@@ -1,10 +1,10 @@
 {
   "name": "webmangler",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The WebMangler core",
   "license": "MIT",
   "main": "lib/index.js",
-  "typings": "index.d.ts",
+  "typings": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/ericcornelissen/webmangler",
