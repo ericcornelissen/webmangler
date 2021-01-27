@@ -1,10 +1,5 @@
-# IDEs
-.vscode/
-.idea/
-
 # Dependencies
 node_modules/
 
 # Generated & temporary
-_reports/
-.temp/
+lib/

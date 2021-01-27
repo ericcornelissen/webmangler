@@ -1,0 +1,32 @@
+# Check out Nyc at: https://github.com/istanbuljs/nyc
+
+all: true
+extends:
+  - "@istanbuljs/nyc-config-typescript"
+reporter:
+  - lcov
+  - text
+check-coverage:
+  statements: 80
+  lines: 80
+  branches: 80
+  functions: 80
+watermarks:
+  statements: [80, 95]
+  lines: [80, 95]
+  branches: [80, 95]
+  functions: [80, 95]
+
+extensions:
+  - .ts
+include:
+  - packages/**/*.ts
+exclude:
+  - _reports/
+  - .temp/
+  - node_modules/
+  - packages/**/*.test.ts # don't ignore helpers modules in tests, those should be tested too
+  - packages/**/*.mock.ts
+
+report-dir: ./_reports
+temp-dir: ./.temp/nyc

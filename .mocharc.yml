@@ -1,0 +1,13 @@
+# Check out Mocha at: https://mochajs.org/
+
+recursive: true
+reporter: spec
+ui: tdd
+require:
+  - ts-node/register
+
+spec: packages/**/*.test.ts
+watch-files:
+  - packages/**/*.ts
+watch-ignore:
+  - node_modules/
