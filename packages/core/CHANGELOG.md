@@ -9,6 +9,10 @@ Versioning].
 
 - _No changes yet_
 
+## [0.1.2] - 2021-01-27
+
+- Add missing type declarations.
+
 ## [0.1.1] - 2021-01-27
 
 - Update exported type declarations.
