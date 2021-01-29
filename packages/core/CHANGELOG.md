@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add default options for `RecommendedManglers` and `BuiltInManglers`.
 
 ## [0.1.2] - 2021-01-27
 

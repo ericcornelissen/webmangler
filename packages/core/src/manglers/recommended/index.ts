@@ -28,7 +28,7 @@ export default class RecommendedManglers extends MultiMangler {
    * @param options The {@link RecommendedManglersOptions}.
    * @since v0.1.0
    */
-  constructor(options: RecommendedManglersOptions) {
+  constructor(options: RecommendedManglersOptions={}) {
     const plugins: WebManglerPlugin[] = [];
 
     if (!options.disableCssClassMangling) {
