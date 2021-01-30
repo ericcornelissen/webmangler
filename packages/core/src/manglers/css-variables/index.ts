@@ -1,6 +1,37 @@
 import SimpleManglerPlugin from "../utils/simple-mangler.class";
 
 /**
+ * The options for _WebMangler_'s built-in CSS variables mangler.
+ *
+ * @since v0.1.0
+ */
+export type CssVariableManglerOptions = {
+  /**
+   * One or more patterns for CSS variables that should be mangled.
+   *
+   * @default `"[a-zA-Z-]+"`
+   * @since v0.1.0
+   */
+  cssVarNamePattern?: string | string[];
+
+  /**
+   * A list of CSS variable names that should not be used.
+   *
+   * @default `[]`
+   * @since v0.1.0
+   */
+  reservedCssVarNames?: string[];
+
+  /**
+   * A prefix to use for mangled CSS variables.
+   *
+   * @default `""`
+   * @since v0.1.0
+   */
+  keepCssVarPrefix?: string;
+}
+
+/**
  * The CSS variables mangler is a built-in plugin of _WebMangler_ that can be
  * used to mangle CSS variables, e.g. "--color" in `--color: #ABC;`.
  *

@@ -3,17 +3,14 @@
     "module": "commonjs",
     "target": "es2019",
     "alwaysStrict": true,
+    "esModuleInterop": false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "preserveConstEnums": true,
     "removeComments": false,
     "sourceMap": true,
-    "strict": true,
-    "typeRoots": [
-      "node_modules/@types",
-      "packages/"
-    ]
+    "strict": true
   },
   "exclude": [
     "node_modules/"

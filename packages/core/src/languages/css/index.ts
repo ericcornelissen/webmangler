@@ -1,3 +1,5 @@
+import type { ManglerExpression } from "../types";
+
 import SimpleLanguagePlugin from "../utils/simple-language-plugin.class";
 
 import cssClassesMatchers from "./css-classes";

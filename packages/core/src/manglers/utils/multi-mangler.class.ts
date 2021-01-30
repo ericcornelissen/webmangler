@@ -1,3 +1,7 @@
+import type { WebManglerPlugin } from "../types";
+import type { WebManglerLanguagePlugin } from "../../languages";
+import type { MangleEngine, ManglerFile } from "../../types";
+
 /**
  * The {@link MultiMangler} class is a utility to create a {@link
  * WebManglerPlugin} that provides multiple manglers in one plugin.

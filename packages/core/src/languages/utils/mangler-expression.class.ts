@@ -1,7 +1,9 @@
+import type { ManglerExpression, ManglerMatch } from "../types";
+
 import { format as printf } from "util";
 
-import { toArrayIfNeeded } from "./helpers";
-import Match from "./mangler-match.class";
+import { toArrayIfNeeded } from "../../helpers";
+import _ManglerMatch from "./mangler-match.class";
 
 const REG_EXP_FLAGS = "gm";
 
@@ -32,7 +34,7 @@ type MatchReplacer = ((replaceStr: string, match: ManglerMatch) => string);
  *
  * @since v0.1.0
  */
-export default class ManglerExpression {
+export default class _ManglerExpression implements ManglerExpression {
   /**
    * Get a {@link MatchParser} to return the value at a specific index in a
    * match.
@@ -144,7 +146,7 @@ export default class ManglerExpression {
     const regExp = this.newRegExp(pattern);
     let match: RegExpExecArray | null = null;
     while ((match = regExp.exec(s)) !== null) {
-      const manglerMatch = Match.fromExec(match);
+      const manglerMatch = _ManglerMatch.fromExec(match);
       yield* this.parseMatch(pattern, manglerMatch);
     }
   }
@@ -156,7 +158,7 @@ export default class ManglerExpression {
   public replace(s: string, pattern: string, to: string): string {
     const regexp = this.newRegExp(pattern);
     return s.replace(regexp, (...args: string[]): string => {
-      const manglerMatch = Match.fromReplace(args);
+      const manglerMatch = _ManglerMatch.fromReplace(args);
       return this.replaceMatch(to, manglerMatch);
     });
   }

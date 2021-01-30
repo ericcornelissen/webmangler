@@ -7,7 +7,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.3] - 2021-01-30
+
 - Add default options for `RecommendedManglers` and `BuiltInManglers`.
+- Update exported type declarations.
 
 ## [0.1.2] - 2021-01-27
 

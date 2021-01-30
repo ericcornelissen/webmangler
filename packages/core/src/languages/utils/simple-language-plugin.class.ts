@@ -1,3 +1,9 @@
+import type {
+  ManglerExpression,
+  ManglerExpressions,
+  WebManglerLanguagePlugin,
+} from "../types";
+
 /**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of
  * a {@link WebManglerLanguagePlugin} that works given a set of languages and a

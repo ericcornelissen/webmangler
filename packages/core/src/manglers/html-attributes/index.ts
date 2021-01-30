@@ -1,6 +1,44 @@
 import SimpleManglerPlugin from "../utils/simple-mangler.class";
 
 /**
+ * The options for _WebMangler_'s built-in HTML Attributes mangler.
+ *
+ * @since v0.1.0
+ */
+export type HtmlAttributeManglerOptions = {
+  /**
+   * One or more patterns for HTML attributes that should be mangled.
+   *
+   * The most common value for this option is: `'data-[a-z-]+'`,  which will
+   * mangle all `data-` attributes.
+   *
+   * @default `"data-[a-z-]+"`
+   * @since v0.1.0
+   */
+  attrNamePattern?: string | string[];
+
+  /**
+   * A list of HTML attribute names that should not be used.
+   *
+   * @default `[]`
+   * @since v0.1.0
+   */
+  reservedAttrNames?: string[];
+
+  /**
+   * A prefix to use for mangled HTML attributes. Set to `''` if no prefix
+   * should be used for mangled HTML attributes.
+   *
+   * The most common value for this option is: `'data-`, which will keep the
+   * prefix of 'data-' attributes.
+   *
+   * @default `"data-"`
+   * @since v0.1.0
+   */
+  keepAttrPrefix?: string;
+}
+
+/**
  * The HTML attribute mangler is a built-in plugin of _WebMangler_ that can be
  * used to mangle HTML attributes, e.g. "data-foo" in `<img data-foo="bar"/>`.
  *

@@ -1,3 +1,5 @@
+import type { ManglerMatch } from "../types";
+
 /**
  * Type representing an object of named groups.
  */
@@ -9,7 +11,7 @@ type NamedGroupsObject = { [key: string]: string };
  *
  * @since v0.1.0
  */
-export default class ManglerMatch {
+export default class _ManglerMatch {
   /**
    * Create a {@link ManglerMatch} from a {@link RegExpExecArray}.
    *
@@ -18,7 +20,7 @@ export default class ManglerMatch {
    * @since v0.1.0
    */
   static fromExec(match: RegExpExecArray): ManglerMatch {
-    return new ManglerMatch(match, match.groups);
+    return new _ManglerMatch(match, match.groups);
   }
 
   /**
@@ -30,7 +32,7 @@ export default class ManglerMatch {
    * @since v0.1.0
    */
   static fromReplace(rawMatch: unknown[]): ManglerMatch {
-    return new ManglerMatch(
+    return new _ManglerMatch(
       [...rawMatch as string[]],
       rawMatch[rawMatch.length - 1] as NamedGroupsObject,
     );

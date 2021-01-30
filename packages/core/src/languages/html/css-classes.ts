@@ -1,4 +1,6 @@
-import ManglerExpression from "../../mangler-expression.class";
+import { ManglerMatch } from "../types";
+
+import ManglerExpression from "../utils/mangler-expression.class";
 
 const GROUP_NAME_ALL = "all";
 const GROUP_NAME_MAIN = "main";

@@ -1,3 +1,6 @@
+import type { ManglerExpression } from "./languages";
+import type { ManglerFile } from "./types";
+
 import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
 
@@ -197,6 +200,29 @@ function parseOptions(
     manglePrefix: options.manglePrefix || DEFAULT_MANGLE_PREFIX,
     reservedNames: options.reservedNames || DEFAULT_RESERVED_NAMES,
   };
+}
+
+/**
+ * A set of generic options used by the {@link MangleEngine} for mangling.
+ *
+ * @since v0.1.0
+ */
+export type MangleEngineOptions = {
+  /**
+   * The prefix to use for mangled strings.
+   *
+   * @default `""`
+   * @since v0.1.0
+   */
+  manglePrefix?: string;
+
+  /**
+   * A list of names not to be used as mangled string.
+   *
+   * @default `[]`
+   * @since v0.1.0
+   */
+  reservedNames?: string[];
 }
 
 /**

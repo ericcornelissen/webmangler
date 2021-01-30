@@ -1,3 +1,5 @@
+import type { BuiltInManglersOptions } from "../builtin";
+
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";

@@ -1,3 +1,6 @@
+import type { ManglerExpression } from "../languages";
+import type { MangleEngineOptions, ManglerFile } from "../types";
+
 import { expect } from "chai";
 
 import ManglerExpressionMock from "../__mocks__/mangler-expression.mock";

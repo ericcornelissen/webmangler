@@ -1,4 +1,6 @@
-import ManglerExpression from "../../mangler-expression.class";
+import { ManglerMatch } from "../types";
+
+import ManglerExpression from "../utils/mangler-expression.class";
 
 const GROUP_NAME_QUOTE = "q";
 const GROUP_NAME_PRE_PATTERN = "pre";

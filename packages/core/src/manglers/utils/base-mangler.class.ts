@@ -1,3 +1,11 @@
+import type { WebManglerPlugin } from "../types";
+import type {
+  ManglerExpression,
+  ManglerExpressions,
+  WebManglerLanguagePlugin,
+} from "../../languages";
+import type { MangleEngine, ManglerFile } from "../../types";
+
 /**
  * The {@link BaseManglerPlugin} abstract class provides a basic implementation
  * of a {@link WebManglerPlugin} that deals with the handling of {@link

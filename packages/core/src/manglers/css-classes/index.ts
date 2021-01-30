@@ -1,6 +1,37 @@
 import SimpleManglerPlugin from "../utils/simple-mangler.class";
 
 /**
+ * The options for _WebMangler_'s built-in CSS class mangler.
+ *
+ * @since v0.1.0
+ */
+export type CssClassManglerOptions = {
+  /**
+   * One or more patterns for CSS classes that should be mangled.
+   *
+   * @default `"cls-[a-zA-Z-_]+"`
+   * @since v0.1.0
+   */
+  classNamePattern?: string | string[];
+
+  /**
+   * A list of CSS class names that should not be used.
+   *
+   * @default `[]`
+   * @since v0.1.0
+   */
+  reservedClassNames?: string[];
+
+  /**
+   * A prefix to use for mangled CSS classes.
+   *
+   * @default `""`
+   * @since v0.1.0
+   */
+  keepClassNamePrefix?: string;
+}
+
+/**
  * The CSS class mangler is a built-in plugin of _WebMangler_ that can be used
  * to mangle CSS classes, e.g. "cls-foo" in `.cls-foo { color: red; }`.
  *

@@ -1,3 +1,5 @@
+import type { ManglerExpressions, WebManglerLanguagePlugin } from "../types";
+
 /**
  * The {@link MultiLanguagePlugin} class is a utility to create a {@link
  * WebManglerLanguagePlugin} that provides multiple language plugins in one.

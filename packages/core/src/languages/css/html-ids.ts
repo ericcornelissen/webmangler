@@ -1,4 +1,4 @@
-import ManglerExpression from "../../mangler-expression.class";
+import ManglerExpression from "../utils/mangler-expression.class";
 
 const expressions: ManglerExpression[] = [
   // e.g.

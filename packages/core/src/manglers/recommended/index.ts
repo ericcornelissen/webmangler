@@ -1,8 +1,47 @@
+import type { WebManglerPlugin } from "../types";
+import type { CssClassManglerOptions } from "../css-classes";
+import type { CssVariableManglerOptions } from "../css-variables";
+import type { HtmlAttributeManglerOptions } from "../html-attributes";
+
 import MultiMangler from "../utils/multi-mangler.class";
 
 import CssClassMangler from "../css-classes";
 import CssVariableMangler from "../css-variables";
 import HtmlAttributeMangler from "../html-attributes";
+
+/**
+ * The configuration of the {@link RecommendedManglers}.
+ *
+ * To disable any individual mangler the `pattern` option of that mangler can be
+ * set to `undefined`.
+ *
+ * @since v0.1.0
+ */
+interface RecommendedManglersOptions extends
+  CssClassManglerOptions,
+  CssVariableManglerOptions,
+  HtmlAttributeManglerOptions {
+  /**
+   * Disable the {@see CssClassMangler}.
+   *
+   * @since v0.1.0
+   */
+  disableCssClassMangling?: boolean;
+
+  /**
+   * Disable the {@see CssVariableMangler}.
+   *
+   * @since v0.1.0
+   */
+  disableCssVarMangling?: boolean;
+
+  /**
+   * Disable the {@see HtmlAttributeMangler}.
+   *
+   * @since v0.1.0
+   */
+  disableHtmlAttrMangling?: boolean;
+}
 
 /**
  * This {@link WebManglerPlugin} enables all recommended built-in manglers. The
@@ -58,3 +97,5 @@ export default class RecommendedManglers extends MultiMangler {
     super(plugins);
   }
 }
+
+export type { RecommendedManglersOptions };

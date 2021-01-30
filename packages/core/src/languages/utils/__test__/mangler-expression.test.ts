@@ -1,7 +1,7 @@
 import { expect, use as chaiUse } from "chai";
 import * as sinonChai from "sinon-chai";
 
-import ManglerMatchMock from "../__mocks__/mangler-match.mock";
+import ManglerMatchMock from "../../../__mocks__/mangler-match.mock";
 
 import ManglerExpression from "../mangler-expression.class";
 

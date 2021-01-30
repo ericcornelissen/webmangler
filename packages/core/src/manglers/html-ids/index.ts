@@ -1,6 +1,37 @@
 import SimpleManglerPlugin from "../utils/simple-mangler.class";
 
 /**
+ * The options for _WebMangler_'s built-in HTML IDs mangler.
+ *
+ * @since v0.1.0
+ */
+export type HtmlIdManglerOptions = {
+  /**
+   * One or more patterns for IDs that should be mangled.
+   *
+   * @default `"id-[a-zA-Z-_]+"`
+   * @since v0.1.0
+   */
+  idNamePattern?: string | string[];
+
+  /**
+   * A list of IDs that should not be used.
+   *
+   * @default `[]`
+   * @since v0.1.0
+   */
+  reservedIds?: string[];
+
+  /**
+   * A prefix to use for mangled IDs.
+   *
+   * @default `""`
+   * @since v0.1.0
+   */
+  keepIdPrefix?: string;
+}
+
+/**
  * The HTML ID mangler (or just ID mangler) is a built-in plugin of _WebMangler_
  * that can be used to mangle IDs on the web, e.g. in `<div id="foo"></div>`.
  *

@@ -1,3 +1,5 @@
+import type { MangleEngine, ManglerFile } from "../../types";
+
 import BaseManglerPlugin from "./base-mangler.class";
 
 /**

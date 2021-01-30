@@ -1,3 +1,5 @@
+import type { ManglerFile, WebManglerOptions } from "./types";
+
 import manglerEngine from "./engine";
 
 /**
@@ -23,3 +25,7 @@ export default function webmangler(
 
   return files;
 }
+
+export type { ManglerFile, WebManglerOptions };
+export type { WebManglerPlugin } from "./manglers";
+export type { WebManglerLanguagePlugin } from "./languages";
