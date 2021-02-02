@@ -9,6 +9,11 @@ Versioning].
 
 - _No changes yet_
 
+## [0.1.4] - 2021-02-02
+
+- Publish from root rather than `./lib`.
+- Remove mocks and tests accidentally published.
+
 ## [0.1.3] - 2021-01-30
 
 - Add default options for `RecommendedManglers` and `BuiltInManglers`.

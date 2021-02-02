@@ -2,4 +2,7 @@
 node_modules/
 
 # Generated & temporary
-lib/
+/languages/
+/manglers/
+/*.d.ts
+/*.js

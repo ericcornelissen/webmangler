@@ -1,10 +1,10 @@
 {
   "name": "webmangler",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "The WebMangler core",
   "license": "MIT",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "main": "index.js",
+  "typings": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/ericcornelissen/webmangler",
@@ -19,7 +19,7 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "clean": "rm -rf lib/",
+    "clean": "rm -rf languages/ manglers/ *.js *.d.ts",
     "compile": "tsc",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"

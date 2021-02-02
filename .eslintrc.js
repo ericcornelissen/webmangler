@@ -184,8 +184,14 @@ module.exports = {
 
     // Generated & temporary
     "_reports/",
-    ".tmp/",
+    ".temp/",
     "lib/",
+
+    // Generated in packages/core
+    "packages/core/languages/",
+    "packages/core/manglers/",
+    "packages/core/*.d.ts",
+    "packages/core/*.js",
 
     // Don't ignore configuration files
     "!.*.js",
