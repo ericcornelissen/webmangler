@@ -1,26 +1,29 @@
 #!/usr/bin/env node
 /**
  * @fileoverview
- * Cleans the repository from generated files.
+ * Restore the repository to a clean state, removing all generated files.
  */
 
-const { execFile } = require("child_process");
+const { execFileSync } = require("child_process");
 const path = require("path");
 
 const fromRoot = (fileOrFolder) => path.resolve(__dirname, "..", fileOrFolder);
 
-const TO_DELETE = [
-  fromRoot(".temp/"),
-  fromRoot("_reports/"),
-  fromRoot("packages/core/lib/"),
-  fromRoot(".eslintcache"),
-  fromRoot("npm-debug.log"),
-];
+const FILES_AND_FOLDERS_TO_DELETE = [
+  ".temp/",
+  "_reports/",
+  ".eslintcache",
+  "npm-debug.log",
+].map(fromRoot);
 
-execFile("rm", ["-rf", ...TO_DELETE], (error) => {
-  if (error) {
-    console.error("Cleaning failed");
-  } else {
-    console.info("Repository cleaned");
-  }
+const PACKAGES_TO_CLEAN = [
+  "packages/cli",
+  "packages/core",
+].map(fromRoot);
+
+execFileSync("rm", ["-rf", ...FILES_AND_FOLDERS_TO_DELETE]);
+PACKAGES_TO_CLEAN.forEach((packageDir) => {
+  execFileSync("npm", ["run", "clean"], { cwd: packageDir });
 });
+
+console.info("Repository cleaned!");
