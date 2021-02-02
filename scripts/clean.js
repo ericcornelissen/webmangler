@@ -21,6 +21,7 @@ const PACKAGES_TO_CLEAN = [
   "packages/core",
 ].map(fromRoot);
 
+execFileSync("git", ["checkout", "HEAD", "--", "./testdata"]);
 execFileSync("rm", ["-rf", ...FILES_AND_FOLDERS_TO_DELETE]);
 PACKAGES_TO_CLEAN.forEach((packageDir) => {
   execFileSync("npm", ["run", "clean"], { cwd: packageDir });

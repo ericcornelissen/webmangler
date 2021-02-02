@@ -1,0 +1,22 @@
+#id-list {
+  font-family: sans-serif;
+
+  --font-size: large;
+}
+
+.cls-foo {
+  color: purple;
+}
+
+.cls-bar {
+  color: orange;
+}
+
+.cls-foo,
+.cls-bar {
+  font-size: var(--font-size);
+}
+
+.baz {
+  text-decoration: underline;
+}

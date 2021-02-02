@@ -1,0 +1,7 @@
+# Ignore everything in this folder...
+/*
+# except:
+!.gitignore
+!sample.css
+!sample.html
+!sample.js

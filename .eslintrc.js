@@ -182,6 +182,9 @@ module.exports = {
     // Dependencies
     "node_modules/",
 
+    // Test data
+    "testdata/",
+
     // Generated & temporary
     "_reports/",
     ".temp/",

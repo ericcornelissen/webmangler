@@ -3,3 +3,5 @@ node_modules/
 
 # Generated & temporary
 lib/
+.webmanglerrc.js
+webmangler.config.js
