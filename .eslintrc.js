@@ -88,6 +88,14 @@ module.exports = {
   },
 
   overrides: [
+    { // packages/cli
+      files: [
+        "packages/cli/**/*.ts",
+      ],
+      rules: {
+        "security/detect-non-literal-fs-filename": "off",
+      },
+    },
     { // Script files
       files: [
         "scripts/*.js",

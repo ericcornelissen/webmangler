@@ -7,7 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Initial release with writing capabilities and basic configuration
+- Read configuration from `.webmanglerrc.js` or `webmangler.config.js`.
+- Configure the configuration file with the `--config`/`-c` option.
+- Enable writing to files with the `--write`/`-w` option.
 
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
