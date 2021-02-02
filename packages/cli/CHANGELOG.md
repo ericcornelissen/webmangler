@@ -7,7 +7,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Increase minimum `webmangler` peerDependency to `>=v0.1.4`.
+- Fix formatting in examples of the README.
 
 ## [0.1.0] - 2021-02-02
 

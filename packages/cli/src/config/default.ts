@@ -1,7 +1,7 @@
 import type { WebManglerOptions } from "webmangler";
 
-import BuiltInLanguages from "webmangler/lib/languages/builtin";
-import RecommendManglers from "webmangler/lib/manglers/recommended";
+import BuiltInLanguages from "webmangler/languages/builtin";
+import RecommendManglers from "webmangler/manglers/recommended";
 
 /**
  * The default configuration for _WebMangler_ used by the _WebMangler_ CLI.

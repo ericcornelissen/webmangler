@@ -15,20 +15,19 @@ Add your configuration in `.webmanglerrc.js` or `webmangler.config.js`, e.g.:
 ```js
 // .webmanglerrc.js
 
-const BuiltInLanguages = require("webmangler/lib/languages/builtin").default;
-const RecommendedManglers = require("webmangler/lib/manglers/recommended").default;
+const BuiltInLanguages = require("webmangler/languages/builtin").default;
+const RecommendedManglers = require("webmangler/manglers/recommended").default;
 
 module.exports = {
   plugins: [
     // Mangle CSS classes, CSS variables, and data attributes
     new RecommendedManglers(),
-    ],
+  ],
   languages: [
     // Mangle in CSS, HTML, and JavaScript
     new BuiltInLanguages(),
   ],
 };
-
 ```
 
 Add a script to your project manifest to mangle a folder, e.g.:
