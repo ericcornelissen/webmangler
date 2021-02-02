@@ -4,7 +4,9 @@
   "description": "The WebMangler Command Line Interface (CLI)",
   "license": "MIT",
   "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "bin": {
+    "webmangler": "./lib/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ericcornelissen/webmangler",

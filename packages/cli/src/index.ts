@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import type { WebManglerCliArgs } from "./types";
 
 import yargs from "yargs";

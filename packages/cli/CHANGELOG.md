@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.0] - 2021-02-02
+
 - Initial release with writing capabilities and basic configuration
 - Read configuration from `.webmanglerrc.js` or `webmangler.config.js`.
 - Configure the configuration file with the `--config`/`-c` option.
