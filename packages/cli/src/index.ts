@@ -4,13 +4,15 @@ import type { WebManglerCliArgs } from "./types";
 
 import yargs from "yargs";
 
+import getVersionMessage from "./version";
 import run from "./main";
 
+const versionMessage = getVersionMessage();
 const args = yargs(process.argv.slice(2))
   .scriptName("webmangler")
   .usage("$0 [options] <files>")
   .help()
-  .version()
+  .version("version", versionMessage)
   .options({
     "config": {
       alias: "c",

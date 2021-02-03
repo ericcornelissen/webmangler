@@ -7,8 +7,14 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.1] - 2021-02-03
+
 - Increase minimum `webmangler` peerDependency to `>=v0.1.4`.
 - Fix formatting in examples of the README.
+- Fix NPM scripts example in the README.
+- Add WebMangler core and NodeJS version to `--version` output.
 
 ## [0.1.0] - 2021-02-02
 

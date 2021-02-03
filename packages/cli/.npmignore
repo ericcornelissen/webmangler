@@ -1,3 +1,7 @@
 lib/types.js
 src/
 tsconfig.json
+
+# Temporary
+.webmanglerrc.js
+webmangler.config.js
