@@ -145,6 +145,7 @@ module.exports = {
     { // Configuration files (JS)
       files: [
         ".eslintrc.js",
+        "commitlint.config.js",
       ],
       parser: "espree",
       parserOptions: {
@@ -152,7 +153,7 @@ module.exports = {
       },
       globals: JS_GLOBALS,
     },
-    { //Configuration files (JSON)
+    { // Configuration files (JSON)
       files: [
         "package.json",
         "package-lock.json",
@@ -167,7 +168,7 @@ module.exports = {
         "plugin:json/recommended",
       ],
     },
-    { //Configuration files (YAML)
+    { // Configuration files (YAML)
       files: [
         ".mocharc.yml",
         ".nycrc.yml",
