@@ -1,0 +1,10 @@
+name: WebMangler CodeQL config
+
+queries:
+- uses: security-extended
+
+paths:
+- 'packages/'
+paths-ignore:
+- '**/__mocks__/**/*'
+- '**/__tests__/**/*'

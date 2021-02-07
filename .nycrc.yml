@@ -6,11 +6,12 @@ extends:
 reporter:
   - lcov
   - text
-check-coverage:
-  statements: 80
-  lines: 80
-  branches: 80
-  functions: 80
+
+check-coverage: true
+statements: 80
+lines: 80
+branches: 60
+functions: 80
 watermarks:
   statements: [80, 95]
   lines: [80, 95]
