@@ -1,8 +1,8 @@
-import MultiLanguagePlugin from "../utils/multi-language-plugin.class";
+import MultiLanguagePlugin from "./utils/multi-language-plugin.class";
 
-import CssLanguageSupport from "../css";
-import HtmlLanguageSupport from "../html";
-import JavaScriptLanguageSupport from "../javascript";
+import CssLanguageSupport from "./css";
+import HtmlLanguageSupport from "./html";
+import JavaScriptLanguageSupport from "./javascript";
 
 /**
  * This {@link WebManglerLanguagePlugin} enables all built-in language plugins.

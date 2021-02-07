@@ -1,4 +1,4 @@
-import SimpleManglerPlugin from "../utils/simple-mangler.class";
+import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
  * The options for _WebMangler_'s built-in HTML IDs mangler.
