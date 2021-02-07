@@ -17,15 +17,108 @@ suite("CSS Variable Mangler", function() {
   suite("CSS", function() {
     const scenarios: TestScenario[] = [
       {
-        name: "sample",
+        name: "variable declarations",
         cases: [
+          ...varySpacing(":", {
+            input: ":root{ --foo:#000; }",
+            expected: ":root{ --a:#000; }",
+          }),
+          ...varySpacing(["{", "}"], {
+            input: ".foo{--foo:#000;}",
+            expected: ".foo{--a:#000;}",
+          }),
           {
-            input: "--foo: #000;",
-            expected: "--a: #000;",
+            input: ":root { --foo: white; --bar: black; }",
+            expected: ":root { --a: white; --b: black; }",
           },
           {
-            input: ".foo { }",
-            expected: ".foo { }",
+            input: ".foo { --bar: white; } .bar { --foo: black; }",
+            expected: ".foo { --a: white; } .bar { --b: black; }",
+          },
+        ],
+      },
+      {
+        name: "variable usage",
+        cases: [
+          ...varySpacing(["(", ")"], {
+            input: ".foo { color: var(--foo); }",
+            expected: ".foo { color: var(--a); }",
+          }),
+          {
+            input: "div { color: var(--foo); font: var(--bar); }",
+            expected: "div { color: var(--a); font: var(--b); }",
+          },
+          {
+            input: ".foo { color: var(--foo); } .bar { font: var(--bar); }",
+            expected: ".foo { color: var(--a); } .bar { font: var(--b); }",
+          },
+          ...varySpacing([","], {
+            input: ".foo { color: var(--foo,#fff); }",
+            expected: ".foo { color: var(--a,#fff); }",
+          }),
+          {
+            input: "div { color: var(--foo, #000); font: var(--bar, serif); }",
+            expected: "div { color: var(--a, #000); font: var(--b, serif); }",
+          },
+          {
+            input: ".foo { color: var(--foo, #000); } .bar { font: var(--bar, serif); }",
+            expected: ".foo { color: var(--a, #000); } .bar { font: var(--b, serif); }",
+          },
+        ],
+      },
+      {
+        name: "reserved class names",
+        cases: [
+          {
+            input: ":root { --foo: 'bar'; }",
+            reserved: ["a"],
+            expected: ":root { --b: 'bar'; }",
+          },
+          {
+            input: ":root { --foo: 'bar'; }",
+            reserved: ["a", "b", "c"],
+            expected: ":root { --d: 'bar'; }",
+          },
+          {
+            input: ":root { --foo: white; --bar: black; }",
+            reserved: ["b"],
+            expected: ":root { --a: white; --c: black; }",
+          },
+        ],
+      },
+      {
+        name: "prefixed mangling",
+        cases: [
+          {
+            input: ":root { --foo: 'bar'; }",
+            prefix: "mangled-",
+            expected: ":root { --mangled-a: 'bar'; }",
+          },
+          {
+            input: ":root { --foo: white; --bar: black; }",
+            prefix: "var-",
+            expected: ":root { --var-a: white; --var-b: black; }",
+          },
+          {
+            input: ":root { --var-foo: white; --var-bar: black; }",
+            pattern: "var-[a-z]+",
+            prefix: "var-",
+            expected: ":root { --var-a: white; --var-b: black; }",
+          },
+        ],
+      },
+      {
+        name: "edge cases",
+        cases: [
+          {
+            input: ":root { --foo: 'bar' }",
+            expected: ":root { --a: 'bar' }",
+            description: "It shouldn't be a problem if the `;` is missing",
+          },
+          {
+            input: ":root { color: var(--foo) }",
+            expected: ":root { color: var(--a) }",
+            description: "It shouldn't be a problem if the `;` is missing",
           },
         ],
       },
@@ -64,20 +157,109 @@ suite("CSS Variable Mangler", function() {
   suite("HTML", function() {
     const scenarios: TestScenario[] = [
       {
-        name: "sample",
+        name: "variable declarations in <style>",
         cases: [
+          ...varyQuotes("html", {
+            input: "<div style=\"--foo: #000;\"></div>",
+            expected: "<div style=\"--a: #000;\"></div>",
+          }),
           ...varySpacing("=", {
             input: "<div style=\"--foo: #000;\"></div>",
             expected: "<div style=\"--a: #000;\"></div>",
           }),
-          ...varyQuotes("html", {
-            input: "<div style=\"--foo: #000;\"></div>",
-            expected: "<div style=\"--a: #000;\"></div>",
+          ...varySpacing(":", {
+            input: "<div style=\"--foo:#000;\"></div>",
+            expected: "<div style=\"--a:#000;\"></div>",
           }),
+          {
+            input: "<div style=\"color: red; --foo: #000;\"></div>",
+            expected: "<div style=\"color: red; --a: #000;\"></div>",
+          },
+          {
+            input: "<div style=\"--foo: #000; --bar: #FFF;\"></div>",
+            expected: "<div style=\"--a: #000; --b: #FFF;\"></div>",
+          },
+        ],
+      },
+      {
+        name: "variable usage in <style>",
+        cases: [
           ...varyQuotes("html", {
-            input: "<div style=\"color: #000;\"></div>",
-            expected: "<div style=\"color: #000;\"></div>",
+            input: "<div style=\"color: var(--foo);\"></div>",
+            expected: "<div style=\"color: var(--a);\"></div>",
           }),
+          ...varySpacing(":", {
+            input: "<div style=\"color:var(--foo);\"></div>",
+            expected: "<div style=\"color:var(--a);\"></div>",
+          }),
+          ...varySpacing(["(", ")"], {
+            input: "<div style=\"color: var(--foo);\"></div>",
+            expected: "<div style=\"color: var(--a);\"></div>",
+          }),
+          ...varySpacing([","], {
+            input: "<div style=\"color: var(--foo,'#000');\"></div>",
+            expected: "<div style=\"color: var(--a,'#000');\"></div>",
+          }),
+          {
+            input: "<div style=\"color: var(--foo); font: var(--bar);\"></div>",
+            expected: "<div style=\"color: var(--a); font: var(--b);\"></div>",
+          },
+        ],
+      },
+      {
+        name: "reserved class names",
+        cases: [
+          {
+            input: "<div style=\"--foo: 'bar';\"></div>",
+            reserved: ["a"],
+            expected: "<div style=\"--b: 'bar';\"></div>",
+          },
+          {
+            input: "<div style=\"--foo: 'bar';\"></div>",
+            reserved: ["a", "b", "c"],
+            expected: "<div style=\"--d: 'bar';\"></div>",
+          },
+          {
+            input: "<div style=\"--foo: #fff; --bar: #000;\"></div>",
+            reserved: ["b"],
+            expected: "<div style=\"--a: #fff; --c: #000;\"></div>",
+          },
+        ],
+      },
+      {
+        name: "prefixed mangling",
+        cases: [
+          {
+            input: "<div style=\"--foo: 'bar';\"></div>",
+            prefix: "mangled-",
+            expected: "<div style=\"--mangled-a: 'bar';\"></div>",
+          },
+          {
+            input: "<div style=\"--foo: #fff; --bar: #000;\"></div>",
+            prefix: "var-",
+            expected: "<div style=\"--var-a: #fff; --var-b: #000;\"></div>",
+          },
+          {
+            input: "<div style=\"--var-foo: #fff; --var-bar: #000;\"></div>",
+            pattern: "var-[a-z]+",
+            prefix: "var-",
+            expected: "<div style=\"--var-a: #fff; --var-b: #000;\"></div>",
+          },
+        ],
+      },
+      {
+        name: "edge cases",
+        cases: [
+          {
+            input: "<div style=\"--foo: 'bar'\"></div>",
+            expected: "<div style=\"--a: 'bar'\"></div>",
+            description: "It shouldn't be a problem if the `;` is missing",
+          },
+          {
+            input: "<div style=\"color: var(--foo)\"></div>",
+            expected: "<div style=\"color: var(--a)\"></div>",
+            description: "It shouldn't be a problem if the `;` is missing",
+          },
         ],
       },
     ];
@@ -118,9 +300,58 @@ suite("CSS Variable Mangler", function() {
         name: "sample",
         cases: [
           ...varyQuotes("js", {
-            input: "$icon.style.removeProperty(\"--foobar\")",
-            expected: "$icon.style.removeProperty(\"--a\")",
+            input: "$el.style.getPropertyValue(\"--foobar\");",
+            expected: "$el.style.getPropertyValue(\"--a\");",
           }),
+          ...varySpacing("\"", {
+            input: "$el.style.removeProperty(\"--foobar\");",
+            expected: "$el.style.removeProperty(\"--a\");",
+          }),
+          ...varyQuotes("js", {
+            input: "var x = \"--foo\", setProperty(x, \"bar\");",
+            expected: "var x = \"--a\", setProperty(x, \"bar\");",
+          }),
+        ],
+      },
+      {
+        name: "reserved class names",
+        cases: [
+          {
+            input: "$el.style.getPropertyValue(\"--foobar\");",
+            reserved: ["a"],
+            expected: "$el.style.getPropertyValue(\"--b\");",
+          },
+          {
+            input: "$el.style.removeProperty(\"--foobar\");",
+            reserved: ["a", "b", "c"],
+            expected: "$el.style.removeProperty(\"--d\");",
+          },
+          {
+            input: "getPropertyValue(\"--foo\"); removeProperty(\"--bar\");",
+            reserved: ["b"],
+            expected: "getPropertyValue(\"--a\"); removeProperty(\"--c\");",
+          },
+        ],
+      },
+      {
+        name: "prefixed mangling",
+        cases: [
+          {
+            input: "$el.style.getPropertyValue(\"--foobar\");",
+            prefix: "mangled-",
+            expected: "$el.style.getPropertyValue(\"--mangled-a\");",
+          },
+          {
+            input: "getPropertyValue(\"--foo\"); removeProperty(\"--bar\");",
+            prefix: "var-",
+            expected: "getPropertyValue(\"--var-a\"); removeProperty(\"--var-b\");",
+          },
+          {
+            input: "getPropertyValue(\"--var-foo\"); removeProperty(\"--var-bar\");",
+            pattern: "var-[a-z]+",
+            prefix: "var-",
+            expected: "getPropertyValue(\"--var-a\"); removeProperty(\"--var-b\");",
+          },
         ],
       },
     ];
