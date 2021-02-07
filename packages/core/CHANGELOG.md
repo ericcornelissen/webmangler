@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Don't publish empty `types.js` files.
 
 ## [0.1.5] - 2021-02-07
 
