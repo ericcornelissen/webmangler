@@ -1,24 +1,23 @@
 import ManglerExpression from "../utils/mangler-expression.class";
 
 const expressions: ManglerExpression[] = [
-  // e.g. CSS variable declarations
-  //  --(foo)(:) #000;
-  //  --(foo)( :) #000;
+  // CSS variable declarations, e.g.:
+  //  `--(foo): 'bar';`
+  //  `--(foo) : 'bar;`
   new ManglerExpression(
-    "--(%s)(\\s*:)",
+    "--(%s)(?=\\s*:)",
     ManglerExpression.matchParserForIndex(1),
-    ManglerExpression.matchReplacerBy("--%s$2"),
+    ManglerExpression.matchReplacerBy("--%s"),
   ),
 
-  // e.g. CSS variable usage
-  //  color: var\((--)(foo)()\)
-  //  color: var\(( --)(foo)()\)
-  //  color: var\((--)(foo)( )\)
-  //  color: var\(( --)(foo)( )\)
+  // CSS variable usage, e.g.:
+  //  `var(--foo);`
+  //  `var(--foo, 'bar');`
+  //  `var ( --foo );`
   new ManglerExpression(
-    "var\\((\\s*--)(%s)(\\s*)\\)",
-    ManglerExpression.matchParserForIndex(2),
-    ManglerExpression.matchReplacerBy("var($1%s$3)"),
+    "(?<=var\\s*\\(\\s*)--(%s)(?=\\s*(,|\\)))",
+    ManglerExpression.matchParserForIndex(1),
+    ManglerExpression.matchReplacerBy("--%s"),
   ),
 ];
 

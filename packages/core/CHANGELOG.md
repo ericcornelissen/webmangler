@@ -9,6 +9,14 @@ Versioning].
 
 - _No changes yet_
 
+## [0.1.5] - 2021-02-07
+
+- Increase performance of CSS variable mangling.
+- Fix cases where CSS variables were not mangled due to whitespace.
+- Prevent unintended changes to whitespace with CSS variable mangling.
+- Support mangling CSS variable usage (with `var(--foo)`) in HTML.
+- Support fallback syntax (`var(name, fallback)`) when mangling CSS variables.
+
 ## [0.1.4] - 2021-02-02
 
 - Publish from root rather than `./lib`.
