@@ -6,7 +6,7 @@ on:
   pull_request:
     paths:
       - .github/codecov.yml
-      - .github/renovate.json5
+      - .github/renovate.json
 
 jobs:
   codecov:
@@ -33,5 +33,5 @@ jobs:
           node-version: 12.x
       - name: Install Renovate CLI
         run: npm install -g renovate
-      - name: Validate .github/renovate.json5
+      - name: Validate .github/renovate.json
         run: renovate-config-validator
