@@ -1,10 +1,7 @@
 name: Validate Source Code
 on:
-  push:
-  pull_request:
-
-env:
-  HUSKY: 0
+  - push
+  - pull_request
 
 jobs:
   build:
@@ -13,55 +10,55 @@ jobs:
     strategy:
       matrix:
         working-directory:
-        - packages/cli
-        - packages/core
+          - packages/cli
+          - packages/core
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v2
-      with:
-        node-version: 12.x
-    - name: Install monorepo dependencies
-      working-directory: ./
-      run: npm ci
-    - name: Install package dependencies
-      run: npm ci
-    - name: Compile
-      run: npm run compile
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+      - name: Install monorepo dependencies
+        working-directory: ./
+        run: npm ci
+      - name: Install ${{ matrix.working-directory }} dependencies
+        run: npm ci
+      - name: Compile ${{ matrix.working-directory }}
+        run: npm run compile
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v2
-      with:
-        node-version: 12.x
-    - name: Install dependencies
-      run: npm ci
-    - name: Run linters
-      run: npm run lint
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+      - name: Install monorepo dependencies
+        run: npm ci
+      - name: Run linters
+        run: npm run lint
   test:
     name: Test
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v2
-      with:
-        node-version: 12.x
-    - name: Install dependencies
-      run: npm ci
-    - name: Run tests
-      run: npm run test:coverage
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./_reports/lcov.info
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+      - name: Install monorepo dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm run test:coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./_reports/lcov.info
