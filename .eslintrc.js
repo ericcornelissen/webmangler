@@ -171,6 +171,7 @@ module.exports = {
     },
     { // Configuration files (YAML)
       files: [
+        ".github/**/*.yml",
         ".mocharc.yml",
         ".nycrc.yml",
       ],
@@ -199,6 +200,7 @@ module.exports = {
     "packages/core/*.js",
 
     // Don't ignore configuration files
+    "!.github/",
     "!.*.js",
     "!.*.yml",
   ],
