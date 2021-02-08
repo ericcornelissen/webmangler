@@ -155,6 +155,7 @@ module.exports = {
     },
     { // Configuration files (JSON)
       files: [
+        ".github/renovate.json",
         "package.json",
         "package-lock.json",
         "tsconfig.json",
