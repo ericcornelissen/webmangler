@@ -61,7 +61,7 @@ function countInstances(
  *
  * @param instances The strings to mangle and the number of times they appear.
  * @param manglePrefix The prefix for mangled values.
- * @param reservedNames The values not to be used as mangled value.
+ * @param reservedNames Strings and patterns not to be used as mangled strings.
  * @returns A mapping defining the mangling.
  */
 function mangleInstances(
@@ -129,7 +129,7 @@ function getSafeTwoStepMangleMapping(
  *
  * @param instances The strings to mangle and the number of times they appear.
  * @param manglePrefix The prefix to be used for mangled values.
- * @param reservedNames The names that should not be used.
+ * @param reservedNames Strings and patterns not to be used as mangled strings.
  * @returns Two maps to perform safe two-step mangling.
  */
 function getMangleMaps(
@@ -217,7 +217,9 @@ export type MangleEngineOptions = {
   manglePrefix?: string;
 
   /**
-   * A list of names not to be used as mangled string.
+   * A list of names and patterns not to be used as mangled string.
+   *
+   * Patterns are supported since v0.1.7.
    *
    * @default `[]`
    * @since v0.1.0
@@ -229,11 +231,11 @@ export type MangleEngineOptions = {
  * Mangle all strings matching the provided `expressions` and `patterns`
  * consistently across all `files`.
  *
- * The names in `reservedNames` specified in the `options` will not be outputted
- * as mangled strings. By default no values are reserved.
+ * The names and patterns in `reservedNames` specified in the `options` will not
+ * be outputted as mangled strings. By default no strings are reserved.
  *
  * The `manglePrefix` specified in the `options` will be used as a prefix for
- * all mangled values. By default no prefix is used.
+ * all mangled strings. By default no prefix is used.
  *
  * NOTE: files that are not supported won't be returned. Therefore, the returned
  * list may be shorter than the inputted list.

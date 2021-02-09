@@ -6,7 +6,7 @@
  */
 export default class NameGenerator {
   /**
-   * The set of characters the {@link @NameGenerator} uses.
+   * The default set of characters used by {@link @NameGenerator}s.
    *
    * @since v0.1.0
    */
@@ -16,7 +16,7 @@ export default class NameGenerator {
   ];
 
   /**
-   * The list of reserved names.
+   * The list of reserved names and patterns.
    */
   private readonly reserved: RegExp[];
 
@@ -32,11 +32,24 @@ export default class NameGenerator {
    * Create a new {@link NameGenerator} that can be used to generate short,
    * safe, and unique strings.
    *
-   * @param reserved A list of reserved names.
+   * The `reserved` parameter can be used to specify strings that should not be
+   * generated. Each string is interpreted as a case sensitive Regular
+   * Expression that must match exactly. E.g. the reserved string "fa" will be
+   * transformed in the Regular Expression `/^fa$/` and hence only prevent the
+   * exact string "fa" from being generated. On the other hand, the reserved
+   * pattern "a.*", transformed into `/^a.*$/`, will prevent any string starting
+   * with an "a" (including just "a") from being generated.
+   *
+   * If you need to reserve a character that has a special meaning in Regular
+   * Expressions you need to escape it. E.g. the reserved string "a\\." will be
+   * transformed into `/^a\.$/` and will prevent the string "a." from being
+   * generated.
+   *
+   * @param reserved A list of reserved names or expressions.
    * @since v0.1.0
    */
   constructor(reserved: string[]=[]) {
-    this.reserved = reserved.map((rawExpr) => new RegExp(`^${rawExpr}$`, "i"));
+    this.reserved = reserved.map((rawExpr) => new RegExp(`^${rawExpr}$`));
   }
 
   /**
