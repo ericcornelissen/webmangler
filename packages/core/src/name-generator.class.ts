@@ -18,7 +18,7 @@ export default class NameGenerator {
   /**
    * The list of reserved names.
    */
-  private readonly reserved: string[];
+  private readonly reserved: RegExp[];
 
   /**
    * The last returned name.
@@ -36,7 +36,7 @@ export default class NameGenerator {
    * @since v0.1.0
    */
   constructor(reserved: string[]=[]) {
-    this.reserved = reserved;
+    this.reserved = reserved.map((rawExpr) => new RegExp(`^${rawExpr}$`, "i"));
   }
 
   /**
@@ -61,7 +61,7 @@ export default class NameGenerator {
    * @returns `true` if `s` is reserved, `false` otherwise.
    */
   private isReserved(s: string): boolean {
-    return this.reserved.includes(s);
+    return this.reserved.some((expr) => expr.test(s));
   }
 
   /**
