@@ -7,7 +7,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Allow for mangling with custom character sets.
+- Improve character set used by all built-in manglers.
 
 ## [0.1.6] - 2021-02-09
 
