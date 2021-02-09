@@ -1,4 +1,4 @@
-import type { ManglerFile } from "webmangler";
+import type { WebManglerCliFile } from "./types";
 
 import * as path from "path";
 
@@ -22,30 +22,23 @@ type WebManglerCliFileParams = {
 }
 
 /**
- * The _WebMangler_ CLI representation of a File. It extends the {@link
- * ManglerFile} type with a field recording the file path.
+ * The default implementation of {@link WebManglerCliFile}.
  *
  * @since v0.1.0
  */
-export default class WebManglerCliFile implements ManglerFile {
+export default class _WebManglerCliFile implements WebManglerCliFile {
   /**
    * @inheritDoc
    */
   public content: string;
 
   /**
-   * The original file size in bytes.
-   *
-   * NOTE: This is needed because _WebMangler_ changes content in place.
-   *
-   * @since v0.1.0
+   * @inheritDoc
    */
   public readonly originalSize: number;
 
   /**
-   * The (absolute) path of the file.
-   *
-   * @since v0.1.0
+   * @inheritDoc
    */
   public readonly path: string;
 
@@ -69,9 +62,7 @@ export default class WebManglerCliFile implements ManglerFile {
   }
 
   /**
-   * Get the file size in bytes.
-   *
-   * @returns The file size in bytes.
+   * @inheritDoc
    */
   get size(): number {
     return this.content.length;
