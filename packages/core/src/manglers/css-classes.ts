@@ -15,7 +15,9 @@ export type CssClassManglerOptions = {
   classNamePattern?: string | string[];
 
   /**
-   * A list of CSS class names that should not be used.
+   * A list of strings and patterns of CSS class names that should not be used.
+   *
+   * Patterns are supported since v0.1.7.
    *
    * @default `[]`
    * @since v0.1.0

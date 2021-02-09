@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Allow reserved strings to be Regular Expressions.
 
 ## [0.1.6] - 2021-02-09
 
