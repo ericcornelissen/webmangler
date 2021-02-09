@@ -94,6 +94,44 @@ suite("ManglerEngine", function() {
       ],
     },
     {
+      name: "custom character set",
+      cases: [
+        {
+          files: [new ManglerFileMock("css", ".another, .one, .bites, .de_dust { }")],
+          expected: [new ManglerFileMock("css", ".a, .b, .c, .aa { }")],
+          expressions: new Map([
+            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z_]+",
+          options: {
+            charSet: ["a", "b", "c"],
+          },
+        },
+        {
+          files: [new ManglerFileMock("css", ".another, .one, .bites, .de_dust { }")],
+          expected: [new ManglerFileMock("css", ".c, .b, .a, .cc { }")],
+          expressions: new Map([
+            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z_]+",
+          options: {
+            charSet: ["c", "b", "a"],
+          },
+        },
+        {
+          files: [new ManglerFileMock("css", ".foo { } .bar { }")],
+          expected: [new ManglerFileMock("css", ".x { } .xx { }")],
+          expressions: new Map([
+            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+          options: {
+            charSet: ["x"],
+          },
+        },
+      ],
+    },
+    {
       name: "reserved names",
       cases: [
         {
