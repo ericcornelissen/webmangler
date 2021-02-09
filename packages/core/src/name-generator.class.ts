@@ -1,5 +1,7 @@
 import type { Char, CharSet } from "./types";
 
+import { ALL_LOWERCASE_CHARS } from "./characters";
+
 /**
  * The {@link NameGenerator} class is a utility class to generate short, safe,
  * and unique strings.
@@ -12,10 +14,7 @@ export default class NameGenerator {
    *
    * @since v0.1.0
    */
-  static readonly DEFAULT_CHARSET: CharSet = [
-    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-    "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-  ];
+  static readonly DEFAULT_CHARSET: CharSet = ALL_LOWERCASE_CHARS;
 
   /**
    * The list of reserved names and patterns.
