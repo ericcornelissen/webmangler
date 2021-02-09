@@ -117,8 +117,10 @@ export default function run(args: WebManglerCliArgs): void {
 
   const outFiles = webmangler(inFiles, config);
 
-  const stats = compareStats(inFiles, outFiles);
-  logStats(stats);
+  if (args.stats) {
+    const stats = compareStats(inFiles, outFiles);
+    logStats(stats);
+  }
 
   if (args.write) {
     fs.writeFiles(outFiles);

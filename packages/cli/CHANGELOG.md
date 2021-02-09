@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Use `--stats`/`-S`to get mangling statistics.
 
 ## [0.1.1] - 2021-02-03
 

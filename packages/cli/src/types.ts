@@ -19,6 +19,13 @@ type WebManglerCliArgs = {
   readonly config?: string;
 
   /**
+   * Option to enable outputting mangler statistics.
+   *
+   * @since v0.1.2
+   */
+  readonly stats?: boolean;
+
+  /**
    * Option to enable writing changes to the input files.
    *
    * @since v0.1.0
