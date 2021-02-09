@@ -7,7 +7,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.6] - 2021-02-09
+
 - Don't publish empty `types.js` files.
+- Define `webmangler` in terms of files extending `ManglerFile`.
 
 ## [0.1.5] - 2021-02-07
 

@@ -18,7 +18,10 @@ interface WebManglerPlugin {
    * @returns The mangled files.
    * @since v0.1.0
    */
-  mangle(mangleEngine: MangleEngine, files: ManglerFile[]): ManglerFile[];
+  mangle<File extends ManglerFile>(
+    mangleEngine: MangleEngine<File>,
+    files: File[],
+  ): File[];
 
   /**
    * Instruct the {@link WebManglerPlugin} to use the {@link ManglerExpression}s

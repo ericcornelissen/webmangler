@@ -11,10 +11,10 @@ import manglerEngine from "./engine";
  * @returns The mangled files.
  * @since v0.1.0
  */
-export default function webmangler(
-  files: ManglerFile[],
+export default function webmangler<File extends ManglerFile>(
+  files: File[],
   options: WebManglerOptions,
-): ManglerFile[] {
+): File[] {
   for (const plugin of options.plugins) {
     for (const languagePlugin of options.languages) {
       plugin.use(languagePlugin);

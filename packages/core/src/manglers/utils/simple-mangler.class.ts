@@ -78,7 +78,10 @@ export default abstract class SimpleManglerPlugin extends BaseManglerPlugin {
    * @inheritDoc
    * @since v0.1.0
    */
-  mangle(mangleEngine: MangleEngine, files: ManglerFile[]): ManglerFile[] {
+  mangle<File extends ManglerFile>(
+    mangleEngine: MangleEngine<File>,
+    files: File[],
+  ): File[] {
     return mangleEngine(
       files,
       this.expressions,

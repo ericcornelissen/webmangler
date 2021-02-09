@@ -1,6 +1,6 @@
 {
   "name": "webmangler",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "The WebMangler core",
   "license": "MIT",
   "main": "index.js",

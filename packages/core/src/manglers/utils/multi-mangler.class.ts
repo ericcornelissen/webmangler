@@ -33,7 +33,10 @@ export default abstract class MultiMangler implements WebManglerPlugin {
    * @inheritDoc
    * @since v0.1.0
    */
-  mangle(mangleEngine: MangleEngine, files: ManglerFile[]): ManglerFile[] {
+  mangle<File extends ManglerFile>(
+    mangleEngine: MangleEngine<File>,
+    files: File[],
+  ): File[] {
     this.plugins.forEach((plugin: WebManglerPlugin) => {
       files = plugin.mangle(mangleEngine, files);
     });

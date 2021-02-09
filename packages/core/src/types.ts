@@ -60,12 +60,12 @@ interface ManglerFile {
  * @returns The mangled files.
  * @since v0.1.0
  */
-type MangleEngine = (
-  files: ManglerFile[],
+type MangleEngine<File extends ManglerFile> = (
+  files: File[],
   expressions: Map<string, ManglerExpression[]>,
   patterns: string | string[],
   options: MangleEngineOptions,
-) => ManglerFile[];
+) => File[];
 
 export type {
   MangleEngine,

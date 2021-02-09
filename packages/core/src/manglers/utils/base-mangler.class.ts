@@ -59,6 +59,9 @@ export default abstract class BaseManglerPlugin implements WebManglerPlugin {
    *
    * @inheritDoc
    */
-  abstract mangle(engine: MangleEngine, files: ManglerFile[]): ManglerFile[];
+  abstract mangle<File extends ManglerFile>(
+    engine: MangleEngine<File>,
+    files: File[],
+  ): File[];
 }
 

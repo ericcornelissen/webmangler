@@ -154,11 +154,11 @@ function getMangleMaps(
  * @param mangleMap The mapping defining the mangling.
  * @returns The mangled files.
  */
-function doMangle(
-  files: ManglerFile[],
+function doMangle<File extends ManglerFile>(
+  files: File[],
   expressions: Map<string, ManglerExpression[]>,
   mangleMap: Map<string, string>,
-): ManglerFile[] {
+): File[] {
   files.forEach((file) => {
     const fileExpressions = expressions.get(file.type) as ManglerExpression[];
     mangleMap.forEach((to, from) => {
@@ -179,10 +179,10 @@ function doMangle(
  * @param expressions The {@link ManglerExpression}s to be used in mangling.
  * @returns The files supported by the `expressions`.
  */
-function getSupportedFilesOnly(
-  files: ManglerFile[],
+function getSupportedFilesOnly<File extends ManglerFile>(
+  files: File[],
   expressions: Map<string, ManglerExpression[]>,
-): ManglerFile[] {
+): File[] {
   return files.filter((file) => expressions.get(file.type) !== undefined);
 }
 
@@ -245,12 +245,12 @@ export type MangleEngineOptions = {
  * @returns The mangled files.
  * @since v0.1.0
  */
-export default function mangle(
-  files: ManglerFile[],
+export default function mangle<File extends ManglerFile>(
+  files: File[],
   expressions: Map<string, ManglerExpression[]>,
   patterns: string | string[],
   options: MangleEngineOptions,
-): ManglerFile[] {
+): File[] {
   const supportedFiles = getSupportedFilesOnly(files, expressions);
   const { manglePrefix, reservedNames } = parseOptions(options);
   patterns = toArrayIfNeeded(patterns);
