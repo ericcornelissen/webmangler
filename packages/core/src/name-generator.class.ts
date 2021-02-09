@@ -8,7 +8,7 @@ import type { Char } from "./types";
  */
 export default class NameGenerator {
   /**
-   * The set of characters the {@link @NameGenerator} uses.
+   * The default characters set used by a {@link @NameGenerator}.
    *
    * @since v0.1.0
    */

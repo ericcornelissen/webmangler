@@ -1,3 +1,5 @@
+import type { Char } from "../types";
+
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -150,6 +152,17 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   static readonly _ID = "html-attribute-mangler";
 
   /**
+   * The character set used by {@link HtmlAttributeMangler}. Note that HTML
+   * attributes are case insensitive, so only lowercase letters are used.
+   *
+   * @since v0.1.7
+   */
+  static readonly CHARACTER_SET: Char[] = [
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+    "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+  ];
+
+  /**
    * The default patterns used by a {@link HtmlAttributeMangler}.
    *
    * @since v0.1.0
@@ -178,6 +191,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    */
   constructor(options: HtmlAttributeManglerOptions={}) {
     super(HtmlAttributeMangler._ID, {
+      charSet: HtmlAttributeMangler.CHARACTER_SET,
       patterns: HtmlAttributeMangler.getPatterns(options.attrNamePattern),
       reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),

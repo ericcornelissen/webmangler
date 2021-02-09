@@ -1,3 +1,5 @@
+import type { Char } from "../types";
+
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -134,6 +136,18 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
   static readonly _ID = "css-variable-mangler";
 
   /**
+   * The character set used by {@link CssVariableMangler}.
+   *
+   * @since v0.1.7
+   */
+  static readonly CHARACTER_SET: Char[] = [
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+    "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
+    "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+    "T", "U", "V", "W", "X", "Y", "Z", "_",
+  ];
+
+  /**
    * The default patterns used by a {@link CssVariableMangler}.
    *
    * @since v0.1.0
@@ -162,6 +176,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    */
   constructor(options: CssVariableManglerOptions={}) {
     super(CssVariableMangler._ID, {
+      charSet: CssVariableMangler.CHARACTER_SET,
       patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
       reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
       prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),

@@ -1,3 +1,5 @@
+import type { Char } from "../types";
+
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -137,6 +139,19 @@ export default class CssClassMangler extends SimpleManglerPlugin {
   static readonly _ID = "css-class-mangler";
 
   /**
+   * The character set used by {@link CssClassMangler}.
+   *
+   * @since v0.1.7
+   */
+  static readonly CHARACTER_SET: Char[] = [
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+    "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
+    "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+    "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7",
+    "8", "9", "_",
+  ];
+
+  /**
    * The default patterns used by a {@link CssClassMangler}.
    *
    * @since v0.1.0
@@ -165,6 +180,7 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    */
   constructor(options: CssClassManglerOptions={}) {
     super(CssClassMangler._ID, {
+      charSet: CssClassMangler.CHARACTER_SET,
       patterns: CssClassMangler.getPatterns(options.classNamePattern),
       reserved: CssClassMangler.getReserved(options.reservedClassNames),
       prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
