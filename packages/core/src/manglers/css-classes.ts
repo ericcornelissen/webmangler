@@ -141,6 +141,14 @@ export default class CssClassMangler extends SimpleManglerPlugin {
   static readonly _ID = "css-class-mangler";
 
   /**
+   * The list of reserved strings that are always reserved because they are
+   * illegal class names.
+   *
+   * @since v0.1.7
+   */
+  static readonly ALWAYS_RESERVED: string[] = ["-.*"];
+
+  /**
    * The character set used by {@link CssClassMangler}.
    *
    * @since v0.1.7
@@ -150,7 +158,7 @@ export default class CssClassMangler extends SimpleManglerPlugin {
     "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
     "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
     "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7",
-    "8", "9", "_",
+    "8", "9", "-", "_",
   ];
 
   /**
@@ -208,7 +216,8 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedClassNames?: string[]): string[] {
-    return reservedClassNames || CssClassMangler.DEFAULT_RESERVED;
+    const configured = reservedClassNames || CssClassMangler.DEFAULT_RESERVED;
+    return CssClassMangler.ALWAYS_RESERVED.concat(configured);
   }
 
   /**
