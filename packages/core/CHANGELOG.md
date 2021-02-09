@@ -8,6 +8,8 @@ Versioning].
 ## [Unreleased]
 
 - Allow reserved strings to be Regular Expressions.
+- Export all mangler plugins from `webmangler/manglers`.
+- Export all language plugins from `webmangler/languages`.
 
 ## [0.1.6] - 2021-02-09
 
