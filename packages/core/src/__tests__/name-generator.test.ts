@@ -2,20 +2,20 @@ import { expect } from "chai";
 
 import NameGenerator from "../name-generator.class";
 
-const charsetSize = NameGenerator.CHARSET.length;
+const charsetSize = NameGenerator.DEFAULT_CHARSET.length;
 
-const a = NameGenerator.CHARSET[0];
-const b = NameGenerator.CHARSET[1];
-const c = NameGenerator.CHARSET[2];
-const d = NameGenerator.CHARSET[3];
-const e = NameGenerator.CHARSET[4];
-const z = NameGenerator.CHARSET[charsetSize - 1];
+const a = NameGenerator.DEFAULT_CHARSET[0];
+const b = NameGenerator.DEFAULT_CHARSET[1];
+const c = NameGenerator.DEFAULT_CHARSET[2];
+const d = NameGenerator.DEFAULT_CHARSET[3];
+const e = NameGenerator.DEFAULT_CHARSET[4];
+const z = NameGenerator.DEFAULT_CHARSET[charsetSize - 1];
 
 suite("NameGenerator", function() {
   suite("No reserved", function() {
     test("one-character names", function() {
       const g = new NameGenerator();
-      for (const char of NameGenerator.CHARSET) {
+      for (const char of NameGenerator.DEFAULT_CHARSET) {
         expect(g.nextName()).to.equal(char);
       }
     });
