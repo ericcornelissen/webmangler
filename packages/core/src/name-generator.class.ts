@@ -47,11 +47,21 @@ export default class NameGenerator {
    */
   nextName(): string {
     this.current = NameGenerator.tick(this.current);
-    if (this.reserved.includes(this.current)) {
+    if (this.isReserved(this.current)) {
       return this.nextName();
     } else {
       return this.current;
     }
+  }
+
+  /**
+   * Check with a string is reserved in the {@link NameGenerator}.
+   *
+   * @param s The string of interest.
+   * @returns `true` if `s` is reserved, `false` otherwise.
+   */
+  private isReserved(s: string): boolean {
+    return this.reserved.includes(s);
   }
 
   /**
