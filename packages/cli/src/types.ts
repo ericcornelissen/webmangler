@@ -1,5 +1,3 @@
-import type { ManglerFile } from "webmangler";
-
 /**
  * The _WebMangler_ CLI arguments represented as an object.
  *
@@ -28,22 +26,4 @@ type WebManglerCliArgs = {
   readonly write?: boolean;
 }
 
-/**
- * The _WebMangler_ CLI representation of a File. It extends the {@link
- * ManglerFile} type with a field recording the file path.
- *
- * @since v0.1.0
- */
-interface WebManglerCliFile extends ManglerFile {
-  /**
-   * The (absolute) path of the file.
-   *
-   * @since v0.1.0
-   */
-  readonly path: string;
-}
-
-export type {
-  WebManglerCliArgs,
-  WebManglerCliFile,
-};
+export type { WebManglerCliArgs };
