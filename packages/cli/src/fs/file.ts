@@ -34,6 +34,15 @@ export default class WebManglerCliFile implements ManglerFile {
   public content: string;
 
   /**
+   * The original file size in bytes.
+   *
+   * NOTE: This is needed because _WebMangler_ changes content in place.
+   *
+   * @since v0.1.0
+   */
+  public readonly originalSize: number;
+
+  /**
    * The (absolute) path of the file.
    *
    * @since v0.1.0
@@ -54,7 +63,17 @@ export default class WebManglerCliFile implements ManglerFile {
     const { content, filePath } = params;
 
     this.content = content;
+    this.originalSize = this.size;
     this.path = filePath;
     this.type = getTypeFromFilePath(filePath);
+  }
+
+  /**
+   * Get the file size in bytes.
+   *
+   * @returns The file size in bytes.
+   */
+  get size(): number {
+    return this.content.length;
   }
 }

@@ -46,3 +46,5 @@ export function writeFiles(files: WebManglerCliFile[]): void {
     fs.writeFileSync(file.path, file.content);
   });
 }
+
+export type { WebManglerCliFile };
