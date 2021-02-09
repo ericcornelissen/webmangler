@@ -17,7 +17,10 @@ export type CssVariableManglerOptions = {
   cssVarNamePattern?: string | string[];
 
   /**
-   * A list of CSS variable names that should not be used.
+   * A list of strings and patterns of CSS variable names that should not be
+   * used.
+   *
+   * Patterns are supported since v0.1.7.
    *
    * @default `[]`
    * @since v0.1.0

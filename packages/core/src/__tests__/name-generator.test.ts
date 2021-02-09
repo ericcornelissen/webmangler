@@ -79,26 +79,53 @@ suite("NameGenerator", function() {
       const g1 = new NameGenerator([a]);
       expect(g1.nextName()).to.equal(b);
       expect(g1.nextName()).to.equal(c);
+      for (let i = 0; i < charsetSize - 3; i++) {
+        g1.nextName();
+      }
+      expect(g1.nextName()).to.equal(`${a}${a}`);
 
       const g2 = new NameGenerator([b]);
       expect(g2.nextName()).to.equal(a);
       expect(g2.nextName()).to.equal(c);
       expect(g2.nextName()).to.equal(d);
+      for (let i = 0; i < (charsetSize * 2) - 4; i++) {
+        g2.nextName();
+      }
+      expect(g2.nextName()).to.equal(`${b}${a}`);
 
       const g3 = new NameGenerator([b, c]);
       expect(g3.nextName()).to.equal(a);
       expect(g3.nextName()).to.equal(d);
       expect(g3.nextName()).to.equal(e);
+      for (let i = 0; i < (charsetSize * 2) - 5; i++) {
+        g3.nextName();
+      }
+      expect(g3.nextName()).to.equal(`${b}${a}`);
+      for (let i = 0; i < charsetSize - 1; i++) {
+        g3.nextName();
+      }
+      expect(g3.nextName()).to.equal(`${c}${a}`);
 
       const g4 = new NameGenerator([b, d]);
       expect(g4.nextName()).to.equal(a);
       expect(g4.nextName()).to.equal(c);
       expect(g4.nextName()).to.equal(e);
+      for (let i = 0; i < (charsetSize * 2) - 5; i++) {
+        g4.nextName();
+      }
+      expect(g4.nextName()).to.equal(`${b}${a}`);
+      for (let i = 0; i < (charsetSize * 2) - 1; i++) {
+        g4.nextName();
+      }
+      expect(g4.nextName()).to.equal(`${d}${a}`);
     });
 
     test("two-character names", function() {
       const g = new NameGenerator([`${a}${a}`, `${b}${b}`]);
-      for (let i = 0; i < charsetSize; i++) {
+      expect(g.nextName()).to.equal(a);
+      expect(g.nextName()).to.equal(b);
+
+      for (let i = 0; i < charsetSize - 2; i++) {
         g.nextName();
       }
 
@@ -109,6 +136,29 @@ suite("NameGenerator", function() {
       }
 
       expect(g.nextName()).to.equal(`${b}${c}`);
+    });
+
+    test("reserved expression", function() {
+      const g = new NameGenerator([`${a}.*`]);
+      expect(g.nextName()).to.equal(b);
+
+      for (let i = 0; i < charsetSize - 2; i++) {
+        g.nextName();
+      }
+
+      expect(g.nextName()).to.equal(`${b}${a}`);
+    });
+
+    test("mixed reserved", function() {
+      const g = new NameGenerator(["c", `${a}.*`]);
+      expect(g.nextName()).to.equal(b);
+      expect(g.nextName()).to.equal(d);
+
+      for (let i = 0; i < charsetSize - 4; i++) {
+        g.nextName();
+      }
+
+      expect(g.nextName()).to.equal(`${b}${a}`);
     });
   });
 });

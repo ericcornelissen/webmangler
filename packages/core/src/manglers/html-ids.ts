@@ -17,7 +17,9 @@ export type HtmlIdManglerOptions = {
   idNamePattern?: string | string[];
 
   /**
-   * A list of IDs that should not be used.
+   * A list of strings and patterns of IDs that should not be used.
+   *
+   * Patterns are supported since v0.1.7.
    *
    * @default `[]`
    * @since v0.1.0

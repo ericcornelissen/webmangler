@@ -7,6 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Allow reserved strings to be Regular Expressions.
 - Allow for mangling with custom character sets.
 - Improve character set used by all built-in manglers.
 
