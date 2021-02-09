@@ -1,4 +1,5 @@
 import { deepStrictEqual } from "assert";
+import { format as printf } from "util";
 
 import { toArrayIfNeeded } from "../../helpers";
 import { TestCase } from "./testing";
@@ -34,6 +35,22 @@ function duplicates<T>(value: T, index: number, arr: T[]): boolean {
   });
 
   return firstIndexOfValue === index;
+}
+
+/**
+ * Generate an array of length `n` of strings formatted based on the provided
+ * template using the index of the string in the array.
+ *
+ * @param n The desired length of the array.
+ * @param template A string containing one "%s" where the index is inserted.
+ * @returns The generated array.
+ */
+export function getArrayOfFormattedStrings(
+  n: number,
+  template: string,
+): string[] {
+  const nArray: string[] = ".".repeat(n).split("");
+  return nArray.map((_, i) => printf(template, i));
 }
 
 /**

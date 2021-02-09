@@ -5,7 +5,12 @@ import {
   PSEUDO_ELEMENT_SELECTORS,
   PSEUDO_SELECTORS,
 } from "./css-selectors";
-import { isValidClassName, varyQuotes, varySpacing } from "./test-helpers";
+import {
+  getArrayOfFormattedStrings,
+  isValidClassName,
+  varyQuotes,
+  varySpacing,
+} from "./test-helpers";
 import { TestCase, TestScenario } from "./testing";
 
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
@@ -917,50 +922,50 @@ suite("CSS Classes Mangler", function() {
     }
   });
 
-  suite("Illegal class names", function() {
-    test("without extra reserved", function() {
-      const n = CssClassMangler.CHARACTER_SET.length ** 2;
-      const nArray: string[] = ".".repeat(n).split("");
-      const nClassArray = nArray.map((_, i) => `.cls-${i}`);
-      const content = `${nClassArray.join(",")} { }`;
-      const file = new ManglerFileMock("css", content);
+  suite("Illegal names", function() {
+    const illegalNames: string[] = [
+      ".-",
+    ];
 
+    let content = "";
+
+    setup(function() {
+      const n = CssClassMangler.CHARACTER_SET.length;
+      const nClassArray = getArrayOfFormattedStrings(n, ".cls-%s");
+      content = `${nClassArray.join(",")} { }`;
+    });
+
+    test("without extra reserved", function() {
       const cssClassMangler = new CssClassMangler({
         classNamePattern: "cls-[0-9]+",
       });
       cssClassMangler.use(builtInLanguageSupport);
 
+      const file = new ManglerFileMock("css", content);
       const result = cssClassMangler.mangle(mangleEngine, [file]);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
-      expect(out.content).to.have.string(".a,");
-      expect(out.content).to.have.string(".aa,");
-      expect(out.content).to.have.string(".aaa");
-      expect(out.content).not.to.have.string(".-");
+      for (const illegalName of illegalNames) {
+        expect(out.content).not.to.have.string(illegalName);
+      }
     });
 
     test("with extra reserved", function() {
-      const n = CssClassMangler.CHARACTER_SET.length**2;
-      const nArray: string[] = ".".repeat(n).split("");
-      const nClassArray = nArray.map((_, i) => `.cls-${i}`);
-      const content = `${nClassArray.join(",")} { }`;
-      const file = new ManglerFileMock("css", content);
-
       const cssClassMangler = new CssClassMangler({
         classNamePattern: "cls-[0-9]+",
         reservedClassNames: ["a"],
       });
       cssClassMangler.use(builtInLanguageSupport);
 
+      const file = new ManglerFileMock("css", content);
       const result = cssClassMangler.mangle(mangleEngine, [file]);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
-      expect(out.content).not.to.have.string(".a,");
-      expect(out.content).to.have.string(".aa,");
-      expect(out.content).to.have.string(".aab");
-      expect(out.content).not.to.have.string(".-");
+      for (const illegalName of illegalNames) {
+        expect(out.content).not.to.have.string(illegalName);
+      }
     });
   });
 

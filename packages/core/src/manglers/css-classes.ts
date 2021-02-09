@@ -216,7 +216,11 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedClassNames?: string[]): string[] {
-    const configured = reservedClassNames || CssClassMangler.DEFAULT_RESERVED;
+    let configured = reservedClassNames;
+    if (configured === undefined) {
+      configured = CssClassMangler.DEFAULT_RESERVED;
+    }
+
     return CssClassMangler.ALWAYS_RESERVED.concat(configured);
   }
 

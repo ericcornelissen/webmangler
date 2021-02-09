@@ -139,6 +139,14 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
   static readonly _ID = "css-variable-mangler";
 
   /**
+   * The list of reserved strings that are always reserved because they are
+   * illegal CSS variable names.
+   *
+   * @since v0.1.7
+   */
+  static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-).*"];
+
+  /**
    * The character set used by {@link CssVariableMangler}.
    *
    * @since v0.1.7
@@ -147,7 +155,8 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
     "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
     "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
-    "T", "U", "V", "W", "X", "Y", "Z", "_",
+    "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7",
+    "8", "9", "-", "_",
   ];
 
   /**
@@ -205,7 +214,12 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedCssVarNames?: string[]): string[] {
-    return reservedCssVarNames || CssVariableMangler.DEFAULT_RESERVED;
+    let configured = reservedCssVarNames;
+    if (configured === undefined) {
+      configured = CssVariableMangler.DEFAULT_RESERVED;
+    }
+
+    return CssVariableMangler.ALWAYS_RESERVED.concat(configured);
   }
 
   /**
