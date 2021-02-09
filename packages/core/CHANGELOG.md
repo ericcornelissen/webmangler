@@ -11,6 +11,7 @@ Versioning].
 - Allow reserved strings to be Regular Expressions.
 - Export all mangler plugins from `webmangler/manglers`.
 - Export all language plugins from `webmangler/languages`.
+- Fix bug where the prefix could not be omitted with the HTML attribute mangler.
 
 ## [0.1.6] - 2021-02-09
 

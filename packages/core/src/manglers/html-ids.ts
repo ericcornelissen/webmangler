@@ -183,7 +183,11 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
   private static getPatterns(
     idNamePattern?: string | string[],
   ): string | string[] {
-    return idNamePattern || HtmlIdMangler.DEFAULT_PATTERNS;
+    if (idNamePattern === undefined) {
+      return HtmlIdMangler.DEFAULT_PATTERNS;
+    }
+
+    return idNamePattern;
   }
 
   /**
@@ -193,7 +197,11 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedIds?: string[]): string[] {
-    return reservedIds || HtmlIdMangler.DEFAULT_RESERVED;
+    if (reservedIds === undefined) {
+      return HtmlIdMangler.DEFAULT_RESERVED;
+    }
+
+    return reservedIds;
   }
 
   /**
@@ -203,6 +211,10 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @returns The prefix to be used.
    */
   private static getPrefix(keepIdPrefix?: string): string {
-    return keepIdPrefix || HtmlIdMangler.DEFAULT_PREFIX;
+    if (keepIdPrefix === undefined) {
+      return HtmlIdMangler.DEFAULT_PREFIX;
+    }
+
+    return keepIdPrefix;
   }
 }

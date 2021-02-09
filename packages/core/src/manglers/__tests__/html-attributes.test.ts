@@ -27,6 +27,11 @@ suite("HTML Attribute Mangler", function() {
             input: ".data-foo { }",
             expected: ".data-foo { }",
           },
+          {
+            input: "[data-foo] { }",
+            expected: "[a] { }",
+            prefix: "",
+          },
         ],
       },
     ];
@@ -78,6 +83,11 @@ suite("HTML Attribute Mangler", function() {
             input: "<div class=\"data-foo\"></div>",
             expected: "<div class=\"data-foo\"></div>",
           }),
+          {
+            input: "<div data-foo=\"bar\"></div>",
+            expected: "<div a=\"bar\"></div>",
+            prefix: "",
+          },
         ],
       },
     ];
@@ -129,6 +139,11 @@ suite("HTML Attribute Mangler", function() {
             input: "document.querySelectorAll(\".data-foo\");",
             expected: "document.querySelectorAll(\".data-foo\");",
           }),
+          {
+            input: "document.querySelectorAll(\"[data-foo]\");",
+            expected: "document.querySelectorAll(\"[a]\");",
+            prefix: "",
+          },
         ],
       },
     ];
