@@ -1,6 +1,6 @@
 import type { CharSet } from "../types";
 
-import { ALL_LOWERCASE_CHARS } from "../characters";
+import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -156,12 +156,24 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   static readonly _ID = "html-attribute-mangler";
 
   /**
+   * The list of reserved strings that are always reserved because they are
+   * illegal HTML attribute names.
+   *
+   * @since v0.1.7
+   */
+  static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-|_).*"];
+
+  /**
    * The character set used by {@link HtmlAttributeMangler}. Note that HTML
    * attributes are case insensitive, so only lowercase letters are used.
    *
    * @since v0.1.7
    */
-  static readonly CHARACTER_SET: CharSet = ALL_LOWERCASE_CHARS;
+  static readonly CHARACTER_SET: CharSet = [
+    ...ALL_LOWERCASE_CHARS,
+    ...ALL_NUMBER_CHARS,
+    "-", "_",
+  ];
 
   /**
    * The default patterns used by a {@link HtmlAttributeMangler}.
@@ -218,7 +230,12 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedAttrNames?: string[]): string[] {
-    return reservedAttrNames || HtmlAttributeMangler.DEFAULT_RESERVED;
+    let configured = reservedAttrNames;
+    if (configured === undefined) {
+      configured = HtmlAttributeMangler.DEFAULT_RESERVED;
+    }
+
+    return HtmlAttributeMangler.ALWAYS_RESERVED.concat(configured);
   }
 
   /**

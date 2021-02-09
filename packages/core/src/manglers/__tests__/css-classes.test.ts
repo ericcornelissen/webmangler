@@ -929,10 +929,10 @@ suite("CSS Classes Mangler", function() {
 
     let content = "";
 
-    setup(function() {
+    suiteSetup(function() {
       const n = CssClassMangler.CHARACTER_SET.length;
-      const nClassArray = getArrayOfFormattedStrings(n, ".cls-%s");
-      content = `${nClassArray.join(",")} { }`;
+      const nArray = getArrayOfFormattedStrings(n, ".cls-%s");
+      content = `${nArray.join(",")} { }`;
     });
 
     test("without extra reserved", function() {

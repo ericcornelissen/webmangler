@@ -392,26 +392,26 @@ suite("CSS Variable Mangler", function() {
 
   suite("Illegal names", function() {
     const illegalNames: string[] = [
-      "---", "--0", "--1", "--2", "--3", "--4",
-      "--5", "--6", "--7", "--8", "--9",
+      "---", "--0", "--1", "--2", "--3", "--4", "--5", "--6", "--7", "--8",
+      "--9",
     ];
 
     let content = "";
 
-    setup(function() {
+    suiteSetup(function() {
       const n = CssVariableMangler.CHARACTER_SET.length;
-      const nClassArray = getArrayOfFormattedStrings(n, "--%s:red");
-      content = `${nClassArray.join(",")} { }`;
+      const nArray = getArrayOfFormattedStrings(n, "--%s:red");
+      content = `:root { ${nArray.join(";")} `;
     });
 
     test("without extra reserved", function() {
-      const cssClassMangler = new CssVariableMangler({
+      const cssVariableMangler = new CssVariableMangler({
         cssVarNamePattern: "[0-9]+",
       });
-      cssClassMangler.use(builtInLanguageSupport);
+      cssVariableMangler.use(builtInLanguageSupport);
 
       const file = new ManglerFileMock("css", content);
-      const result = cssClassMangler.mangle(mangleEngine, [file]);
+      const result = cssVariableMangler.mangle(mangleEngine, [file]);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -421,14 +421,14 @@ suite("CSS Variable Mangler", function() {
     });
 
     test("with extra reserved", function() {
-      const cssClassMangler = new CssVariableMangler({
+      const cssVariableMangler = new CssVariableMangler({
         cssVarNamePattern: "[0-9]+",
         reservedCssVarNames: ["a"],
       });
-      cssClassMangler.use(builtInLanguageSupport);
+      cssVariableMangler.use(builtInLanguageSupport);
 
       const file = new ManglerFileMock("css", content);
-      const result = cssClassMangler.mangle(mangleEngine, [file]);
+      const result = cssVariableMangler.mangle(mangleEngine, [file]);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
