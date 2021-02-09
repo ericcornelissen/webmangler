@@ -1,5 +1,5 @@
 import type { ManglerExpression } from "./languages";
-import type { Char, ManglerFile } from "./types";
+import type { CharSet, ManglerFile } from "./types";
 
 import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
@@ -69,7 +69,7 @@ function mangleInstances(
   instances: Map<string, number>,
   manglePrefix: string,
   reservedNames: string[],
-  charSet: Char[],
+  charSet: CharSet,
 ): Map<string, string> {
   const orderedInstances = mapToOrderedList(instances);
   const mangleMap: Map<string, string> = new Map();
@@ -139,7 +139,7 @@ function getMangleMaps(
   instances: Map<string, number>,
   manglePrefix: string,
   reservedNames: string[],
-  charSet: Char[],
+  charSet: CharSet,
 ): [Map<string, string>, Map<string, string>] {
   const mangleMap = mangleInstances(
     instances,
@@ -206,7 +206,7 @@ function getSupportedFilesOnly<File extends ManglerFile>(
 function parseOptions(
   options: MangleEngineOptions,
 ): {
-  charSet: Char[],
+  charSet: CharSet,
   manglePrefix: string,
   reservedNames: string[],
 } {
@@ -229,7 +229,7 @@ export type MangleEngineOptions = {
    * @default {@link NameGenerator.DEFAULT_CHARSET}
    * @since v0.1.7
    */
-  readonly charSet?: Char[];
+  readonly charSet?: CharSet;
 
   /**
    * The prefix to use for mangled strings.

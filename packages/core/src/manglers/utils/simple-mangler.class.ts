@@ -1,4 +1,4 @@
-import type { Char, MangleEngine, ManglerFile } from "../../types";
+import type { CharSet, MangleEngine, ManglerFile } from "../../types";
 
 import BaseManglerPlugin from "./base-mangler.class";
 
@@ -14,7 +14,7 @@ interface SimpleManglerOptions {
    * @default `undefined`
    * @since v0.1.7
    */
-  charSet?: Char[];
+  charSet?: CharSet;
 
   /**
    * One or more patterns that should be mangled.
@@ -54,7 +54,7 @@ export default abstract class SimpleManglerPlugin extends BaseManglerPlugin {
   /**
    * The character set to use when mangling.
    */
-  private readonly charSet?: Char[];
+  private readonly charSet?: CharSet;
 
   /**
    * The pattern(s) to be mangled.

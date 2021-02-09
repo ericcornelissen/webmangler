@@ -1,4 +1,4 @@
-import type { Char } from "../types";
+import type { CharSet } from "../types";
 
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
@@ -140,7 +140,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    *
    * @since v0.1.7
    */
-  static readonly CHARACTER_SET: Char[] = [
+  static readonly CHARACTER_SET: CharSet = [
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
     "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
     "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",

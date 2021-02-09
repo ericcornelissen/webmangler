@@ -1,4 +1,4 @@
-import type { Char } from "./types";
+import type { Char, CharSet } from "./types";
 
 /**
  * The {@link NameGenerator} class is a utility class to generate short, safe,
@@ -12,7 +12,7 @@ export default class NameGenerator {
    *
    * @since v0.1.0
    */
-  static readonly DEFAULT_CHARSET: Char[] = [
+  static readonly DEFAULT_CHARSET: CharSet = [
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
     "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
   ];
@@ -25,7 +25,7 @@ export default class NameGenerator {
   /**
    * The list of characters available to generate names with.
    */
-  private readonly charSet: Char[];
+  private readonly charSet: CharSet;
 
   /**
    * The last returned name.
@@ -45,7 +45,7 @@ export default class NameGenerator {
    */
   constructor(
     reserved: string[] = [],
-    charSet: Char[] = NameGenerator.DEFAULT_CHARSET,
+    charSet: CharSet = NameGenerator.DEFAULT_CHARSET,
   ) {
     this.reserved = reserved;
     this.charSet = charSet;
