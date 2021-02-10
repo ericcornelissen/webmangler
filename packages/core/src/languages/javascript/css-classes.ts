@@ -1,4 +1,4 @@
-import { ManglerMatch } from "../types";
+import type { ManglerMatch } from "../types";
 
 import ManglerExpression from "../utils/mangler-expression.class";
 

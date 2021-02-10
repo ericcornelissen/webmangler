@@ -21,6 +21,12 @@ const args = yargs(process.argv.slice(2))
       normalize: true,
       type: "string",
     },
+    "stats": {
+      alias: "S",
+      demandOption: false,
+      describe: "Output mangler statistics",
+      type: "boolean",
+    },
     "write": {
       alias: "w",
       demandOption: false,

@@ -1,3 +1,7 @@
+import type { Char, CharSet } from "./types";
+
+import { ALL_LOWERCASE_CHARS } from "./characters";
+
 /**
  * The {@link NameGenerator} class is a utility class to generate short, safe,
  * and unique strings.
@@ -10,15 +14,17 @@ export default class NameGenerator {
    *
    * @since v0.1.0
    */
-  static readonly CHARSET: string[] = [
-    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-    "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-  ];
+  static readonly DEFAULT_CHARSET: CharSet = ALL_LOWERCASE_CHARS;
 
   /**
    * The list of reserved names and patterns.
    */
   private readonly reserved: RegExp[];
+
+  /**
+   * The list of characters available to generate names with.
+   */
+  private readonly charSet: CharSet;
 
   /**
    * The last returned name.
@@ -46,10 +52,15 @@ export default class NameGenerator {
    * generated.
    *
    * @param reserved A list of reserved names or expressions.
+   * @param charSet The character set to be used.
    * @since v0.1.0
    */
-  constructor(reserved: string[]=[]) {
+  constructor(
+    reserved: string[] = [],
+    charSet: CharSet = NameGenerator.DEFAULT_CHARSET,
+  ) {
     this.reserved = reserved.map((rawExpr) => new RegExp(`^${rawExpr}$`));
+    this.charSet = charSet;
   }
 
   /**
@@ -59,7 +70,7 @@ export default class NameGenerator {
    * @since v0.1.0
    */
   nextName(): string {
-    this.current = NameGenerator.tick(this.current);
+    this.current = this.tick(this.current);
     if (this.isReserved(this.current)) {
       return this.nextName();
     } else {
@@ -83,19 +94,19 @@ export default class NameGenerator {
    * @param s The current string.
    * @returns The next string.
    */
-  private static tick(s: string): string {
+  private tick(s: string): string {
     if (s === "") {
-      return NameGenerator.CHARSET[0];
+      return this.charSet[0];
     }
 
-    let nextChar = NameGenerator.CHARSET[0];
+    let nextChar = this.charSet[0];
     let tailStr = s.substring(0, s.length - 1);
 
-    const headChar = s.charAt(s.length - 1);
-    if (NameGenerator.isLastCharInCharset(headChar)) {
-      tailStr = NameGenerator.tick(tailStr);
+    const headChar: Char = s.charAt(s.length - 1) as Char;
+    if (this.isLastCharInCharset(headChar)) {
+      tailStr = this.tick(tailStr);
     } else {
-      nextChar = NameGenerator.getNextChar(headChar);
+      nextChar = this.getNextChar(headChar);
     }
 
     return `${tailStr}${nextChar}`;
@@ -103,25 +114,26 @@ export default class NameGenerator {
 
   /**
    * Check if a given character is the last character in the character set used
-   * by the {@link NameGenerator}.
+   * by this {@link NameGenerator}.
    *
    * @param c The character of interest.
    * @returns `true` if `c` is the last character, `false` otherwise.
    */
-  private static isLastCharInCharset(c: string): boolean {
-    const lastIndex = NameGenerator.CHARSET.length - 1;
-    return NameGenerator.CHARSET[lastIndex] === c;
+  private isLastCharInCharset(c: Char): boolean {
+    const lastIndex = this.charSet.length - 1;
+    return this.charSet[lastIndex] === c;
   }
 
   /**
-   * Get the next character in the character set used by {@link NameGenerator}.
+   * Get the next character in the character set used by this {@link
+   * NameGenerator}.
    *
    * @param c The character of interest.
    * @returns The character coming after `c` in the character set.
    */
-  private static getNextChar(c: string): string {
-    const currentCharIndex = NameGenerator.CHARSET.indexOf(c);
+  private getNextChar(c: Char): Char {
+    const currentCharIndex = this.charSet.indexOf(c);
     const nextCharIndex = currentCharIndex + 1;
-    return NameGenerator.CHARSET[nextCharIndex];
+    return this.charSet[nextCharIndex];
   }
 }

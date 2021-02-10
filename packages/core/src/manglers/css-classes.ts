@@ -1,3 +1,10 @@
+import type { CharSet } from "../types";
+
+import {
+  ALL_LOWERCASE_CHARS,
+  ALL_NUMBER_CHARS,
+  ALL_UPPERCASE_CHARS,
+} from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -139,6 +146,26 @@ export default class CssClassMangler extends SimpleManglerPlugin {
   static readonly _ID = "css-class-mangler";
 
   /**
+   * The list of reserved strings that are always reserved because they are
+   * illegal class names.
+   *
+   * @since v0.1.7
+   */
+  static readonly ALWAYS_RESERVED: string[] = ["-.*"];
+
+  /**
+   * The character set used by {@link CssClassMangler}.
+   *
+   * @since v0.1.7
+   */
+  static readonly CHARACTER_SET: CharSet = [
+    ...ALL_LOWERCASE_CHARS,
+    ...ALL_UPPERCASE_CHARS,
+    ...ALL_NUMBER_CHARS,
+    "-", "_",
+  ];
+
+  /**
    * The default patterns used by a {@link CssClassMangler}.
    *
    * @since v0.1.0
@@ -167,6 +194,7 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    */
   constructor(options: CssClassManglerOptions={}) {
     super(CssClassMangler._ID, {
+      charSet: CssClassMangler.CHARACTER_SET,
       patterns: CssClassMangler.getPatterns(options.classNamePattern),
       reserved: CssClassMangler.getReserved(options.reservedClassNames),
       prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
@@ -196,11 +224,12 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedClassNames?: string[]): string[] {
-    if (reservedClassNames === undefined) {
-      return CssClassMangler.DEFAULT_RESERVED;
+    let configured = reservedClassNames;
+    if (configured === undefined) {
+      configured = CssClassMangler.DEFAULT_RESERVED;
     }
 
-    return reservedClassNames;
+    return CssClassMangler.ALWAYS_RESERVED.concat(configured);
   }
 
   /**

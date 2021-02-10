@@ -1,3 +1,4 @@
+import type { TestScenario } from "@webmangler/testing";
 import type { ManglerExpression } from "../languages";
 import type { MangleEngineOptions, ManglerFile } from "../types";
 
@@ -8,8 +9,17 @@ import ManglerFileMock from "../__mocks__/mangler-file.mock";
 
 import engine from "../engine";
 
+interface TestCase {
+  description?: string;
+  expected: ManglerFile[];
+  expressions: Map<string, ManglerExpression[]>;
+  files: ManglerFile[];
+  options?: MangleEngineOptions;
+  patterns: string | string[];
+}
+
 suite("ManglerEngine", function() {
-  const scenarios: TestScenario[] = [
+  const scenarios: TestScenario<TestCase>[] = [
     {
       name: "one file",
       cases: [
@@ -90,6 +100,44 @@ suite("ManglerEngine", function() {
             ["html", [new ManglerExpressionMock("cls-(%s)", 1, "cls-%s")]],
           ]),
           patterns: "[a-z]+",
+        },
+      ],
+    },
+    {
+      name: "custom character set",
+      cases: [
+        {
+          files: [new ManglerFileMock("css", ".another, .one, .bites, .de_dust { }")],
+          expected: [new ManglerFileMock("css", ".a, .b, .c, .aa { }")],
+          expressions: new Map([
+            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z_]+",
+          options: {
+            charSet: ["a", "b", "c"],
+          },
+        },
+        {
+          files: [new ManglerFileMock("css", ".another, .one, .bites, .de_dust { }")],
+          expected: [new ManglerFileMock("css", ".c, .b, .a, .cc { }")],
+          expressions: new Map([
+            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z_]+",
+          options: {
+            charSet: ["c", "b", "a"],
+          },
+        },
+        {
+          files: [new ManglerFileMock("css", ".foo { } .bar { }")],
+          expected: [new ManglerFileMock("css", ".x { } .xx { }")],
+          expressions: new Map([
+            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+          options: {
+            charSet: ["x"],
+          },
         },
       ],
     },
@@ -255,18 +303,3 @@ suite("ManglerEngine", function() {
     });
   }
 });
-
-interface TestCase {
-  files: ManglerFile[];
-  expected: ManglerFile[];
-  expressions: Map<string, ManglerExpression[]>;
-  patterns: string | string[];
-  options?: MangleEngineOptions;
-
-  description?: string;
-}
-
-type TestScenario = {
-  name: string,
-  cases: TestCase[],
-}

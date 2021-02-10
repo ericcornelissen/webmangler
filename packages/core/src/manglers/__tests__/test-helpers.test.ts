@@ -1,14 +1,39 @@
+import type { TestScenario } from "@webmangler/testing";
+import type { TestCase } from "./types";
+
 import { expect } from "chai";
 
 import {
+  getArrayOfFormattedStrings,
   isValidClassName,
   permuteObjects,
   varyQuotes,
   varySpacing,
 } from "./test-helpers";
-import { TestCase, TestScenario } from "./testing";
 
 suite("Manglers Test helpers", function() {
+  suite("::getArrayOfFormattedStrings", function() {
+    test("n is 0", function() {
+      const result = getArrayOfFormattedStrings(0, "%s");
+      expect(result).to.have.lengthOf(0);
+    });
+
+    test("n is not 0", function() {
+      const max = 5;
+      for (let n = 0; n < max; n++) {
+        const result = getArrayOfFormattedStrings(n, "%s");
+        expect(result).to.have.lengthOf(n);
+      }
+    });
+
+    test("string formatting", function() {
+      const result = getArrayOfFormattedStrings(5, "(%s)");
+      for (const i in result) {
+        expect(result[i]).to.equal(`(${i})`);
+      }
+    });
+  });
+
   suite("::isValidClassName", function() {
     test("valid class names", function() {
       const names: string[] = [
@@ -68,7 +93,7 @@ suite("Manglers Test helpers", function() {
     suite("JavaScript", function() {
       const type = "js";
 
-      const scenarios: TestScenario[] = [
+      const scenarios: TestScenario<TestCase>[] = [
         {
           name: "single quotes input",
           cases: [
@@ -122,7 +147,7 @@ suite("Manglers Test helpers", function() {
     suite("HTML", function() {
       const type = "html";
 
-      const scenarios: TestScenario[] = [
+      const scenarios: TestScenario<TestCase>[] = [
         {
           name: "single quotes input",
           cases: [

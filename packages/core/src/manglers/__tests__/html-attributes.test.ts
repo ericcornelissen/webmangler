@@ -1,7 +1,13 @@
+import type { TestScenario } from "@webmangler/testing";
+import type { TestCase } from "./types";
+
 import { expect } from "chai";
 
-import { varyQuotes, varySpacing } from "./test-helpers";
-import { TestScenario } from "./testing";
+import {
+  getArrayOfFormattedStrings,
+  varyQuotes,
+  varySpacing,
+} from "./test-helpers";
 
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
 
@@ -15,7 +21,7 @@ suite("HTML Attribute Mangler", function() {
   const DEFAULT_PATTERN = "data-[a-z-]+";
 
   suite("CSS", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",
         cases: [
@@ -67,7 +73,7 @@ suite("HTML Attribute Mangler", function() {
   });
 
   suite("HTML", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",
         cases: [
@@ -123,7 +129,7 @@ suite("HTML Attribute Mangler", function() {
   });
 
   suite("JavaScript", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",
         cases: [
@@ -176,6 +182,55 @@ suite("HTML Attribute Mangler", function() {
         }
       });
     }
+  });
+
+  suite("Illegal names", function() {
+    const illegalNames: string[] = [
+      " -", " _", " 1", " 2", " 3", " 4", " 5", " 6", " 7", " 8", " 9",
+    ];
+
+    let content = "";
+
+    suiteSetup(function() {
+      const n = HtmlAttributeMangler.CHARACTER_SET.length;
+      const nArray = getArrayOfFormattedStrings(n, "<div data-%s=\"foo\">");
+      content = nArray.join("");
+    });
+
+    test("without extra reserved", function() {
+      const htmlAttributeMangler = new HtmlAttributeMangler({
+        attrNamePattern: "data-[0-9]+",
+        keepAttrPrefix: "",
+      });
+      htmlAttributeMangler.use(builtInLanguageSupport);
+
+      const file = new ManglerFileMock("html", content);
+      const result = htmlAttributeMangler.mangle(mangleEngine, [file]);
+      expect(result).to.have.lengthOf(1);
+
+      const out = result[0];
+      for (const illegalName of illegalNames) {
+        expect(out.content).not.to.have.string(illegalName);
+      }
+    });
+
+    test("with extra reserved", function() {
+      const htmlAttributeMangler = new HtmlAttributeMangler({
+        attrNamePattern: "data-[0-9]+",
+        reservedAttrNames: ["a"],
+        keepAttrPrefix: "",
+      });
+      htmlAttributeMangler.use(builtInLanguageSupport);
+
+      const file = new ManglerFileMock("html", content);
+      const result = htmlAttributeMangler.mangle(mangleEngine, [file]);
+      expect(result).to.have.lengthOf(1);
+
+      const out = result[0];
+      for (const illegalName of illegalNames) {
+        expect(out.content).not.to.have.string(illegalName);
+      }
+    });
   });
 
   test("no input files", function() {
