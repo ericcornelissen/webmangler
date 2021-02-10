@@ -6,9 +6,10 @@ import * as path from "path";
 import _WebManglerCliFile from "./file.class";
 
 /**
- * Read a list of files from disk.
+ * Read a list of directories or files from disk. Directories are recursively
+ * read.
  *
- * @param filePaths The file paths of the files to read.
+ * @param filePaths The paths of the files to read.
  * @returns The files read and converted into {@link ManglerFile}.
  */
 export function readFiles(filePaths: string[]): WebManglerCliFile[] {
