@@ -28,10 +28,7 @@ type FileStats = {
  */
 type ManglerStats = Map<string, FileStats>;
 
-type SimpleLogger = (msg: string) => void;
-
 export type {
   FileStats,
   ManglerStats,
-  SimpleLogger,
 };

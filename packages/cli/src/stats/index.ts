@@ -1,4 +1,4 @@
-import type { ManglerStats, SimpleLogger } from "./types";
+import type { ManglerStats } from "./types";
 import type { WebManglerCliFile } from "../fs";
 
 /**
@@ -57,7 +57,10 @@ export function getStatsBetween(
  * @param log A function to take a string and log it.
  * @param stats The _WebMangler_ run statistics.
  */
-export function logStats(log: SimpleLogger, stats: ManglerStats): void {
+export function logStats(
+  log: (msg: string) => void,
+  stats: ManglerStats,
+): void {
   stats.forEach((fileStats, filePath) => {
     if (fileStats.changed) {
       const percentage = fileStats.changePercentage;
