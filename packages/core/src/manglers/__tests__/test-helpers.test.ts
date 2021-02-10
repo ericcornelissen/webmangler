@@ -1,3 +1,6 @@
+import type { TestScenario } from "@webmangler/testing";
+import type { TestCase } from "./types";
+
 import { expect } from "chai";
 
 import {
@@ -7,7 +10,6 @@ import {
   varyQuotes,
   varySpacing,
 } from "./test-helpers";
-import { TestCase, TestScenario } from "./testing";
 
 suite("Manglers Test helpers", function() {
   suite("::getArrayOfFormattedStrings", function() {
@@ -91,7 +93,7 @@ suite("Manglers Test helpers", function() {
     suite("JavaScript", function() {
       const type = "js";
 
-      const scenarios: TestScenario[] = [
+      const scenarios: TestScenario<TestCase>[] = [
         {
           name: "single quotes input",
           cases: [
@@ -145,7 +147,7 @@ suite("Manglers Test helpers", function() {
     suite("HTML", function() {
       const type = "html";
 
-      const scenarios: TestScenario[] = [
+      const scenarios: TestScenario<TestCase>[] = [
         {
           name: "single quotes input",
           cases: [

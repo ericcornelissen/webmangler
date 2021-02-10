@@ -1,3 +1,6 @@
+import type { TestScenario } from "@webmangler/testing";
+import type { TestCase } from "./types";
+
 import { expect } from "chai";
 
 import {
@@ -11,7 +14,6 @@ import {
   varyQuotes,
   varySpacing,
 } from "./test-helpers";
-import { TestCase, TestScenario } from "./testing";
 
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
 
@@ -25,7 +27,7 @@ suite("CSS Classes Mangler", function() {
   const DEFAULT_PATTERN = "cls[-_][a-zA-Z-_]+";
 
   suite("CSS", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "individual selectors",
         cases: [
@@ -345,7 +347,7 @@ suite("CSS Classes Mangler", function() {
   });
 
   suite("HTML", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "single class",
         cases: [
@@ -655,7 +657,7 @@ suite("CSS Classes Mangler", function() {
   });
 
   suite("JavaScript", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "single class",
         cases: [

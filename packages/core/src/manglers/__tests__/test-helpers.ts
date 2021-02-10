@@ -1,8 +1,9 @@
+import type { TestCase } from "./types";
+
 import { deepStrictEqual } from "assert";
 import { format as printf } from "util";
 
 import { toArrayIfNeeded } from "../../helpers";
-import { TestCase } from "./testing";
 
 /**
  * Clone an object and, optionally, replace some of the values in the object.

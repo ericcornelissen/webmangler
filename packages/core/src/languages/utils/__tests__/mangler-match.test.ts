@@ -1,9 +1,18 @@
+import type { TestScenario } from "@webmangler/testing";
+
 import { expect } from "chai";
 
 import ManglerMatch from "../mangler-match.class";
 
+interface TestCase {
+  groups?: { [key: string]: string },
+  input: string,
+  matched: string,
+  matches: string[],
+}
+
 suite("ManglerMatch", function() {
-  const scenarios: TestScenario[] = [
+  const scenarios: TestScenario<TestCase>[] = [
     {
       name: "sample",
       cases: [
@@ -173,16 +182,4 @@ function mockMatchFromReplace(
     ...matches,
     (groups as unknown as string),
   ];
-}
-
-type TestCase = {
-  input: string,
-  matched: string,
-  matches: string[],
-  groups?: { [key: string]: string },
-}
-
-type TestScenario = {
-  name: string,
-  cases: TestCase[],
 }

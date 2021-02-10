@@ -1,0 +1,24 @@
+{
+  "name": "@webmangler/testing",
+  "version": "0.1.0",
+  "description": "WebMangler testing utilities",
+  "license": "Unlicense",
+  "main": "",
+  "typings": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ericcornelissen/webmangler",
+    "directory": "packages/testing"
+  },
+  "bugs": {
+    "url": "https://github.com/ericcornelissen/webmangler/issues"
+  },
+  "author": {
+    "name": "Eric Cornelissen",
+    "email": "ericornelissen@gmail.com",
+    "url": "https://ericcornelissen.dev/"
+  },
+  "engines": {
+    "node": ">=12.16.0"
+  }
+}
