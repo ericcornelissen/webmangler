@@ -210,7 +210,11 @@ export default class CssClassMangler extends SimpleManglerPlugin {
   private static getPatterns(
     classNamePattern?: string | string[],
   ): string | string[] {
-    return classNamePattern || CssClassMangler.DEFAULT_PATTERNS;
+    if (classNamePattern === undefined) {
+      return CssClassMangler.DEFAULT_PATTERNS;
+    }
+
+    return classNamePattern;
   }
 
   /**
@@ -235,6 +239,10 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    * @returns The prefix to be used.
    */
   private static getPrefix(keepClassNamePrefix?: string): string {
-    return keepClassNamePrefix || CssClassMangler.DEFAULT_PREFIX;
+    if (keepClassNamePrefix === undefined) {
+      return CssClassMangler.DEFAULT_PREFIX;
+    }
+
+    return keepClassNamePrefix;
   }
 }

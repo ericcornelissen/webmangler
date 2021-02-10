@@ -1,6 +1,7 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to the _WebMangler Core_ project will be documented in this
+file.
 
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
@@ -9,6 +10,9 @@ Versioning].
 
 - Allow reserved strings to be Regular Expressions.
 - Allow for mangling with custom character sets.
+- Export all mangler plugins from `webmangler/manglers`.
+- Export all language plugins from `webmangler/languages`.
+- Fix bug where the prefix could not be omitted with the HTML attribute mangler.
 - Improve character set used by all built-in manglers.
 
 ## [0.1.6] - 2021-02-09

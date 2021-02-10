@@ -220,7 +220,11 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   private static getPatterns(
     attrNamePattern?: string | string[],
   ): string | string[] {
-    return attrNamePattern || HtmlAttributeMangler.DEFAULT_PATTERNS;
+    if (attrNamePattern === undefined) {
+      return HtmlAttributeMangler.DEFAULT_PATTERNS;
+    }
+
+    return attrNamePattern;
   }
 
   /**
@@ -245,6 +249,10 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * @returns The prefix to be used.
    */
   private static getPrefix(keepAttrPrefix?: string): string {
-    return keepAttrPrefix || HtmlAttributeMangler.DEFAULT_PREFIX;
+    if (keepAttrPrefix === undefined) {
+      return HtmlAttributeMangler.DEFAULT_PREFIX;
+    }
+
+    return keepAttrPrefix;
   }
 }

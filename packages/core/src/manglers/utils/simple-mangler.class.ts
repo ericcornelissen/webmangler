@@ -85,8 +85,8 @@ export default abstract class SimpleManglerPlugin extends BaseManglerPlugin {
   }
 
   /**
-   * Mangle the `files` with the configured pattern, reserved values, and
-   * prefix.
+   * Mangle the `files` with the configured character set, pattern, reserved
+   * values, and prefix.
    *
    * @inheritDoc
    * @since v0.1.0

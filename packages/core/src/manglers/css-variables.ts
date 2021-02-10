@@ -208,7 +208,11 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
   private static getPatterns(
     cssVarNamePattern?: string | string[],
   ): string | string[] {
-    return cssVarNamePattern || CssVariableMangler.DEFAULT_PATTERNS;
+    if (cssVarNamePattern === undefined) {
+      return CssVariableMangler.DEFAULT_PATTERNS;
+    }
+
+    return cssVarNamePattern;
   }
 
   /**
@@ -233,6 +237,10 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * @returns The prefix to be used.
    */
   private static getPrefix(keepCssVarPrefix?: string): string {
-    return keepCssVarPrefix || CssVariableMangler.DEFAULT_PREFIX;
+    if (keepCssVarPrefix === undefined) {
+      return CssVariableMangler.DEFAULT_PREFIX;
+    }
+
+    return keepCssVarPrefix;
   }
 }
