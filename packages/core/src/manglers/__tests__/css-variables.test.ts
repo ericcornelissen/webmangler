@@ -1,3 +1,6 @@
+import type { TestScenario } from "@webmangler/testing";
+import type { TestCase } from "./types";
+
 import { expect } from "chai";
 
 import {
@@ -5,7 +8,6 @@ import {
   varyQuotes,
   varySpacing,
 } from "./test-helpers";
-import { TestScenario } from "./testing";
 
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
 
@@ -19,7 +21,7 @@ suite("CSS Variable Mangler", function() {
   const DEFAULT_PATTERN = "[a-z-]+";
 
   suite("CSS", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "variable declarations",
         cases: [
@@ -159,7 +161,7 @@ suite("CSS Variable Mangler", function() {
   });
 
   suite("HTML", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "variable declarations in <style>",
         cases: [
@@ -299,7 +301,7 @@ suite("CSS Variable Mangler", function() {
   });
 
   suite("JavaScript", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",
         cases: [

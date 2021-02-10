@@ -1,7 +1,9 @@
+import type { TestScenario } from "@webmangler/testing";
+import type { TestCase } from "./types";
+
 import { expect } from "chai";
 
 import { varyQuotes, varySpacing } from "./test-helpers";
-import { TestScenario } from "./testing";
 
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
 
@@ -15,7 +17,7 @@ suite("HTML ID Mangler", function() {
   const DEFAULT_PATTERN = "id[-_][a-zA-Z-_]+";
 
   suite("CSS", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",
         cases: [
@@ -62,7 +64,7 @@ suite("HTML ID Mangler", function() {
   });
 
   suite("HTML", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",
         cases: [
@@ -125,7 +127,7 @@ suite("HTML ID Mangler", function() {
   });
 
   suite("JavaScript", function() {
-    const scenarios: TestScenario[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",
         cases: [

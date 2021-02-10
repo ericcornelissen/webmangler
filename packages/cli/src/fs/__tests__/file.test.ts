@@ -1,3 +1,5 @@
+import { TestScenario } from "@webmangler/testing";
+
 import { expect } from "chai";
 import * as path from "path";
 
@@ -5,21 +7,16 @@ import WebManglerCliFile from "../file.class";
 
 type TestCase = {
   content: string;
-  filePath: string;
   expectedSize: number;
   expectedType: string;
+  filePath: string;
 };
-
-type TestScenario = {
-  name: string,
-  cases: TestCase[],
-}
 
 suite("WebManglerCliFile", function() {
   const replacementContentString = "not the original string";
   const replacementContentSize = 23;
 
-  const scenarios: TestScenario[] = [
+  const scenarios: TestScenario<TestCase>[] = [
     {
       name: "Sample",
       cases: [

@@ -1,3 +1,4 @@
+import type { TestScenario } from "@webmangler/testing";
 import type { ManglerExpression } from "../languages";
 import type { MangleEngineOptions, ManglerFile } from "../types";
 
@@ -8,8 +9,17 @@ import ManglerFileMock from "../__mocks__/mangler-file.mock";
 
 import engine from "../engine";
 
+interface TestCase {
+  description?: string;
+  expected: ManglerFile[];
+  expressions: Map<string, ManglerExpression[]>;
+  files: ManglerFile[];
+  options?: MangleEngineOptions;
+  patterns: string | string[];
+}
+
 suite("ManglerEngine", function() {
-  const scenarios: TestScenario[] = [
+  const scenarios: TestScenario<TestCase>[] = [
     {
       name: "one file",
       cases: [
@@ -293,18 +303,3 @@ suite("ManglerEngine", function() {
     });
   }
 });
-
-interface TestCase {
-  files: ManglerFile[];
-  expected: ManglerFile[];
-  expressions: Map<string, ManglerExpression[]>;
-  patterns: string | string[];
-  options?: MangleEngineOptions;
-
-  description?: string;
-}
-
-type TestScenario = {
-  name: string,
-  cases: TestCase[],
-}
