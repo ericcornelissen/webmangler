@@ -1,3 +1,10 @@
+import type { CharSet } from "../types";
+
+import {
+  ALL_LOWERCASE_CHARS,
+  ALL_NUMBER_CHARS,
+  ALL_UPPERCASE_CHARS,
+} from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -140,6 +147,18 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
   static readonly _ID = "html-id-mangler";
 
   /**
+   * The character set used by {@link HtmlIdMangler}.
+   *
+   * @since v0.1.7
+   */
+  static readonly CHARACTER_SET: CharSet = [
+    ...ALL_LOWERCASE_CHARS,
+    ...ALL_UPPERCASE_CHARS,
+    ...ALL_NUMBER_CHARS,
+    "-", "_",
+  ];
+
+  /**
    * The default patterns used by a {@link HtmlIdMangler}.
    *
    * @since v0.1.0
@@ -168,6 +187,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    */
   constructor(options: HtmlIdManglerOptions={}) {
     super(HtmlIdMangler._ID, {
+      charSet: HtmlIdMangler.CHARACTER_SET,
       patterns: HtmlIdMangler.getPatterns(options.idNamePattern),
       reserved: HtmlIdMangler.getReserved(options.reservedIds),
       prefix: HtmlIdMangler.getPrefix(options.keepIdPrefix),

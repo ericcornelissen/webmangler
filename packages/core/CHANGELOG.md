@@ -8,10 +8,16 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.7] - 2021-02-10
+
 - Allow reserved strings to be Regular Expressions.
+- Allow for mangling with custom character sets.
 - Export all mangler plugins from `webmangler/manglers`.
 - Export all language plugins from `webmangler/languages`.
 - Fix bug where the prefix could not be omitted with the HTML attribute mangler.
+- Improve character set used by all built-in manglers.
 
 ## [0.1.6] - 2021-02-09
 

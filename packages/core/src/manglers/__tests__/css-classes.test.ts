@@ -5,7 +5,12 @@ import {
   PSEUDO_ELEMENT_SELECTORS,
   PSEUDO_SELECTORS,
 } from "./css-selectors";
-import { isValidClassName, varyQuotes, varySpacing } from "./test-helpers";
+import {
+  getArrayOfFormattedStrings,
+  isValidClassName,
+  varyQuotes,
+  varySpacing,
+} from "./test-helpers";
 import { TestCase, TestScenario } from "./testing";
 
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
@@ -915,6 +920,53 @@ suite("CSS Classes Mangler", function() {
         }
       });
     }
+  });
+
+  suite("Illegal names", function() {
+    const illegalNames: string[] = [
+      ".-",
+    ];
+
+    let content = "";
+
+    suiteSetup(function() {
+      const n = CssClassMangler.CHARACTER_SET.length;
+      const nArray = getArrayOfFormattedStrings(n, ".cls-%s");
+      content = `${nArray.join(",")} { }`;
+    });
+
+    test("without extra reserved", function() {
+      const cssClassMangler = new CssClassMangler({
+        classNamePattern: "cls-[0-9]+",
+      });
+      cssClassMangler.use(builtInLanguageSupport);
+
+      const file = new ManglerFileMock("css", content);
+      const result = cssClassMangler.mangle(mangleEngine, [file]);
+      expect(result).to.have.lengthOf(1);
+
+      const out = result[0];
+      for (const illegalName of illegalNames) {
+        expect(out.content).not.to.have.string(illegalName);
+      }
+    });
+
+    test("with extra reserved", function() {
+      const cssClassMangler = new CssClassMangler({
+        classNamePattern: "cls-[0-9]+",
+        reservedClassNames: ["a"],
+      });
+      cssClassMangler.use(builtInLanguageSupport);
+
+      const file = new ManglerFileMock("css", content);
+      const result = cssClassMangler.mangle(mangleEngine, [file]);
+      expect(result).to.have.lengthOf(1);
+
+      const out = result[0];
+      for (const illegalName of illegalNames) {
+        expect(out.content).not.to.have.string(illegalName);
+      }
+    });
   });
 
   test("no input files", function() {

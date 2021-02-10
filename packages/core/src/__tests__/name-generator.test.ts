@@ -1,164 +1,254 @@
+import type { CharSet } from "../types";
+
 import { expect } from "chai";
 
+import {
+  ALL_LOWERCASE_CHARS,
+  ALL_NUMBER_CHARS,
+  ALL_UPPERCASE_CHARS,
+} from "../characters";
 import NameGenerator from "../name-generator.class";
 
-const charsetSize = NameGenerator.CHARSET.length;
-
-const a = NameGenerator.CHARSET[0];
-const b = NameGenerator.CHARSET[1];
-const c = NameGenerator.CHARSET[2];
-const d = NameGenerator.CHARSET[3];
-const e = NameGenerator.CHARSET[4];
-const z = NameGenerator.CHARSET[charsetSize - 1];
-
 suite("NameGenerator", function() {
-  suite("No reserved", function() {
-    test("one-character names", function() {
-      const g = new NameGenerator();
-      for (const char of NameGenerator.CHARSET) {
-        expect(g.nextName()).to.equal(char);
+  const noReservedScenarios: {
+    name: string,
+    cases: (CharSet | undefined)[],
+  }[] = [
+    {
+      name: "default character set",
+      cases: [
+        undefined, // Defaults to the default character set
+      ],
+    },
+    {
+      name: "custom character sets",
+      cases: [
+        ALL_LOWERCASE_CHARS,
+        ALL_NUMBER_CHARS,
+        ALL_UPPERCASE_CHARS,
+        [...ALL_LOWERCASE_CHARS, ...ALL_UPPERCASE_CHARS],
+        [...ALL_LOWERCASE_CHARS, ...ALL_NUMBER_CHARS],
+        ["a", "b", "c", "d"],
+        ["-", "_", "x", "y"],
+      ],
+    },
+  ];
+
+  for (const { name, cases } of noReservedScenarios) {
+    test(`${name}, without reserved`, function() {
+      for (const testCase of cases) {
+        const charSet = testCase || NameGenerator.DEFAULT_CHARSET;
+        expect(charSet).to.have.length.above(3);
+
+        const charSetSize = charSet.length;
+        const firstChar = charSet[0];
+        const secondChar = charSet[1];
+        const lastChar = charSet[charSetSize - 1];
+
+        const g = new NameGenerator(undefined, testCase);
+        for (const char of charSet) {
+          expect(g.nextName()).to.equal(char);
+        }
+
+        expect(g.nextName()).to.equal(`${firstChar}${firstChar}`);
+        expect(g.nextName()).to.equal(`${firstChar}${secondChar}`);
+
+        for (let i = 0; i < charSetSize - 3; i++) {
+          g.nextName();
+        }
+
+        expect(g.nextName()).to.equal(`${firstChar}${lastChar}`);
+        expect(g.nextName()).to.equal(`${secondChar}${firstChar}`);
+
+        for (let i = 0; i < ((charSetSize - 2) * charSetSize) - 1; i++) {
+          g.nextName();
+        }
+
+        expect(g.nextName()).to.equal(`${lastChar}${firstChar}`);
+        expect(g.nextName()).to.equal(`${lastChar}${secondChar}`);
+
+        for (let i = 0; i < charSetSize - 3; i++) {
+          g.nextName();
+        }
+
+        expect(g.nextName()).to.equal(`${lastChar}${lastChar}`);
+        expect(g.nextName()).to.equal(`${firstChar}${firstChar}${firstChar}`);
+        expect(g.nextName()).to.equal(`${firstChar}${firstChar}${secondChar}`);
       }
     });
+  }
 
-    test("two-character names", function() {
-      const g = new NameGenerator();
-      for (let i = 0; i < charsetSize - 1; i++) {
-        g.nextName();
+  const reservedScenarios: {
+    name: string,
+    cases: {
+      charSet?: CharSet,
+      reserved: string[],
+      _points_: { inc: number, name: string }[],
+    }[],
+  }[] = [
+    {
+      name: "reserved strings",
+      cases: [
+        {
+          reserved: ["a"],
+          _points_: [
+            { inc: 0, name: "b" },
+            { inc: NameGenerator.DEFAULT_CHARSET.length - 2, name: "aa" },
+          ],
+        },
+        {
+          reserved: ["a", "b", "ab"],
+          _points_: [
+            { inc: 0, name: "c" },
+            { inc: NameGenerator.DEFAULT_CHARSET.length - 3, name: "aa" },
+            { inc: 0, name: "ac" },
+          ],
+        },
+        {
+          charSet: ALL_LOWERCASE_CHARS,
+          reserved: ["a"],
+          _points_: [
+            { inc: 0, name: "b" },
+            { inc: ALL_LOWERCASE_CHARS.length - 2, name: "aa" },
+          ],
+        },
+        {
+          charSet: ALL_UPPERCASE_CHARS,
+          reserved: ["B"],
+          _points_: [
+            { inc: 1, name: "C" },
+            { inc: ALL_UPPERCASE_CHARS.length - 2, name: "AB" },
+          ],
+        },
+        {
+          charSet: ALL_NUMBER_CHARS,
+          reserved: ["3", "1", "4"],
+          _points_: [
+            { inc: 2, name: "5" },
+            { inc: ALL_NUMBER_CHARS.length - 5, name: "01" },
+          ],
+        },
+      ],
+    },
+    {
+      name: "reserved patterns",
+      cases: [
+        {
+          reserved: ["a.*"],
+          _points_: [
+            { inc: 0, name: "b" },
+            { inc: NameGenerator.DEFAULT_CHARSET.length - 2, name: "ba" },
+          ],
+        },
+        {
+          reserved: [".*b"],
+          _points_: [
+            { inc: 0, name: "a" },
+            { inc: 0, name: "c" },
+            { inc: NameGenerator.DEFAULT_CHARSET.length - 3, name: "aa" },
+            { inc: 0, name: "ac" },
+          ],
+        },
+        {
+          reserved: ["a.", ".c"],
+          _points_: [
+            { inc: 0, name: "a" },
+            { inc: 0, name: "b" },
+            { inc: 0, name: "c" },
+            { inc: NameGenerator.DEFAULT_CHARSET.length - 3, name: "ba" },
+            { inc: 1, name: "bd" },
+          ],
+        },
+        {
+          charSet: ALL_NUMBER_CHARS,
+          reserved: ["0.*"],
+          _points_: [
+            { inc: 0, name: "1" },
+            { inc: ALL_NUMBER_CHARS.length - 2, name: "10" },
+          ],
+        },
+        {
+          charSet: ALL_UPPERCASE_CHARS,
+          reserved: [".*B.*"],
+          _points_: [
+            { inc: 1, name: "C" },
+            { inc: ALL_UPPERCASE_CHARS.length - 2, name: "AC" },
+            { inc: ALL_UPPERCASE_CHARS.length - 3, name: "CA" },
+          ],
+        },
+        {
+          charSet: [...ALL_LOWERCASE_CHARS, ...ALL_UPPERCASE_CHARS],
+          reserved: ["[b-d]", "[D-G]"],
+          _points_: [
+            { inc: 1, name: "e" },
+            { inc: ALL_LOWERCASE_CHARS.length - 3, name: "C" },
+            { inc: 0, name: "H" },
+          ],
+        },
+      ],
+    },
+    {
+      name: "reserved strings & patterns",
+      cases: [
+        {
+          reserved: ["a.*", "c"],
+          _points_: [
+            { inc: 0, name: "b" },
+            { inc: 0, name: "d" },
+            { inc: NameGenerator.DEFAULT_CHARSET.length - 4, name: "ba" },
+            { inc: 1, name: "bc" },
+          ],
+        },
+        {
+          reserved: ["c", ".+b"],
+          _points_: [
+            { inc: 0, name: "a" },
+            { inc: 0, name: "b" },
+            { inc: NameGenerator.DEFAULT_CHARSET.length - 3, name: "aa" },
+            { inc: 0, name: "ac" },
+            { inc: NameGenerator.DEFAULT_CHARSET.length - 2, name: "bc" },
+          ],
+        },
+        {
+          charSet: ALL_NUMBER_CHARS,
+          reserved: ["0.*", "2"],
+          _points_: [
+            { inc: 0, name: "1" },
+            { inc: 0, name: "3" },
+            { inc: ALL_NUMBER_CHARS.length - 4, name: "10" },
+          ],
+        },
+        {
+          charSet: ALL_UPPERCASE_CHARS,
+          reserved: ["E", ".*B.*"],
+          _points_: [
+            { inc: 1, name: "C" },
+            { inc: 1, name: "F" },
+            { inc: ALL_UPPERCASE_CHARS.length - 5, name: "AC" },
+            { inc: ALL_UPPERCASE_CHARS.length - 3, name: "CA" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  for (const { name, cases } of reservedScenarios) {
+    test(name, function() {
+      for (const testCase of cases) {
+        const { charSet: _charSet, reserved, _points_ } = testCase;
+
+        const charSet = _charSet || NameGenerator.DEFAULT_CHARSET;
+        expect(charSet).to.have.length.above(3);
+
+        const g = new NameGenerator(reserved, _charSet);
+        for (const { inc, name } of _points_) {
+          for (let i = 0; i < inc; i++) {
+            g.nextName();
+          }
+
+          expect(g.nextName()).to.equal(name);
+        }
       }
-
-      expect(g.nextName()).to.equal(z);
-      expect(g.nextName()).to.equal(`${a}${a}`);
-      expect(g.nextName()).to.equal(`${a}${b}`);
-
-      for (let i = 0; i < charsetSize - 3; i++) {
-        g.nextName();
-      }
-
-      expect(g.nextName()).to.equal(`${a}${z}`);
-      expect(g.nextName()).to.equal(`${b}${a}`);
-      expect(g.nextName()).to.equal(`${b}${b}`);
     });
-
-    test("three-character names", function() {
-      const g = new NameGenerator();
-      for (let i = 0; i < (charsetSize + 1) * charsetSize; i++) {
-        g.nextName();
-      }
-
-      expect(g.nextName()).to.equal(`${a}${a}${a}`);
-      expect(g.nextName()).to.equal(`${a}${a}${b}`);
-
-      for (let i = 0; i < charsetSize - 3; i++) {
-        g.nextName();
-      }
-
-      expect(g.nextName()).to.equal(`${a}${a}${z}`);
-      expect(g.nextName()).to.equal(`${a}${b}${a}`);
-      expect(g.nextName()).to.equal(`${a}${b}${b}`);
-
-      for (let i = 0; i < charsetSize - 3; i++) {
-        g.nextName();
-      }
-
-      expect(g.nextName()).to.equal(`${a}${b}${z}`);
-      expect(g.nextName()).to.equal(`${a}${c}${a}`);
-      expect(g.nextName()).to.equal(`${a}${c}${b}`);
-
-      for (let i = 0; i < ((charsetSize - 2) * charsetSize) - 3; i++) {
-        g.nextName();
-      }
-
-      expect(g.nextName()).to.equal(`${a}${z}${z}`);
-      expect(g.nextName()).to.equal(`${b}${a}${a}`);
-      expect(g.nextName()).to.equal(`${b}${a}${b}`);
-    });
-  });
-
-  suite("With reserved", function() {
-    test("one-character names", function() {
-      const g1 = new NameGenerator([a]);
-      expect(g1.nextName()).to.equal(b);
-      expect(g1.nextName()).to.equal(c);
-      for (let i = 0; i < charsetSize - 3; i++) {
-        g1.nextName();
-      }
-      expect(g1.nextName()).to.equal(`${a}${a}`);
-
-      const g2 = new NameGenerator([b]);
-      expect(g2.nextName()).to.equal(a);
-      expect(g2.nextName()).to.equal(c);
-      expect(g2.nextName()).to.equal(d);
-      for (let i = 0; i < (charsetSize * 2) - 4; i++) {
-        g2.nextName();
-      }
-      expect(g2.nextName()).to.equal(`${b}${a}`);
-
-      const g3 = new NameGenerator([b, c]);
-      expect(g3.nextName()).to.equal(a);
-      expect(g3.nextName()).to.equal(d);
-      expect(g3.nextName()).to.equal(e);
-      for (let i = 0; i < (charsetSize * 2) - 5; i++) {
-        g3.nextName();
-      }
-      expect(g3.nextName()).to.equal(`${b}${a}`);
-      for (let i = 0; i < charsetSize - 1; i++) {
-        g3.nextName();
-      }
-      expect(g3.nextName()).to.equal(`${c}${a}`);
-
-      const g4 = new NameGenerator([b, d]);
-      expect(g4.nextName()).to.equal(a);
-      expect(g4.nextName()).to.equal(c);
-      expect(g4.nextName()).to.equal(e);
-      for (let i = 0; i < (charsetSize * 2) - 5; i++) {
-        g4.nextName();
-      }
-      expect(g4.nextName()).to.equal(`${b}${a}`);
-      for (let i = 0; i < (charsetSize * 2) - 1; i++) {
-        g4.nextName();
-      }
-      expect(g4.nextName()).to.equal(`${d}${a}`);
-    });
-
-    test("two-character names", function() {
-      const g = new NameGenerator([`${a}${a}`, `${b}${b}`]);
-      expect(g.nextName()).to.equal(a);
-      expect(g.nextName()).to.equal(b);
-
-      for (let i = 0; i < charsetSize - 2; i++) {
-        g.nextName();
-      }
-
-      expect(g.nextName()).to.equal(`${a}${b}`);
-
-      for (let i = 0; i < (charsetSize - 1); i++) {
-        g.nextName();
-      }
-
-      expect(g.nextName()).to.equal(`${b}${c}`);
-    });
-
-    test("reserved expression", function() {
-      const g = new NameGenerator([`${a}.*`]);
-      expect(g.nextName()).to.equal(b);
-
-      for (let i = 0; i < charsetSize - 2; i++) {
-        g.nextName();
-      }
-
-      expect(g.nextName()).to.equal(`${b}${a}`);
-    });
-
-    test("mixed reserved", function() {
-      const g = new NameGenerator(["c", `${a}.*`]);
-      expect(g.nextName()).to.equal(b);
-      expect(g.nextName()).to.equal(d);
-
-      for (let i = 0; i < charsetSize - 4; i++) {
-        g.nextName();
-      }
-
-      expect(g.nextName()).to.equal(`${b}${a}`);
-    });
-  });
+  }
 });
