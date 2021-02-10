@@ -62,6 +62,12 @@ module.exports = {
     "space-before-function-paren": ["error", "never"],
     "space-in-parens": ["error", "never"],
 
+    // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+    "@typescript-eslint/consistent-type-imports": ["error", {
+      prefer: "type-imports",
+      disallowTypeAnnotations: false,
+    }],
+
     // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
     "jsdoc/require-param-type": "off", // Redundant in TypeScript
     "jsdoc/require-returns-type": "off", // Redundant in TypeScript

@@ -1,4 +1,4 @@
-import { TestScenario } from "@webmangler/testing";
+import type { TestScenario } from "@webmangler/testing";
 
 import { expect } from "chai";
 import * as path from "path";
