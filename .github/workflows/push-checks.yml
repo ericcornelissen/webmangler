@@ -59,8 +59,12 @@ jobs:
           # Install monorepo dependencies
           npm ci
 
+          # Install dependencies of package/cli
+          cd packages/cli
+          npm ci
+
           # Install dependencies of package/core
-          cd packages/core
+          cd ../core
           npm ci
       - name: Run tests
         run: npm run test:coverage
