@@ -1,3 +1,10 @@
+import type { CharSet } from "../types";
+
+import {
+  ALL_LOWERCASE_CHARS,
+  ALL_NUMBER_CHARS,
+  ALL_UPPERCASE_CHARS,
+} from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -15,7 +22,9 @@ export type CssClassManglerOptions = {
   classNamePattern?: string | string[];
 
   /**
-   * A list of CSS class names that should not be used.
+   * A list of strings and patterns of CSS class names that should not be used.
+   *
+   * Patterns are supported since v0.1.7.
    *
    * @default `[]`
    * @since v0.1.0
@@ -137,6 +146,26 @@ export default class CssClassMangler extends SimpleManglerPlugin {
   static readonly _ID = "css-class-mangler";
 
   /**
+   * The list of reserved strings that are always reserved because they are
+   * illegal class names.
+   *
+   * @since v0.1.7
+   */
+  static readonly ALWAYS_RESERVED: string[] = ["-.*"];
+
+  /**
+   * The character set used by {@link CssClassMangler}.
+   *
+   * @since v0.1.7
+   */
+  static readonly CHARACTER_SET: CharSet = [
+    ...ALL_LOWERCASE_CHARS,
+    ...ALL_UPPERCASE_CHARS,
+    ...ALL_NUMBER_CHARS,
+    "-", "_",
+  ];
+
+  /**
    * The default patterns used by a {@link CssClassMangler}.
    *
    * @since v0.1.0
@@ -165,6 +194,7 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    */
   constructor(options: CssClassManglerOptions={}) {
     super(CssClassMangler._ID, {
+      charSet: CssClassMangler.CHARACTER_SET,
       patterns: CssClassMangler.getPatterns(options.classNamePattern),
       reserved: CssClassMangler.getReserved(options.reservedClassNames),
       prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
@@ -180,7 +210,11 @@ export default class CssClassMangler extends SimpleManglerPlugin {
   private static getPatterns(
     classNamePattern?: string | string[],
   ): string | string[] {
-    return classNamePattern || CssClassMangler.DEFAULT_PATTERNS;
+    if (classNamePattern === undefined) {
+      return CssClassMangler.DEFAULT_PATTERNS;
+    }
+
+    return classNamePattern;
   }
 
   /**
@@ -190,7 +224,12 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedClassNames?: string[]): string[] {
-    return reservedClassNames || CssClassMangler.DEFAULT_RESERVED;
+    let configured = reservedClassNames;
+    if (configured === undefined) {
+      configured = CssClassMangler.DEFAULT_RESERVED;
+    }
+
+    return CssClassMangler.ALWAYS_RESERVED.concat(configured);
   }
 
   /**
@@ -200,6 +239,10 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    * @returns The prefix to be used.
    */
   private static getPrefix(keepClassNamePrefix?: string): string {
-    return keepClassNamePrefix || CssClassMangler.DEFAULT_PREFIX;
+    if (keepClassNamePrefix === undefined) {
+      return CssClassMangler.DEFAULT_PREFIX;
+    }
+
+    return keepClassNamePrefix;
   }
 }

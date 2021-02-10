@@ -1,3 +1,10 @@
+import type { CharSet } from "../types";
+
+import {
+  ALL_LOWERCASE_CHARS,
+  ALL_NUMBER_CHARS,
+  ALL_UPPERCASE_CHARS,
+} from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -15,7 +22,9 @@ export type HtmlIdManglerOptions = {
   idNamePattern?: string | string[];
 
   /**
-   * A list of IDs that should not be used.
+   * A list of strings and patterns of IDs that should not be used.
+   *
+   * Patterns are supported since v0.1.7.
    *
    * @default `[]`
    * @since v0.1.0
@@ -138,6 +147,18 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
   static readonly _ID = "html-id-mangler";
 
   /**
+   * The character set used by {@link HtmlIdMangler}.
+   *
+   * @since v0.1.7
+   */
+  static readonly CHARACTER_SET: CharSet = [
+    ...ALL_LOWERCASE_CHARS,
+    ...ALL_UPPERCASE_CHARS,
+    ...ALL_NUMBER_CHARS,
+    "-", "_",
+  ];
+
+  /**
    * The default patterns used by a {@link HtmlIdMangler}.
    *
    * @since v0.1.0
@@ -166,6 +187,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    */
   constructor(options: HtmlIdManglerOptions={}) {
     super(HtmlIdMangler._ID, {
+      charSet: HtmlIdMangler.CHARACTER_SET,
       patterns: HtmlIdMangler.getPatterns(options.idNamePattern),
       reserved: HtmlIdMangler.getReserved(options.reservedIds),
       prefix: HtmlIdMangler.getPrefix(options.keepIdPrefix),
@@ -181,7 +203,11 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
   private static getPatterns(
     idNamePattern?: string | string[],
   ): string | string[] {
-    return idNamePattern || HtmlIdMangler.DEFAULT_PATTERNS;
+    if (idNamePattern === undefined) {
+      return HtmlIdMangler.DEFAULT_PATTERNS;
+    }
+
+    return idNamePattern;
   }
 
   /**
@@ -191,7 +217,11 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedIds?: string[]): string[] {
-    return reservedIds || HtmlIdMangler.DEFAULT_RESERVED;
+    if (reservedIds === undefined) {
+      return HtmlIdMangler.DEFAULT_RESERVED;
+    }
+
+    return reservedIds;
   }
 
   /**
@@ -201,6 +231,10 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @returns The prefix to be used.
    */
   private static getPrefix(keepIdPrefix?: string): string {
-    return keepIdPrefix || HtmlIdMangler.DEFAULT_PREFIX;
+    if (keepIdPrefix === undefined) {
+      return HtmlIdMangler.DEFAULT_PREFIX;
+    }
+
+    return keepIdPrefix;
   }
 }

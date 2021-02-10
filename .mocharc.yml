@@ -1,7 +1,7 @@
 # Check out Mocha at: https://mochajs.org/
 
 recursive: true
-reporter: spec
+reporter: dot
 ui: tdd
 require:
   - ts-node/register

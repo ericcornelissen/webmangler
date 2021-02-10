@@ -1,3 +1,6 @@
+import type { CharSet } from "../types";
+
+import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -18,7 +21,10 @@ export type HtmlAttributeManglerOptions = {
   attrNamePattern?: string | string[];
 
   /**
-   * A list of HTML attribute names that should not be used.
+   * A list of strings and patterns of HTML attributes names that should not be
+   * used.
+   *
+   * Patterns are supported since v0.1.7.
    *
    * @default `[]`
    * @since v0.1.0
@@ -150,6 +156,26 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   static readonly _ID = "html-attribute-mangler";
 
   /**
+   * The list of reserved strings that are always reserved because they are
+   * illegal HTML attribute names.
+   *
+   * @since v0.1.7
+   */
+  static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-|_).*"];
+
+  /**
+   * The character set used by {@link HtmlAttributeMangler}. Note that HTML
+   * attributes are case insensitive, so only lowercase letters are used.
+   *
+   * @since v0.1.7
+   */
+  static readonly CHARACTER_SET: CharSet = [
+    ...ALL_LOWERCASE_CHARS,
+    ...ALL_NUMBER_CHARS,
+    "-", "_",
+  ];
+
+  /**
    * The default patterns used by a {@link HtmlAttributeMangler}.
    *
    * @since v0.1.0
@@ -178,6 +204,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    */
   constructor(options: HtmlAttributeManglerOptions={}) {
     super(HtmlAttributeMangler._ID, {
+      charSet: HtmlAttributeMangler.CHARACTER_SET,
       patterns: HtmlAttributeMangler.getPatterns(options.attrNamePattern),
       reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
@@ -193,7 +220,11 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   private static getPatterns(
     attrNamePattern?: string | string[],
   ): string | string[] {
-    return attrNamePattern || HtmlAttributeMangler.DEFAULT_PATTERNS;
+    if (attrNamePattern === undefined) {
+      return HtmlAttributeMangler.DEFAULT_PATTERNS;
+    }
+
+    return attrNamePattern;
   }
 
   /**
@@ -203,7 +234,12 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedAttrNames?: string[]): string[] {
-    return reservedAttrNames || HtmlAttributeMangler.DEFAULT_RESERVED;
+    let configured = reservedAttrNames;
+    if (configured === undefined) {
+      configured = HtmlAttributeMangler.DEFAULT_RESERVED;
+    }
+
+    return HtmlAttributeMangler.ALWAYS_RESERVED.concat(configured);
   }
 
   /**
@@ -213,6 +249,10 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * @returns The prefix to be used.
    */
   private static getPrefix(keepAttrPrefix?: string): string {
-    return keepAttrPrefix || HtmlAttributeMangler.DEFAULT_PREFIX;
+    if (keepAttrPrefix === undefined) {
+      return HtmlAttributeMangler.DEFAULT_PREFIX;
+    }
+
+    return keepAttrPrefix;
   }
 }

@@ -1,3 +1,10 @@
+import type { CharSet } from "../types";
+
+import {
+  ALL_LOWERCASE_CHARS,
+  ALL_NUMBER_CHARS,
+  ALL_UPPERCASE_CHARS,
+} from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -15,7 +22,10 @@ export type CssVariableManglerOptions = {
   cssVarNamePattern?: string | string[];
 
   /**
-   * A list of CSS variable names that should not be used.
+   * A list of strings and patterns of CSS variable names that should not be
+   * used.
+   *
+   * Patterns are supported since v0.1.7.
    *
    * @default `[]`
    * @since v0.1.0
@@ -134,6 +144,26 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
   static readonly _ID = "css-variable-mangler";
 
   /**
+   * The list of reserved strings that are always reserved because they are
+   * illegal CSS variable names.
+   *
+   * @since v0.1.7
+   */
+  static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-).*"];
+
+  /**
+   * The character set used by {@link CssVariableMangler}.
+   *
+   * @since v0.1.7
+   */
+  static readonly CHARACTER_SET: CharSet = [
+    ...ALL_LOWERCASE_CHARS,
+    ...ALL_UPPERCASE_CHARS,
+    ...ALL_NUMBER_CHARS,
+    "-", "_",
+  ];
+
+  /**
    * The default patterns used by a {@link CssVariableMangler}.
    *
    * @since v0.1.0
@@ -162,6 +192,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    */
   constructor(options: CssVariableManglerOptions={}) {
     super(CssVariableMangler._ID, {
+      charSet: CssVariableMangler.CHARACTER_SET,
       patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
       reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
       prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),
@@ -177,7 +208,11 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
   private static getPatterns(
     cssVarNamePattern?: string | string[],
   ): string | string[] {
-    return cssVarNamePattern || CssVariableMangler.DEFAULT_PATTERNS;
+    if (cssVarNamePattern === undefined) {
+      return CssVariableMangler.DEFAULT_PATTERNS;
+    }
+
+    return cssVarNamePattern;
   }
 
   /**
@@ -187,7 +222,12 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * @returns The reserved names to be used.
    */
   private static getReserved(reservedCssVarNames?: string[]): string[] {
-    return reservedCssVarNames || CssVariableMangler.DEFAULT_RESERVED;
+    let configured = reservedCssVarNames;
+    if (configured === undefined) {
+      configured = CssVariableMangler.DEFAULT_RESERVED;
+    }
+
+    return CssVariableMangler.ALWAYS_RESERVED.concat(configured);
   }
 
   /**
@@ -197,6 +237,10 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * @returns The prefix to be used.
    */
   private static getPrefix(keepCssVarPrefix?: string): string {
-    return keepCssVarPrefix || CssVariableMangler.DEFAULT_PREFIX;
+    if (keepCssVarPrefix === undefined) {
+      return CssVariableMangler.DEFAULT_PREFIX;
+    }
+
+    return keepCssVarPrefix;
   }
 }

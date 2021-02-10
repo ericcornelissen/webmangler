@@ -1,6 +1,10 @@
 import { expect } from "chai";
 
-import { varyQuotes, varySpacing } from "./test-helpers";
+import {
+  getArrayOfFormattedStrings,
+  varyQuotes,
+  varySpacing,
+} from "./test-helpers";
 import { TestScenario } from "./testing";
 
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
@@ -384,6 +388,54 @@ suite("CSS Variable Mangler", function() {
         }
       });
     }
+  });
+
+  suite("Illegal names", function() {
+    const illegalNames: string[] = [
+      "---", "--0", "--1", "--2", "--3", "--4", "--5", "--6", "--7", "--8",
+      "--9",
+    ];
+
+    let content = "";
+
+    suiteSetup(function() {
+      const n = CssVariableMangler.CHARACTER_SET.length;
+      const nArray = getArrayOfFormattedStrings(n, "--%s:red");
+      content = `:root { ${nArray.join(";")} `;
+    });
+
+    test("without extra reserved", function() {
+      const cssVariableMangler = new CssVariableMangler({
+        cssVarNamePattern: "[0-9]+",
+      });
+      cssVariableMangler.use(builtInLanguageSupport);
+
+      const file = new ManglerFileMock("css", content);
+      const result = cssVariableMangler.mangle(mangleEngine, [file]);
+      expect(result).to.have.lengthOf(1);
+
+      const out = result[0];
+      for (const illegalName of illegalNames) {
+        expect(out.content).not.to.have.string(illegalName);
+      }
+    });
+
+    test("with extra reserved", function() {
+      const cssVariableMangler = new CssVariableMangler({
+        cssVarNamePattern: "[0-9]+",
+        reservedCssVarNames: ["a"],
+      });
+      cssVariableMangler.use(builtInLanguageSupport);
+
+      const file = new ManglerFileMock("css", content);
+      const result = cssVariableMangler.mangle(mangleEngine, [file]);
+      expect(result).to.have.lengthOf(1);
+
+      const out = result[0];
+      for (const illegalName of illegalNames) {
+        expect(out.content).not.to.have.string(illegalName);
+      }
+    });
   });
 
   test("no input files", function() {

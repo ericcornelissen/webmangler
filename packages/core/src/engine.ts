@@ -1,5 +1,5 @@
 import type { ManglerExpression } from "./languages";
-import type { ManglerFile } from "./types";
+import type { CharSet, ManglerFile } from "./types";
 
 import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
@@ -61,18 +61,20 @@ function countInstances(
  *
  * @param instances The strings to mangle and the number of times they appear.
  * @param manglePrefix The prefix for mangled values.
- * @param reservedNames The values not to be used as mangled value.
+ * @param reservedNames Strings and patterns not to be used as mangled strings.
+ * @param charSet The character set to use to generate mangle strings.
  * @returns A mapping defining the mangling.
  */
 function mangleInstances(
   instances: Map<string, number>,
   manglePrefix: string,
   reservedNames: string[],
+  charSet: CharSet,
 ): Map<string, string> {
   const orderedInstances = mapToOrderedList(instances);
   const mangleMap: Map<string, string> = new Map();
 
-  const nameGenerator = new NameGenerator(reservedNames);
+  const nameGenerator = new NameGenerator(reservedNames, charSet);
   orderedInstances.forEach((originalName: string): void => {
     const mangleName = nameGenerator.nextName();
     const fullMangledName = `${manglePrefix}${mangleName}`;
@@ -129,15 +131,23 @@ function getSafeTwoStepMangleMapping(
  *
  * @param instances The strings to mangle and the number of times they appear.
  * @param manglePrefix The prefix to be used for mangled values.
- * @param reservedNames The names that should not be used.
+ * @param reservedNames Strings and patterns not to be used as mangled strings.
+ * @param charSet The character set to use to generate mangle strings.
  * @returns Two maps to perform safe two-step mangling.
  */
 function getMangleMaps(
   instances: Map<string, number>,
   manglePrefix: string,
   reservedNames: string[],
+  charSet: CharSet,
 ): [Map<string, string>, Map<string, string>] {
-  const mangleMap = mangleInstances(instances, manglePrefix, reservedNames);
+  const mangleMap = mangleInstances(
+    instances,
+    manglePrefix,
+    reservedNames,
+    charSet,
+  );
+
   return getSafeTwoStepMangleMapping(mangleMap);
 }
 
@@ -195,8 +205,13 @@ function getSupportedFilesOnly<File extends ManglerFile>(
  */
 function parseOptions(
   options: MangleEngineOptions,
-): { manglePrefix: string, reservedNames: string[] } {
+): {
+  charSet: CharSet,
+  manglePrefix: string,
+  reservedNames: string[],
+} {
   return {
+    charSet: options.charSet || NameGenerator.DEFAULT_CHARSET,
     manglePrefix: options.manglePrefix || DEFAULT_MANGLE_PREFIX,
     reservedNames: options.reservedNames || DEFAULT_RESERVED_NAMES,
   };
@@ -209,6 +224,14 @@ function parseOptions(
  */
 export type MangleEngineOptions = {
   /**
+   * The character set for mangled strings.
+   *
+   * @default {@link NameGenerator.DEFAULT_CHARSET}
+   * @since v0.1.7
+   */
+  readonly charSet?: CharSet;
+
+  /**
    * The prefix to use for mangled strings.
    *
    * @default `""`
@@ -217,7 +240,9 @@ export type MangleEngineOptions = {
   manglePrefix?: string;
 
   /**
-   * A list of names not to be used as mangled string.
+   * A list of names and patterns not to be used as mangled string.
+   *
+   * Patterns are supported since v0.1.7.
    *
    * @default `[]`
    * @since v0.1.0
@@ -229,11 +254,11 @@ export type MangleEngineOptions = {
  * Mangle all strings matching the provided `expressions` and `patterns`
  * consistently across all `files`.
  *
- * The names in `reservedNames` specified in the `options` will not be outputted
- * as mangled strings. By default no values are reserved.
+ * The names and patterns in `reservedNames` specified in the `options` will not
+ * be outputted as mangled strings. By default no strings are reserved.
  *
  * The `manglePrefix` specified in the `options` will be used as a prefix for
- * all mangled values. By default no prefix is used.
+ * all mangled strings. By default no prefix is used.
  *
  * NOTE: files that are not supported won't be returned. Therefore, the returned
  * list may be shorter than the inputted list.
@@ -252,7 +277,7 @@ export default function mangle<File extends ManglerFile>(
   options: MangleEngineOptions,
 ): File[] {
   const supportedFiles = getSupportedFilesOnly(files, expressions);
-  const { manglePrefix, reservedNames } = parseOptions(options);
+  const { manglePrefix, reservedNames, charSet } = parseOptions(options);
   patterns = toArrayIfNeeded(patterns);
 
   const instancesCount = countInstances(supportedFiles, expressions, patterns);
@@ -260,6 +285,7 @@ export default function mangle<File extends ManglerFile>(
     instancesCount,
     manglePrefix,
     reservedNames,
+    charSet,
   );
 
   const intermediateFiles = doMangle(supportedFiles, expressions, mapToUnique);
