@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Use `--stats`/`-S`to get mangling statistics.
+- Enable verbose logging with `--verbose`/`-v`/`-vv`.
 
 ## [0.1.1] - 2021-02-03
 

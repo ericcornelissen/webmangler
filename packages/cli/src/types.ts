@@ -1,3 +1,5 @@
+import type { LogLevel } from "./logger";
+
 /**
  * The _WebMangler_ CLI arguments represented as an object.
  *
@@ -24,6 +26,13 @@ type WebManglerCliArgs = {
    * @since v0.1.2
    */
   readonly stats?: boolean;
+
+  /**
+   * Option to configure the amount of logging.
+   *
+   * @since v0.1.2
+   */
+  readonly verbose: LogLevel;
 
   /**
    * Option to enable writing changes to the input files.

@@ -27,6 +27,13 @@ const args = yargs(process.argv.slice(2))
       describe: "Output mangler statistics",
       type: "boolean",
     },
+    "verbose": {
+      alias: "v",
+      count: true,
+      demandOption: false,
+      describe: "Output more information",
+      type: "boolean",
+    },
     "write": {
       alias: "w",
       demandOption: false,
