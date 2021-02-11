@@ -73,3 +73,41 @@ export const PSEUDO_SELECTORS: string[] = [
   "valid",
   "visited",
 ];
+
+/**
+ * A list of all type or units for the `attr()` CSS function.
+ *
+ * Based on: https://developer.mozilla.org/en-US/docs/Web/CSS/attr()#values
+ */
+export const TYPE_OR_UNITS: string[] = [
+  "string",
+  "color",
+  "url",
+  "integer",
+  "number",
+  "length",
+  "em",
+  "ex",
+  "px",
+  "rem",
+  "vw",
+  "vh",
+  "vmin",
+  "vmax",
+  "mm",
+  "cm",
+  "in",
+  "pt",
+  "pc",
+  "angle",
+  "deg",
+  "grad",
+  "rad",
+  "time",
+  "s",
+  "ms",
+  "frequency",
+  "Hz",
+  "kHz",
+  "%",
+];

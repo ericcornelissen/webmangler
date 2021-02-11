@@ -3,6 +3,7 @@ import type { TestCase } from "./types";
 
 import { expect } from "chai";
 
+import { TYPE_OR_UNITS } from "./css-selectors";
 import {
   getArrayOfFormattedStrings,
   varyQuotes,
@@ -23,20 +24,102 @@ suite("HTML Attribute Mangler", function() {
   suite("CSS", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "sample",
+        name: "attribute selector",
+        cases: [
+          ...varySpacing(["[", "]"], {
+            input: "[data-foo] { }",
+            expected: "[data-a] { }",
+          }),
+          ...varySpacing("[", {
+            input: "div[data-foo] { }",
+            expected: "div[data-a] { }",
+          }),
+          ...varySpacing(["[", "]"], {
+            input: "[data-foo=\"bar\"] { }",
+            expected: "[data-a=\"bar\"] { }",
+          }),
+          ...varySpacing("=", {
+            input: "[data-foo=\"bar\"] { }",
+            expected: "[data-a=\"bar\"] { }",
+          }),
+          ...varySpacing("~=", {
+            input: "[data-foo~=\"bar\"] { }",
+            expected: "[data-a~=\"bar\"] { }",
+          }),
+          ...varySpacing("^=", {
+            input: "[data-foo^=\"bar\"] { }",
+            expected: "[data-a^=\"bar\"] { }",
+          }),
+          ...varySpacing("$=", {
+            input: "[data-foo$=\"bar\"] { }",
+            expected: "[data-a$=\"bar\"] { }",
+          }),
+          ...varySpacing("*=", {
+            input: "[data-foo*=\"bar\"] { }",
+            expected: "[data-a*=\"bar\"] { }",
+          }),
+          ...varySpacing("|=", {
+            input: "[data-foo|=\"bar\"] { }",
+            expected: "[data-a|=\"bar\"] { }",
+          }),
+        ],
+      },
+      {
+        name: "attribute usage",
+        cases: [
+          ...varySpacing(["(", ")"], {
+            input: "div { content: attr(data-foo); }",
+            expected: "div { content: attr(data-a); }",
+          }),
+          ...varySpacing(["(", ")"], {
+            input: `div { content: attr(data-foo ${TYPE_OR_UNITS[0]}); }`,
+            expected: `div { content: attr(data-a ${TYPE_OR_UNITS[0]}); }`,
+          }),
+          ...TYPE_OR_UNITS.map((typeOrUnit) => {
+            return {
+              input: `div { content: attr(data-foo ${typeOrUnit}); }`,
+              expected: `div { content: attr(data-a ${typeOrUnit}); }`,
+            };
+          }),
+          ...varySpacing(["(", ")"], {
+            input: "div { content: attr(data-foo, \"bar\"); }",
+            expected: "div { content: attr(data-a, \"bar\"); }",
+          }),
+          ...varySpacing([","], {
+            input: "div { content: attr(data-foo,\"bar\"); }",
+            expected: "div { content: attr(data-a,\"bar\"); }",
+          }),
+        ],
+      },
+      {
+        name: "prefix",
         cases: [
           {
             input: "[data-foo] { }",
-            expected: "[data-a] { }",
+            expected: "[a] { }",
+            prefix: "",
+          },
+        ],
+      },
+      {
+        name: "non-attribute selectors matching pattern",
+        cases: [
+          {
+            input: "#data-foo { }",
+            expected: "#data-foo { }",
           },
           {
             input: ".data-foo { }",
             expected: ".data-foo { }",
           },
           {
-            input: "[data-foo] { }",
-            expected: "[a] { }",
-            prefix: "",
+            input: ".data-foo[data-foo] { }",
+            expected: ".data-foo[data-a] { }",
+          },
+          {
+            input: "div { }",
+            expected: "div { }",
+            pattern: "[a-z]+",
           },
         ],
       },
