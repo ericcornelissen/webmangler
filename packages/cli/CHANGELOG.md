@@ -8,12 +8,17 @@ Versioning].
 
 ## [Unreleased]
 
-- Use `--stats`/`-S`to get mangling statistics.
+- _No changes yet_
+
+## [0.1.2] - 2021-02-11
+
+- Increase minimum `webmangler` peerDependency to `^0.1.7`.
+- Enable mangling statistics with `--stats`/`-S`.
 - Enable verbose logging with `--verbose`/`-v`/`-vv`.
 
 ## [0.1.1] - 2021-02-03
 
-- Increase minimum `webmangler` peerDependency to `>=v0.1.4`.
+- Increase minimum `webmangler` peerDependency to `^0.1.4`.
 - Fix formatting in examples of the README.
 - Fix NPM scripts example in the README.
 - Add WebMangler core and NodeJS version to `--version` output.
