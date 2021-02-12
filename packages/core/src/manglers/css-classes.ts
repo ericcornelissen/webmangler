@@ -151,7 +151,7 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    *
    * @since v0.1.7
    */
-  static readonly ALWAYS_RESERVED: string[] = ["-.*"];
+  static readonly ALWAYS_RESERVED: string[] = ["(-|[0-9]).*"];
 
   /**
    * The character set used by {@link CssClassMangler}.

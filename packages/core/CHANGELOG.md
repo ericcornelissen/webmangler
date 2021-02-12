@@ -10,6 +10,11 @@ Versioning].
 
 - _No changes yet_
 
+## [0.1.8] - 2021-02-12
+
+- Prevent CSS class mangler from generating classes with a leading number.
+- Rename built-in languages export from `webmangler/languages`.
+
 ## [0.1.7] - 2021-02-10
 
 - Allow reserved strings to be Regular Expressions.
