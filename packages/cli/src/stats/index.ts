@@ -1,6 +1,8 @@
 import type { ManglerStats } from "./types";
 import type { WebManglerCliFile } from "../fs";
 
+import * as chalk from "chalk";
+
 import { getChangedPercentage } from "./helpers";
 
 /**
@@ -23,18 +25,20 @@ function roundToTwoDecimalPlaces(x: number): number {
 function getDisplayPercentage(percentage: number): string {
   if (percentage < 0) {
     if (percentage > -0.01) {
-      return "<-0.01";
+      return chalk.green("<-0.01%");
     }
 
-    return roundToTwoDecimalPlaces(percentage).toString();
+    const roundedPercentage = roundToTwoDecimalPlaces(percentage);
+    return chalk.greenBright(`${roundedPercentage}%`);
   } else if (percentage > 0) {
     if (percentage < 0.01) {
-      return "<+0.01";
+      return chalk.red("<+0.01%");
     }
 
-    return roundToTwoDecimalPlaces(percentage).toString();
+    const roundedPercentage = roundToTwoDecimalPlaces(percentage);
+    return chalk.redBright(`+${roundedPercentage}%`);
   } else {
-    return "0";
+    return chalk.gray("0%");
   }
 }
 
@@ -89,7 +93,7 @@ export function logStats(
     if (fileStats.changed) {
       const percentage = getDisplayPercentage(fileStats.changePercentage);
       const reduction = `${fileStats.sizeBefore} -> ${fileStats.sizeAfter}`;
-      log(`${filePath} ${percentage}% (${reduction})`);
+      log(`${filePath} ${percentage} (${reduction})`);
     } else {
       log(`${filePath} [NOT MANGLED]`);
     }
