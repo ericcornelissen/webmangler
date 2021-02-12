@@ -4,7 +4,42 @@ import type { WebManglerCliFile } from "../fs";
 import { getChangedPercentage } from "./helpers";
 
 /**
- * Compute the statics about one _WebMangler_ run.
+ * Round a number to at most two decimal places.
+ *
+ * @param x The number of interest.
+ * @returns The number rounded.
+ */
+function roundToTwoDecimalPlaces(x: number): number {
+  const rounded = Math.round((x + Number.EPSILON) * 100) / 100;
+  return rounded;
+}
+
+/**
+ * Convert a percentage as number to a percentage for output.
+ *
+ * @param percentage The percentage as a number.
+ * @returns The percentage string (without %).
+ */
+function getDisplayPercentage(percentage: number): string {
+  if (percentage < 0) {
+    if (percentage > -0.01) {
+      return "<-0.01";
+    }
+
+    return roundToTwoDecimalPlaces(percentage).toString();
+  } else if (percentage > 0) {
+    if (percentage < 0.01) {
+      return "<+0.01";
+    }
+
+    return roundToTwoDecimalPlaces(percentage).toString();
+  } else {
+    return "0";
+  }
+}
+
+/**
+ * Compute the statistics about one _WebMangler_ run.
  *
  * @param inFiles The files selected for mangling.
  * @param outFiles The files after mangling.
@@ -52,7 +87,7 @@ export function logStats(
 ): void {
   stats.forEach((fileStats, filePath) => {
     if (fileStats.changed) {
-      const percentage = fileStats.changePercentage;
+      const percentage = getDisplayPercentage(fileStats.changePercentage);
       const reduction = `${fileStats.sizeBefore} -> ${fileStats.sizeAfter}`;
       log(`${filePath} ${percentage}% (${reduction})`);
     } else {
