@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix percentages reported with `--stats`/`-S`.
 
 ## [0.1.2] - 2021-02-11
 

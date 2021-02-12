@@ -1,18 +1,7 @@
 import type { ManglerStats } from "./types";
 import type { WebManglerCliFile } from "../fs";
 
-/**
- * Get the percentage change between two numbers. The result is rounded to two
- * decimal places.
- *
- * @param before The before number.
- * @param after The after number.
- * @returns The percentage difference between `before` and `after`.
- */
-function getChangedPercentage(before: number, after: number): number {
-  const rawPercentage = (after - before) / after;
-  return Math.round((rawPercentage + Number.EPSILON) * 100) / 100;
-}
+import { getChangedPercentage } from "./helpers";
 
 /**
  * Compute the statics about one _WebMangler_ run.
