@@ -37,7 +37,7 @@ Add a script to your project manifest to mangle a folder, e.g.:
 
 {
   "scripts": {
-    "mangle": "webmangler -w ./dist"
+    "mangle": "webmangler --write --stats ./dist"
   }
 }
 ```

@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.3] - 2021-02-12
+
 - Increase minimum `webmangler` peerDependency to `^0.1.9`.
 - Fix percentages reported with `--stats`/`-S`.
 - Color percentages of `--stats`/`-S` output.

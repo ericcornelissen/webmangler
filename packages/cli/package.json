@@ -1,6 +1,6 @@
 {
   "name": "webmangler-cli",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "The WebMangler Command Line Interface (CLI)",
   "license": "MIT",
   "main": "lib/index.js",
