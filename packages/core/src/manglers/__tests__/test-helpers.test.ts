@@ -1,5 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
+import type { QuoteLanguages } from "./test-helpers";
 
 import { expect } from "chai";
 
@@ -87,141 +88,215 @@ suite("Manglers Test helpers", function() {
   });
 
   suite("::varyQuotes", function() {
-    const ofTestCase = (c: TestCase) => (o: TestCase) => o.input === c.input;
-    const notNumber = (n: number) => (o: number) => o !== n;
+    const languages: QuoteLanguages[] = [
+      "css",
+      "html",
+      "js",
+      "single-backticks",
+      "double-backticks",
+    ];
 
-    suite("CSS", function() {
-      const type = "css";
+    const scenarios: TestScenario<TestCase>[] = [
+      {
+        name: "only single quotes in input",
+        cases: [
+          {
+            input: "Hello 'world'!",
+            expected: "Praise 'the sun'",
+          },
+          {
+            input: "The 'cake' is 'a' lie",
+            expected: "The 'pie' is 'a' lie",
+          },
+        ],
+      },
+      {
+        name: "only double quotes in input",
+        cases: [
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+          },
+          {
+            input: "The \"cake\" is \"a\" lie",
+            expected: "The \"pie\" is \"a\" lie",
+          },
+        ],
+      },
+      {
+        name: "only backticks in input",
+        cases: [
+          {
+            input: "Hello `world`!",
+            expected: "Praise `the sun`",
+          },
+          {
+            input: "The `cake` is `a` lie",
+            expected: "The `pie` is `a` lie",
+          },
+        ],
+      },
+      {
+        name: "mixed quotes in input",
+        cases: [
+          { // single quotes and double quotes
+            input: "Praise 'the' \"sun\"",
+            expected: "Praise 'a' \"moon\"",
+          },
+          { // single quotes and backticks
+            input: "The 'cake' is `a` lie",
+            expected: "The 'pie' is `a` lie",
+          },
+          { // double quotes and backticks
+            input: "\"Why\" not `Zoidberg`",
+            expected: "\"Why\" not `Zoidberg`",
+          },
+          { // single quotes, double quotes, and backticks
+            input: "Double 'rainbow', \"what\" does `it` mean?",
+            expected: "Double 'rainbow', \"what\" does `it` mean?",
+          },
+        ],
+      },
+      {
+        name: "with description",
+        cases: [
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+            description: "",
+          },
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+            description: "foobar",
+          },
+        ],
+      },
+      {
+        name: "with pattern",
+        cases: [
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+            pattern: "",
+          },
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+            pattern: "cls-.+",
+          },
+        ],
+      },
+      {
+        name: "with prefix",
+        cases: [
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+            prefix: "",
+          },
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+            prefix: "cls-",
+          },
+        ],
+      },
+      {
+        name: "with reserved",
+        cases: [
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+            reserved: [],
+          },
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+            reserved: ["a"],
+          },
+          {
+            input: "Hello \"world\"!",
+            expected: "Praise \"the sun\"",
+            reserved: ["a", "b"],
+          },
+        ],
+      },
+    ];
 
-      const scenarios: TestScenario<TestCase>[] = [
-        {
-          name: "single quotes input",
-          cases: [
-            {
-              input: "div { content: 'foo'; }",
-              expected: "div { content: 'bar'; }",
-            },
-            {
-              input: ".cls-foo { content: 'foo'; }",
-              expected: ".a { content: 'bar'; }",
-            },
-            {
-              input: "div { color: attr(data-color, '#000'); }",
-              expected: "div { color: attr(data-a, '#000'); }",
-            },
-            {
-              input: "div { color: attr(data-color, '#000'); content: 'foo'; }",
-              expected: "div { color: attr(data-a, '#000'); content: 'foo'; }",
-            },
-          ],
-        },
-        {
-          name: "double quotes input",
-          cases: [
-            {
-              input: "div { content: \"foo\"; }",
-              expected: "div { content: \"bar\"; }",
-            },
-            {
-              input: ".cls-foo { content: \"foo\"; }",
-              expected: ".a { content: \"foo\"; }",
-            },
-            {
-              input: "div { color: attr(data-color, \"#000\"); }",
-              expected: "div { color: attr(data-a, \"#000\"); }",
-            },
-            {
-              input: "div { color: attr(data-color, \"#000\"); content: \"foo\"; }",
-              expected: "div { color: attr(data-a, \"#000\"); content: \"foo\"; }",
-            },
-          ],
-        },
-        {
-          name: "with description",
-          cases: [
-            {
-              input: ".cls-foo { content: \"bar\"; }",
-              expected: ".a { content: \"bar\"; }",
-              description: "",
-            },
-            {
-              input: ".cls-foo { content: \"bar\"; }",
-              expected: ".a { content: \"bar\"; }",
-              description: "Hello world!",
-            },
-          ],
-        },
-        {
-          name: "with pattern",
-          cases: [
-            {
-              input: ".cls-foo { content: \"bar\"; }",
-              expected: ".cls-foo { content: \"bar\"; }",
-              pattern: "",
-            },
-            {
-              input: ".cls-foo { content: \"bar\"; }",
-              expected: ".a { content: \"bar\"; }",
-              pattern: "cls-.+",
-            },
-          ],
-        },
-        {
-          name: "with prefix",
-          cases: [
-            {
-              input: ".foo { content: \"bar\"; }",
-              expected: ".cls-a { content: \"bar\"; }",
-              prefix: "cls-",
-            },
-            {
-              input: ".foo { content: \"bar\"; }",
-              expected: ".cls-a { content: \"bar\"; }",
-              prefix: "cls-",
-            },
-            {
-              input: ".foo { content: \"bar\"; }",
-              expected: ".a { content: \"bar\"; }",
-              prefix: "",
-            },
-          ],
-        },
-        {
-          name: "with reserved",
-          cases: [
-            {
-              input: ":root { --foo: \"bar\"; }",
-              expected: ":root { --a: \"bar\"; }",
-              reserved: [],
-            },
-            {
-              input: ":root { --foo: \"bar\"; }",
-              expected: ":root { --b: \"bar\"; }",
-              reserved: ["a"],
-            },
-            {
-              input: ":root { --foo: \"bar\"; }",
-              expected: ":root { --c: \"bar\"; }",
-              reserved: ["a", "b"],
-            },
-          ],
-        },
-      ];
+    type LanguageVerifier = (original: TestCase, result: TestCase[]) => void;
+    const verifiers: Map<QuoteLanguages, LanguageVerifier> = new Map([
+      ["css", function(original: TestCase, result: TestCase[]): void {
+        expect(result).to.have.length(2);
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "\""),
+          expected: original.expected.replace(/('|"|`)/g, "\""),
+        }));
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "'"),
+          expected: original.expected.replace(/('|"|`)/g, "'"),
+        }));
+      }],
+      ["html", function(original: TestCase, result: TestCase[]): void {
+        expect(result).to.have.length(2);
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "\""),
+          expected: original.expected.replace(/('|"|`)/g, "\""),
+        }));
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "'"),
+          expected: original.expected.replace(/('|"|`)/g, "'"),
+        }));
+      }],
+      ["js", function(original: TestCase, result: TestCase[]): void {
+        expect(result).to.have.length(3);
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "\""),
+          expected: original.expected.replace(/('|"|`)/g, "\""),
+        }));
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "'"),
+          expected: original.expected.replace(/('|"|`)/g, "'"),
+        }));
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "`"),
+          expected: original.expected.replace(/('|"|`)/g, "`"),
+        }));
+      }],
+      ["single-backticks", function(original: TestCase, result: TestCase[]): void {
+        expect(result).to.have.length(2);
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "'"),
+          expected: original.expected.replace(/('|"|`)/g, "'"),
+        }));
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "`"),
+          expected: original.expected.replace(/('|"|`)/g, "`"),
+        }));
+      }],
+      ["double-backticks", function(original: TestCase, result: TestCase[]): void {
+        expect(result).to.have.length(2);
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "\""),
+          expected: original.expected.replace(/('|"|`)/g, "\""),
+        }));
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "`"),
+          expected: original.expected.replace(/('|"|`)/g, "`"),
+        }));
+        // TODO
+      }],
+    ]);
 
+    for (const language of languages) {
       for (const { name, cases } of scenarios) {
-        test(name, function() {
+        test(`${language} - ${name}`, function() {
+          const resultVerifier = verifiers.get(language) as LanguageVerifier;
+          expect(resultVerifier).not.to.be.undefined;
+
           for (const testCase of cases) {
-            const result = varyQuotes(type, testCase);
-            expect(result).to.have.length(2);
-            expect(result).to.deep.include(testCase);
-
-            const indexOfOriginal = result.findIndex(ofTestCase(testCase));
-            expect(indexOfOriginal).not.to.equal(-1);
-
-            const othersIndices = [0, 1].filter(notNumber(indexOfOriginal));
-            for (const i of othersIndices) {
-              expect(result[i]).not.to.deep.equal(testCase);
-            }
+            const result = varyQuotes(language, testCase);
+            resultVerifier(testCase, result);
 
             for (const entry of result) {
               expect(entry.description).to.equal(testCase.description);
@@ -233,319 +308,17 @@ suite("Manglers Test helpers", function() {
         });
       }
 
-      test("no quotes in input", function() {
+      test(`${language} - no quotes in input`, function() {
         const testCase: TestCase = {
-          input: ".foo { }",
-          expected: ".bar { }",
+          input: "Hello world!",
+          expected: "Hello world!",
         };
 
-        const result = varyQuotes(type, testCase);
+        const result = varyQuotes(language, testCase);
         expect(result).to.have.length(1);
         expect(result[0]).to.deep.equal(testCase);
       });
-    });
-
-    suite("HTML", function() {
-      const type = "html";
-
-      const scenarios: TestScenario<TestCase>[] = [
-        {
-          name: "single quotes input",
-          cases: [
-            {
-              input: "<div id='foo'></div>",
-              expected: "<div id='bar'></div>",
-            },
-            {
-              input: "<div data-foo='foo'></div>",
-              expected: "<div data-a='foo'></div>",
-            },
-            {
-              input: "<p data-foo='bar' data-bar='foo'>Lorem ipsum</p>",
-              expected: "<p data-a='bar' data-b='foo'>Lorem ipsum</p>",
-            },
-            {
-              input: "<p data-foo='bar'>Lorem <b data-bar='foo'>ipsum</b></p>",
-              expected: "<p data-a='bar'>Lorem <b data-b='foo'>ipsum</b></p>",
-            },
-          ],
-        },
-        {
-          name: "double quotes input",
-          cases: [
-            {
-              input: "<div id=\"foo\"></div>",
-              expected: "<div id=\"bar\"></div>",
-            },
-            {
-              input: "<div data-foo=\"foo\"></div>",
-              expected: "<div data-a=\"foo\"></div>",
-            },
-            {
-              input: "<p data-foo=\"bar\" data-bar=\"foo\">Lorem ipsum</p>",
-              expected: "<p data-a=\"bar\" data-b=\"foo\">Lorem ipsum</p>",
-            },
-            {
-              input: "<p data-foo=\"bar\">Lorem <b data-bar=\"foo\">ipsum</b></p>",
-              expected: "<p data-a=\"bar\">Lorem <b data-b=\"foo\">ipsum</b></p>",
-            },
-          ],
-        },
-        {
-          name: "with description",
-          cases: [
-            {
-              input: "<div id=\"foobar\"></div>",
-              expected: "<div id=\"a\"></div>",
-              description: "",
-            },
-            {
-              input: "<div data-foo=\"bar\"></div>",
-              expected: "<div data-a=\"bar\"></div>",
-              description: "Hello world!",
-            },
-          ],
-        },
-        {
-          name: "with pattern",
-          cases: [
-            {
-              input: "<div id=\"foobar\"></div>",
-              expected: "<div id=\"foobar\"></div>",
-              pattern: "",
-            },
-            {
-              input: "<div data-foo=\"bar\"></div>",
-              expected: "<div data-a=\"bar\"></div>",
-              pattern: "data-.+",
-            },
-          ],
-        },
-        {
-          name: "with prefix",
-          cases: [
-            {
-              input: "<div id=\"foobar\"></div>",
-              expected: "<div id=\"id-a\"></div>",
-              prefix: "id-",
-            },
-            {
-              input: "<div data-foo=\"bar\"></div>",
-              expected: "<div foo-a=\"bar\"></div>",
-              prefix: "foo-",
-            },
-            {
-              input: "<div data-foo=\"bar\"></div>",
-              expected: "<div a=\"bar\"></div>",
-              prefix: "",
-            },
-          ],
-        },
-        {
-          name: "with reserved",
-          cases: [
-            {
-              input: "<div id=\"foobar\"></div>",
-              expected: "<div id=\"foobar\"></div>",
-              reserved: [],
-            },
-            {
-              input: "<div data-foo=\"bar\"></div>",
-              expected: "<div data-b=\"bar\"></div>",
-              reserved: ["a"],
-            },
-            {
-              input: "<div data-bar=\"foo\"></div>",
-              expected: "<div data-c=\"foo\"></div>",
-              reserved: ["a", "b"],
-            },
-          ],
-        },
-      ];
-
-      for (const { name, cases } of scenarios) {
-        test(name, function() {
-          for (const testCase of cases) {
-            const result = varyQuotes(type, testCase);
-            expect(result).to.have.length(2);
-            expect(result).to.deep.include(testCase);
-
-            const indexOfOriginal = result.findIndex(ofTestCase(testCase));
-            expect(indexOfOriginal).not.to.equal(-1);
-
-            const othersIndices = [0, 1].filter(notNumber(indexOfOriginal));
-            for (const i of othersIndices) {
-              expect(result[i]).not.to.deep.equal(testCase);
-            }
-
-            for (const entry of result) {
-              expect(entry.description).to.equal(testCase.description);
-              expect(entry.pattern).to.equal(testCase.pattern);
-              expect(entry.prefix).to.equal(testCase.prefix);
-              expect(entry.reserved).to.equal(testCase.reserved);
-            }
-          }
-        });
-      }
-
-      test("no quotes in input", function() {
-        const testCase: TestCase = {
-          input: "<p>foobar</p>",
-          expected: "<p>foobar</p>",
-        };
-
-        const result = varyQuotes(type, testCase);
-        expect(result).to.have.length(1);
-        expect(result[0]).to.deep.equal(testCase);
-      });
-    });
-
-    suite("JavaScript", function() {
-      const type = "js";
-
-      const scenarios: TestScenario<TestCase>[] = [
-        {
-          name: "single quotes input",
-          cases: [
-            {
-              input: "var foo = 'bar';",
-              expected: "var bar = 'foo'",
-            },
-            {
-              input: "foo('bar');",
-              expected: "foo('bar')",
-            },
-          ],
-        },
-        {
-          name: "double quotes input",
-          cases: [
-            {
-              input: "var foo = \"bar\";",
-              expected: "var bar = \"foo\"",
-            },
-            {
-              input: "foo(\"bar\");",
-              expected: "foo(\"bar\")",
-            },
-          ],
-        },
-        {
-          name: "backticks input",
-          cases: [
-            {
-              input: "var foo = `bar`;",
-              expected: "var bar = `foo`",
-            },
-            {
-              input: "foo(`bar`);",
-              expected: "foo(`bar`)",
-            },
-          ],
-        },
-        {
-          name: "with description",
-          cases: [
-            {
-              input: "document.querySelector(\".cls-foo\");",
-              expected: "document.querySelector(\".a\");",
-              description: "",
-            },
-            {
-              input: "document.querySelector(\".cls-foo\");",
-              expected: "document.querySelector(\".a\");",
-              description: "Hello world!",
-            },
-          ],
-        },
-        {
-          name: "with pattern",
-          cases: [
-            {
-              input: "document.querySelector(\".cls-foo\");",
-              expected: "document.querySelector(\".cls-foo\");",
-              pattern: "",
-            },
-            {
-              input: "document.querySelector(\".cls-foo\");",
-              expected: "document.querySelector(\".a\");",
-              pattern: "cls-.+",
-            },
-          ],
-        },
-        {
-          name: "with prefix",
-          cases: [
-            {
-              input: "document.getElementById(\"id-foo\");",
-              expected: "document.getElementById(\"a\");",
-              prefix: "",
-            },
-            {
-              input: "document.getElementById(\"id-foo\");",
-              expected: "document.getElementById(\"id-a\");",
-              prefix: "id-",
-            },
-          ],
-        },
-        {
-          name: "with reserved",
-          cases: [
-            {
-              input: "document.querySelector(\".cls-foo\");",
-              expected: "document.querySelector(\".a\");",
-              reserved: [],
-            },
-            {
-              input: "document.querySelector(\".cls-foo\");",
-              expected: "document.querySelector(\".b\");",
-              reserved: ["a"],
-            },
-            {
-              input: "document.querySelector(\".cls-foo\");",
-              expected: "document.querySelector(\".c\");",
-              reserved: ["a", "b"],
-            },
-          ],
-        },
-      ];
-
-      for (const { name, cases } of scenarios) {
-        test(name, function() {
-          for (const testCase of cases) {
-            const result = varyQuotes(type, testCase);
-            expect(result).to.have.length(3);
-            expect(result).to.deep.include(testCase);
-
-            const indexOfOriginal = result.findIndex(ofTestCase(testCase));
-            expect(indexOfOriginal).not.to.equal(-1);
-
-            const othersIndices = [0, 1].filter(notNumber(indexOfOriginal));
-            for (const i of othersIndices) {
-              expect(result[i]).not.to.deep.equal(testCase);
-            }
-
-            for (const entry of result) {
-              expect(entry.description).to.equal(testCase.description);
-              expect(entry.pattern).to.equal(testCase.pattern);
-              expect(entry.prefix).to.equal(testCase.prefix);
-              expect(entry.reserved).to.equal(testCase.reserved);
-            }
-          }
-        });
-      }
-
-      test("no quotes in input", function() {
-        const testCase: TestCase = {
-          input: "var foo;",
-          expected: "var bar;",
-        };
-
-        const result = varyQuotes(type, testCase);
-        expect(result).to.have.length(1);
-        expect(result[0]).to.deep.equal(testCase);
-      });
-    });
+    }
   });
 
   suite("::varySpacing", function() {

@@ -89,6 +89,12 @@ export function permuteObjects<T>(objects: T[]): T[] {
 }
 
 /**
+ * Type representing the languages supported by the {@link varyQuotes} function.
+ */
+export type QuoteLanguages =
+  "css" | "html" | "js" | "single-backticks" | "double-backticks";
+
+/**
  * Vary the quotes used in the snippets of code of `testCase` for a certain
  * `language`.
  *
@@ -97,16 +103,16 @@ export function permuteObjects<T>(objects: T[]): T[] {
  * @returns A variation of `testCase` for every quote allowed by `language`.
  */
 export function varyQuotes(
-  language: "css" | "html" | "js",
+  language: QuoteLanguages,
   testCase: TestCase,
 ): TestCase[] {
-  const doubleQuotesAllowed = ["css", "html", "js"];
-  const singleQuotesAllowed = ["css", "html", "js"];
-  const backticksAllowed = ["js"];
+  const doubleQuotesAllowed = ["css", "html", "js", "double-backticks"];
+  const singleQuotesAllowed = ["css", "html", "js", "single-backticks"];
+  const backticksAllowed = ["js", "double-backticks", "single-backticks"];
 
   const doubleQuotes = cloneObject(testCase, {
-    input: testCase.input.replace(/'/g, "\"").replace(/`/g, "\""),
-    expected: testCase.expected.replace(/'/g, "\"").replace(/`/g, "\""),
+    input: testCase.input.replace(/('|`)/g, "\""),
+    expected: testCase.expected.replace(/('|`)/g, "\""),
   });
 
   const result: TestCase[] = [];
