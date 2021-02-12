@@ -1,21 +1,45 @@
 import type { ManglerStats } from "./types";
 import type { WebManglerCliFile } from "../fs";
 
+import { getChangedPercentage } from "./helpers";
+
 /**
- * Get the percentage change between two numbers. The result is rounded to two
- * decimal places.
+ * Round a number to at most two decimal places.
  *
- * @param before The before number.
- * @param after The after number.
- * @returns The percentage difference between `before` and `after`.
+ * @param x The number of interest.
+ * @returns The number rounded.
  */
-function getChangedPercentage(before: number, after: number): number {
-  const rawPercentage = (after - before) / after;
-  return Math.round((rawPercentage + Number.EPSILON) * 100) / 100;
+function roundToTwoDecimalPlaces(x: number): number {
+  const rounded = Math.round((x + Number.EPSILON) * 100) / 100;
+  return rounded;
 }
 
 /**
- * Compute the statics about one _WebMangler_ run.
+ * Convert a percentage as number to a percentage for output.
+ *
+ * @param percentage The percentage as a number.
+ * @returns The percentage string (without %).
+ */
+function getDisplayPercentage(percentage: number): string {
+  if (percentage < 0) {
+    if (percentage > -0.01) {
+      return "<-0.01";
+    }
+
+    return roundToTwoDecimalPlaces(percentage).toString();
+  } else if (percentage > 0) {
+    if (percentage < 0.01) {
+      return "<+0.01";
+    }
+
+    return roundToTwoDecimalPlaces(percentage).toString();
+  } else {
+    return "0";
+  }
+}
+
+/**
+ * Compute the statistics about one _WebMangler_ run.
  *
  * @param inFiles The files selected for mangling.
  * @param outFiles The files after mangling.
@@ -63,7 +87,7 @@ export function logStats(
 ): void {
   stats.forEach((fileStats, filePath) => {
     if (fileStats.changed) {
-      const percentage = fileStats.changePercentage;
+      const percentage = getDisplayPercentage(fileStats.changePercentage);
       const reduction = `${fileStats.sizeBefore} -> ${fileStats.sizeAfter}`;
       log(`${filePath} ${percentage}% (${reduction})`);
     } else {
