@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Fix cases where HTML attributes were not mangled due to whitespace.
+- Fix mangling multiple HTML attributes on a single HTML element.
 - Support mangling HTML attribute usage (with `attr(data-foo)`) in CSS.
 
 ## [0.1.7] - 2021-02-10

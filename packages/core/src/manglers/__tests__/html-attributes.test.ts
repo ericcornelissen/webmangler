@@ -166,7 +166,7 @@ suite("HTML Attribute Mangler", function() {
   suite("HTML", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "sample",
+        name: "single attribute",
         cases: [
           ...varySpacing("=", {
             input: "<div data-foo=\"bar\"></div>",
@@ -176,14 +176,63 @@ suite("HTML Attribute Mangler", function() {
             input: "<div data-foo=\"bar\"></div>",
             expected: "<div data-a=\"bar\"></div>",
           }),
+        ],
+      },
+      {
+        name: "multiple attributes",
+        cases: [
           ...varyQuotes("html", {
-            input: "<div class=\"data-foo\"></div>",
-            expected: "<div class=\"data-foo\"></div>",
+            input: "<div data-foo=\"bar\"><div data-bar=\"foo\"></div></div>",
+            expected: "<div data-a=\"bar\"><div data-b=\"foo\"></div></div>",
           }),
+          ...varySpacing("=", {
+            input: "<div data-foo=\"bar\"><div data-bar=\"foo\"></div></div>",
+            expected: "<div data-a=\"bar\"><div data-b=\"foo\"></div></div>",
+          }),
+          ...varyQuotes("html", {
+            input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
+            expected: "<div data-a=\"bar\" data-b=\"foo\"></div>",
+          }),
+          ...varySpacing("=", {
+            input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
+            expected: "<div data-a=\"bar\" data-b=\"foo\"></div>",
+          }),
+        ],
+      },
+      {
+        name: "prefixed mangling",
+        cases: [
           {
             input: "<div data-foo=\"bar\"></div>",
             expected: "<div a=\"bar\"></div>",
             prefix: "",
+            description: "prefix may be omitted",
+          },
+          {
+            input: "<div data-bar=\"foobar\"></div>",
+            expected: "<div foo-a=\"foobar\"></div>",
+            prefix: "foo-",
+            description: "prefix may be changed",
+          },
+        ],
+      },
+      {
+        name: "corner cases",
+        cases: [
+          {
+            input: "<div class=\"data-foo\"></div>",
+            expected: "<div class=\"data-foo\"></div>",
+            description: "matches inside attribute value should be ignored",
+          },
+          {
+            input: "<div>data-foo is an attribute name</div>",
+            expected: "<div>data-foo is an attribute name</div>",
+            description: "matches outside an element tag should be ignored",
+          },
+          {
+            input: "< div data-foo=\"bar\"></div>",
+            expected: "< div data-a=\"bar\"></div>",
+            description: "ignore spacing before opening tag",
           },
         ],
       },
