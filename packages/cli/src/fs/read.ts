@@ -34,7 +34,7 @@ function* getFilesIn(basePath: string): Iterable<string> {
  * The path can be both a file or a directory.
  *
  * @param basePath The path to find files at or under.
- * @param extensions The extensions to yield.
+ * @param extensions The extensions of files to yield.
  * @yields The file(s) at or under basePath.
  */
 function* getFilesInFiltered(
@@ -42,7 +42,7 @@ function* getFilesInFiltered(
   extensions: string[],
 ): Iterable<string> {
   for (const filePath of getFilesIn(basePath)) {
-    if (extensions.some((ext) => path.extname(filePath) === ext)) {
+    if (extensions.some((ext) => filePath.endsWith(`.${ext}`))) {
       yield filePath;
     }
   }

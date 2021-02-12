@@ -49,8 +49,8 @@ suite("Reading", function() {
       fsMock.lstatSync.returns({ isFile: () => true });
       fsMock.readFileSync.returns({ toString: () => "" });
 
-      const extension = ".bar";
-      const file = `foo${extension}`;
+      const extension = "bar";
+      const file = `foo.${extension}`;
 
       const result = readFilesInAll([file], [extension]);
       expect(result).to.have.length(1);
@@ -65,8 +65,8 @@ suite("Reading", function() {
       fsMock.lstatSync.returns({ isFile: () => true });
       fsMock.readFileSync.returns({ toString: () => "" });
 
-      const extension = ".bar";
-      const file = `foo${extension}-x`;
+      const extension = "bar";
+      const file = `foo.${extension}-x`;
 
       const result = readFilesInAll([file], [extension]);
       expect(result).to.have.length(0);
@@ -79,8 +79,8 @@ suite("Reading", function() {
       fsMock.existsSync.returns(true);
       fsMock.lstatSync.returns({ isFile: () => true });
 
-      const extension = ".txt";
-      const paths = [`foo${extension}`, `bar${extension}`];
+      const extension = "txt";
+      const paths = [`foo.${extension}`, `bar.${extension}`];
 
       const result = readFilesInAll(paths, [extension]);
       expect(result).to.have.length(paths.length);
@@ -95,7 +95,7 @@ suite("Reading", function() {
       fsMock.lstatSync.returns({ isFile: () => true });
 
       const extension = ".txt";
-      const paths = [`foo${extension}-x`, `bar${extension}-x`];
+      const paths = [`foo.${extension}-x`, `bar.${extension}-x`];
 
       const result = readFilesInAll(paths, [extension]);
       expect(result).to.have.length(0);
@@ -109,11 +109,11 @@ suite("Reading", function() {
       fsMock.existsSync.returns(true);
       fsMock.lstatSync.returns({ isFile: () => true });
 
-      const extension = ".txt";
+      const extension = "txt";
       const paths = [
-        `praise${extension}-x`,
-        `the${extension}`,
-        `sun${extension}-x`,
+        `praise.${extension}-x`,
+        `the.${extension}`,
+        `sun.${extension}-x`,
       ];
 
       const result = readFilesInAll(paths, [extension]);
@@ -125,12 +125,12 @@ suite("Reading", function() {
     });
 
     test("input is directory with files", function() {
-      const extension = ".txt";
+      const extension = "txt";
       const directory = path.resolve("foobar");
       const files = [
-        `praise${extension}`,
-        `the${extension}`,
-        `sun${extension}`,
+        `praise.${extension}`,
+        `the.${extension}`,
+        `sun.${extension}`,
       ];
 
       fsMock.existsSync.returns(true);
@@ -152,12 +152,12 @@ suite("Reading", function() {
     });
 
     test("input is directory with files but some are filtered", function() {
-      const extension = ".txt";
+      const extension = "txt";
       const directory = path.resolve("foobar");
       const files = [
-        `praise${extension}`,
-        `the${extension}-x`,
-        `sun${extension}`,
+        `praise.${extension}`,
+        `the.${extension}-x`,
+        `sun.${extension}`,
       ];
 
       fsMock.existsSync.returns(true);
@@ -179,18 +179,18 @@ suite("Reading", function() {
     });
 
     test("input has nested directories and files", function() {
-      const extension = ".txt";
+      const extension = "txt";
       const level0Dir = path.resolve("foo");
       const level1Dir = path.resolve("bar");
       const level1Files = [
         level1Dir,
-        `praise${extension}`,
-        `the${extension}`,
-        `sun${extension}`,
+        `praise.${extension}`,
+        `the.${extension}`,
+        `sun.${extension}`,
       ];
       const level2Files = [
-        `hello${extension}`,
-        `world${extension}`,
+        `hello.${extension}`,
+        `world.${extension}`,
       ];
 
       const dirsCount = 2;
