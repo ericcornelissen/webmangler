@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Increase minimum `webmangler` peerDependency to `^0.1.9`.
+- Only read supported files from disk.
 
 ## [0.1.2] - 2021-02-11
 

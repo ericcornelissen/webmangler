@@ -23,7 +23,10 @@ export default function run(args: WebManglerCliArgs): void {
   logger.debug("configuration read");
 
   logger.debug("reading files provided on the CLI...");
-  const inFiles = fs.readFiles(args._);
+  const inFiles = fs.readFilesInAll(
+    args._,
+    config.languages.map((plugin) => plugin.getLanguages()).flat(),
+  );
   logger.debug(`found ${inFiles.length} files`);
 
   logger.debug(`mangling ${inFiles.length} files...`);
