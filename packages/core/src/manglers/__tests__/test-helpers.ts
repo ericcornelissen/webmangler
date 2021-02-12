@@ -100,6 +100,7 @@ export function varyQuotes(
   language: "css" | "html" | "js",
   testCase: TestCase,
 ): TestCase[] {
+  const doubleQuotesAllowed = ["css", "html", "js"];
   const singleQuotesAllowed = ["css", "html", "js"];
   const backticksAllowed = ["js"];
 
@@ -108,14 +109,17 @@ export function varyQuotes(
     expected: testCase.expected.replace(/'/g, "\"").replace(/`/g, "\""),
   });
 
-  const result: TestCase[] = [doubleQuotes];
+  const result: TestCase[] = [];
+  if (doubleQuotesAllowed.includes(language)) {
+    result.push(doubleQuotes);
+  }
   if (singleQuotesAllowed.includes(language)) {
     const singleQuotes = cloneObject(testCase, {
       input: doubleQuotes.input.replace(/"/g, "'"),
       expected: doubleQuotes.expected.replace(/"/g, "'"),
     });
 
-    if (singleQuotes.input !== doubleQuotes.input) {
+    if (!result.find(({ input }) => input === singleQuotes.input)) {
       result.push(singleQuotes);
     }
   }
@@ -125,7 +129,7 @@ export function varyQuotes(
       expected: doubleQuotes.expected.replace(/"/g, "`"),
     });
 
-    if (backticks.input !== doubleQuotes.input) {
+    if (!result.find(({ input }) => input === backticks.input)) {
       result.push(backticks);
     }
   }
@@ -137,38 +141,40 @@ export function varyQuotes(
  * Expand a single {@link TestCase} to multiple similar {@link TestCase}s that
  * have varied spacing.
  *
- * The provided {@link TestCase} is always the first element in the returned
- * array.
+ * If multiple strings are provided, every combination of spacing is created.
+ * Hence, this function outputs exponentially many {@link TestCase}s.
  *
- * @param chars The character(s) to vary the spacing around.
+ * @param strings The string(s) to vary the spacing around.
  * @param testCase The {@link TestCase} to vary the spacing in.
  * @returns One or more {@link TestCase}s based on `testCase`.
  */
 export function varySpacing(
-  chars: string | string[],
+  strings: string | string[],
   testCase: TestCase,
 ): TestCase[] {
-  chars = toArrayIfNeeded(chars);
+  strings = toArrayIfNeeded(strings);
 
   const result: TestCase[] = [testCase];
-  for (const char of chars) {
-    const spaceBeforeCase = cloneObject(testCase, {
-      input: testCase.input.replace(char, ` ${char}`),
-      expected: testCase.expected.replace(char, ` ${char}`),
-    });
-    const spaceAfterCase = cloneObject(testCase, {
-      input: testCase.input.replace(char, `${char} `),
-      expected: testCase.expected.replace(char, `${char} `),
-    });
-    const spaceSurroundingCase = cloneObject(testCase, {
-      input: testCase.input.replace(char, ` ${char} `),
-      expected: testCase.expected.replace(char, ` ${char} `),
-    });
+  strings.forEach((str) => {
+    result.forEach((entry) => {
+      const spaceBeforeCase = cloneObject(entry, {
+        input: entry.input.replace(str, ` ${str}`),
+        expected: entry.expected.replace(str, ` ${str}`),
+      });
+      const spaceAfterCase = cloneObject(entry, {
+        input: entry.input.replace(str, `${str} `),
+        expected: entry.expected.replace(str, `${str} `),
+      });
+      const spaceSurroundingCase = cloneObject(entry, {
+        input: entry.input.replace(str, ` ${str} `),
+        expected: entry.expected.replace(str, ` ${str} `),
+      });
 
-    if (testCase.input !== spaceBeforeCase.input) {
-      result.push(spaceBeforeCase, spaceAfterCase, spaceSurroundingCase);
-    }
-  }
+      if (entry.input !== spaceBeforeCase.input) {
+        result.push(spaceBeforeCase, spaceAfterCase, spaceSurroundingCase);
+      }
+    });
+  });
 
   return result;
 }
