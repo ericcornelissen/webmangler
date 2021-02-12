@@ -271,8 +271,16 @@ suite("HTML Attribute Mangler", function() {
   suite("JavaScript", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "sample",
+        name: "attribute selectors",
         cases: [
+          {
+            input: "document.querySelectorAll(\"p[data-foo] b[data-bar]\");",
+            expected: "document.querySelectorAll(\"p[data-a] b[data-b]\");",
+          },
+          {
+            input: "document.querySelectorAll(\"[data-foo][data-bar]\");",
+            expected: "document.querySelectorAll(\"[data-a][data-b]\");",
+          },
           ...varyQuotes("js", {
             input: "document.querySelectorAll(\"[data-foo]\");",
             expected: "document.querySelectorAll(\"[data-a]\");",
@@ -281,14 +289,62 @@ suite("HTML Attribute Mangler", function() {
             input: "document.querySelectorAll(\".foo[data-bar]\");",
             expected: "document.querySelectorAll(\".foo[data-a]\");",
           }),
-          ...varyQuotes("js", {
-            input: "document.querySelectorAll(\".data-foo\");",
-            expected: "document.querySelectorAll(\".data-foo\");",
+          ...varySpacing(["[", "]"], {
+            input: "document.querySelectorAll(\".foo[data-bar]\");",
+            expected: "document.querySelectorAll(\".foo[data-a]\");",
           }),
+          {
+            input: "document.querySelectorAll(\"[data-foo][data-bar]\");",
+            expected: "document.querySelectorAll(\"[data-a][data-b]\");",
+          },
+        ],
+      },
+      {
+        name: "attribute manipulation",
+        cases: [
+          ...varyQuotes("js", {
+            input: "$el.getAttribute(\"data-foo\");",
+            expected: "$el.getAttribute(\"data-a\");",
+          }),
+          ...varySpacing("\"", {
+            input: "$el.removeAttribute(\"data-bar\");",
+            expected: "$el.removeAttribute(\"data-a\");",
+          }),
+          ...varyQuotes("js", {
+            input: "let attr = \"data-foo\"; $el.setAttribute(attr, \"bar\");",
+            expected: "let attr = \"data-a\"; $el.setAttribute(attr, \"bar\");",
+          }),
+        ],
+      },
+      {
+        name: "prefixed mangling",
+        cases: [
           {
             input: "document.querySelectorAll(\"[data-foo]\");",
             expected: "document.querySelectorAll(\"[a]\");",
             prefix: "",
+            description: "prefix may be omitted",
+          },
+          {
+            input: "document.querySelectorAll(\"[data-bar]\");",
+            expected: "document.querySelectorAll(\"[foo-a]\");",
+            prefix: "foo-",
+            description: "prefix may be changed",
+          },
+        ],
+      },
+      {
+        name: "corner cases",
+        cases: [
+          {
+            input: "document.querySelectorAll(\".data-foo\");",
+            expected: "document.querySelectorAll(\".data-foo\");",
+            description: "class selector matching pattern should not be mangled",
+          },
+          {
+            input: "document.querySelectorAll(\"#data-foo\");",
+            expected: "document.querySelectorAll(\"#data-foo\");",
+            description: "ID selector matching pattern should not be mangled",
           },
         ],
       },

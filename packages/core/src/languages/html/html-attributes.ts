@@ -14,7 +14,7 @@ const GROUP_NAME_POST_MATCH = "post";
  * @param pattern The pattern.
  * @returns A {@see RegExp} to match `pattern` in an element.
  */
-function getClassRegExp(pattern: string): RegExp {
+function getAttributeRegExp(pattern: string): RegExp {
   const expr = `(?<=\\s)(?<${GROUP_NAME_LOCAL}>${pattern})(?=\\s|\\=|\\>)`;
   return new RegExp(expr, "gm");
 }
@@ -62,7 +62,7 @@ const expressions: ManglerExpression[] = [
     `.replace(/\s/g, ""),
     (pattern: string, match: ManglerMatch): string[] => {
       const s = match.getNamedGroup(GROUP_NAME_ALL);
-      const regExp = getClassRegExp(pattern);
+      const regExp = getAttributeRegExp(pattern);
       return findInstancesOfGroupIn(s, regExp, GROUP_NAME_LOCAL);
     },
     ManglerExpression.matchReplacerBy(`
