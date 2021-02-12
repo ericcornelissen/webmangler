@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Increase minimum `webmangler` peerDependency to `^0.1.9`.
 
 ## [0.1.2] - 2021-02-11
 
