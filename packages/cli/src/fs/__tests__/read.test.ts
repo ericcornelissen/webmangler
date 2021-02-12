@@ -27,8 +27,11 @@ suite("Reading", function() {
 
   suite("::readFiles", function() {
     test("no input file paths", function() {
-      const result = readFilesInAll([], []);
+      const result = readFilesInAll([], [".js", ".ts"]);
       expect(result).to.have.lengthOf(0);
+
+      const resultWithoutFilters = readFilesInAll([], []);
+      expect(resultWithoutFilters).to.have.lengthOf(0);
     });
 
     test("one input file that does not exist", function() {
@@ -94,8 +97,11 @@ suite("Reading", function() {
       fsMock.existsSync.returns(true);
       fsMock.lstatSync.returns({ isFile: () => true });
 
-      const extension = ".txt";
-      const paths = [`foo.${extension}-x`, `bar.${extension}-x`];
+      const extension = "txt";
+      const paths = [
+        `foo.${extension}-x`,
+        `bar.${extension}-x`,
+      ];
 
       const result = readFilesInAll(paths, [extension]);
       expect(result).to.have.length(0);
@@ -218,6 +224,24 @@ suite("Reading", function() {
       expect(fsMock.lstatSync).to.have.callCount(dirsCount + filesCount);
       expect(fsMock.readFileSync).to.have.callCount(filesCount);
       expect(fsMock.readdirSync).to.have.callCount(dirsCount);
+    });
+
+    test("extension text at end of file name without extension", function() {
+      fsMock.existsSync.returns(true);
+      fsMock.lstatSync.returns({ isFile: () => true });
+
+      const extension = "txt";
+      const paths = [
+        `foo${extension}`,
+        `bar${extension}`,
+      ];
+
+      const result = readFilesInAll(paths, [extension]);
+      expect(result).to.have.length(0);
+      expect(fsMock.existsSync).to.have.callCount(paths.length);
+      expect(fsMock.lstatSync).to.have.callCount(paths.length);
+      expect(fsMock.readFileSync).not.to.have.been.called;
+      expect(fsMock.readdirSync).not.to.have.been.called;
     });
   });
 });
