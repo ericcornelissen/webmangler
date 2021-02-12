@@ -8,7 +8,13 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix cases where HTML attributes were not mangled due to whitespace.
+- Fix mangling multiple HTML attributes on a single HTML element.
+- Fix mangling multiple HTML attributes in a single HTML selector in JavaScript.
+- Fix mangling HTML attributes when `>` appears in an attribute value.
+- Support mangling HTML attribute usage (with `attr(data-foo)`) in CSS.
+- Support mangling attribute-value selectors in JavaScript.
+- Improve HTML attribute mangler performance on JavaScript.
 
 ## [0.1.8] - 2021-02-12
 
