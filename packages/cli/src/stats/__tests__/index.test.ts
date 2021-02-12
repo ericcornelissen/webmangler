@@ -156,6 +156,20 @@ suite("Statistics", function() {
       }
     });
 
+    test("file that was not mangled", function() {
+      const entries: [string, FileStats][] = [
+        ["foo.bar", new FileStatsMock(1, 1)],
+      ];
+      const stats: ManglerStats = new Map(entries);
+
+      logStats(logMock, stats);
+      expect(logMock).to.have.callCount(entries.length);
+      for (const [path] of entries) {
+        expect(logMock).to.have.been.calledWith(sinon.match(path));
+        expect(logMock).to.have.been.calledWith(sinon.match("[NOT MANGLED]"));
+      }
+    });
+
     test("negative percentage between -0.01 and -100", function() {
       const entries: [string, FileStats][] = [
         ["correct.txt", new FileStatsMock(0, 1, -0.01)],
@@ -231,6 +245,19 @@ suite("Statistics", function() {
       expect(logMock).to.have.callCount(entries.length);
       for (const [,] of entries) {
         expect(logMock).to.have.been.calledWith(sinon.match("<+0.01%"));
+      }
+    });
+
+    test("percentage is exactly 0", function() {
+      const entries: [string, FileStats][] = [
+        ["foo.bar", new FileStatsMock(0, 1, 0)],
+      ];
+      const stats: ManglerStats = new Map(entries);
+
+      logStats(logMock, stats);
+      expect(logMock).to.have.callCount(entries.length);
+      for (const [,] of entries) {
+        expect(logMock).to.have.been.calledWith(sinon.match("0%"));
       }
     });
   });
