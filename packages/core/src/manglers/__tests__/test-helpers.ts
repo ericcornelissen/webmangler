@@ -97,10 +97,10 @@ export function permuteObjects<T>(objects: T[]): T[] {
  * @returns A variation of `testCase` for every quote allowed by `language`.
  */
 export function varyQuotes(
-  language: "html" | "js",
+  language: "css" | "html" | "js",
   testCase: TestCase,
 ): TestCase[] {
-  const singleQuotesAllowed = ["html", "js"];
+  const singleQuotesAllowed = ["css", "html", "js"];
   const backticksAllowed = ["js"];
 
   const doubleQuotes = cloneObject(testCase, {

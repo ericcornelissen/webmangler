@@ -34,6 +34,10 @@ suite("HTML Attribute Mangler", function() {
             input: "div[data-foo] { }",
             expected: "div[data-a] { }",
           }),
+          ...varyQuotes("css", {
+            input: "[data-foo=\"bar\"] { }",
+            expected: "[data-a=\"bar\"] { }",
+          }),
           ...varySpacing(["[", "]"], {
             input: "[data-foo=\"bar\"] { }",
             expected: "[data-a=\"bar\"] { }",
@@ -80,6 +84,10 @@ suite("HTML Attribute Mangler", function() {
               input: `div { content: attr(data-foo ${typeOrUnit}); }`,
               expected: `div { content: attr(data-a ${typeOrUnit}); }`,
             };
+          }),
+          ...varyQuotes("css", {
+            input: "div { content: attr(data-foo, \"bar\"); }",
+            expected: "div { content: attr(data-a, \"bar\"); }",
           }),
           ...varySpacing(["(", ")"], {
             input: "div { content: attr(data-foo, \"bar\"); }",
