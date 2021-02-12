@@ -19,6 +19,15 @@ interface WebManglerLanguagePlugin {
    * @since v0.1.0
    */
   getExpressionsFor(pluginId: string): ManglerExpressions[];
+
+  /**
+   * Get a list of the languages supported by the {@link
+   * WebManglerLanguagePlugin}.
+   *
+   * @returns A list of languages.
+   * @since v0.1.9
+   */
+  getLanguages(): string[];
 }
 
 /**

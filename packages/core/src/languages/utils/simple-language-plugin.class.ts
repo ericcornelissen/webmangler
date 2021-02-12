@@ -18,10 +18,10 @@ import type {
 export default abstract class SimpleLanguagePlugin
     implements WebManglerLanguagePlugin {
   /**
-   * The language, and its aliases, that this {@link SimpleLanguagePlugin}
+   * The languages, including aliases, that this {@link SimpleLanguagePlugin}
    * supports.
    */
-  private readonly languageAliases: string[];
+  private readonly languages: string[];
 
   /**
    * The {@link ManglerExpression}s for each supported {@link WebManglerPlugin}.
@@ -31,15 +31,22 @@ export default abstract class SimpleLanguagePlugin
   /**
    * Initialize a new {@link SimpleLanguagePlugin}.
    *
-   * @param languageAliases A language and its aliases.
+   * @example
+   * class LanguagePlugin extends SimpleLanguagePlugin {
+   *   constructor() {
+   *     super(["js", "cjs", "mjs"], expressions);
+   *   }
+   * }
+   *
+   * @param languages Supported language, including aliases.
    * @param expressions The expressions for supported {@link WebManglerPlugin}.
    * @since v0.1.0
    */
   constructor(
-    languageAliases: string[],
+    languages: string[],
     expressions: Map<string, ManglerExpression[]>,
   ) {
-    this.languageAliases = languageAliases;
+    this.languages = languages;
     this.expressions = expressions;
   }
 
@@ -48,13 +55,22 @@ export default abstract class SimpleLanguagePlugin
    * when the {@link SimpleLanguagePlugin} was initialized.
    *
    * @inheritDoc
-   * @since v0.1.0
    */
   getExpressionsFor(manglerId: string): ManglerExpressions[] {
     const manglerMatchers = this.expressions.get(manglerId) || [];
-    return this.languageAliases.map((language: string): ManglerExpressions => ({
+    return this.languages.map((language: string): ManglerExpressions => ({
       language: language,
       expressions: manglerMatchers,
     }));
+  }
+
+  /**
+   * Will return all the languages configured when the {@link
+   * SimpleLanguagePlugin} was initialized.
+   *
+   * @inheritDoc
+   */
+  getLanguages(): string[] {
+    return this.languages;
   }
 }

@@ -32,12 +32,26 @@ export default abstract class MultiLanguagePlugin
    * {@link MultiLanguagePlugin}.
    *
    * @inheritDoc
-   * @since v0.1.0
    */
   getExpressionsFor(manglerId: string): ManglerExpressions[] {
     const result: ManglerExpressions[] = [];
     this.plugins.forEach((plugin) => {
       result.push(...plugin.getExpressionsFor(manglerId));
+    });
+
+    return result;
+  }
+
+  /**
+   * Will return all the languages supported by every plugin in the {@link
+   * MultiLanguagePlugin}.
+   *
+   * @inheritDoc
+   */
+  getLanguages(): string[] {
+    const result: string[] = [];
+    this.plugins.forEach((plugin) => {
+      result.push(...plugin.getLanguages());
     });
 
     return result;

@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.9] - 2021-02-12
+
 - Fix cases where HTML attributes were not mangled due to whitespace.
 - Fix mangling multiple HTML attributes on a single HTML element.
 - Fix mangling multiple HTML attributes in a single HTML selector in JavaScript.

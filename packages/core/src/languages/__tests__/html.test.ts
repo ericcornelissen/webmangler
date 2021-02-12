@@ -35,4 +35,11 @@ suite("Built-in HTML Language Support", function() {
     const expressions = plugin.getExpressionsFor(HtmlIdMangler._ID);
     expect(expressions).to.have.length.above(0);
   });
+
+  test("get languages", function() {
+    const plugin = new HtmlLanguageSupport();
+
+    const result = plugin.getLanguages();
+    expect(result).to.include("html");
+  });
 });
