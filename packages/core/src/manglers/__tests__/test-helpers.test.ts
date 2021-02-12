@@ -42,6 +42,8 @@ suite("Manglers Test helpers", function() {
         "bar",
         "foo-bar",
         "Hello_World",
+        "_foobar",
+        "a_0-",
       ];
 
       for (const name of names) {
@@ -55,6 +57,17 @@ suite("Manglers Test helpers", function() {
         ".foo",
         "bar.",
         "foo=bar",
+        "-foobar",
+        "0foobar",
+        "1foobar",
+        "2foobar",
+        "3foobar",
+        "4foobar",
+        "5foobar",
+        "6foobar",
+        "7foobar",
+        "8foobar",
+        "9foobar",
       ];
 
       for (const name of names) {

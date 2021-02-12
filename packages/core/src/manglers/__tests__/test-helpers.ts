@@ -3,10 +3,17 @@ import type { TestCase } from "./types";
 import { deepStrictEqual } from "assert";
 import { format as printf } from "util";
 
-import { toArrayIfNeeded } from "../../helpers";
-
 /**
  * Clone an object and, optionally, replace some of the values in the object.
+ *
+ * @example
+ * const original = { a: "foo", b: "bar" };
+ * const clone = cloneObject(original);
+ * // original !== clone
+ *
+ * @example
+ * const clone = cloneObject({ a: "foo", b: "bar" }, { b: "baz" });
+ * // clone.b === "baz"
  *
  * @param o The object to clone.
  * @param r The keys to replace.
@@ -19,6 +26,9 @@ function cloneObject<T>(o: T, r?: unknown): T {
 /**
  * A helper function for `Array.prototype.filter` to filter out any duplicates
  * in an array.
+ *
+ * @example
+ * array.filter(duplicates);
  *
  * @param value The current value.
  * @param index The index of the value.
@@ -42,8 +52,15 @@ function duplicates<T>(value: T, index: number, arr: T[]): boolean {
  * Generate an array of length `n` of strings formatted based on the provided
  * template using the index of the string in the array.
  *
+ * The behaviour is undefined if `template` contains 0 or more than ` "%s", but
+ * the function won't fail.
+ *
+ * @example
+ * const array = getArrayOfFormattedStrings(3, "-%s-");
+ * // array === ["-0-", "-1-", "-2-"]
+ *
  * @param n The desired length of the array.
- * @param template A string containing one "%s" where the index is inserted.
+ * @param template A string with a single "%s" where the index will be inserted.
  * @returns The generated array.
  */
 export function getArrayOfFormattedStrings(
@@ -57,11 +74,19 @@ export function getArrayOfFormattedStrings(
 /**
  * Check if the provided string is a valid class name.
  *
- * @param s The string of interest.
- * @returns `true` if `s` is a valid class name, `false` otherwise.
+ * @example
+ * const validClassName = isValidClassName("foo");
+ * // validClassName === true
+ *
+ * @example
+ * const invalidClassName = isValidClassName(".foo");
+ * // invalidClassName === false
+ *
+ * @param className The string of interest.
+ * @returns `true` if `className` is a valid class name, `false` otherwise.
  */
-export function isValidClassName(s: string): boolean {
-  return /^[a-zA-Z-_]*$/.test(s);
+export function isValidClassName(className: string): boolean {
+  return /^[a-zA-Z_][a-zA-Z0-9_-]*$/.test(className);
 }
 
 /**
@@ -98,7 +123,7 @@ export type QuoteLanguages =
  * Vary the quotes used in the snippets of code of `testCase` for a certain
  * `language`.
  *
- * @param language The language the snippets are in.
+ * @param language The language `testCase` is written in.
  * @param testCase The {@link TestCase} to vary.
  * @returns A variation of `testCase` for every quote allowed by `language`.
  */
@@ -158,7 +183,7 @@ export function varySpacing(
   strings: string | string[],
   testCase: TestCase,
 ): TestCase[] {
-  strings = toArrayIfNeeded(strings);
+  strings = Array.isArray(strings) ? strings : [strings];
 
   const result: TestCase[] = [testCase];
   strings.forEach((str) => {
