@@ -75,6 +75,17 @@ export const PSEUDO_SELECTORS: string[] = [
 ];
 
 /**
+ * A list of all CSS selector connectors.
+ */
+export const SELECTOR_CONNECTORS: string[] = [
+  " ",
+  ",",
+  ">",
+  "+",
+  "~",
+];
+
+/**
  * A list of all type or units for the `attr()` CSS function.
  *
  * Based on: https://developer.mozilla.org/en-US/docs/Web/CSS/attr()#values

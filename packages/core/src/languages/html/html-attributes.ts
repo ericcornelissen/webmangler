@@ -2,10 +2,12 @@ import type { ManglerMatch } from "../types";
 
 import ManglerExpression from "../utils/mangler-expression.class";
 
-const GROUP_NAME_ALL = "all";
-const GROUP_NAME_LOCAL = "attribute";
-const GROUP_NAME_PRE_MATCH = "pre";
-const GROUP_NAME_POST_MATCH = "post";
+const GROUP_ALL = "all";
+const GROUP_ATTRIBUTE = "attribute";
+const GROUP_QUOTE = "quote";
+
+const SELECTOR_REQUIRED_BEFORE = "\\s";
+const SELECTOR_REQUIRED_AFTER = "\\s|\\=|\\>";
 
 /**
  * Get a regular expression to match individual attributes in a HTML element
@@ -15,7 +17,12 @@ const GROUP_NAME_POST_MATCH = "post";
  * @returns A {@see RegExp} to match `pattern` in an element.
  */
 function getAttributeRegExp(pattern: string): RegExp {
-  const expr = `(?<=\\s)(?<${GROUP_NAME_LOCAL}>${pattern})(?=\\s|\\=|\\>)`;
+  const expr = `
+    (?<=${SELECTOR_REQUIRED_BEFORE})
+    (?<${GROUP_ATTRIBUTE}>${pattern})
+    (?=${SELECTOR_REQUIRED_AFTER})
+  `.replace(/\s/g, "");
+
   return new RegExp(expr, "gm");
 }
 
@@ -54,20 +61,32 @@ const expressions: ManglerExpression[] = [
   new ManglerExpression(
     `
       (?<=\\<\\s*[a-zA-Z]+(?=\\s))
-      (?<${GROUP_NAME_ALL}>
-        (?<${GROUP_NAME_PRE_MATCH}>[^\\>]*)
-        %s
-        (?<${GROUP_NAME_POST_MATCH}>\\s|\\=|\\>)
+      (?<${GROUP_ALL}>
+        (?:
+          [^\\>]
+          |
+          (?<${GROUP_QUOTE}>"|')
+            (.(?!\\k<${GROUP_QUOTE}>))*
+            \\>
+            (.(?<!\\k<${GROUP_QUOTE}>))*
+          (\\k<${GROUP_QUOTE}>)
+        )*
+        (?<=${SELECTOR_REQUIRED_BEFORE})
+        (?<${GROUP_ATTRIBUTE}>%s)
+        (?:${SELECTOR_REQUIRED_AFTER})
       )
     `.replace(/\s/g, ""),
     (pattern: string, match: ManglerMatch): string[] => {
-      const s = match.getNamedGroup(GROUP_NAME_ALL);
+      const s = match.getNamedGroup(GROUP_ALL);
       const regExp = getAttributeRegExp(pattern);
-      return findInstancesOfGroupIn(s, regExp, GROUP_NAME_LOCAL);
+      return findInstancesOfGroupIn(s, regExp, GROUP_ATTRIBUTE);
     },
-    ManglerExpression.matchReplacerBy(`
-      $<${GROUP_NAME_PRE_MATCH}>%s$<${GROUP_NAME_POST_MATCH}>
-    `.replace(/\s/g, "")),
+    (replaceStr: string, match: ManglerMatch): string => {
+      const s = match.getNamedGroup(GROUP_ALL);
+      const attr = match.getNamedGroup(GROUP_ATTRIBUTE);
+      const regExp = getAttributeRegExp(attr);
+      return s.replace(regExp, replaceStr);
+    },
   ),
 ];
 

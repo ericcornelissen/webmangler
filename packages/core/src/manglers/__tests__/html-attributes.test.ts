@@ -3,7 +3,12 @@ import type { TestCase } from "./types";
 
 import { expect } from "chai";
 
-import { TYPE_OR_UNITS } from "./css-selectors";
+import {
+  PSEUDO_ELEMENT_SELECTORS,
+  PSEUDO_SELECTORS,
+  SELECTOR_CONNECTORS,
+  TYPE_OR_UNITS ,
+} from "./css-selectors";
 import {
   getArrayOfFormattedStrings,
   varyQuotes,
@@ -24,16 +29,60 @@ suite("HTML Attribute Mangler", function() {
   suite("CSS", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "attribute selector",
+        name: "single attribute selector",
         cases: [
           ...varySpacing(["[", "]"], {
             input: "[data-foo] { }",
             expected: "[data-a] { }",
           }),
-          ...varySpacing("[", {
+          ...varySpacing(["[", "]"], {
             input: "div[data-foo] { }",
             expected: "div[data-a] { }",
           }),
+          ...varySpacing(["[", "]"], {
+            input: "a[href] { }",
+            expected: "a[href] { }",
+          }),
+        ],
+      },
+      {
+        name: "multiple attribute selectors",
+        cases: [
+          ...SELECTOR_CONNECTORS.map((connector) => {
+            return {
+              input: `div[data-foo]${connector}div[data-bar] { }`,
+              expected: `div[data-a]${connector}div[data-b] { }`,
+            };
+          }),
+          {
+            input: "div[data-foo] { } p[data-bar] { }",
+            expected: "div[data-a] { } p[data-b] { }",
+          },
+          {
+            input: "div[data-foo][data-bar] { }",
+            expected: "div[data-a][data-b] { }",
+          },
+          {
+            input: "div[data-foo][data-foo] { }",
+            expected: "div[data-a][data-a] { }",
+          },
+          {
+            input: "div[data-praise].foo[data-the]#bar[data-sun] { }",
+            expected: "div[data-a].foo[data-b]#bar[data-c] { }",
+          },
+          {
+            input: "div[data-foo] { } a[href] { }",
+            expected: "div[data-a] { } a[href] { }",
+          },
+          {
+            input: "a[href] { } div[data-foo] { }",
+            expected: "a[href] { } div[data-a] { }",
+          },
+        ],
+      },
+      {
+        name: "attribute value selector",
+        cases: [
           ...varyQuotes("css", {
             input: "[data-foo=\"bar\"] { }",
             expected: "[data-a=\"bar\"] { }",
@@ -45,6 +94,10 @@ suite("HTML Attribute Mangler", function() {
           ...varySpacing("=", {
             input: "[data-foo=\"bar\"] { }",
             expected: "[data-a=\"bar\"] { }",
+          }),
+          ...varySpacing("|=", {
+            input: "[data-foo|=\"bar\"] { }",
+            expected: "[data-a|=\"bar\"] { }",
           }),
           ...varySpacing("~=", {
             input: "[data-foo~=\"bar\"] { }",
@@ -62,9 +115,27 @@ suite("HTML Attribute Mangler", function() {
             input: "[data-foo*=\"bar\"] { }",
             expected: "[data-a*=\"bar\"] { }",
           }),
-          ...varySpacing("|=", {
-            input: "[data-foo|=\"bar\"] { }",
-            expected: "[data-a|=\"bar\"] { }",
+        ],
+      },
+      {
+        name: "attribute selectors with pseudo selectors",
+        cases: [
+          ...PSEUDO_SELECTORS.map((s: string): TestCase => ({
+            input: `[data-foo]:${s} { }`,
+            expected: `[data-a]:${s} { }`,
+          })),
+          ...PSEUDO_ELEMENT_SELECTORS.map((s: string): TestCase => ({
+            input: `[data-foo]::${s} { }`,
+            expected: `[data-a]::${s} { }`,
+          })),
+        ],
+      },
+      {
+        name: "inverted attribute selectors",
+        cases: [
+          ...varySpacing(["(", ")"], {
+            input: ":not([data-foo]) { }",
+            expected: ":not([data-a]) { }",
           }),
         ],
       },
@@ -100,18 +171,96 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "prefix",
+        name: "reserved attribute names",
+        cases: [
+          {
+            input: "[data-foo] { }",
+            expected: "[data-b] { }",
+            reserved: ["a"],
+          },
+          {
+            input: "[data-foo] { } [data-bar] { }",
+            expected: "[data-a] { } [data-d] { }",
+            reserved: ["b", "c"],
+          },
+          {
+            input: "[data-praise], [data-the], [data-sun] { }",
+            expected: "[data-c], [data-e], [data-f] { }",
+            reserved: ["a", "b", "d"],
+          },
+        ],
+      },
+      {
+        name: "prefixed mangling",
         cases: [
           {
             input: "[data-foo] { }",
             expected: "[a] { }",
             prefix: "",
+            description: "prefix may be omitted",
+          },
+          {
+            input: "[data-foo] { }",
+            expected: "[foo-a] { }",
+            prefix: "foo-",
+            description: "prefix may be changed",
           },
         ],
       },
       {
-        name: "non-attribute selectors matching pattern",
+        name: "input attributes and mangled attributes intersect",
         cases: [
+          {
+            input: "[data-a] { }",
+            pattern: "data-[a-z]",
+            expected: "[data-a] { }",
+          },
+          {
+            input: "[data-b][data-a] { }",
+            pattern: "data-[a-z]",
+            expected: "[data-a][data-b] { }",
+          },
+          {
+            input: "[data-a][data-c][data-b] { }",
+            pattern: "data-[a-z]",
+            expected: "[data-a][data-b][data-c] { }",
+          },
+          {
+            input: "[data-d][data-b][data-c][data-a] { }",
+            pattern: "data-[a-z]",
+            expected: "[data-a][data-b][data-c][data-d] { }",
+          },
+          {
+            input: "[data-d][data-a][data-b][data-c][data-b] { }",
+            pattern: "data-[a-z]",
+            expected: "[data-b][data-c][data-a][data-d][data-a] { }",
+          },
+          {
+            input: "[data-o][data-m][data-foo][data-n] { }",
+            pattern: "data-[a-z]",
+            expected: "[data-a][data-b][data-foo][data-c] { }",
+          },
+        ],
+      },
+      {
+        name: "corner cases",
+        cases: [
+          {
+            input: "[data-foo=\"]\"] { }",
+            expected: "[data-a=\"]\"] { }",
+          },
+          {
+            input: "[data-foo=\"[\"] { }",
+            expected: "[data-a=\"[\"] { }",
+          },
+          {
+            input: "[data-foo=\"=\"] { }",
+            expected: "[data-a=\"=\"] { }",
+          },
+          {
+            input: "#data-foo[data-foo] { }",
+            expected: "#data-foo[data-a] { }",
+          },
           {
             input: "#data-foo { }",
             expected: "#data-foo { }",
@@ -127,6 +276,11 @@ suite("HTML Attribute Mangler", function() {
           {
             input: "div { }",
             expected: "div { }",
+            pattern: "[a-z]+",
+          },
+          {
+            input: "div[class] { }",
+            expected: "div[data-a] { }",
             pattern: "[a-z]+",
           },
         ],
@@ -176,12 +330,32 @@ suite("HTML Attribute Mangler", function() {
             input: "<div data-foo=\"bar\"></div>",
             expected: "<div data-a=\"bar\"></div>",
           }),
+          {
+            input: "<div data-foo></div>",
+            expected: "<div data-a></div>",
+          },
         ],
       },
       {
         name: "multiple attributes",
         cases: [
           ...varyQuotes("html", {
+            input: "<div id=\"foo\" data-foo=\"bar\"></div>",
+            expected: "<div id=\"foo\" data-a=\"bar\"></div>",
+          }),
+          ...varyQuotes("html", {
+            input: "<div data-foo=\"bar\" id=\"foo\"></div>",
+            expected: "<div data-a=\"bar\" id=\"foo\"></div>",
+          }),
+          ...varyQuotes("html", {
+            input: "<div id=\"foo\"><div data-foo=\"bar\"></div></div>",
+            expected: "<div id=\"foo\"><div data-a=\"bar\"></div></div>",
+          }),
+          ...varyQuotes("html", {
+            input: "<div data-foo=\"bar\"><div id=\"foo\"></div></div>",
+            expected: "<div data-a=\"bar\"><div id=\"foo\"></div></div>",
+          }),
+          ...varyQuotes("html", {
             input: "<div data-foo=\"bar\"><div data-bar=\"foo\"></div></div>",
             expected: "<div data-a=\"bar\"><div data-b=\"foo\"></div></div>",
           }),
@@ -197,6 +371,34 @@ suite("HTML Attribute Mangler", function() {
             input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
             expected: "<div data-a=\"bar\" data-b=\"foo\"></div>",
           }),
+          {
+            input: "<a href=\"https://www.example.com/\" data-foo></a>",
+            expected: "<a href=\"https://www.example.com/\" data-a></a>",
+          },
+          {
+            input: "<a data-foo href=\"https://www.example.com/\"></a>",
+            expected: "<a data-a href=\"https://www.example.com/\"></a>",
+          },
+        ],
+      },
+      {
+        name: "reserved attribute names",
+        cases: [
+          {
+            input: "<div data-foo=\"bar\"></div>",
+            expected: "<div data-b=\"bar\"></div>",
+            reserved: ["a"],
+          },
+          {
+            input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
+            expected: "<div data-a=\"bar\" data-d=\"foo\"></div>",
+            reserved: ["b", "c"],
+          },
+          {
+            input: "<div data-praise=\"do\" data-the=\"the\" data-sun=\"thing\"></div>",
+            expected: "<div data-c=\"do\" data-e=\"the\" data-f=\"thing\"></div>",
+            reserved: ["a", "b", "d"],
+          },
         ],
       },
       {
@@ -217,8 +419,48 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
+        name: "input attributes and mangled attributes intersect",
+        cases: [
+          {
+            input: "<div data-a></div>",
+            pattern: "data-[a-z]",
+            expected: "<div data-a></div>",
+          },
+          {
+            input: "<div data-b data-a></div>",
+            pattern: "data-[a-z]",
+            expected: "<div data-a data-b></div>",
+          },
+          {
+            input: "<div data-a data-c data-b></div>",
+            pattern: "data-[a-z]",
+            expected: "<div data-a data-b data-c></div>",
+          },
+          {
+            input: "<div data-d data-b data-c data-a></div>",
+            pattern: "data-[a-z]",
+            expected: "<div data-a data-b data-c data-d></div>",
+          },
+          {
+            input: "<div data-d data-a data-b data-c data-b></div>",
+            pattern: "data-[a-z]",
+            expected: "<div data-b data-c data-a data-d data-a></div>",
+          },
+          {
+            input: "<div data-o data-m data-foo data-n></div>",
+            pattern: "data-[a-z]",
+            expected: "<div data-a data-b data-foo data-c></div>",
+          },
+        ],
+      },
+      {
         name: "corner cases",
         cases: [
+          {
+            input: "<div data-foo=\">\" data-bar=\"foo\"></div>",
+            expected: "<div data-a=\">\" data-b=\"foo\"></div>",
+            description: "closing `>` inside attribute values should be ignored",
+          },
           {
             input: "<div class=\"data-foo\"></div>",
             expected: "<div class=\"data-foo\"></div>",
@@ -271,16 +513,8 @@ suite("HTML Attribute Mangler", function() {
   suite("JavaScript", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "attribute selectors",
+        name: "single attribute selectors",
         cases: [
-          {
-            input: "document.querySelectorAll(\"p[data-foo] b[data-bar]\");",
-            expected: "document.querySelectorAll(\"p[data-a] b[data-b]\");",
-          },
-          {
-            input: "document.querySelectorAll(\"[data-foo][data-bar]\");",
-            expected: "document.querySelectorAll(\"[data-a][data-b]\");",
-          },
           ...varyQuotes("js", {
             input: "document.querySelectorAll(\"[data-foo]\");",
             expected: "document.querySelectorAll(\"[data-a]\");",
@@ -293,10 +527,92 @@ suite("HTML Attribute Mangler", function() {
             input: "document.querySelectorAll(\".foo[data-bar]\");",
             expected: "document.querySelectorAll(\".foo[data-a]\");",
           }),
-          {
+        ],
+      },
+      {
+        name: "multiple attribute selectors",
+        cases: [
+          ...SELECTOR_CONNECTORS.map((connector) => {
+            return {
+              input: `"[data-foo]${connector}data[data-bar]"`,
+              expected: `"[data-a]${connector}data[data-b]"`,
+            };
+          }),
+          ...varyQuotes("js", {
+            input: "document.querySelectorAll(\"a[href] span[data-foobar]\");",
+            expected: "document.querySelectorAll(\"a[href] span[data-a]\");",
+          }),
+          ...varySpacing(["[", "]"], {
+            input: "document.querySelectorAll(\"span[data-foobar] a[href]\");",
+            expected: "document.querySelectorAll(\"span[data-a] a[href]\");",
+          }),
+          ...varyQuotes("js", {
+            input: "document.querySelectorAll(\"p[data-foo] b[data-bar]\");",
+            expected: "document.querySelectorAll(\"p[data-a] b[data-b]\");",
+          }),
+          ...varyQuotes("js", {
             input: "document.querySelectorAll(\"[data-foo][data-bar]\");",
             expected: "document.querySelectorAll(\"[data-a][data-b]\");",
-          },
+          }),
+          ...varySpacing(["[", "]"], {
+            input: "document.querySelectorAll(\"[data-foo][data-bar]\");",
+            expected: "document.querySelectorAll(\"[data-a][data-b]\");",
+          }),
+        ],
+      },
+      {
+        name: "attribute value selector",
+        cases: [
+          ...varyQuotes("js", {
+            input: "var s = \"[data-foo=\\\"bar\\\"]\";",
+            expected: "var s = \"[data-a=\\\"bar\\\"]\";",
+          }),
+          ...varyQuotes("js", {
+            input: "var s = \"[data-foo|=\\\"bar\\\"]\";",
+            expected: "var s = \"[data-a|=\\\"bar\\\"]\";",
+          }),
+          ...varyQuotes("js", {
+            input: "var s = \"[data-foo~=\\\"bar\\\"]\";",
+            expected: "var s = \"[data-a~=\\\"bar\\\"]\";",
+          }),
+          ...varyQuotes("js", {
+            input: "var s = \"[data-foo^=\\\"bar\\\"]\";",
+            expected: "var s = \"[data-a^=\\\"bar\\\"]\";",
+          }),
+          ...varyQuotes("js", {
+            input: "var s = \"[data-foo$=\\\"bar\\\"]\";",
+            expected: "var s = \"[data-a$=\\\"bar\\\"]\";",
+          }),
+          ...varyQuotes("js", {
+            input: "var s = \"[data-foo*=\\\"bar\\\"]\";",
+            expected: "var s = \"[data-a*=\\\"bar\\\"]\";",
+          }),
+          ...varyQuotes("js", {
+            input: "var s = \"[data-foo=\\\"bar\\\"][data-bar=\\\"foo\\\"]\";",
+            expected: "var s = \"[data-a=\\\"bar\\\"][data-b=\\\"foo\\\"]\";",
+          }),
+        ],
+      },
+      {
+        name: "attribute selectors with pseudo selectors",
+        cases: [
+          ...PSEUDO_SELECTORS.map((s: string): TestCase => ({
+            input: `querySelector("[data-foo]:${s}");`,
+            expected: `querySelector("[data-a]:${s}");`,
+          })),
+          ...PSEUDO_ELEMENT_SELECTORS.map((s: string): TestCase => ({
+            input: `querySelector("[data-foo]::${s}");`,
+            expected: `querySelector("[data-a]::${s}");`,
+          })),
+        ],
+      },
+      {
+        name: "inverted attribute selectors",
+        cases: [
+          ...varySpacing(["(", ")"], {
+            input: "var s= \":not([data-foo])\";",
+            expected: "var s= \":not([data-a])\";",
+          }),
         ],
       },
       {
@@ -317,6 +633,26 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
+        name: "reserved attribute names",
+        cases: [
+          {
+            input: "document.querySelectorAll(\"[data-foo]\");",
+            expected: "document.querySelectorAll(\"[data-b]\");",
+            reserved: ["a"],
+          },
+          {
+            input: "var s1 = \"[data-foo]\"; var s2 = \"[data-bar]\";",
+            expected: "var s1 = \"[data-a]\"; var s2 = \"[data-d]\";",
+            reserved: ["b", "c"],
+          },
+          {
+            input: "var s1 = \"[data-praise][data-the]\"; var s2 = \"[data-sun]\";",
+            expected: "var s1 = \"[data-c][data-e]\"; var s2 = \"[data-f]\";",
+            reserved: ["a", "b", "d"],
+          },
+        ],
+      },
+      {
         name: "prefixed mangling",
         cases: [
           {
@@ -334,6 +670,41 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
+        name: "input attributes and mangled attributes intersect",
+        cases: [
+          {
+            input: "querySelector(\"[data-a]\");",
+            pattern: "data-[a-z]",
+            expected: "querySelector(\"[data-a]\");",
+          },
+          {
+            input: "querySelector(\"[data-b][data-a]\");",
+            pattern: "data-[a-z]",
+            expected: "querySelector(\"[data-a][data-b]\");",
+          },
+          {
+            input: "querySelector(\"[data-a][data-c][data-b]\");",
+            pattern: "data-[a-z]",
+            expected: "querySelector(\"[data-a][data-b][data-c]\");",
+          },
+          {
+            input: "var selector = \"[data-d][data-b][data-c][data-a]\";",
+            pattern: "data-[a-z]",
+            expected: "var selector = \"[data-a][data-b][data-c][data-d]\";",
+          },
+          {
+            input: "var s = \"[data-d][data-a][data-b][data-c][data-b]\";",
+            pattern: "data-[a-z]",
+            expected: "var s = \"[data-b][data-c][data-a][data-d][data-a]\";",
+          },
+          {
+            input: "var selector = \"[data-o][data-m][data-foo][data-n]\";",
+            pattern: "data-[a-z]",
+            expected: "var selector = \"[data-a][data-b][data-foo][data-c]\";",
+          },
+        ],
+      },
+      {
         name: "corner cases",
         cases: [
           {
@@ -342,8 +713,18 @@ suite("HTML Attribute Mangler", function() {
             description: "class selector matching pattern should not be mangled",
           },
           {
+            input: "querySelector(\".data-foo[data-foo]\");",
+            expected: "querySelector(\".data-foo[data-a]\");",
+            description: "class selector matching pattern should not be mangled",
+          },
+          {
             input: "document.querySelectorAll(\"#data-foo\");",
             expected: "document.querySelectorAll(\"#data-foo\");",
+            description: "ID selector matching pattern should not be mangled",
+          },
+          {
+            input: "querySelector(\"#data-foo[data-foo]\");",
+            expected: "querySelector(\"#data-foo[data-a]\");",
             description: "ID selector matching pattern should not be mangled",
           },
         ],

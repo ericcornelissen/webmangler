@@ -6,8 +6,8 @@ const GROUP_ALL = "all";
 const GROUP_ATTRIBUTE = "attribute";
 const GROUP_QUOTE = "quote";
 
-const REQUIRED_BEFORE = "\\[\\s*";
-const REQUIRED_AFTER = "\\s*(?:\\]|\\=|\\|=\\~=|\\^=|\\$=|\\*=|)";
+const SELECTOR_REQUIRED_BEFORE = "\\[\\s*";
+const SELECTOR_REQUIRED_AFTER = "\\s*(?:\\]|\\=|\\|=|\\~=|\\^=|\\$=|\\*=)";
 
 /**
  * Get a regular expression to match individual attributes selectors in a query
@@ -18,9 +18,9 @@ const REQUIRED_AFTER = "\\s*(?:\\]|\\=|\\|=\\~=|\\^=|\\$=|\\*=|)";
  */
 function getAttributeRegExp(pattern: string): RegExp {
   const expr = `
-    (?<=${REQUIRED_BEFORE})
+    (?<=${SELECTOR_REQUIRED_BEFORE})
     (?<${GROUP_ATTRIBUTE}>${pattern})
-    (?=${REQUIRED_AFTER})
+    (?=${SELECTOR_REQUIRED_AFTER})
   `.replace(/\s/g, "");
 
   return new RegExp(expr, "gm");
@@ -64,12 +64,12 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("[(data-foo)*="bar"]"\)`
   new ManglerExpression(
     `
-      (?<=(?<${GROUP_QUOTE}>"|'|\`)\\s*)
+      (?<=(?<${GROUP_QUOTE}>"|'|\`))
       (?<${GROUP_ALL}>
-        (?:.(?!\\k<${GROUP_QUOTE}>))*
-        (?:${REQUIRED_BEFORE})
+        (?:.(?!\\k<${GROUP_QUOTE}>)|\\\\k<${GROUP_QUOTE}>)*
+        (?:${SELECTOR_REQUIRED_BEFORE})
         (?<${GROUP_ATTRIBUTE}>%s)
-        (?:${REQUIRED_AFTER})
+        (?:${SELECTOR_REQUIRED_AFTER})
       )
     `.replace(/\s/g, ""),
     (pattern: string, match: ManglerMatch): string[] => {
