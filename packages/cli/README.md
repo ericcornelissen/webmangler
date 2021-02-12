@@ -15,7 +15,7 @@ Add your configuration in `.webmanglerrc.js` or `webmangler.config.js`, e.g.:
 ```js
 // .webmanglerrc.js
 
-const { BuiltInLanguagesPlugin } = require("webmangler/languages");
+const { BuiltInLanguagesSupport } = require("webmangler/languages");
 const { BuiltInManglers } = require("webmangler/manglers");
 
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
   ],
   languages: [
     // Mangle in CSS, HTML, and JavaScript
-    new BuiltInLanguagesPlugin(),
+    new BuiltInLanguagesSupport(),
   ],
 };
 ```

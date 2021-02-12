@@ -1,6 +1,6 @@
 import type WebManglerCliFile from "./file.class";
 
-export { readFiles } from "./read";
+export { readFilesInAll } from "./read";
 export { writeFiles } from "./write";
 
 export type { WebManglerCliFile };
