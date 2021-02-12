@@ -10,6 +10,7 @@ Versioning].
 
 - Increase minimum `webmangler` peerDependency to `^0.1.9`.
 - Fix percentages reported with `--stats`/`-S`.
+- Color percentages of `--stats`/`-S` output.
 - Only read supported files from disk.
 
 ## [0.1.2] - 2021-02-11
