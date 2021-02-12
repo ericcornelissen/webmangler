@@ -6,7 +6,7 @@ import * as sinonChai from "sinon-chai";
 
 import * as fsMock from "../__mocks__/fs.mock";
 
-import { readFiles } from "../read";
+import { readFilesInAll } from "../read";
 
 chaiUse(sinonChai);
 
@@ -27,14 +27,17 @@ suite("Reading", function() {
 
   suite("::readFiles", function() {
     test("no input file paths", function() {
-      const result = readFiles([]);
+      const result = readFilesInAll([], []);
       expect(result).to.have.lengthOf(0);
     });
 
     test("one input file that does not exist", function() {
       fsMock.existsSync.returns(false);
 
-      const result = readFiles(["foo.bar"]);
+      const extension = "bar";
+      const file = `foo.${extension}`;
+
+      const result = readFilesInAll([file], [extension]);
       expect(result).to.have.length(0);
       expect(fsMock.existsSync).to.have.callCount(1);
       expect(fsMock.readdirSync).not.to.have.been.called;
@@ -46,7 +49,10 @@ suite("Reading", function() {
       fsMock.lstatSync.returns({ isFile: () => true });
       fsMock.readFileSync.returns({ toString: () => "" });
 
-      const result = readFiles(["foo.bar"]);
+      const extension = ".bar";
+      const file = `foo${extension}`;
+
+      const result = readFilesInAll([file], [extension]);
       expect(result).to.have.length(1);
       expect(fsMock.existsSync).to.have.callCount(1);
       expect(fsMock.lstatSync).to.have.callCount(1);
@@ -54,12 +60,29 @@ suite("Reading", function() {
       expect(fsMock.readdirSync).not.to.have.been.called;
     });
 
+    test("one input file that exists but is filtered", function() {
+      fsMock.existsSync.returns(true);
+      fsMock.lstatSync.returns({ isFile: () => true });
+      fsMock.readFileSync.returns({ toString: () => "" });
+
+      const extension = ".bar";
+      const file = `foo${extension}-x`;
+
+      const result = readFilesInAll([file], [extension]);
+      expect(result).to.have.length(0);
+      expect(fsMock.existsSync).to.have.callCount(1);
+      expect(fsMock.readdirSync).not.to.have.been.called;
+      expect(fsMock.readFileSync).not.to.have.been.called;
+    });
+
     test("multiple input file that exist", function() {
       fsMock.existsSync.returns(true);
       fsMock.lstatSync.returns({ isFile: () => true });
 
-      const paths = ["foo.txt", "bar.txt"];
-      const result = readFiles(paths);
+      const extension = ".txt";
+      const paths = [`foo${extension}`, `bar${extension}`];
+
+      const result = readFilesInAll(paths, [extension]);
       expect(result).to.have.length(paths.length);
       expect(fsMock.existsSync).to.have.callCount(paths.length);
       expect(fsMock.lstatSync).to.have.callCount(paths.length);
@@ -67,9 +90,48 @@ suite("Reading", function() {
       expect(fsMock.readdirSync).not.to.have.been.called;
     });
 
+    test("multiple input file that exist but are filtered", function() {
+      fsMock.existsSync.returns(true);
+      fsMock.lstatSync.returns({ isFile: () => true });
+
+      const extension = ".txt";
+      const paths = [`foo${extension}-x`, `bar${extension}-x`];
+
+      const result = readFilesInAll(paths, [extension]);
+      expect(result).to.have.length(0);
+      expect(fsMock.existsSync).to.have.callCount(paths.length);
+      expect(fsMock.lstatSync).to.have.callCount(paths.length);
+      expect(fsMock.readFileSync).not.to.have.been.called;
+      expect(fsMock.readdirSync).not.to.have.been.called;
+    });
+
+    test("multiple input file that exist but some are filtered", function() {
+      fsMock.existsSync.returns(true);
+      fsMock.lstatSync.returns({ isFile: () => true });
+
+      const extension = ".txt";
+      const paths = [
+        `praise${extension}-x`,
+        `the${extension}`,
+        `sun${extension}-x`,
+      ];
+
+      const result = readFilesInAll(paths, [extension]);
+      expect(result).to.have.length(1);
+      expect(fsMock.existsSync).to.have.callCount(paths.length);
+      expect(fsMock.lstatSync).to.have.callCount(paths.length);
+      expect(fsMock.readFileSync).to.have.callCount(1);
+      expect(fsMock.readdirSync).not.to.have.been.called;
+    });
+
     test("input is directory with files", function() {
+      const extension = ".txt";
       const directory = path.resolve("foobar");
-      const files = ["praise.txt", "the.txt", "sun.txt"];
+      const files = [
+        `praise${extension}`,
+        `the${extension}`,
+        `sun${extension}`,
+      ];
 
       fsMock.existsSync.returns(true);
       fsMock.readdirSync.returns(files);
@@ -81,7 +143,7 @@ suite("Reading", function() {
         return { isFile: () => true };
       });
 
-      const result = readFiles([directory]);
+      const result = readFilesInAll([directory], [extension]);
       expect(result).to.have.length(files.length);
       expect(fsMock.existsSync).to.have.callCount(1 + files.length);
       expect(fsMock.lstatSync).to.have.callCount(1 + files.length);
@@ -89,11 +151,47 @@ suite("Reading", function() {
       expect(fsMock.readdirSync).to.have.callCount(1);
     });
 
+    test("input is directory with files but some are filtered", function() {
+      const extension = ".txt";
+      const directory = path.resolve("foobar");
+      const files = [
+        `praise${extension}`,
+        `the${extension}-x`,
+        `sun${extension}`,
+      ];
+
+      fsMock.existsSync.returns(true);
+      fsMock.readdirSync.returns(files);
+      fsMock.lstatSync.callsFake((path) => {
+        if (path === directory) {
+          return { isFile: () => false };
+        }
+
+        return { isFile: () => true };
+      });
+
+      const result = readFilesInAll([directory], [extension]);
+      expect(result).to.have.length(files.length - 1);
+      expect(fsMock.existsSync).to.have.callCount(1 + files.length);
+      expect(fsMock.lstatSync).to.have.callCount(1 + files.length);
+      expect(fsMock.readFileSync).to.have.callCount(files.length - 1);
+      expect(fsMock.readdirSync).to.have.callCount(1);
+    });
+
     test("input has nested directories and files", function() {
+      const extension = ".txt";
       const level0Dir = path.resolve("foo");
       const level1Dir = path.resolve("bar");
-      const level1Files = [level1Dir, "praise.txt", "the.txt", "sun.txt"];
-      const level2Files = ["hello.txt", "world.txt"];
+      const level1Files = [
+        level1Dir,
+        `praise${extension}`,
+        `the${extension}`,
+        `sun${extension}`,
+      ];
+      const level2Files = [
+        `hello${extension}`,
+        `world${extension}`,
+      ];
 
       const dirsCount = 2;
       const filesCount = level1Files.length - 1 + level2Files.length;
@@ -114,7 +212,7 @@ suite("Reading", function() {
         return { isFile: () => true };
       });
 
-      const result = readFiles([level0Dir]);
+      const result = readFilesInAll([level0Dir], [extension]);
       expect(result).to.have.length(filesCount);
       expect(fsMock.existsSync).to.have.callCount(dirsCount + filesCount);
       expect(fsMock.lstatSync).to.have.callCount(dirsCount + filesCount);

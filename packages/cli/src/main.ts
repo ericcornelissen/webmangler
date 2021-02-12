@@ -23,7 +23,7 @@ export default function run(args: WebManglerCliArgs): void {
   logger.debug("configuration read");
 
   logger.debug("reading files provided on the CLI...");
-  const inFiles = fs.readFiles(args._);
+  const inFiles = fs.readFilesInAll(args._, [".css", ".html", ".js"]);
   logger.debug(`found ${inFiles.length} files`);
 
   logger.debug(`mangling ${inFiles.length} files...`);
