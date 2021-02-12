@@ -3,10 +3,17 @@ import type { TestCase } from "./types";
 import { deepStrictEqual } from "assert";
 import { format as printf } from "util";
 
-import { toArrayIfNeeded } from "../../helpers";
-
 /**
  * Clone an object and, optionally, replace some of the values in the object.
+ *
+ * @example
+ * const original = { a: "foo", b: "bar" };
+ * const clone = cloneObject(original);
+ * // original !== clone
+ *
+ * @example
+ * const clone = cloneObject({ a: "foo", b: "bar" }, { b: "baz" });
+ * // clone.b === "baz"
  *
  * @param o The object to clone.
  * @param r The keys to replace.
@@ -19,6 +26,9 @@ function cloneObject<T>(o: T, r?: unknown): T {
 /**
  * A helper function for `Array.prototype.filter` to filter out any duplicates
  * in an array.
+ *
+ * @example
+ * array.filter(duplicates);
  *
  * @param value The current value.
  * @param index The index of the value.
@@ -42,8 +52,15 @@ function duplicates<T>(value: T, index: number, arr: T[]): boolean {
  * Generate an array of length `n` of strings formatted based on the provided
  * template using the index of the string in the array.
  *
+ * The behaviour is undefined if `template` contains 0 or more than ` "%s", but
+ * the function won't fail.
+ *
+ * @example
+ * const array = getArrayOfFormattedStrings(3, "-%s-");
+ * // array === ["-0-", "-1-", "-2-"]
+ *
  * @param n The desired length of the array.
- * @param template A string containing one "%s" where the index is inserted.
+ * @param template A string with a single "%s" where the index will be inserted.
  * @returns The generated array.
  */
 export function getArrayOfFormattedStrings(
@@ -57,11 +74,19 @@ export function getArrayOfFormattedStrings(
 /**
  * Check if the provided string is a valid class name.
  *
- * @param s The string of interest.
- * @returns `true` if `s` is a valid class name, `false` otherwise.
+ * @example
+ * const validClassName = isValidClassName("foo");
+ * // validClassName === true
+ *
+ * @example
+ * const invalidClassName = isValidClassName(".foo");
+ * // invalidClassName === false
+ *
+ * @param className The string of interest.
+ * @returns `true` if `className` is a valid class name, `false` otherwise.
  */
-export function isValidClassName(s: string): boolean {
-  return /^[a-zA-Z-_]*$/.test(s);
+export function isValidClassName(className: string): boolean {
+  return /^[a-zA-Z_][a-zA-Z0-9_-]*$/.test(className);
 }
 
 /**
@@ -89,33 +114,43 @@ export function permuteObjects<T>(objects: T[]): T[] {
 }
 
 /**
+ * Type representing the languages supported by the {@link varyQuotes} function.
+ */
+export type QuoteLanguages =
+  "css" | "html" | "js" | "single-backticks" | "double-backticks";
+
+/**
  * Vary the quotes used in the snippets of code of `testCase` for a certain
  * `language`.
  *
- * @param language The language the snippets are in.
+ * @param language The language `testCase` is written in.
  * @param testCase The {@link TestCase} to vary.
  * @returns A variation of `testCase` for every quote allowed by `language`.
  */
 export function varyQuotes(
-  language: "css" | "html" | "js",
+  language: QuoteLanguages,
   testCase: TestCase,
 ): TestCase[] {
-  const singleQuotesAllowed = ["css", "html", "js"];
-  const backticksAllowed = ["js"];
+  const doubleQuotesAllowed = ["css", "html", "js", "double-backticks"];
+  const singleQuotesAllowed = ["css", "html", "js", "single-backticks"];
+  const backticksAllowed = ["js", "double-backticks", "single-backticks"];
 
   const doubleQuotes = cloneObject(testCase, {
-    input: testCase.input.replace(/'/g, "\"").replace(/`/g, "\""),
-    expected: testCase.expected.replace(/'/g, "\"").replace(/`/g, "\""),
+    input: testCase.input.replace(/('|`)/g, "\""),
+    expected: testCase.expected.replace(/('|`)/g, "\""),
   });
 
-  const result: TestCase[] = [doubleQuotes];
+  const result: TestCase[] = [];
+  if (doubleQuotesAllowed.includes(language)) {
+    result.push(doubleQuotes);
+  }
   if (singleQuotesAllowed.includes(language)) {
     const singleQuotes = cloneObject(testCase, {
       input: doubleQuotes.input.replace(/"/g, "'"),
       expected: doubleQuotes.expected.replace(/"/g, "'"),
     });
 
-    if (singleQuotes.input !== doubleQuotes.input) {
+    if (!result.find(({ input }) => input === singleQuotes.input)) {
       result.push(singleQuotes);
     }
   }
@@ -125,7 +160,7 @@ export function varyQuotes(
       expected: doubleQuotes.expected.replace(/"/g, "`"),
     });
 
-    if (backticks.input !== doubleQuotes.input) {
+    if (!result.find(({ input }) => input === backticks.input)) {
       result.push(backticks);
     }
   }
@@ -137,38 +172,40 @@ export function varyQuotes(
  * Expand a single {@link TestCase} to multiple similar {@link TestCase}s that
  * have varied spacing.
  *
- * The provided {@link TestCase} is always the first element in the returned
- * array.
+ * If multiple strings are provided, every combination of spacing is created.
+ * Hence, this function outputs exponentially many {@link TestCase}s.
  *
- * @param chars The character(s) to vary the spacing around.
+ * @param strings The string(s) to vary the spacing around.
  * @param testCase The {@link TestCase} to vary the spacing in.
  * @returns One or more {@link TestCase}s based on `testCase`.
  */
 export function varySpacing(
-  chars: string | string[],
+  strings: string | string[],
   testCase: TestCase,
 ): TestCase[] {
-  chars = toArrayIfNeeded(chars);
+  strings = Array.isArray(strings) ? strings : [strings];
 
   const result: TestCase[] = [testCase];
-  for (const char of chars) {
-    const spaceBeforeCase = cloneObject(testCase, {
-      input: testCase.input.replace(char, ` ${char}`),
-      expected: testCase.expected.replace(char, ` ${char}`),
-    });
-    const spaceAfterCase = cloneObject(testCase, {
-      input: testCase.input.replace(char, `${char} `),
-      expected: testCase.expected.replace(char, `${char} `),
-    });
-    const spaceSurroundingCase = cloneObject(testCase, {
-      input: testCase.input.replace(char, ` ${char} `),
-      expected: testCase.expected.replace(char, ` ${char} `),
-    });
+  strings.forEach((str) => {
+    result.forEach((entry) => {
+      const spaceBeforeCase = cloneObject(entry, {
+        input: entry.input.replace(str, ` ${str}`),
+        expected: entry.expected.replace(str, ` ${str}`),
+      });
+      const spaceAfterCase = cloneObject(entry, {
+        input: entry.input.replace(str, `${str} `),
+        expected: entry.expected.replace(str, `${str} `),
+      });
+      const spaceSurroundingCase = cloneObject(entry, {
+        input: entry.input.replace(str, ` ${str} `),
+        expected: entry.expected.replace(str, ` ${str} `),
+      });
 
-    if (testCase.input !== spaceBeforeCase.input) {
-      result.push(spaceBeforeCase, spaceAfterCase, spaceSurroundingCase);
-    }
-  }
+      if (entry.input !== spaceBeforeCase.input) {
+        result.push(spaceBeforeCase, spaceAfterCase, spaceSurroundingCase);
+      }
+    });
+  });
 
   return result;
 }
