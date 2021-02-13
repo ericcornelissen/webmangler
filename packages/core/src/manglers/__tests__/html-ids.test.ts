@@ -336,7 +336,7 @@ suite("HTML ID Mangler", function() {
   suite("HTML", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "sample",
+        name: "single `id` attribute",
         cases: [
           ...varySpacing("=", {
             input: "<div id=\"id-foo\"></div>",
@@ -346,6 +346,44 @@ suite("HTML ID Mangler", function() {
             input: "<div id=\"id-foo\"></div>",
             expected: "<div id=\"a\"></div>",
           }),
+          {
+            input: "<h1 id=\"id-foo\"></h1>",
+            expected: "<h1 id=\"a\"></h1>",
+          },
+        ],
+      },
+      {
+        name: "`id` attribute and other attributes",
+        cases: [
+          {
+            input: "<div class=\"foo\" id=\"id-bar\"></div>",
+            expected: "<div class=\"foo\" id=\"a\"></div>",
+          },
+          {
+            input: "<div id=\"id-foo\" class=\"bar\"></div>",
+            expected: "<div id=\"a\" class=\"bar\"></div>",
+          },
+          {
+            input: "<div data-x=\"y\" id=\"id-foo\" class=\"bar\"></div>",
+            expected: "<div data-x=\"y\" id=\"a\" class=\"bar\"></div>",
+          },
+          {
+            input: "<button disabled id=\"id-foo\"></button>",
+            expected: "<button disabled id=\"a\"></button>",
+          },
+          {
+            input: "<button id=\"id-foo\" disabled></button>",
+            expected: "<button id=\"a\" disabled></button>",
+          },
+          {
+            input: "<button aria-hidden id=\"id-foo\" disabled></button>",
+            expected: "<button aria-hidden id=\"a\" disabled></button>",
+          },
+        ],
+      },
+      {
+        name: "single `href` attribute",
+        cases: [
           ...varySpacing("=", {
             input: "<div href=\"#id-foo\"></div>",
             expected: "<div href=\"#a\"></div>",
@@ -354,13 +392,128 @@ suite("HTML ID Mangler", function() {
             input: "<div href=\"#id-foo\"></div>",
             expected: "<div href=\"#a\"></div>",
           }),
-          ...varyQuotes("html", {
-            input: "<div href=\"www.id-foo.com\"></div>",
-            expected: "<div href=\"www.id-foo.com\"></div>",
-          }),
+          {
+            input: "<div href=\"www.id-foo.com/bar#id-foo\"></div>",
+            expected: "<div href=\"www.id-foo.com/bar#a\"></div>",
+          },
+          {
+            input: "<div href=\"www.id-foo.com/bar#id-foo?q=bar\"></div>",
+            expected: "<div href=\"www.id-foo.com/bar#a?q=bar\"></div>",
+          },
+        ],
+      },
+      {
+        name: "`href` attribute and other attributes",
+        cases: [
+          {
+            input: "<a class=\"foo\" href=\"#id-bar\"></a>",
+            expected: "<a class=\"foo\" href=\"#a\"></a>",
+          },
+          {
+            input: "<a href=\"#id-foo\" class=\"bar\"></a>",
+            expected: "<a href=\"#a\" class=\"bar\"></a>",
+          },
+          {
+            input: "<a data-x=\"y\" href=\"#id-foo\" class=\"bar\"></a>",
+            expected: "<a data-x=\"y\" href=\"#a\" class=\"bar\"></a>",
+          },
+          {
+            input: "<a disabled href=\"#id-bar\"></a>",
+            expected: "<a disabled href=\"#a\"></a>",
+          },
+          {
+            input: "<a href=\"#id-bar\" disabled></a>",
+            expected: "<a href=\"#a\" disabled></a>",
+          },
+          {
+            input: "<a aria-hidden href=\"#id-bar\" disabled></a>",
+            expected: "<a aria-hidden href=\"#a\" disabled></a>",
+          },
+        ],
+      },
+      {
+        name: "reserved id names",
+        cases: [
+          {
+            input: "<div id=\"id-foo\"></div>",
+            reserved: ["a"],
+            expected: "<div id=\"b\"></div>",
+          },
+          {
+            input: "<div id=\"id-foo\"></div>",
+            reserved: ["a", "b", "c"],
+            expected: "<div id=\"d\"></div>",
+          },
+          {
+            input: "<div id=\"id-foo\"><p id=\"id-bar\"></p></div>",
+            reserved: ["b"],
+            expected: "<div id=\"a\"><p id=\"c\"></p></div>",
+          },
+        ],
+      },
+      {
+        name: "prefixed mangling",
+        cases: [
+          {
+            input: "<div id=\"id-foo\"></div>",
+            prefix: "mangled-",
+            expected: "<div id=\"mangled-a\"></div>",
+          },
+          {
+            input: "<div id=\"id-foo\"><p id=\"id-bar\"></p></div>",
+            prefix: "id-",
+            expected: "<div id=\"id-a\"><p id=\"id-b\"></p></div>",
+          },
+          {
+            input: "<div id=\"foo-bar\"><p id=\"foo-baz\"></p></div>",
+            pattern: "foo-[a-z]+",
+            prefix: "foo-",
+            expected: "<div id=\"foo-a\"><p id=\"foo-b\"></p></div>",
+          },
+        ],
+      },
+      {
+        name: "input ids and mangled ids intersect",
+        cases: [
+          {
+            input: "<p id=\"a\"><a id=\"b\"></a></p>",
+            expected: "<p id=\"a\"><a id=\"b\"></a></p>",
+            pattern: "[a-z]",
+          },
+          {
+            input: "<p id=\"b\"><a id=\"a\"></a></p>",
+            expected: "<p id=\"a\"><a id=\"b\"></a></p>",
+            pattern: "[a-z]",
+          },
+          {
+            input: "<p id=\"a\"><b id=\"c\"></b><a id=\"b\"></a></p>",
+            expected: "<p id=\"a\"><b id=\"b\"></b><a id=\"c\"></a></p>",
+            pattern: "[a-z]",
+          },
+        ],
+      },
+      {
+        name: "corner cases",
+        cases: [
+          {
+            input: "<div di=\"id-bar\"></div>",
+            expected: "<div di=\"id-bar\"></div>",
+            description: "the id attribute name must be correct",
+          },
+          {
+            input: "<div data-foo=\">\" id=\"id-bar\"></div>",
+            expected: "<div data-foo=\">\" id=\"a\"></div>",
+            description: "early non-closing `>` should not prevent id mangling",
+          },
           {
             input: "<div class=\"id-foo\"></div>",
             expected: "<div class=\"id-foo\"></div>",
+            description: "matching patterns in non-id attributes should be ignored",
+          },
+          {
+            input: "<div data-id=\"id-foo\"></div>",
+            expected: "<div data-id=\"id-foo\"></div>",
+            description: "matching patterns in id-like attributes should be ignored",
           },
         ],
       },

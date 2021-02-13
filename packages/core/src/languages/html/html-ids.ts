@@ -1,52 +1,49 @@
 import ManglerExpression from "../utils/mangler-expression.class";
 
+const GROUP_ID = "main";
+const GROUP_QUOTE = "quote";
+
+const HTML_QUOTE_CAPTURING_GROUP_PATTERN = `(?<${GROUP_QUOTE}>"|')`;
+const HTML_QUOTE_MATCHING_PATTERN = `\\k<${GROUP_QUOTE}>`;
+const URL_BASE_PATTERN = "[a-zA-Z0-9\\-\\_\\/\\:\\.]+";
+const URL_QUERY_PATTERN = "\\?[a-zA-Z0-9\\_\\-\\=\\%]+";
+
 const expressions: ManglerExpression[] = [
-  /* Single quotes */
-
-  // e.g.
-  //  id=(')(foo)(')
-  //  id= (' )(foo)(')
-  //  id =(')(foo)( ')
-  //  id = (')(foo)( ')
+  // Id definitions, e.g.:
+  //  `<div id="(foo)"></div>`
+  //  `<div class="bar" id="(foo)"></div>`
+  //  `<div id="(foo)" class="bar"></div>`
+  //  `<div disabled id="(foo)" class="bar"></div>`
   new ManglerExpression(
-    "id(\\s*=\\s*)('\\s*)(%s)(\\s*')",
-    ManglerExpression.matchParserForIndex(3),
-    ManglerExpression.matchReplacerBy("id$1$2%s$4"),
+    `
+      (?<=\\sid\\s*=\\s*${HTML_QUOTE_CAPTURING_GROUP_PATTERN}\\s*)
+      (?<${GROUP_ID}>%s)
+      (?=\\s*${HTML_QUOTE_MATCHING_PATTERN})
+    `.replace(/\s/g, ""),
+    ManglerExpression.matchParserForGroup(GROUP_ID),
+    ManglerExpression.matchReplacerBy("%s"),
   ),
 
-  // e.g.
-  //  href=('#)(foo)(')
-  //  href= (' #)(foo)( ')
-  //  href =('/path/to/page#)(foo)(')
-  //  href = ('https://example.com/#)(foo)(')
+  // Id usage in hrefs, e.g.:
+  //  `<a href="(#foo)"></a>`
+  //  `<a href="https://www.example.com/(#foo)"></a>`
+  //  `<a href="https://www.example.com/(#foo)?q=bar"></a>`
   new ManglerExpression(
-    "href(\\s*=\\s*)('[^']*#)(%s)(\\s*')",
-    ManglerExpression.matchParserForIndex(3),
-    ManglerExpression.matchReplacerBy("href$1$2%s$4"),
-  ),
-
-  /* Double quotes */
-
-  // e.g.
-  //  id=(")(foo)(")
-  //  id= (" )(foo)(")
-  //  id =(")(foo)( ")
-  //  id = (" )(foo)( ")
-  new ManglerExpression(
-    "id(\\s*=\\s*)(\"\\s*)(%s)(\\s*\")",
-    ManglerExpression.matchParserForIndex(3),
-    ManglerExpression.matchReplacerBy("id$1$2%s$4"),
-  ),
-
-  // e.g.
-  //  href=("#)(foo)(")
-  //  href= (" #)(foo)( ")
-  //  href =("/path/to/page#)(foo)(")
-  //  href = ("https://example.com/#)(foo)(")
-  new ManglerExpression(
-    "href(\\s*=\\s*)(\"[^\"]*\\#)(%s)(\\s*\")",
-    ManglerExpression.matchParserForIndex(3),
-    ManglerExpression.matchReplacerBy("href$1$2%s$4"),
+    `
+      (?<=
+        href\\s*=\\s*
+        ${HTML_QUOTE_CAPTURING_GROUP_PATTERN}\\s*
+        (?:${URL_BASE_PATTERN})?
+      )
+      #(?<${GROUP_ID}>%s)
+      (?=
+        (?:${URL_QUERY_PATTERN})?
+        \\s*
+        ${HTML_QUOTE_MATCHING_PATTERN}
+      )
+    `.replace(/\s/g, ""),
+    ManglerExpression.matchParserForGroup(GROUP_ID),
+    ManglerExpression.matchReplacerBy("#%s"),
   ),
 ];
 
