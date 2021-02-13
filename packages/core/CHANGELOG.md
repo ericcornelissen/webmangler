@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix mangling IDs followed by child, sibling, and adjacent combinators in CSS.
 
 ## [0.1.9] - 2021-02-12
 

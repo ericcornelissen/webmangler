@@ -86,7 +86,25 @@ export function getArrayOfFormattedStrings(
  * @returns `true` if `className` is a valid class name, `false` otherwise.
  */
 export function isValidClassName(className: string): boolean {
-  return /^[a-zA-Z_][a-zA-Z0-9_-]*$/.test(className);
+  return /^[a-zA-Z_][a-zA-Z0-9_-]+$/.test(className);
+}
+
+/**
+ * Check if the provided string is a valid id name.
+ *
+ * @example
+ * const invalidIdName = isValidIdName("foo");
+ * // invalidIdName === true
+ *
+ * @example
+ * const invalidIdName = isValidIdName("#foo");
+ * // invalidIdName === false
+ *
+ * @param idName The string of interest.
+ * @returns `true` if `idName` is a valid id name, `false` otherwise.
+ */
+export function isValidIdName(idName: string): boolean {
+  return /^[a-zA-Z0-9_-]+$/.test(idName);
 }
 
 /**
