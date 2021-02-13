@@ -8,10 +8,10 @@ reporter:
   - text
 
 check-coverage: true
-statements: 80
-lines: 80
-branches: 60
-functions: 80
+statements: 85
+lines: 85
+branches: 85
+functions: 90
 watermarks:
   statements: [80, 95]
   lines: [80, 95]
@@ -26,7 +26,7 @@ exclude:
   - _reports/
   - .temp/
   - node_modules/
-  - packages/**/*.test.ts # don't ignore helpers modules in tests, those should be tested too
+  - packages/**/*.test.ts
   - packages/**/*.mock.ts
 
 report-dir: ./_reports
