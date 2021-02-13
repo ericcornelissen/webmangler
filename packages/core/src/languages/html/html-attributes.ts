@@ -44,9 +44,8 @@ function findInstancesOfGroupIn(
 
   let match: RegExpExecArray | null = null;
   while ((match = regExp.exec(s)) !== null) {
-    if (match.groups) {
-      results.push(match.groups[groupName]);
-    }
+    const groups = match.groups as { [key: string]: string; };
+    results.push(groups[groupName]);
   }
 
   return results;
