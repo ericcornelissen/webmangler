@@ -784,10 +784,50 @@ suite("HTML Attribute Mangler", function() {
       );
     });
 
+    test("custom pattern", function() {
+      const pattern = "foo(bar|baz)-[a-z]+";
+
+      const htmlAttributeMangler = new HtmlAttributeMangler({ attrNamePattern: pattern });
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        pattern,
+        sinon.match.any,
+      );
+    });
+
+    test("custom patterns", function() {
+      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+
+      const htmlAttributeMangler = new HtmlAttributeMangler({ attrNamePattern: patterns });
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        patterns,
+        sinon.match.any,
+      );
+    });
+
     test("default reserved", function() {
       const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(HtmlAttributeMangler.DEFAULT_RESERVED);
 
       const htmlAttributeMangler = new HtmlAttributeMangler();
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("reservedNames", expected),
+      );
+    });
+
+    test("custom reserved", function() {
+      const reserved: string[] = ["foo", "bar"];
+      const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(reserved);
+
+      const htmlAttributeMangler = new HtmlAttributeMangler({ reservedAttrNames: reserved });
       htmlAttributeMangler.mangle(EngineMock, []);
       expect(EngineMock).to.have.been.calledWith(
         sinon.match.any,
@@ -807,6 +847,19 @@ suite("HTML Attribute Mangler", function() {
         sinon.match.any,
         sinon.match.any,
         sinon.match.has("manglePrefix", expected),
+      );
+    });
+
+    test("custom prefix", function() {
+      const prefix = "foobar";
+
+      const htmlAttributeMangler = new HtmlAttributeMangler({ keepAttrPrefix: prefix });
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("manglePrefix", prefix),
       );
     });
   });

@@ -415,10 +415,50 @@ suite("CSS Variable Mangler", function() {
       );
     });
 
+    test("custom pattern", function() {
+      const pattern = "foo(bar|baz)-[a-z]+";
+
+      const cssVariableMangler = new CssVariableMangler({ cssVarNamePattern: pattern });
+      cssVariableMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        pattern,
+        sinon.match.any,
+      );
+    });
+
+    test("custom patterns", function() {
+      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+
+      const cssVariableMangler = new CssVariableMangler({ cssVarNamePattern: patterns });
+      cssVariableMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        patterns,
+        sinon.match.any,
+      );
+    });
+
     test("default reserved", function() {
       const expected = CssVariableMangler.ALWAYS_RESERVED.concat(CssVariableMangler.DEFAULT_RESERVED);
 
       const cssVariableMangler = new CssVariableMangler();
+      cssVariableMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("reservedNames", expected),
+      );
+    });
+
+    test("custom reserved", function() {
+      const reserved: string[] = ["foo", "bar"];
+      const expected = CssVariableMangler.ALWAYS_RESERVED.concat(reserved);
+
+      const cssVariableMangler = new CssVariableMangler({ reservedCssVarNames: reserved });
       cssVariableMangler.mangle(EngineMock, []);
       expect(EngineMock).to.have.been.calledWith(
         sinon.match.any,
@@ -438,6 +478,19 @@ suite("CSS Variable Mangler", function() {
         sinon.match.any,
         sinon.match.any,
         sinon.match.has("manglePrefix", expected),
+      );
+    });
+
+    test("custom prefix", function() {
+      const prefix = "foobar";
+
+      const cssVariableMangler = new CssVariableMangler({ keepCssVarPrefix: prefix });
+      cssVariableMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("manglePrefix", prefix),
       );
     });
   });

@@ -201,6 +201,32 @@ suite("HTML ID Mangler", function() {
       );
     });
 
+    test("custom pattern", function() {
+      const pattern = "foo(bar|baz)-[a-z]+";
+
+      const htmlIdMangler = new HtmlIdMangler({ idNamePattern: pattern });
+      htmlIdMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        pattern,
+        sinon.match.any,
+      );
+    });
+
+    test("custom patterns", function() {
+      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+
+      const htmlIdMangler = new HtmlIdMangler({ idNamePattern: patterns });
+      htmlIdMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        patterns,
+        sinon.match.any,
+      );
+    });
+
     test("default reserved", function() {
       const expected = HtmlIdMangler.DEFAULT_RESERVED;
 
@@ -214,6 +240,19 @@ suite("HTML ID Mangler", function() {
       );
     });
 
+    test("custom reserved", function() {
+      const reserved: string[] = ["foo", "bar"];
+
+      const htmlIdMangler = new HtmlIdMangler({ reservedIds: reserved });
+      htmlIdMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("reservedNames", reserved),
+      );
+    });
+
     test("default prefix", function() {
       const expected = HtmlIdMangler.DEFAULT_PREFIX;
 
@@ -224,6 +263,19 @@ suite("HTML ID Mangler", function() {
         sinon.match.any,
         sinon.match.any,
         sinon.match.has("manglePrefix", expected),
+      );
+    });
+
+    test("custom prefix", function() {
+      const prefix = "foobar";
+
+      const htmlIdMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
+      htmlIdMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("manglePrefix", prefix),
       );
     });
   });
