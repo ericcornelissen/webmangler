@@ -1,7 +1,9 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
-import { expect } from "chai";
+import { expect, use as chaiUse } from "chai";
+import * as sinon from "sinon";
+import * as sinonChai from "sinon-chai";
 
 import {
   getArrayOfFormattedStrings,
@@ -9,6 +11,7 @@ import {
   varySpacing,
 } from "./test-helpers";
 
+import EngineMock from "../../__mocks__/engine.mock";
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
 
 import BuiltInLanguageSupport from "../../languages/builtin";
@@ -16,6 +19,8 @@ import mangleEngine from "../../engine";
 import CssVariableMangler from "../css-variables";
 
 const builtInLanguageSupport = new BuiltInLanguageSupport();
+
+chaiUse(sinonChai);
 
 suite("CSS Variable Mangler", function() {
   const DEFAULT_PATTERN = "[a-z-]+";
@@ -390,6 +395,51 @@ suite("CSS Variable Mangler", function() {
         }
       });
     }
+  });
+
+  suite("Configuration", function() {
+    setup(function() {
+      EngineMock.resetHistory();
+    });
+
+    test("default patterns", function() {
+      const expected = CssVariableMangler.DEFAULT_PATTERNS;
+
+      const cssVariableMangler = new CssVariableMangler();
+      cssVariableMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        expected,
+        sinon.match.any,
+      );
+    });
+
+    test("default reserved", function() {
+      const expected = CssVariableMangler.ALWAYS_RESERVED.concat(CssVariableMangler.DEFAULT_RESERVED);
+
+      const cssVariableMangler = new CssVariableMangler();
+      cssVariableMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("reservedNames", expected),
+      );
+    });
+
+    test("default prefix", function() {
+      const expected = CssVariableMangler.DEFAULT_PREFIX;
+
+      const cssVariableMangler = new CssVariableMangler();
+      cssVariableMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("manglePrefix", expected),
+      );
+    });
   });
 
   suite("Illegal names", function() {

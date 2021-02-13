@@ -384,6 +384,10 @@ suite("Built-in Manglers", function() {
     });
   });
 
+  test("no configuration", function() {
+    expect(new BuiltInManglers).not.to.throw;
+  });
+
   test("no input files", function() {
     for (const options of permuteObjects(ALL_DEFAULT_OPTIONS)) {
       const mangler = new BuiltInManglers(options);
