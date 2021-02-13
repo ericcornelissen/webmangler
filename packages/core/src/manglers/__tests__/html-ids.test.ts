@@ -36,6 +36,39 @@ suite("HTML ID Mangler", function() {
         ],
       },
       {
+        name: "href attribute selectors",
+        cases: [
+          ...varyQuotes("css", {
+            input: "[href=\"#id-foo\"]",
+            expected: "[href=\"#a\"]",
+          }),
+          ...varySpacing("=", {
+            input: "[href=\"#id-bar\"]",
+            expected: "[href=\"#a\"]",
+          }),
+          ...varySpacing("|=", {
+            input: "[href|=\"#id-foo\"]",
+            expected: "[href|=\"#a\"]",
+          }),
+          ...varySpacing("~=", {
+            input: "[href~=\"#id-foo\"]",
+            expected: "[href~=\"#a\"]",
+          }),
+          ...varySpacing("^=", {
+            input: "[href^=\"#id-foo\"]",
+            expected: "[href^=\"#a\"]",
+          }),
+          ...varySpacing("$=", {
+            input: "[href$=\"#id-foo\"]",
+            expected: "[href$=\"#a\"]",
+          }),
+          ...varySpacing("*=", {
+            input: "[href*=\"#id-foo\"]",
+            expected: "[href*=\"#a\"]",
+          }),
+        ],
+      },
+      {
         name: "id with pseudo selectors",
         cases: [
           ...PSEUDO_SELECTORS.map((s: string): TestCase => ({
