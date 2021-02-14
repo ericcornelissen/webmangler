@@ -7,6 +7,7 @@ import { expect } from "chai";
 import {
   getArrayOfFormattedStrings,
   isValidClassName,
+  isValidIdName,
   permuteObjects,
   varyQuotes,
   varySpacing,
@@ -54,6 +55,7 @@ suite("Manglers Test helpers", function() {
 
     test("invalid class names", function() {
       const names: string[] = [
+        "",
         ".foo",
         "bar.",
         "foo=bar",
@@ -72,6 +74,49 @@ suite("Manglers Test helpers", function() {
 
       for (const name of names) {
         const valid = isValidClassName(name);
+        expect(valid).to.be.false;
+      }
+    });
+  });
+
+  suite("::isValidIdName", function() {
+    test("valid id names", function() {
+      const names: string[] = [
+        "foo",
+        "bar",
+        "foo-bar",
+        "Hello_World",
+        "_foobar",
+        "-foobar",
+        "0foobar",
+        "1foobar",
+        "2foobar",
+        "3foobar",
+        "4foobar",
+        "5foobar",
+        "6foobar",
+        "7foobar",
+        "8foobar",
+        "9foobar",
+        "a_0-",
+      ];
+
+      for (const name of names) {
+        const valid = isValidIdName(name);
+        expect(valid).to.be.true;
+      }
+    });
+
+    test("invalid id names", function() {
+      const names: string[] = [
+        "",
+        ".foo",
+        "bar.",
+        "foo=bar",
+      ];
+
+      for (const name of names) {
+        const valid = isValidIdName(name);
         expect(valid).to.be.false;
       }
     });

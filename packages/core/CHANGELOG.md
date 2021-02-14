@@ -8,7 +8,11 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Allow ID mangling in complex query selectors in JavaScript.
+- Fix mangling IDs followed by child, sibling, and adjacent combinators in CSS.
+- Fix accidental mangling of some non-id attributes in HTML.
+- Support mangling IDs in CSS attribute selectors using `href`.
+- Improve HTML ID mangler performance on JavaScript.
 
 ## [0.1.9] - 2021-02-12
 
