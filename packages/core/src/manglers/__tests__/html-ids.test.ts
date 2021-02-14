@@ -2,6 +2,7 @@ import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
 import { expect } from "chai";
+import { format as printf } from "util";
 
 import {
   ATTRIBUTE_SELECTORS,
@@ -585,20 +586,349 @@ suite("HTML ID Mangler", function() {
   suite("JavaScript", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "sample",
+        name: "id query selector",
+        cases: [
+          ...varyQuotes("js", {
+            input: "document.querySelector(\"#id-foo\");",
+            expected: "document.querySelector(\"#a\");",
+          }),
+          ...varySpacing(["(", "\"", ")"], {
+            input: "document.querySelector(\"#id-foo\");",
+            expected: "document.querySelector(\"#a\");",
+          }),
+          {
+            input: "document.querySelector(\"div\");",
+            expected: "document.querySelector(\"div\");",
+          },
+          {
+            input: "document.querySelector(\".foo\");",
+            expected: "document.querySelector(\".foo\");",
+          },
+          {
+            input: "document.querySelector(\"[data-foo]\");",
+            expected: "document.querySelector(\"[data-foo]\");",
+          },
+          {
+            input: "document.querySelector(\":root\");",
+            expected: "document.querySelector(\":root\");",
+          },
+        ],
+      },
+      {
+        name: "id query selector with pseudo selectors",
+        cases: [
+          ...PSEUDO_SELECTORS.map((s: string): TestCase => ({
+            input: `document.querySelector("#id-foo:${s}");`,
+            expected: `document.querySelector("#a:${s}");`,
+          })),
+          ...PSEUDO_ELEMENT_SELECTORS.map((s: string): TestCase => ({
+            input: `document.querySelector("#id-foo::${s}");`,
+            expected: `document.querySelector("#a::${s}");`,
+          })),
+          ...PSEUDO_SELECTORS.map((s: string): TestCase => ({
+            input: `document.querySelector("div:${s}");`,
+            expected: `document.querySelector("div:${s}");`,
+          })),
+          ...PSEUDO_ELEMENT_SELECTORS.map((s: string): TestCase => ({
+            input: `document.querySelector("div::${s}");`,
+            expected: `document.querySelector("div::${s}");`,
+          })),
+          ...PSEUDO_SELECTORS.map((s: string): TestCase => ({
+            input: `document.querySelector(".foo:${s}");`,
+            expected: `document.querySelector(".foo:${s}");`,
+          })),
+          ...PSEUDO_ELEMENT_SELECTORS.map((s: string): TestCase => ({
+            input: `document.querySelector(".foo::${s}");`,
+            expected: `document.querySelector(".foo::${s}");`,
+          })),
+        ],
+      },
+      {
+        name: "id query selector with attribute selectors",
+        cases: [
+          ...ATTRIBUTE_SELECTORS.map((s: string): TestCase => ({
+            input: `document.querySelector("#id-foo[${s}]");`,
+            expected: `document.querySelector("#a[${s}]");`,
+          })),
+        ],
+      },
+      {
+        name: "inverted id query selector",
+        cases: [
+          ...varySpacing(["(", ")"], {
+            input: "document.querySelector(\":not(#id-foo)\");",
+            expected: "document.querySelector(\":not(#a)\");",
+          }),
+        ],
+      },
+      {
+        name: "id query selector in 'or' combinator",
+        cases: [
+          ...varySpacing(",", {
+            input: "document.querySelector(\"#id-foo,#id-bar\");",
+            expected: "document.querySelector(\"#a,#b\");",
+          }),
+          ...varySpacing(",", {
+            input: "document.querySelector(\"div,#id-foo\");",
+            expected: "document.querySelector(\"div,#a\");",
+          }),
+          ...varySpacing(",", {
+            input: "document.querySelector(\"#id-foo,span\");",
+            expected: "document.querySelector(\"#a,span\");",
+          }),
+          ...varySpacing(",", {
+            input: "document.querySelector(\".foo,#id-bar\");",
+            expected: "document.querySelector(\".foo,#a\");",
+          }),
+          ...varySpacing(",", {
+            input: "document.querySelector(\"#id-foo,.bar\");",
+            expected: "document.querySelector(\"#a,.bar\");",
+          }),
+          ...varySpacing(",", {
+            input: "document.querySelector(\"div,#id-foo,span\");",
+            expected: "document.querySelector(\"div,#a,span\");",
+          }),
+        ],
+      },
+      {
+        name: "id query selector in 'and' combinator",
+        cases: [
+          {
+            input: "document.querySelector(\"#id-foo#id-bar\");",
+            expected: "document.querySelector(\"#a#b\");",
+          },
+          {
+            input: "document.querySelector(\"div#id-foo\");",
+            expected: "document.querySelector(\"div#a\");",
+          },
+          {
+            input: "document.querySelector(\".foo#id-foo\");",
+            expected: "document.querySelector(\".foo#a\");",
+          },
+          {
+            input: "document.querySelector(\"#id-foo.bar\");",
+            expected: "document.querySelector(\"#a.bar\");",
+          },
+          {
+            input: "document.querySelector(\"div#id-foo.bar\");",
+            expected: "document.querySelector(\"div#a.bar\");",
+          },
+        ],
+      },
+      {
+        name: "id query selector in 'descendant' combinator",
+        cases: [
+          {
+            input: "document.querySelector(\"#id-foo #id-bar\");",
+            expected: "document.querySelector(\"#a #b\");",
+          },
+          {
+            input: "document.querySelector(\"div #id-foo\");",
+            expected: "document.querySelector(\"div #a\");",
+          },
+          {
+            input: "document.querySelector(\"#id-foo div\");",
+            expected: "document.querySelector(\"#a div\");",
+          },
+          {
+            input: "document.querySelector(\".foo #id-bar\");",
+            expected: "document.querySelector(\".foo #a\");",
+          },
+          {
+            input: "document.querySelector(\"#id-foo .bar\");",
+            expected: "document.querySelector(\"#a .bar\");",
+          },
+          {
+            input: "document.querySelector(\".foo #id-bar div\");",
+            expected: "document.querySelector(\".foo #a div\");",
+          },
+        ],
+      },
+      {
+        name: "id query selector in 'child' combinator",
+        cases: [
+          ...varySpacing(">", {
+            input: "document.querySelector(\"#id-foo>#id-bar\");",
+            expected: "document.querySelector(\"#a>#b\");",
+          }),
+          ...varySpacing(">", {
+            input: "document.querySelector(\"div>#id-foo\");",
+            expected: "document.querySelector(\"div>#a\");",
+          }),
+          ...varySpacing(">", {
+            input: "document.querySelector(\"#id-foo>div\");",
+            expected: "document.querySelector(\"#a>div\");",
+          }),
+          ...varySpacing(">", {
+            input: "document.querySelector(\".foo>#id-bar\");",
+            expected: "document.querySelector(\".foo>#a\");",
+          }),
+          ...varySpacing(">", {
+            input: "document.querySelector(\"#id-foo>.bar\");",
+            expected: "document.querySelector(\"#a>.bar\");",
+          }),
+          ...varySpacing(">", {
+            input: "document.querySelector(\"div>#id-foo>.bar\");",
+            expected: "document.querySelector(\"div>#a>.bar\");",
+          }),
+        ],
+      },
+      {
+        name: "id query selector in 'adjacent sibling' combinator",
+        cases: [
+          ...varySpacing("+", {
+            input: "document.querySelector(\"#id-foo+#id-bar\");",
+            expected: "document.querySelector(\"#a+#b\");",
+          }),
+          ...varySpacing("+", {
+            input: "document.querySelector(\"div+#id-foo\");",
+            expected: "document.querySelector(\"div+#a\");",
+          }),
+          ...varySpacing("+", {
+            input: "document.querySelector(\"#id-foo+div\");",
+            expected: "document.querySelector(\"#a+div\");",
+          }),
+          ...varySpacing("+", {
+            input: "document.querySelector(\".foo+#id-bar\");",
+            expected: "document.querySelector(\".foo+#a\");",
+          }),
+          ...varySpacing("+", {
+            input: "document.querySelector(\"#id-foo+.bar\");",
+            expected: "document.querySelector(\"#a+.bar\");",
+          }),
+          ...varySpacing("+", {
+            input: "document.querySelector(\"div+#id-foo+.bar\");",
+            expected: "document.querySelector(\"div+#a+.bar\");",
+          }),
+        ],
+      },
+      {
+        name: "id query selector in 'general sibling' combinator",
+        cases: [
+          ...varySpacing("~", {
+            input: "document.querySelector(\"#id-foo~#id-bar\");",
+            expected: "document.querySelector(\"#a~#b\");",
+          }),
+          ...varySpacing("~", {
+            input: "document.querySelector(\"div~#id-foo\");",
+            expected: "document.querySelector(\"div~#a\");",
+          }),
+          ...varySpacing("~", {
+            input: "document.querySelector(\"#id-foo~div\");",
+            expected: "document.querySelector(\"#a~div\");",
+          }),
+          ...varySpacing("~", {
+            input: "document.querySelector(\".foo~#id-bar\");",
+            expected: "document.querySelector(\".foo~#a\");",
+          }),
+          ...varySpacing("~", {
+            input: "document.querySelector(\"#id-foo~.bar\");",
+            expected: "document.querySelector(\"#a~.bar\");",
+          }),
+          ...varySpacing("~", {
+            input: "document.querySelector(\"div~#id-foo~.bar\");",
+            expected: "document.querySelector(\"div~#a~.bar\");",
+          }),
+        ],
+      },
+      {
+        name: "getElementById",
         cases: [
           ...varyQuotes("js", {
             input: "document.getElementById(\"id-foo\");",
             expected: "document.getElementById(\"a\");",
           }),
-          ...varyQuotes("js", {
-            input: "document.querySelector(\"#id-foo\");",
-            expected: "document.querySelector(\"#a\");",
+          ...varySpacing(["(", ")"], {
+            input: "document.getElementById(\"id-foo\");",
+            expected: "document.getElementById(\"a\");",
           }),
           {
-            input: "var id_foo = \".id-bar\");",
-            expected: "var id_foo = \".id-bar\");",
+            input: "var id = \"id-foo\"; document.getElementById(id);",
+            expected: "var id = \"a\"; document.getElementById(id);",
+          },
+        ],
+      },
+      {
+        name: "other selectors matching the id pattern",
+        cases: [
+          {
+            input: "document.querySelector(\".id-foo\");",
+            expected: "document.querySelector(\".id-foo\");",
+          },
+          {
+            input: "document.querySelector(\"[id-foo]\");",
+            expected: "document.querySelector(\"[id-foo]\");",
+          },
+        ],
+      },
+      {
+        name: "reserved names",
+        cases: [
+          ...[
+            "document.querySelector(\"#%s\");",
+            "document.getElementById(\"%s\");",
+          ].map((input) => ({
+            input: printf(input, "id-foo"),
+            expected: printf(input, "b"),
+            reserved: ["a"],
+          })),
+          ...[
+            "document.querySelector(\"#%s\");",
+            "document.getElementById(\"%s\");",
+          ].map((input) => ({
+            input: printf(input, "id-foo"),
+            expected: printf(input, "d"),
+            reserved: ["a", "b", "c"],
+          })),
+          ...[
+            "document.querySelector(\"#%s #%s\");",
+            "document.getElementById(\"%s\");document.getElementById(\"%s\");",
+          ].map((input) => ({
+            input: printf(input, "id-foo", "id-bar"),
+            expected: printf(input, "a", "c"),
+            reserved: ["b"],
+          })),
+        ],
+      },
+      {
+        name: "prefixed mangling",
+        cases: [
+          ...[
+            "document.querySelector(\"#%s\");",
+            "document.getElementById(\"%s\");",
+          ].map((input) => ({
+            input: printf(input, "id-foo"),
+            expected: printf(input, "mangled-a"),
+            prefix: "mangled-",
+          })),
+          ...[
+            "document.querySelector(\"#%s #%s\");",
+            "document.getElementById(\"%s\");document.getElementById(\"%s\");",
+          ].map((input) => ({
+            input: printf(input, "id-foo", "id-bar"),
+            expected: printf(input, "id-a", "id-b"),
+            prefix: "id-",
+          })),
+        ],
+      },
+      {
+        name: "corner cases",
+        cases: [
+          {
+            input: "document.querySelector(\"#id-foo .id-foo\");",
+            expected: "document.querySelector(\"#a .id-foo\");",
+            description: "non-id selectors matching a mangled id should not be mangled",
+          },
+          {
+            input: "document.querySelector(\"#id-foo #id-foo\");",
+            expected: "document.querySelector(\"#a #a\");",
+            description: "repeated ids should all be mangled",
+          },
+          {
+            input: "var id_foo;",
+            expected: "var id_foo;",
             pattern: "id[-_][a-z]+",
+            description: "non-string matching parts of code should not be mangled",
           },
         ],
       },
