@@ -137,7 +137,7 @@ suite("Statistics", function() {
       const stats: ManglerStats = new Map([[path, fileStats]]);
 
       logStats(logMock, stats);
-      expect(logMock).to.have.callCount(1);
+      expect(logMock).to.have.callCount(2);
       expect(logMock).to.have.been.calledWith(sinon.match(path));
     });
 
@@ -150,7 +150,7 @@ suite("Statistics", function() {
       const stats: ManglerStats = new Map(entries);
 
       logStats(logMock, stats);
-      expect(logMock).to.have.callCount(entries.length);
+      expect(logMock).to.have.callCount(entries.length + 1);
       for (const [path] of entries) {
         expect(logMock).to.have.been.calledWith(sinon.match(path));
       }
@@ -163,7 +163,7 @@ suite("Statistics", function() {
       const stats: ManglerStats = new Map(entries);
 
       logStats(logMock, stats);
-      expect(logMock).to.have.callCount(entries.length);
+      expect(logMock).to.have.callCount(entries.length + 1);
       for (const [path] of entries) {
         expect(logMock).to.have.been.calledWith(sinon.match(path));
         expect(logMock).to.have.been.calledWith(sinon.match("[NOT MANGLED]"));
@@ -186,7 +186,7 @@ suite("Statistics", function() {
       const stats: ManglerStats = new Map(entries);
 
       logStats(logMock, stats);
-      expect(logMock).to.have.callCount(entries.length);
+      expect(logMock).to.have.callCount(entries.length + 1);
       for (const [, fileStats] of entries) {
         expect(logMock).to.have.been.calledWith(
           sinon.match(`${round(fileStats.changePercentage)}%`),
@@ -203,7 +203,7 @@ suite("Statistics", function() {
       const stats: ManglerStats = new Map(entries);
 
       logStats(logMock, stats);
-      expect(logMock).to.have.callCount(entries.length);
+      expect(logMock).to.have.callCount(entries.length + 1);
       for (const [,] of entries) {
         expect(logMock).to.have.been.calledWith(sinon.match("<-0.01%"));
       }
@@ -225,7 +225,7 @@ suite("Statistics", function() {
       const stats: ManglerStats = new Map(entries);
 
       logStats(logMock, stats);
-      expect(logMock).to.have.callCount(entries.length);
+      expect(logMock).to.have.callCount(entries.length + 1);
       for (const [, fileStats] of entries) {
         expect(logMock).to.have.been.calledWith(
           sinon.match(`${round(fileStats.changePercentage)}%`),
@@ -242,7 +242,7 @@ suite("Statistics", function() {
       const stats: ManglerStats = new Map(entries);
 
       logStats(logMock, stats);
-      expect(logMock).to.have.callCount(entries.length);
+      expect(logMock).to.have.callCount(entries.length + 1);
       for (const [,] of entries) {
         expect(logMock).to.have.been.calledWith(sinon.match("<+0.01%"));
       }
@@ -255,10 +255,26 @@ suite("Statistics", function() {
       const stats: ManglerStats = new Map(entries);
 
       logStats(logMock, stats);
-      expect(logMock).to.have.callCount(entries.length);
+      expect(logMock).to.have.callCount(entries.length + 1);
       for (const [,] of entries) {
         expect(logMock).to.have.been.calledWith(sinon.match("0%"));
       }
+    });
+
+    test("overall percentage", function() {
+      const entries: [string, FileStats][] = [
+        ["foo.txt", new FileStatsMock(2, 1)],
+        ["bar.md", new FileStatsMock(3, 1)],
+        ["hello/world.css", new FileStatsMock(5, 2)],
+      ];
+      const stats: ManglerStats = new Map(entries);
+
+      const sizeBefore = entries.map(([, file]) => file.sizeBefore).reduce((p, c) => c + p, 0);
+      const sizeAfter = entries.map(([, file]) => file.sizeAfter).reduce((p, c) => c + p, 0);
+
+      logStats(logMock, stats);
+      expect(logMock).to.have.been.calledWith(sinon.match("-60%"));
+      expect(logMock).to.have.been.calledWith(sinon.match(`${sizeBefore} -> ${sizeAfter}`));
     });
   });
 });

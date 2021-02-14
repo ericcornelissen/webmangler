@@ -89,7 +89,11 @@ export function logStats(
   log: (msg: string) => void,
   stats: ManglerStats,
 ): void {
+  let overallBefore = 0;
+  let overallAfter = 0;
   stats.forEach((fileStats, filePath) => {
+    overallBefore += fileStats.sizeBefore;
+    overallAfter += fileStats.sizeAfter;
     if (fileStats.changed) {
       const percentage = getDisplayPercentage(fileStats.changePercentage);
       const reduction = `${fileStats.sizeBefore} -> ${fileStats.sizeAfter}`;
@@ -98,4 +102,11 @@ export function logStats(
       log(`${filePath} [NOT MANGLED]`);
     }
   });
+
+  if (stats.size > 0) {
+    const changedPercentage = getChangedPercentage(overallBefore, overallAfter);
+    const percentage = getDisplayPercentage(changedPercentage);
+    const reduction = `${overallBefore} -> ${overallAfter}`;
+    log(`OVERALL ${percentage} (${reduction})`);
+  }
 }
