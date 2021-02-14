@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix _Maximum call stack size exceeded_ error by the HTML Attribute mangler.
 
 ## [0.1.9] - 2021-02-12
 

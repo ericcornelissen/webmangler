@@ -4,9 +4,7 @@ import ManglerExpression from "../utils/mangler-expression.class";
 
 const GROUP_ALL = "all";
 const GROUP_ATTRIBUTE = "attribute";
-const GROUP_QUOTE = "quote";
 
-const SELECTOR_REQUIRED_BEFORE = "\\s";
 const SELECTOR_REQUIRED_AFTER = "\\s|\\=|\\>";
 
 /**
@@ -18,7 +16,7 @@ const SELECTOR_REQUIRED_AFTER = "\\s|\\=|\\>";
  */
 function getAttributeRegExp(pattern: string): RegExp {
   const expr = `
-    (?<=${SELECTOR_REQUIRED_BEFORE})
+    (?<=\\s|^)
     (?<${GROUP_ATTRIBUTE}>${pattern})
     (?=${SELECTOR_REQUIRED_AFTER})
   `.replace(/\s/g, "");
@@ -59,18 +57,14 @@ const expressions: ManglerExpression[] = [
   //  `<div (data-foo)="bar" (data-bar)="foo"></div>`
   new ManglerExpression(
     `
-      (?<=\\<\\s*[a-zA-Z]+(?=\\s))
+      (?<=\\<\\s*[a-zA-Z]+\\s+)
       (?<${GROUP_ALL}>
         (?:
-          [^\\>]
-          |
-          (?<${GROUP_QUOTE}>"|')
-            (.(?!\\k<${GROUP_QUOTE}>))*
-            \\>
-            (.(?<!\\k<${GROUP_QUOTE}>))*
-          (\\k<${GROUP_QUOTE}>)
+          (?:
+            [^>"']+
+            (?:\\=\\s*(?:"[^"]*"|'[^']*'))?
+          )\\s+
         )*
-        (?<=${SELECTOR_REQUIRED_BEFORE})
         (?<${GROUP_ATTRIBUTE}>%s)
         (?:${SELECTOR_REQUIRED_AFTER})
       )

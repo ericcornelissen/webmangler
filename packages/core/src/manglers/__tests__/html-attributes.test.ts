@@ -335,10 +335,10 @@ suite("HTML Attribute Mangler", function() {
             input: "<div data-foo=\"bar\"></div>",
             expected: "<div data-a=\"bar\"></div>",
           }),
-          {
+          ...varySpacing(">", {
             input: "<div data-foo></div>",
             expected: "<div data-a></div>",
-          },
+          }),
         ],
       },
       {
@@ -349,8 +349,12 @@ suite("HTML Attribute Mangler", function() {
             expected: "<div id=\"foo\" data-a=\"bar\"></div>",
           }),
           ...varyQuotes("html", {
-            input: "<div data-foo=\"bar\" id=\"foo\"></div>",
-            expected: "<div data-a=\"bar\" id=\"foo\"></div>",
+            input: "<div data-foo=\"foo\" class=\"bar\"></div>",
+            expected: "<div data-a=\"foo\" class=\"bar\"></div>",
+          }),
+          ...varyQuotes("html", {
+            input: "<div id=\"praise\" data-foo=\"the\" class=\"sun\"></div>",
+            expected: "<div id=\"praise\" data-a=\"the\" class=\"sun\"></div>",
           }),
           ...varyQuotes("html", {
             input: "<div id=\"foo\"><div data-foo=\"bar\"></div></div>",
@@ -465,6 +469,11 @@ suite("HTML Attribute Mangler", function() {
             input: "<div data-foo=\">\" data-bar=\"foo\"></div>",
             expected: "<div data-a=\">\" data-b=\"foo\"></div>",
             description: "closing `>` inside attribute values should be ignored",
+          },
+          {
+            input: "<div data-foo=\"bar\" data-foo=\"baz\"></div>",
+            expected: "<div data-a=\"bar\" data-a=\"baz\"></div>",
+            description: "Repeated attributes should all be mangled consistently",
           },
           {
             input: "<div class=\"data-foo\"></div>",
