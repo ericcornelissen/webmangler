@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Include overall statistics when outputting mangling statistics.
 
 ## [0.1.3] - 2021-02-12
 
