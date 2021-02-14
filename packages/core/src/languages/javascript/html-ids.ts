@@ -57,7 +57,6 @@ function findInstancesOfGroupIn(
   return results;
 }
 
-
 const expressions: ManglerExpression[] = [
   // Get element by ID, e.g. (with prefix "id-"):
   //  `getElementById\("foo"\);` <-- NO MATCH

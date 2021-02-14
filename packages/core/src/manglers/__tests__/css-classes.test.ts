@@ -1,7 +1,9 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
-import { expect } from "chai";
+import { expect, use as chaiUse } from "chai";
+import * as sinon from "sinon";
+import * as sinonChai from "sinon-chai";
 
 import {
   ATTRIBUTE_SELECTORS,
@@ -15,6 +17,7 @@ import {
   varySpacing,
 } from "./test-helpers";
 
+import EngineMock from "../../__mocks__/engine.mock";
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
 
 import BuiltInLanguageSupport from "../../languages/builtin";
@@ -22,6 +25,8 @@ import mangleEngine from "../../engine";
 import CssClassMangler from "../css-classes";
 
 const builtInLanguageSupport = new BuiltInLanguageSupport();
+
+chaiUse(sinonChai);
 
 suite("CSS Classes Mangler", function() {
   const DEFAULT_PATTERN = "cls[-_][a-zA-Z-_]+";
@@ -922,6 +927,104 @@ suite("CSS Classes Mangler", function() {
         }
       });
     }
+  });
+
+  suite("Configuration", function() {
+    setup(function() {
+      EngineMock.resetHistory();
+    });
+
+    test("default patterns", function() {
+      const expected = CssClassMangler.DEFAULT_PATTERNS;
+
+      const cssClassMangler = new CssClassMangler();
+      cssClassMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        expected,
+        sinon.match.any,
+      );
+    });
+
+    test("custom pattern", function() {
+      const pattern = "foo(bar|baz)-[a-z]+";
+
+      const cssClassMangler = new CssClassMangler({ classNamePattern: pattern });
+      cssClassMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        pattern,
+        sinon.match.any,
+      );
+    });
+
+    test("custom patterns", function() {
+      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+
+      const cssClassMangler = new CssClassMangler({ classNamePattern: patterns });
+      cssClassMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        patterns,
+        sinon.match.any,
+      );
+    });
+
+    test("default reserved", function() {
+      const expected = CssClassMangler.ALWAYS_RESERVED.concat(CssClassMangler.DEFAULT_RESERVED);
+
+      const cssClassMangler = new CssClassMangler();
+      cssClassMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("reservedNames", expected),
+      );
+    });
+
+    test("custom reserved", function() {
+      const reserved: string[] = ["foo", "bar"];
+      const expected = CssClassMangler.ALWAYS_RESERVED.concat(reserved);
+
+      const cssClassMangler = new CssClassMangler({ reservedClassNames: reserved });
+      cssClassMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("reservedNames", expected),
+      );
+    });
+
+    test("default prefix", function() {
+      const expected = CssClassMangler.DEFAULT_PREFIX;
+
+      const cssClassMangler = new CssClassMangler();
+      cssClassMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("manglePrefix", expected),
+      );
+    });
+
+    test("custom prefix", function() {
+      const prefix = "foobar";
+
+      const cssClassMangler = new CssClassMangler({ keepClassNamePrefix: prefix });
+      cssClassMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("manglePrefix", prefix),
+      );
+    });
   });
 
   suite("Illegal names", function() {

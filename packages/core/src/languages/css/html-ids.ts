@@ -30,7 +30,7 @@ const expressions: ManglerExpression[] = [
   //  `div~(#foo) { }`
   //  `div { } (#foo) { }`
   new ManglerExpression(
-    `\\#(%s)(?=${CSS_SELECTOR_REQUIRED_AFTER})`,
+    `#(%s)(?=${CSS_SELECTOR_REQUIRED_AFTER})`,
     ManglerExpression.matchParserForIndex(1),
     ManglerExpression.matchReplacerBy("#%s"),
   ),

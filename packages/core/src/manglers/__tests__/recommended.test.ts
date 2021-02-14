@@ -296,6 +296,10 @@ suite("Recommended Manglers", function() {
     });
   });
 
+  test("no configuration", function() {
+    expect(new RecommendedManglers).not.to.throw;
+  });
+
   test("no input files", function() {
     for (const options of permuteObjects(ALL_DEFAULT_OPTIONS)) {
       const mangler = new RecommendedManglers(options);
