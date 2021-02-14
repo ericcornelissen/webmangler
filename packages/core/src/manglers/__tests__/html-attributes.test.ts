@@ -1,7 +1,9 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
-import { expect } from "chai";
+import { expect, use as chaiUse } from "chai";
+import * as sinon from "sinon";
+import * as sinonChai from "sinon-chai";
 
 import {
   PSEUDO_ELEMENT_SELECTORS,
@@ -15,6 +17,7 @@ import {
   varySpacing,
 } from "./test-helpers";
 
+import EngineMock from "../../__mocks__/engine.mock";
 import ManglerFileMock from "../../__mocks__/mangler-file.mock";
 
 import mangleEngine from "../../engine";
@@ -22,6 +25,8 @@ import BuiltInLanguageSupport from "../../languages/builtin";
 import HtmlAttributeMangler from "../html-attributes";
 
 const builtInLanguageSupport = new BuiltInLanguageSupport();
+
+chaiUse(sinonChai);
 
 suite("HTML Attribute Mangler", function() {
   const DEFAULT_PATTERN = "data-[a-z-]+";
@@ -759,6 +764,104 @@ suite("HTML Attribute Mangler", function() {
         }
       });
     }
+  });
+
+  suite("Configuration", function() {
+    setup(function() {
+      EngineMock.resetHistory();
+    });
+
+    test("default patterns", function() {
+      const expected = HtmlAttributeMangler.DEFAULT_PATTERNS;
+
+      const htmlAttributeMangler = new HtmlAttributeMangler();
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        expected,
+        sinon.match.any,
+      );
+    });
+
+    test("custom pattern", function() {
+      const pattern = "foo(bar|baz)-[a-z]+";
+
+      const htmlAttributeMangler = new HtmlAttributeMangler({ attrNamePattern: pattern });
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        pattern,
+        sinon.match.any,
+      );
+    });
+
+    test("custom patterns", function() {
+      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+
+      const htmlAttributeMangler = new HtmlAttributeMangler({ attrNamePattern: patterns });
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        patterns,
+        sinon.match.any,
+      );
+    });
+
+    test("default reserved", function() {
+      const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(HtmlAttributeMangler.DEFAULT_RESERVED);
+
+      const htmlAttributeMangler = new HtmlAttributeMangler();
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("reservedNames", expected),
+      );
+    });
+
+    test("custom reserved", function() {
+      const reserved: string[] = ["foo", "bar"];
+      const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(reserved);
+
+      const htmlAttributeMangler = new HtmlAttributeMangler({ reservedAttrNames: reserved });
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("reservedNames", expected),
+      );
+    });
+
+    test("default prefix", function() {
+      const expected = HtmlAttributeMangler.DEFAULT_PREFIX;
+
+      const htmlAttributeMangler = new HtmlAttributeMangler();
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("manglePrefix", expected),
+      );
+    });
+
+    test("custom prefix", function() {
+      const prefix = "foobar";
+
+      const htmlAttributeMangler = new HtmlAttributeMangler({ keepAttrPrefix: prefix });
+      htmlAttributeMangler.mangle(EngineMock, []);
+      expect(EngineMock).to.have.been.calledWith(
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.any,
+        sinon.match.has("manglePrefix", prefix),
+      );
+    });
   });
 
   suite("Illegal names", function() {
