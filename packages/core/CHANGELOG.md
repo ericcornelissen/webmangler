@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix _Maximum call stack size exceeded_ error by the HTML Attribute mangler.
 - Allow ID mangling in complex query selectors in JavaScript.
 - Fix mangling IDs followed by child, sibling, and adjacent combinators in CSS.
 - Fix accidental mangling of some non-id attributes in HTML.
