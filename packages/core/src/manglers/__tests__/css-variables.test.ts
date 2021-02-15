@@ -35,16 +35,34 @@ suite("CSS Variable Mangler", function() {
             expected: ":root{ --a:#000; }",
           }),
           ...varySpacing(["{", "}"], {
-            input: ".foo{--foo:#000;}",
-            expected: ".foo{--a:#000;}",
+            input: ":root{--foo:#000;}",
+            expected: ":root{--a:#000;}",
           }),
+          ...varySpacing(["{", ":", "}"], {
+            input: ":root{--foo:#000;}",
+            expected: ":root{--a:#000;}",
+          }),
+          ...varySpacing(["{", ":", "}"], {
+            input: ":root{--foo:12px;}",
+            expected: ":root{--a:12px;}",
+          }),
+          ...varySpacing(["{", ":", "}"], {
+            input: ":root{--foo:black;}",
+            expected: ":root{--a:black;}",
+          }),
+          ...varySpacing(["{", ":", "}"], {
+            input: ":root{--foo:\"bar\";}",
+            expected: ":root{--a:\"bar\";}",
+          })
+          .map((testCase) => varyQuotes("css", testCase))
+          .flat(),
           {
-            input: ":root { --foo: white; --bar: black; }",
-            expected: ":root { --a: white; --b: black; }",
+            input: ":root { --foo: black; --bar: yellow; }",
+            expected: ":root { --a: black; --b: yellow; }",
           },
           {
-            input: ".foo { --bar: white; } .bar { --foo: black; }",
-            expected: ".foo { --a: white; } .bar { --b: black; }",
+            input: ".cls-1 { --foo: black; } .cls-2 { --bar: yellow; }",
+            expected: ".cls-1 { --a: black; } .cls-2 { --b: yellow; }",
           },
         ],
       },
@@ -52,28 +70,76 @@ suite("CSS Variable Mangler", function() {
         name: "variable usage",
         cases: [
           ...varySpacing(["(", ")"], {
-            input: ".foo { color: var(--foo); }",
-            expected: ".foo { color: var(--a); }",
+            input: "div { color: var(--foo); }",
+            expected: "div { color: var(--a); }",
           }),
-          {
+          ...varySpacing(["(", ")"], {
+            input: "div { background: purple; color: var(--foo); }",
+            expected: "div { background: purple; color: var(--a); }",
+          }),
+          ...varySpacing(["(", ")"], {
+            input: "div { color: var(--foo); font-size: 12px; }",
+            expected: "div { color: var(--a); font-size: 12px; }",
+          }),
+          ...varySpacing(["(", ")"], {
+            input: "div { background: purple; color: var(--foo); font-size: 12px; }",
+            expected: "div { background: purple; color: var(--a); font-size: 12px; }",
+          }),
+          ...varySpacing(["(", ")"], {
             input: "div { color: var(--foo); font: var(--bar); }",
             expected: "div { color: var(--a); font: var(--b); }",
-          },
-          {
-            input: ".foo { color: var(--foo); } .bar { font: var(--bar); }",
-            expected: ".foo { color: var(--a); } .bar { font: var(--b); }",
-          },
-          ...varySpacing([","], {
-            input: ".foo { color: var(--foo,#fff); }",
-            expected: ".foo { color: var(--a,#fff); }",
           }),
+          ...varySpacing(["(", ")"], {
+            input: "div { color: var(--foo); } p { font: var(--bar); }",
+            expected: "div { color: var(--a); } p { font: var(--b); }",
+          }),
+        ],
+      },
+      {
+        name: "variable usage with fallback",
+        cases: [
+          ...varySpacing(["(", ")"], {
+            input: "div { color: var(--foo, red); }",
+            expected: "div { color: var(--a, red); }",
+          }),
+          ...varySpacing(",", {
+            input: "div { color: var(--foo,red); }",
+            expected: "div { color: var(--a,red); }",
+          }),
+          ...varySpacing(["(", ",", ")"], {
+            input: "div { margin: var(--foo,12px); }",
+            expected: "div { margin: var(--a,12px); }",
+          }),
+          ...varySpacing(["(", ",", ")"], {
+            input: "div { color: var(--foo,#000); }",
+            expected: "div { color: var(--a,#000); }",
+          }),
+          ...varyQuotes("css", {
+            input: "div { content: var(--foo,\"bar\"); }",
+            expected: "div { content: var(--a,\"bar\"); }",
+          })
+          .map((testCase) => varyQuotes("css", testCase))
+          .flat(),
+        ],
+      },
+      {
+        name: "variable declarations & usage",
+        cases: [
           {
-            input: "div { color: var(--foo, #000); font: var(--bar, serif); }",
-            expected: "div { color: var(--a, #000); font: var(--b, serif); }",
+            input: ":root { --foo: black; } div { color: var(--foo, yellow); }",
+            expected: ":root { --a: black; } div { color: var(--a, yellow); }",
           },
           {
-            input: ".foo { color: var(--foo, #000); } .bar { font: var(--bar, serif); }",
-            expected: ".foo { color: var(--a, #000); } .bar { font: var(--b, serif); }",
+            input: ":root { --foo: black; } div { color: var(--bar, yellow); }",
+            expected: ":root { --a: black; } div { color: var(--b, yellow); }",
+          },
+          {
+            input: "div { --foo: black; color: var(--foo, yellow); }",
+            expected: "div { --a: black; color: var(--a, yellow); }",
+          },
+          {
+            input: "div { --foo: black; color: var(--bar, yellow); }",
+            expected: "div { --a: black; color: var(--b, yellow); }",
           },
         ],
       },
@@ -81,19 +147,19 @@ suite("CSS Variable Mangler", function() {
         name: "reserved class names",
         cases: [
           {
-            input: ":root { --foo: 'bar'; }",
+            input: ":root { --foo: \"bar\"; }",
             reserved: ["a"],
-            expected: ":root { --b: 'bar'; }",
+            expected: ":root { --b: \"bar\"; }",
           },
           {
-            input: ":root { --foo: 'bar'; }",
+            input: ":root { --foo: \"bar\"; }",
             reserved: ["a", "b", "c"],
-            expected: ":root { --d: 'bar'; }",
+            expected: ":root { --d: \"bar\"; }",
           },
           {
-            input: ":root { --foo: white; --bar: black; }",
+            input: ":root { --foo: black; --bar: yellow; }",
             reserved: ["b"],
-            expected: ":root { --a: white; --c: black; }",
+            expected: ":root { --a: black; --c: yellow; }",
           },
         ],
       },
