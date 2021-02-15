@@ -40,8 +40,6 @@ export default class ParallelManglerExpression implements ManglerExpression {
     patternTemplate: string,
     groupName: string,
     replaceTemplate: string,
-    // matchParser: MatchParser,
-    // matchReplacer: MatchReplacer,
   ) {
     this.patternTemplate = patternTemplate;
     this.groupName = groupName;

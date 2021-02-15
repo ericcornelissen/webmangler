@@ -1,14 +1,9 @@
-import type { ManglerExpression, ManglerMatch } from "../types";
+import type { ManglerExpression } from "../types";
 
-import {
-  ParallelManglerExpression,
-  SerialManglerExpression,
-} from "../utils/mangler-expressions";
+import { ParallelManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_NAME_QUOTE = "q";
-const GROUP_NAME_PRE_PATTERN = "pre";
 const GROUP_NAME_PATTER = "main";
-const GROUP_NAME_POST_PATTER = "post";
 
 const pattern: ManglerExpression[] = [
   // matches e.g. `el.classList.add("foo")`
@@ -23,39 +18,15 @@ const pattern: ManglerExpression[] = [
   ),
 
   // matches e.g. `document.querySelectorAll(".foo")`
-  new SerialManglerExpression(
+  ...["\"", "'", "`"].map((quote) => new ParallelManglerExpression(
     `
-      (?<${GROUP_NAME_QUOTE}>"|'|\`)
-      (?<${GROUP_NAME_PRE_PATTERN}>(?:.(?!\\k<${GROUP_NAME_QUOTE}>))*\\.)
-      (?<${GROUP_NAME_PATTER}>%s)
-      (
-        ?<${GROUP_NAME_POST_PATTER}>
-        \\k<${GROUP_NAME_QUOTE}>|\\s|\\.|\\#|\\[|\\>|\\+|\\~
-      )
+      (?<=${quote}[^${quote}]*)
+      \\.(?<${GROUP_NAME_PATTER}>%s)
+      (?=${quote}|\\s|\\.|\\#|\\[|\\>|\\+|\\~)
     `.replace(/\s/g, ""),
-    (pattern: string, match: ManglerMatch): string[] => {
-      const results: string[] = [];
-
-      const prePatternClasses = match.getNamedGroup(GROUP_NAME_PRE_PATTERN);
-      const lastPatternMatch = match.getNamedGroup(GROUP_NAME_PATTER);
-      const s = `${prePatternClasses}${lastPatternMatch}`;
-      const regexp = new RegExp(`\\.(${pattern})`, "gm");
-      let match2: RegExpExecArray | null = null;
-      while ((match2 = regexp.exec(s)) !== null) {
-        results.push(match2[1]);
-      }
-
-      return results;
-    },
-    SerialManglerExpression.matchReplacerBy(
-      `
-        $<${GROUP_NAME_QUOTE}>
-        $<${GROUP_NAME_PRE_PATTERN}>
-        %s
-        $<${GROUP_NAME_POST_PATTER}>
-      `.replace(/\s/g, ""),
-    ),
-  ),
+    GROUP_NAME_PATTER,
+    ".%s",
+  )),
 ];
 
 export default pattern;
