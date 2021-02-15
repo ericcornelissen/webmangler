@@ -1,6 +1,6 @@
 import type { ManglerExpression } from "../types";
 
-import { ParallelManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_ATTRIBUTE = "attribute";
 const GROUP_QUOTE = "quote";
@@ -18,7 +18,7 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("[(data-foo)^="bar"]"\)`
   //  `querySelector\("[(data-foo)$="bar"]"\)`
   //  `querySelector\("[(data-foo)*="bar"]"\)`
-  ...["\"", "'", "`"].map((quote) => new ParallelManglerExpression(
+  ...["\"", "'", "`"].map((quote) => new SingleGroupManglerExpression(
     `
       (?<=
         ${quote}[^${quote}]*
@@ -26,7 +26,7 @@ const expressions: ManglerExpression[] = [
       )
       (?<${GROUP_ATTRIBUTE}>%s)
       (?=${SELECTOR_REQUIRED_AFTER})
-    `.replace(/\s/g, ""),
+    `,
     GROUP_ATTRIBUTE,
     "%s",
   )),
@@ -35,12 +35,12 @@ const expressions: ManglerExpression[] = [
   //  `$el.getAttribute\("(data-praise)"\)`
   //  `$el.removeAttribute\("(data-the)"\)`
   //  `$el.setAttribute\("(data-sun)", "value"\)`
-  new ParallelManglerExpression(
+  new SingleGroupManglerExpression(
     `
       (?<=(?<${GROUP_QUOTE}>"|'|\`)\\s*)
       (?<${GROUP_ATTRIBUTE}>%s)
       (?=\\s*\\k<${GROUP_QUOTE}>)
-    `.replace(/\s/g, ""),
+    `,
     GROUP_ATTRIBUTE,
     "%s",
   ),

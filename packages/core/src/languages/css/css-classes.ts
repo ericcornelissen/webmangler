@@ -1,6 +1,6 @@
 import type { ManglerExpression } from "../types";
 
-import { ParallelManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_CLASS = "main";
 
@@ -22,8 +22,11 @@ const expressions: ManglerExpression[] = [
   //  `div + .(foo) { }`
   //  `div ~ .(foo) { }`
   //  `#bar { } .(foo) { }`
-  new ParallelManglerExpression(
-    `\\.(?<${GROUP_CLASS}>%s)(?=\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s)`,
+  new SingleGroupManglerExpression(
+    `
+      \\.(?<${GROUP_CLASS}>%s)
+      (?=\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s)
+    `,
     GROUP_CLASS,
     ".%s",
   ),

@@ -1,6 +1,6 @@
 import type { ManglerExpression } from "../types";
 
-import { ParallelManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_ATTRIBUTE = "main";
 
@@ -12,7 +12,7 @@ const expressions: ManglerExpression[] = [
   //  `<div id="xxx" (data-foo)="bar"></div>`
   //  `<div (data-foo)="bar" id="yyy"></div>`
   //  `<div (data-foo)="bar" (data-bar)="foo"></div>`
-  new ParallelManglerExpression(
+  new SingleGroupManglerExpression(
     `
       (?<=
         \\<\\s*[a-zA-Z]+\\s+
@@ -25,7 +25,7 @@ const expressions: ManglerExpression[] = [
       )
       (?<${GROUP_ATTRIBUTE}>%s)
       (?=${SELECTOR_REQUIRED_AFTER})
-    `.replace(/\s/g, ""),
+    `,
     GROUP_ATTRIBUTE,
     "%s",
   ),

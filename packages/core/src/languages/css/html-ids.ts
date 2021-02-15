@@ -1,6 +1,6 @@
 import type { ManglerExpression } from "../types";
 
-import { ParallelManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_ID = "main";
 const GROUP_QUOTE = "quote";
@@ -31,8 +31,11 @@ const expressions: ManglerExpression[] = [
   //  `div+(#foo) { }`
   //  `div~(#foo) { }`
   //  `div { } (#foo) { }`
-  new ParallelManglerExpression(
-    `#(?<${GROUP_ID}>%s)(?=${CSS_SELECTOR_REQUIRED_AFTER})`,
+  new SingleGroupManglerExpression(
+    `
+      #(?<${GROUP_ID}>%s)
+      (?=${CSS_SELECTOR_REQUIRED_AFTER})
+    `,
     GROUP_ID,
     "#%s",
   ),
@@ -45,7 +48,7 @@ const expressions: ManglerExpression[] = [
   //  `[href^="(#foo)"]`
   //  `[href$="(#foo)"]`
   //  `[href*="(#foo)"]`
-  new ParallelManglerExpression(
+  new SingleGroupManglerExpression(
     `
       (?<=
         \\[\\s*href\\s*(?:${ATTR_SELECTOR_METHODS_PATTERN})\\s*
@@ -54,7 +57,7 @@ const expressions: ManglerExpression[] = [
       )
       #(?<${GROUP_ID}>%s)
       (?=\\s*${CSS_QUOTE_MATCHING_PATTERN}\\s*\\])
-    `.replace(/\s/g, ""),
+    `,
     GROUP_ID,
     "#%s",
   ),

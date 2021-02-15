@@ -4,36 +4,45 @@ import { format as printf } from "util";
 
 import _ManglerMatch from "../mangler-match.class";
 
-const REG_EXP_FLAGS = "gm";
-
 /**
- * A {@link ManglerExpression} describes a generic pattern to match and replace
- * arbitrary sub-patterns.
+ * A {@link SingleGroupManglerExpression} is a {@link ManglerExpression}
+ * implementation that matches and replaces based on a single named group.
+ *
+ * @example
+ * new SingleGroupManglerExpression(
+ *   "--(?<GROUP_NAME>%s)--",
+ *   "GROUP_NAME",
+ *   "=%s="
+ * );
+ * // matches "foo" in "--foo--"
  *
  * @since v0.1.11
  */
-export default class ParallelManglerExpression implements ManglerExpression {
+export default class SingleGroupManglerExpression implements ManglerExpression {
   /**
-   * TODO.
+   * The template string to use as (generic) pattern.
    */
   private readonly patternTemplate: string;
 
   /**
-   * TODO.
+   * The name of the group in `patternTemplate` to match and replace.
    */
   private readonly groupName: string;
 
   /**
-   * TODO.
+   * The template for to use to construct replacement strings.
    */
   private readonly replaceTemplate: string;
 
   /**
-   * TODO.
+   * Create an expression from a pattern template with a named group to match
+   * and replace.
    *
-   * @param patternTemplate The generic pattern (should include only one "%s").
-   * @param groupName TODO.
-   * @param replaceTemplate TODO.
+   * NOTE: whitespace is automatically removed from `patternTemplate`.
+   *
+   * @param patternTemplate The generic pattern (only one "%s" allowed).
+   * @param groupName The name of a group in `patternTemplate`.
+   * @param replaceTemplate The replacement pattern (only one "%s" allowed).
    * @since v0.1.11
    */
   constructor(
@@ -41,7 +50,7 @@ export default class ParallelManglerExpression implements ManglerExpression {
     groupName: string,
     replaceTemplate: string,
   ) {
-    this.patternTemplate = patternTemplate;
+    this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
     this.replaceTemplate = replaceTemplate;
   }
@@ -90,13 +99,14 @@ export default class ParallelManglerExpression implements ManglerExpression {
   }
 
   /**
-   * Create a new {@link RegExp} from the pattern template for a given pattern.
+   * Create a new {@link RegExp} from the `patternTemplate` for a given string
+   * or pattern.
    *
-   * @param pattern The pattern of interest.
+   * @param pattern The string or pattern of interest.
    * @returns A {@link RegExp} corresponding to this expression and `pattern`.
    */
   private newRegExp(pattern: string): RegExp {
     const rawExpr = printf(this.patternTemplate, pattern);
-    return new RegExp(rawExpr, REG_EXP_FLAGS);
+    return new RegExp(rawExpr, "gm");
   }
 }

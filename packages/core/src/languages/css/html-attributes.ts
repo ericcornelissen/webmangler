@@ -1,6 +1,6 @@
 import type { ManglerExpression } from "../types";
 
-import { ParallelManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_ATTRIBUTE = "main";
 
@@ -16,12 +16,12 @@ const expressions: ManglerExpression[] = [
   //  `[(data-foo)^=bar]`
   //  `[(data-foo)$=bar]`
   //  `[(data-foo)*=bar]`
-  new ParallelManglerExpression(
+  new SingleGroupManglerExpression(
     `
       (?<=${SELECTOR_REQUIRED_BEFORE})
       (?<${GROUP_ATTRIBUTE}>%s)
       (?=${SELECTOR_REQUIRED_AFTER})
-    `.replace(/\s/g, ""),
+    `,
     GROUP_ATTRIBUTE,
     "%s",
   ),
@@ -31,12 +31,12 @@ const expressions: ManglerExpression[] = [
   //  `attr\((data-foo) number\);`
   //  `attr\((data-foo), 0\);`
   //  `attr\((data-foo) url, "https://www.example.com/"\);`
-  new ParallelManglerExpression(
+  new SingleGroupManglerExpression(
     `
       (?<=attr\\s*\\(\\s*)
       (?<${GROUP_ATTRIBUTE}>%s)
       (?=(\\s+([a-zA-Z]+|%))?\\s*(,|\\)))
-    `.replace(/\s/g, ""),
+    `,
     GROUP_ATTRIBUTE,
     "%s",
   ),

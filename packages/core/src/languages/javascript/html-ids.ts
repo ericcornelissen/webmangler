@@ -1,6 +1,6 @@
 import type { ManglerExpression } from "../types";
 
-import { ParallelManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_ID = "main";
 const GROUP_QUOTE = "quote";
@@ -15,12 +15,12 @@ const expressions: ManglerExpression[] = [
   //  `getElementById\("foo"\);` <-- NO MATCH
   //  `getElementById\("(id-foo)"\);`
   //  `var id = "(id-foo)"; getElementById\(id\);`
-  new ParallelManglerExpression(
+  new SingleGroupManglerExpression(
     `
       (?<=${JS_QUOTE_CAPTURING_GROUP_PATTERN}\\s*)
       (?<${GROUP_ID}>%s)
       (?=\\s*${JS_QUOTE_MATCHING_PATTERN})
-    `.replace(/\s/g, ""),
+    `,
     GROUP_ID,
     "%s",
   ),
@@ -47,12 +47,12 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("div~#(id-foo)"\);`
   //  `querySelector\("#(id-foo)~#(id-bar)"\);`
   //  `querySelector\("#(id-foo)[data-bar]"\);`
-  ...["\"", "'", "`"].map((quote) => new ParallelManglerExpression(
+  ...["\"", "'", "`"].map((quote) => new SingleGroupManglerExpression(
     `
       (?<=${quote}[^${quote}]*)
       #(?<${GROUP_ID}>%s)
       (?=${quote}|${CSS_SELECTOR_REQUIRED_AFTER})
-    `.replace(/\s/g, ""),
+    `,
     GROUP_ID,
     "#%s",
   )),
