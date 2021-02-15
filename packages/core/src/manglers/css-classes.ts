@@ -138,6 +138,7 @@ export type CssClassManglerOptions = {
  * ```
  *
  * @since v0.1.0
+ * @version v0.1.7
  */
 export default class CssClassMangler extends SimpleManglerPlugin {
   /**

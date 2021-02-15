@@ -1,6 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { ManglerExpression } from "../languages";
-import type { MangleEngineOptions, ManglerFile } from "../types";
+import type { CharSet, ManglerFile } from "../types";
 
 import { expect } from "chai";
 
@@ -14,8 +14,10 @@ interface TestCase {
   expected: ManglerFile[];
   expressions: Map<string, ManglerExpression[]>;
   files: ManglerFile[];
-  options?: MangleEngineOptions;
   patterns: string | string[];
+  charSet?: CharSet;
+  reservedNames?: string[];
+  manglePrefix?: string;
 }
 
 suite("ManglerEngine", function() {
@@ -113,9 +115,7 @@ suite("ManglerEngine", function() {
             ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z_]+",
-          options: {
-            charSet: ["a", "b", "c"],
-          },
+          charSet: ["a", "b", "c"],
         },
         {
           files: [new ManglerFileMock("css", ".another, .one, .bites, .de_dust { }")],
@@ -124,9 +124,7 @@ suite("ManglerEngine", function() {
             ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z_]+",
-          options: {
-            charSet: ["c", "b", "a"],
-          },
+          charSet: ["c", "b", "a"],
         },
         {
           files: [new ManglerFileMock("css", ".foo { } .bar { }")],
@@ -135,9 +133,7 @@ suite("ManglerEngine", function() {
             ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
-          options: {
-            charSet: ["x"],
-          },
+          charSet: ["x"],
         },
       ],
     },
@@ -151,9 +147,7 @@ suite("ManglerEngine", function() {
             ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
-          options: {
-            reservedNames: ["b"],
-          },
+          reservedNames: ["b"],
         },
         {
           files: [new ManglerFileMock("css", ".foo { }")],
@@ -162,9 +156,7 @@ suite("ManglerEngine", function() {
             ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
-          options: {
-            reservedNames: ["a", "b"],
-          },
+          reservedNames: ["a", "b"],
         },
       ],
     },
@@ -178,9 +170,7 @@ suite("ManglerEngine", function() {
             ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
-          options: {
-            manglePrefix: "cls-",
-          },
+          manglePrefix: "cls-",
         },
       ],
     },
@@ -194,10 +184,8 @@ suite("ManglerEngine", function() {
             ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
-          options: {
-            reservedNames: ["a"],
-            manglePrefix: "cls-",
-          },
+          reservedNames: ["a"],
+          manglePrefix: "cls-",
         },
       ],
     },
@@ -288,16 +276,8 @@ suite("ManglerEngine", function() {
   for (const { name, cases } of scenarios) {
     test(name, function() {
       for (const testCase of cases) {
-        const {
-          files,
-          expected,
-          expressions,
-          patterns,
-          options,
-          description: failureMessage,
-        } = testCase;
-
-        const result = engine(files, expressions, patterns, options || {});
+        const { expected, description: failureMessage, files } = testCase;
+        const result = engine(files, testCase);
         expect(result).to.deep.equal(expected, failureMessage);
       }
     });

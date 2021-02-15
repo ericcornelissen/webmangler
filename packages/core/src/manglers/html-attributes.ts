@@ -147,6 +147,7 @@ export type HtmlAttributeManglerOptions = {
  * ```
  *
  * @since v0.1.0
+ * @version v0.1.7
  */
 export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**

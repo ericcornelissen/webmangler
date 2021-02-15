@@ -362,7 +362,8 @@ suite("HTML ID Mangler", function() {
           htmlIdMangler.use(builtInLanguageSupport);
 
           const files = [new ManglerFileMock("css", input)];
-          const result = htmlIdMangler.mangle(mangleEngine, files);
+          const options = htmlIdMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -578,7 +579,8 @@ suite("HTML ID Mangler", function() {
           htmlIdMangler.use(builtInLanguageSupport);
 
           const files = [new ManglerFileMock("html", input)];
-          const result = htmlIdMangler.mangle(mangleEngine, files);
+          const options = htmlIdMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -959,7 +961,8 @@ suite("HTML ID Mangler", function() {
           htmlIdMangler.use(builtInLanguageSupport);
 
           const files = [new ManglerFileMock("js", input)];
-          const result = htmlIdMangler.mangle(mangleEngine, files);
+          const options = htmlIdMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -1064,14 +1067,5 @@ suite("HTML ID Mangler", function() {
         sinon.match.has("manglePrefix", prefix),
       );
     });
-  });
-
-  test("no input files", function() {
-    const htmlIdMangler = new HtmlIdMangler({
-      idNamePattern: DEFAULT_PATTERN,
-    });
-
-    const result = htmlIdMangler.mangle(mangleEngine, []);
-    expect(result).to.have.lengthOf(0);
   });
 });

@@ -1,4 +1,4 @@
-import type { CharSet, MangleEngine, ManglerFile } from "../../types";
+import type { CharSet, MangleEngine, MangleEngineOptions, ManglerFile } from "../../types";
 
 import BaseManglerPlugin from "./base-mangler.class";
 
@@ -6,6 +6,7 @@ import BaseManglerPlugin from "./base-mangler.class";
  * Interface defining the configuration of a {@link SimpleLanguagePlugin}.
  *
  * @since v0.1.0
+ * @version v0.1.7
  */
 interface SimpleManglerOptions {
   /**
@@ -48,6 +49,7 @@ interface SimpleManglerOptions {
  * {@link WebManglerPlugin}.
  *
  * @since v0.1.0
+ * @version v0.1.11
  */
 export default abstract class SimpleManglerPlugin extends BaseManglerPlugin {
   /**
@@ -82,6 +84,20 @@ export default abstract class SimpleManglerPlugin extends BaseManglerPlugin {
     this.patterns = options.patterns;
     this.reserved = options.reserved;
     this.prefix = options.prefix;
+  }
+
+  /**
+   * @inheritDoc
+   * @since v0.1.11
+   */
+  config(): MangleEngineOptions {
+    return {
+      expressions: this.expressions,
+      patterns: this.patterns,
+      charSet: this.charSet,
+      reservedNames: this.reserved,
+      manglePrefix: this.prefix,
+    };
   }
 
   /**

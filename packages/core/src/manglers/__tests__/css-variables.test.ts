@@ -155,7 +155,8 @@ suite("CSS Variable Mangler", function() {
           cssVariableMangler.use(builtInLanguageSupport);
 
           const files = [new ManglerFileMock("css", input)];
-          const result = cssVariableMangler.mangle(mangleEngine, files);
+          const options = cssVariableMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -295,7 +296,8 @@ suite("CSS Variable Mangler", function() {
           cssVariableMangler.use(builtInLanguageSupport);
 
           const files = [new ManglerFileMock("html", input)];
-          const result = cssVariableMangler.mangle(mangleEngine, files);
+          const options = cssVariableMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -387,7 +389,8 @@ suite("CSS Variable Mangler", function() {
           cssVariableMangler.use(builtInLanguageSupport);
 
           const files = [new ManglerFileMock("js", input)];
-          const result = cssVariableMangler.mangle(mangleEngine, files);
+          const options = cssVariableMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -515,8 +518,9 @@ suite("CSS Variable Mangler", function() {
       });
       cssVariableMangler.use(builtInLanguageSupport);
 
-      const file = new ManglerFileMock("css", content);
-      const result = cssVariableMangler.mangle(mangleEngine, [file]);
+      const files = [new ManglerFileMock("css", content)];
+      const options = cssVariableMangler.config();
+      const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -532,8 +536,9 @@ suite("CSS Variable Mangler", function() {
       });
       cssVariableMangler.use(builtInLanguageSupport);
 
-      const file = new ManglerFileMock("css", content);
-      const result = cssVariableMangler.mangle(mangleEngine, [file]);
+      const files = [new ManglerFileMock("css", content)];
+      const options = cssVariableMangler.config();
+      const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -541,14 +546,5 @@ suite("CSS Variable Mangler", function() {
         expect(out.content).not.to.have.string(illegalName);
       }
     });
-  });
-
-  test("no input files", function() {
-    const cssVariableMangler = new CssVariableMangler({
-      cssVarNamePattern: DEFAULT_PATTERN,
-    });
-
-    const result = cssVariableMangler.mangle(mangleEngine, []);
-    expect(result).to.have.lengthOf(0);
   });
 });

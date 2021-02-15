@@ -1,5 +1,5 @@
 import type { ManglerExpression } from "./languages";
-import type { CharSet, ManglerFile } from "./types";
+import type { MangleEngineOptions, CharSet, ManglerFile } from "./types";
 
 import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
@@ -203,51 +203,20 @@ function getSupportedFilesOnly<File extends ManglerFile>(
  * @param options The {@link MangleEngineOptions}.
  * @returns All {@link MangleEngineOptions} values.
  */
-function parseOptions(
-  options: MangleEngineOptions,
-): {
+function parseOptions(options: MangleEngineOptions): {
+  expressions: Map<string, ManglerExpression[]>,
+  patterns: string[],
   charSet: CharSet,
   manglePrefix: string,
   reservedNames: string[],
 } {
   return {
+    expressions: options.expressions,
+    patterns: toArrayIfNeeded(options.patterns),
     charSet: options.charSet || NameGenerator.DEFAULT_CHARSET,
     manglePrefix: options.manglePrefix || DEFAULT_MANGLE_PREFIX,
     reservedNames: options.reservedNames || DEFAULT_RESERVED_NAMES,
   };
-}
-
-/**
- * A set of generic options used by the {@link MangleEngine} for mangling.
- *
- * @since v0.1.0
- */
-export type MangleEngineOptions = {
-  /**
-   * The character set for mangled strings.
-   *
-   * @default {@link NameGenerator.DEFAULT_CHARSET}
-   * @since v0.1.7
-   */
-  readonly charSet?: CharSet;
-
-  /**
-   * The prefix to use for mangled strings.
-   *
-   * @default `""`
-   * @since v0.1.0
-   */
-  manglePrefix?: string;
-
-  /**
-   * A list of names and patterns not to be used as mangled string.
-   *
-   * Patterns are supported since v0.1.7.
-   *
-   * @default `[]`
-   * @since v0.1.0
-   */
-  reservedNames?: string[];
 }
 
 /**
@@ -264,21 +233,24 @@ export type MangleEngineOptions = {
  * list may be shorter than the inputted list.
  *
  * @param files The files to mangle.
- * @param expressions The {@link ManglerExpression}s to find strings to mangle.
- * @param patterns The patterns of strings to mangle.
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
+ * @version v0.1.7
  */
 export default function mangle<File extends ManglerFile>(
   files: File[],
-  expressions: Map<string, ManglerExpression[]>,
-  patterns: string | string[],
   options: MangleEngineOptions,
 ): File[] {
+  const {
+    expressions,
+    patterns,
+    manglePrefix,
+    reservedNames,
+    charSet,
+  } = parseOptions(options);
+
   const supportedFiles = getSupportedFilesOnly(files, expressions);
-  const { manglePrefix, reservedNames, charSet } = parseOptions(options);
-  patterns = toArrayIfNeeded(patterns);
 
   const instancesCount = countInstances(supportedFiles, expressions, patterns);
   const [mapToUnique, mapToMangled] = getMangleMaps(

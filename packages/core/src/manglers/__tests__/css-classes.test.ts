@@ -341,7 +341,8 @@ suite("CSS Classes Mangler", function() {
           cssClassMangler.use(builtInLanguageSupport);
 
           const files = [new ManglerFileMock("css", input)];
-          const result = cssClassMangler.mangle(mangleEngine, files);
+          const options = cssClassMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -651,7 +652,8 @@ suite("CSS Classes Mangler", function() {
           cssClassMangler.use(builtInLanguageSupport);
 
           const files = [new ManglerFileMock("html", input)];
-          const result = cssClassMangler.mangle(mangleEngine, files);
+          const options = cssClassMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -919,7 +921,8 @@ suite("CSS Classes Mangler", function() {
           cssClassMangler.use(builtInLanguageSupport);
 
           const files = [new ManglerFileMock("js", input)];
-          const result = cssClassMangler.mangle(mangleEngine, files);
+          const options = cssClassMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -1046,8 +1049,9 @@ suite("CSS Classes Mangler", function() {
       });
       cssClassMangler.use(builtInLanguageSupport);
 
-      const file = new ManglerFileMock("css", content);
-      const result = cssClassMangler.mangle(mangleEngine, [file]);
+      const files = [new ManglerFileMock("css", content)];
+      const options = cssClassMangler.config();
+      const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -1063,8 +1067,9 @@ suite("CSS Classes Mangler", function() {
       });
       cssClassMangler.use(builtInLanguageSupport);
 
-      const file = new ManglerFileMock("css", content);
-      const result = cssClassMangler.mangle(mangleEngine, [file]);
+      const files = [new ManglerFileMock("css", content)];
+      const options = cssClassMangler.config();
+      const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -1072,14 +1077,5 @@ suite("CSS Classes Mangler", function() {
         expect(out.content).not.to.have.string(illegalName);
       }
     });
-  });
-
-  test("no input files", function() {
-    const cssClassMangler = new CssClassMangler({
-      classNamePattern: DEFAULT_PATTERN,
-    });
-
-    const result = cssClassMangler.mangle(mangleEngine, []);
-    expect(result).to.have.lengthOf(0);
   });
 });
