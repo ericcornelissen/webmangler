@@ -31,10 +31,10 @@
     "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "@types/yargs": "15.0.12",
+    "@types/yargs": "16.0.0",
     "@webmangler/testing": "0.1.0",
-    "typescript": "4.1.3",
-    "webmangler": "0.1.9"
+    "typescript": "4.1.5",
+    "webmangler": "0.1.10"
   },
   "peerDependencies": {
     "webmangler": "^0.1.9"
