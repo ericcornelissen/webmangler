@@ -35,6 +35,7 @@ interface WebManglerLanguagePlugin {
  * find and replace patterns by _WebMangler_.
  *
  * @since v0.1.0
+ * @version v0.1.11
  */
 interface ManglerExpression {
   /**

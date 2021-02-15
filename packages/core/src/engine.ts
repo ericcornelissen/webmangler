@@ -172,7 +172,15 @@ function doMangle<File extends ManglerFile>(
   files.forEach((file) => {
     const fileExpressions = expressions.get(file.type) as ManglerExpression[];
     fileExpressions.forEach((expression) => {
-      file.content = expression.replaceAll(file.content, mangleMap);
+      if (expression.replaceAll === undefined) {
+        mangleMap.forEach((to, from) => {
+          fileExpressions.forEach((expression) => {
+            file.content = expression.replace(file.content, from, to);
+          });
+        });
+      } else {
+        file.content = expression.replaceAll(file.content, mangleMap);
+      }
     });
   });
 

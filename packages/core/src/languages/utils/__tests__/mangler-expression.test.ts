@@ -141,11 +141,16 @@ suite("ManglerExpression", function() {
     });
   });
 
-  test("callable (method is deprecated)", function() {
-    const subject = new ManglerExpression("%s", () => ["foo"], () => "bar");
+  test("callable (class is deprecated)", function() {
+    const subject = new ManglerExpression(
+      "%s",
+      (_, match) => [match.getMatchedStr()],
+      (replacement) => replacement,
+    );
     for (const str of subject.exec("foobar", "[ob]+")) {
-      expect(str).to.equal("foo");
+      expect(str).to.equal("oob");
     }
-    subject.replaceAll("foobar", new Map([["bar", "baz"]]));
+    const result = subject.replaceAll("foobar", new Map([["bar", "baz"]]));
+    expect(result).to.equal("foobaz");
   });
 });

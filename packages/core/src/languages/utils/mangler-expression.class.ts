@@ -5,8 +5,6 @@ import { format as printf } from "util";
 import { toArrayIfNeeded } from "../../helpers";
 import _ManglerMatch from "./mangler-match.class";
 
-const REG_EXP_FLAGS = "gm";
-
 /**
  * A {@link MatchParser} is a function that takes as input a `match` and the
  * `pattern` that produced the match and outputs one or more values that should
@@ -37,6 +35,7 @@ type MatchReplacer = ((replaceStr: string, match: ManglerMatch) => string);
  * arbitrary sub-patterns.
  *
  * @since v0.1.0
+ * @version v0.1.11
  * @deprecated
  */
 export default class _ManglerExpression implements ManglerExpression {
@@ -198,6 +197,6 @@ export default class _ManglerExpression implements ManglerExpression {
    */
   private newRegExp(pattern: string): RegExp {
     const rawExpr = printf(this.patternTemplate, pattern);
-    return new RegExp(rawExpr, REG_EXP_FLAGS);
+    return new RegExp(rawExpr, "gm");
   }
 }
