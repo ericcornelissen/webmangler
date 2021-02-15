@@ -1,9 +1,9 @@
-import type { WebManglerLanguagePlugin } from "../../languages";
 import type {
   MangleEngine,
   MangleEngineOptions,
   WebManglerFile,
   WebManglerPlugin,
+  WebManglerLanguagePlugin,
 } from "../../types";
 
 /**

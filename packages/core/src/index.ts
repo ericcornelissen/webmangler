@@ -32,5 +32,4 @@ export default function webmangler<File extends WebManglerFile>(
 }
 
 export type { WebManglerFile, WebManglerOptions };
-export type { WebManglerPlugin } from "./types";
-export type { WebManglerLanguagePlugin } from "./languages";
+export type { WebManglerPlugin, WebManglerLanguagePlugin } from "./types";

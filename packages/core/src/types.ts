@@ -1,5 +1,3 @@
-import type { ManglerExpression, WebManglerLanguagePlugin } from "./languages";
-
 /**
  * A character is an one of a selection of strings of length one.
  *
@@ -18,6 +16,82 @@ type Char =
  * @since v0.1.7
  */
 type CharSet = Char[];
+
+/**
+ * Interface representing a regular expression-like object that can be used to
+ * find and replace patterns by _WebMangler_.
+ *
+ * @since v0.1.0
+ */
+interface ManglerExpression {
+  /**
+   * Execute the {@link ManglerExpression} on a string for a given pattern.
+   *
+   * @param s The string to execute the expression on.
+   * @param pattern The pattern to execute the expression with.
+   * @returns The matched substrings in `s`.
+   * @since v0.1.0
+   */
+  exec(s: string, pattern: string): Iterable<string>;
+
+  /**
+   * Replace patterns in a string by other strings.
+   *
+   * @param s The string to replace in.
+   * @param original The string/pattern to replace.
+   * @param replacement The string/pattern to replace `original` by.
+   * @returns The string with the patterns replaced.
+   * @since v0.1.0
+   */
+  replace(s: string, original: string, replacement: string): string;
+}
+
+/**
+ * Interface wrapping one ore more {@link ManglerExpression}s for a specific
+ * language.
+ *
+ * @since v0.1.0
+ */
+interface ManglerExpressions {
+  /**
+   * The language for which the `expressions` are.
+   *
+   * @since v0.1.0
+   */
+  language: string;
+
+  /**
+   * The {@link ManglerExpression}s for the `language`.
+   *
+   * @since v0.1.0
+   */
+  expressions: ManglerExpression[];
+}
+
+/**
+ * Type defining the information required by _WebMangler_ about files.
+ *
+ * NOTE: The _WebMangler_ core **will not** read or write files for you.
+ *
+ * @since v0.1.0
+ */
+interface WebManglerFile {
+  /**
+   * The contents of the file as a string.
+   *
+   * @since v0.1.0
+   */
+  content: string;
+
+  /**
+   * The type of file, e.g. "js" or "html".
+   *
+   * This can typically be obtained by looking at the extension of the file.
+   *
+   * @since v0.1.0
+   */
+  readonly type: string;
+}
 
 /**
  * Type defining the available options for _WebMangler_.
@@ -83,28 +157,35 @@ interface WebManglerPlugin {
 }
 
 /**
- * Type defining the information required by _WebMangler_ about files.
- *
- * NOTE: The _WebMangler_ core **will not** read or write files for you.
+ * The interface that every language plugin for _WebMangler_ must implement.
  *
  * @since v0.1.0
  */
-interface WebManglerFile {
+interface WebManglerLanguagePlugin {
   /**
-   * The contents of the file as a string.
+   * Get {@link ManglerExpression}s for one or more languages for a {@link
+   * WebManglerPlugin}.
    *
+   * If the {@link WebManglerLanguagePlugin} supports multiple languages it may
+   * return a {@link ManglerExpressions} instance for each language.
+   *
+   * If the {@link WebManglerLanguagePlugin} does not provide support for the
+   * {@link WebManglerPlugin} it should return zero {@link ManglerExpression}s.
+   *
+   * @param pluginId The identifier of the {@link WebManglerPlugin}.
+   * @returns The {@link ManglerExpression}s for the plugin for the language(s).
    * @since v0.1.0
    */
-  content: string;
+  getExpressionsFor(pluginId: string): ManglerExpressions[];
 
   /**
-   * The type of file, e.g. "js" or "html".
+   * Get a list of the languages supported by the {@link
+   * WebManglerLanguagePlugin}.
    *
-   * This can typically be obtained by looking at the extension of the file.
-   *
-   * @since v0.1.0
+   * @returns A list of languages.
+   * @since v0.1.9
    */
-  readonly type: string;
+  getLanguages(): string[];
 }
 
 /**
@@ -208,7 +289,10 @@ export type {
   CharSet,
   MangleEngine,
   MangleEngineOptions,
+  ManglerExpression,
+  ManglerExpressions,
   WebManglerFile,
   WebManglerOptions,
   WebManglerPlugin,
+  WebManglerLanguagePlugin,
 };

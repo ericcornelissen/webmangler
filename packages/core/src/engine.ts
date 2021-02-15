@@ -1,5 +1,9 @@
-import type { ManglerExpression } from "./languages";
-import type { CharSet, MangleEngineOptions, WebManglerFile } from "./types";
+import type {
+  CharSet,
+  MangleEngineOptions,
+  ManglerExpression,
+  WebManglerFile,
+} from "./types";
 
 import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
@@ -236,7 +240,7 @@ function parseOptions(options: MangleEngineOptions): {
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.7
+ * @version v0.1.11
  */
 export default function mangle<File extends WebManglerFile>(
   files: File[],

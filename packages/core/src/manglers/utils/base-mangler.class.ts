@@ -1,13 +1,11 @@
 import type {
-  ManglerExpression,
-  ManglerExpressions,
-  WebManglerLanguagePlugin,
-} from "../../languages";
-import type {
   MangleEngine,
   MangleEngineOptions,
+  ManglerExpression,
+  ManglerExpressions,
   WebManglerFile,
   WebManglerPlugin,
+  WebManglerLanguagePlugin,
 } from "../../types";
 
 /**

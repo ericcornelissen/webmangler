@@ -1,4 +1,5 @@
-import type { ManglerExpression, ManglerMatch } from "../types";
+import type { ManglerExpression } from "../../types";
+import type { ManglerMatch } from "../types";
 
 import { format as printf } from "util";
 

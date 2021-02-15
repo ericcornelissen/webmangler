@@ -1,4 +1,4 @@
-import type { ManglerExpression } from "../types";
+import type { ManglerExpression } from "../../types";
 
 import SimpleLanguagePlugin from "../utils/simple-language-plugin.class";
 
