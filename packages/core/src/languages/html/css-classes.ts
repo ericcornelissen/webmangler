@@ -1,6 +1,6 @@
-import type { ManglerMatch } from "../types";
+import type { ManglerExpression, ManglerMatch } from "../types";
 
-import ManglerExpression from "../utils/mangler-expression.class";
+import { SerialManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_NAME_ALL = "all";
 const GROUP_NAME_MAIN = "main";
@@ -47,7 +47,7 @@ function findInstancesOfGroupIn(
 
 const pattern: ManglerExpression[] = [
   // Finds e.g., "cls-a" and "cls-b" in  `<div class="cls-a ignore cls-b">`
-  new ManglerExpression(
+  new SerialManglerExpression(
     `
       class
       (\\s*=\\s*)

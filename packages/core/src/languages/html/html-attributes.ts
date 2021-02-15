@@ -1,6 +1,6 @@
-import type { ManglerMatch } from "../types";
+import type { ManglerExpression, ManglerMatch } from "../types";
 
-import ManglerExpression from "../utils/mangler-expression.class";
+import { SerialManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_ALL = "all";
 const GROUP_ATTRIBUTE = "attribute";
@@ -55,7 +55,7 @@ const expressions: ManglerExpression[] = [
   //  `<div id="xxx" (data-foo)="bar"></div>`
   //  `<div (data-foo)="bar" id="yyy"></div>`
   //  `<div (data-foo)="bar" (data-bar)="foo"></div>`
-  new ManglerExpression(
+  new SerialManglerExpression(
     `
       (?<=\\<\\s*[a-zA-Z]+\\s+)
       (?<${GROUP_ALL}>

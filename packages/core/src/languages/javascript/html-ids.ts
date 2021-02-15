@@ -1,6 +1,9 @@
-import type { ManglerMatch } from "../types";
+import type { ManglerExpression, ManglerMatch } from "../types";
 
-import ManglerExpression from "../utils/mangler-expression.class";
+import {
+  ParallelManglerExpression,
+  SerialManglerExpression,
+} from "../utils/mangler-expressions";
 
 const GROUP_AFTER = "post";
 const GROUP_SELECTOR_STRING = "all";
@@ -62,14 +65,14 @@ const expressions: ManglerExpression[] = [
   //  `getElementById\("foo"\);` <-- NO MATCH
   //  `getElementById\("(id-foo)"\);`
   //  `var id = "(id-foo)"; getElementById\(id\);`
-  new ManglerExpression(
+  new ParallelManglerExpression(
     `
       (?<=${JS_QUOTE_CAPTURING_GROUP_PATTERN}\\s*)
       (?<${GROUP_ID}>%s)
       (?=\\s*${JS_QUOTE_MATCHING_PATTERN})
     `.replace(/\s/g, ""),
-    ManglerExpression.matchParserForGroup(GROUP_ID),
-    ManglerExpression.matchReplacerBy("%s"),
+    GROUP_ID,
+    "%s",
   ),
 
   // ID selector, e.g. (with prefix "id-"):
@@ -81,7 +84,7 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("#(id-foo) div"\);`
   //  `querySelector\("div #(id-foo)"\);`
   //  `querySelector\("#(id-bar) #(id-foo)"\);`
-  //  `querySelector\("#(id-foo),div"\);`
+  //  `querySelector\("#(id-foo),div"\);`ManglerExpression
   //  `querySelector\("div,#(id-foo)"\);`
   //  `querySelector\("#(id-foo),#(id-bar)"\);`
   //  `querySelector\("#(id-foo)>div"\);`
@@ -94,7 +97,7 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("div~#(id-foo)"\);`
   //  `querySelector\("#(id-foo)~#(id-bar)"\);`
   //  `querySelector\("#(id-foo)[data-bar]"\);`
-  new ManglerExpression(
+  new SerialManglerExpression(
     `
       (?<=${JS_QUOTE_CAPTURING_GROUP_PATTERN}\\s*)
       (?<${GROUP_SELECTOR_STRING}>

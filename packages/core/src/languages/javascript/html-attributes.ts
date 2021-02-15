@@ -1,6 +1,9 @@
-import type { ManglerMatch } from "../types";
+import type { ManglerExpression, ManglerMatch } from "../types";
 
-import ManglerExpression from "../utils/mangler-expression.class";
+import {
+  ParallelManglerExpression,
+  SerialManglerExpression,
+} from "../utils/mangler-expressions";
 
 const GROUP_ALL = "all";
 const GROUP_ATTRIBUTE = "attribute";
@@ -61,7 +64,7 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("[(data-foo)^="bar"]"\)`
   //  `querySelector\("[(data-foo)$="bar"]"\)`
   //  `querySelector\("[(data-foo)*="bar"]"\)`
-  new ManglerExpression(
+  new SerialManglerExpression(
     `
       (?<=(?<${GROUP_QUOTE}>"|'|\`))
       (?<${GROUP_ALL}>
@@ -88,14 +91,14 @@ const expressions: ManglerExpression[] = [
   //  `$el.getAttribute\("(data-praise)"\)`
   //  `$el.removeAttribute\("(data-the)"\)`
   //  `$el.setAttribute\("(data-sun)", "value"\)`
-  new ManglerExpression(
+  new ParallelManglerExpression(
     `
       (?<=(?<${GROUP_QUOTE}>"|'|\`)\\s*)
       (?<${GROUP_ATTRIBUTE}>%s)
       (?=\\s*\\k<${GROUP_QUOTE}>)
     `.replace(/\s/g, ""),
-    ManglerExpression.matchParserForGroup(GROUP_ATTRIBUTE),
-    ManglerExpression.matchReplacerBy("%s"),
+    GROUP_ATTRIBUTE,
+    "%s",
   ),
 ];
 

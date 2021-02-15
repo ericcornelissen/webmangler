@@ -1,6 +1,7 @@
-import type { ManglerMatch } from "../types";
+import type { ManglerExpression, ManglerMatch } from "../types";
 
-import ManglerExpression from "../utils/mangler-expression.class";
+import { SerialManglerExpression } from "../utils/mangler-expressions";
+
 
 const GROUP_ATTRIBUTE_VALUE = "all";
 const GROUP_MATCHED_VARIABLE_NAME = "main";
@@ -54,7 +55,7 @@ function findInstancesIn(
 const expressions: ManglerExpression[] = [
   // CSS variable declarations in style attributes, e.g.:
   //  `<div style="--(foo): #000;"></div>`
-  new ManglerExpression(
+  new SerialManglerExpression(
     `
       (?<=style\\s*=\\s*)
       (?<${GROUP_QUOTE}>"|')
@@ -78,7 +79,7 @@ const expressions: ManglerExpression[] = [
 
   // CSS variable declarations in style attributes, e.g.:
   //  `<div style="color: var\(--(foo)\)"></div>`
-  new ManglerExpression(
+  new SerialManglerExpression(
     `
       (?<=style\\s*=\\s*)
       (?<${GROUP_QUOTE}>"|')
