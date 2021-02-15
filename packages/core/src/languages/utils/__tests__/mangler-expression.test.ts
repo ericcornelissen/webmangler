@@ -140,4 +140,12 @@ suite("ManglerExpression", function() {
       expect(result).to.equal(`cls-${to}bar`);
     });
   });
+
+  test("callable (method is deprecated)", function() {
+    const subject = new ManglerExpression("%s", () => ["foo"], () => "bar");
+    for (const str of subject.exec("foobar", "[ob]+")) {
+      expect(str).to.equal("foo");
+    }
+    subject.replaceAll("foobar", new Map([["bar", "baz"]]));
+  });
 });
