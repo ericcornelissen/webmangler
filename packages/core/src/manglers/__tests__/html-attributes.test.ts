@@ -18,7 +18,7 @@ import {
 } from "./test-helpers";
 
 import EngineMock from "../../__mocks__/engine.mock";
-import ManglerFileMock from "../../__mocks__/mangler-file.mock";
+import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
 
 import mangleEngine from "../../engine";
 import BuiltInLanguageSupport from "../../languages/builtin";
@@ -311,7 +311,7 @@ suite("HTML Attribute Mangler", function() {
           });
           htmlAttributeMangler.use(builtInLanguageSupport);
 
-          const files = [new ManglerFileMock("css", input)];
+          const files = [new WebManglerFileMock("css", input)];
           const options = htmlAttributeMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
@@ -514,7 +514,7 @@ suite("HTML Attribute Mangler", function() {
           });
           htmlAttributeMangler.use(builtInLanguageSupport);
 
-          const files = [new ManglerFileMock("html", input)];
+          const files = [new WebManglerFileMock("html", input)];
           const options = htmlAttributeMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
@@ -766,7 +766,7 @@ suite("HTML Attribute Mangler", function() {
           });
           htmlAttributeMangler.use(builtInLanguageSupport);
 
-          const files = [new ManglerFileMock("js", input)];
+          const files = [new WebManglerFileMock("js", input)];
           const options = htmlAttributeMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
@@ -896,7 +896,7 @@ suite("HTML Attribute Mangler", function() {
       });
       htmlAttributeMangler.use(builtInLanguageSupport);
 
-      const files = [new ManglerFileMock("html", content)];
+      const files = [new WebManglerFileMock("html", content)];
       const options = htmlAttributeMangler.config();
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
@@ -915,7 +915,7 @@ suite("HTML Attribute Mangler", function() {
       });
       htmlAttributeMangler.use(builtInLanguageSupport);
 
-      const files = [new ManglerFileMock("html", content)];
+      const files = [new WebManglerFileMock("html", content)];
       const options = htmlAttributeMangler.config();
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);

@@ -1,4 +1,4 @@
-import type { ManglerFile, WebManglerOptions } from "./types";
+import type { WebManglerFile, WebManglerOptions } from "./types";
 
 import manglerEngine from "./engine";
 import { toArrayIfNeeded } from "./helpers";
@@ -13,7 +13,7 @@ import { toArrayIfNeeded } from "./helpers";
  * @since v0.1.0
  * @version v0.1.11
  */
-export default function webmangler<File extends ManglerFile>(
+export default function webmangler<File extends WebManglerFile>(
   files: File[],
   options: WebManglerOptions,
 ): File[] {
@@ -31,6 +31,6 @@ export default function webmangler<File extends ManglerFile>(
   return files;
 }
 
-export type { ManglerFile, WebManglerOptions };
+export type { WebManglerFile, WebManglerOptions };
 export type { WebManglerPlugin } from "./types";
 export type { WebManglerLanguagePlugin } from "./languages";

@@ -1,5 +1,5 @@
 import type { ManglerExpression } from "./languages";
-import type { MangleEngineOptions, CharSet, ManglerFile } from "./types";
+import type { CharSet, MangleEngineOptions, WebManglerFile } from "./types";
 
 import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
@@ -31,12 +31,12 @@ function mapToOrderedList(map: Map<string, number>): string[] {
  * @returns A map of the count of each string matching a `pattern`.
  */
 function countInstances(
-  files: ManglerFile[],
+  files: WebManglerFile[],
   expressions: Map<string, ManglerExpression[]>,
   patterns: string[],
 ): Map<string, number> {
   const countMap: Map<string, number> = new Map();
-  files.forEach((file: ManglerFile): void => {
+  files.forEach((file: WebManglerFile): void => {
     const fileExpressions = expressions.get(file.type) as ManglerExpression[];
     patterns.forEach((pattern: string): void => {
       fileExpressions.forEach((expression: ManglerExpression): void => {
@@ -164,7 +164,7 @@ function getMangleMaps(
  * @param mangleMap The mapping defining the mangling.
  * @returns The mangled files.
  */
-function doMangle<File extends ManglerFile>(
+function doMangle<File extends WebManglerFile>(
   files: File[],
   expressions: Map<string, ManglerExpression[]>,
   mangleMap: Map<string, string>,
@@ -189,7 +189,7 @@ function doMangle<File extends ManglerFile>(
  * @param expressions The {@link ManglerExpression}s to be used in mangling.
  * @returns The files supported by the `expressions`.
  */
-function getSupportedFilesOnly<File extends ManglerFile>(
+function getSupportedFilesOnly<File extends WebManglerFile>(
   files: File[],
   expressions: Map<string, ManglerExpression[]>,
 ): File[] {
@@ -238,7 +238,7 @@ function parseOptions(options: MangleEngineOptions): {
  * @since v0.1.0
  * @version v0.1.7
  */
-export default function mangle<File extends ManglerFile>(
+export default function mangle<File extends WebManglerFile>(
   files: File[],
   options: MangleEngineOptions,
 ): File[] {

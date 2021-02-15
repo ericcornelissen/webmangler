@@ -67,7 +67,7 @@ interface WebManglerPlugin {
    * @since v0.1.0
    * @deprecated
    */
-  mangle<File extends ManglerFile>(
+  mangle<File extends WebManglerFile>(
     mangleEngine: MangleEngine<File>,
     files: File[],
   ): File[];
@@ -86,8 +86,10 @@ interface WebManglerPlugin {
  * Type defining the information required by _WebMangler_ about files.
  *
  * NOTE: The _WebMangler_ core **will not** read or write files for you.
+ *
+ * @since v0.1.0
  */
-interface ManglerFile {
+interface WebManglerFile {
   /**
    * The contents of the file as a string.
    *
@@ -120,7 +122,7 @@ interface ManglerFile {
  * @since v0.1.0
  * @deprecated
  */
-type MangleEngine<File extends ManglerFile> = (
+type MangleEngine<File extends WebManglerFile> = (
   files: File[],
   expressions: Map<string, ManglerExpression[]>,
   patterns: string | string[],
@@ -206,7 +208,7 @@ export type {
   CharSet,
   MangleEngine,
   MangleEngineOptions,
-  ManglerFile,
+  WebManglerFile,
   WebManglerOptions,
   WebManglerPlugin,
 };

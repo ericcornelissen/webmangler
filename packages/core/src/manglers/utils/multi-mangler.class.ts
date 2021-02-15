@@ -2,7 +2,7 @@ import type { WebManglerLanguagePlugin } from "../../languages";
 import type {
   MangleEngine,
   MangleEngineOptions,
-  ManglerFile,
+  WebManglerFile,
   WebManglerPlugin,
 } from "../../types";
 
@@ -64,7 +64,7 @@ export default abstract class MultiMangler implements WebManglerPlugin {
    * @inheritDoc
    * @since v0.1.0
    */
-  mangle<File extends ManglerFile>(
+  mangle<File extends WebManglerFile>(
     mangleEngine: MangleEngine<File>,
     files: File[],
   ): File[] {

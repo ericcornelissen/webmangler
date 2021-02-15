@@ -14,7 +14,7 @@ import {
 import { isValidIdName, varyQuotes, varySpacing } from "./test-helpers";
 
 import EngineMock from "../../__mocks__/engine.mock";
-import ManglerFileMock from "../../__mocks__/mangler-file.mock";
+import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
 
 import mangleEngine from "../../engine";
 import BuiltInLanguageSupport from "../../languages/builtin";
@@ -361,7 +361,7 @@ suite("HTML ID Mangler", function() {
           });
           htmlIdMangler.use(builtInLanguageSupport);
 
-          const files = [new ManglerFileMock("css", input)];
+          const files = [new WebManglerFileMock("css", input)];
           const options = htmlIdMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
@@ -578,7 +578,7 @@ suite("HTML ID Mangler", function() {
           });
           htmlIdMangler.use(builtInLanguageSupport);
 
-          const files = [new ManglerFileMock("html", input)];
+          const files = [new WebManglerFileMock("html", input)];
           const options = htmlIdMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
@@ -960,7 +960,7 @@ suite("HTML ID Mangler", function() {
           });
           htmlIdMangler.use(builtInLanguageSupport);
 
-          const files = [new ManglerFileMock("js", input)];
+          const files = [new WebManglerFileMock("js", input)];
           const options = htmlIdMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);

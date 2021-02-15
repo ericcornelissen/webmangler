@@ -6,7 +6,7 @@ import * as sinonChai from "sinon-chai";
 
 import {  permuteObjects } from "./test-helpers";
 
-import ManglerFileMock from "../../__mocks__/mangler-file.mock";
+import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
 import CssClassManglerMock from "../__mocks__/css-classes.mock";
 import CssVarManglerMock from "../__mocks__/css-variables.mock";
 import HtmlAttrManglerMock from "../__mocks__/html-attributes.mock";
@@ -25,7 +25,7 @@ chaiUse(sinonChai);
 const builtInLanguageSupport = new BuiltInLanguageSupport();
 
 suite("Built-in Manglers", function() {
-  const DEFAULT_FILES = [new ManglerFileMock("css", ".foo.bar { }")];
+  const DEFAULT_FILES = [new WebManglerFileMock("css", ".foo.bar { }")];
 
   const DEFAULT_CLASS_NAME_OPTIONS = { classNamePattern: "cls[-_][a-z-_]+" };
   const DEFAULT_CSS_VAR_OPTIONS = { cssVarNamePattern: "[a-z-]+" };

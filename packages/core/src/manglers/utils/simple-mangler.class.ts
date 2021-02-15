@@ -1,4 +1,9 @@
-import type { CharSet, MangleEngine, MangleEngineOptions, ManglerFile } from "../../types";
+import type {
+  CharSet,
+  MangleEngine,
+  MangleEngineOptions,
+  WebManglerFile,
+} from "../../types";
 
 import BaseManglerPlugin from "./base-mangler.class";
 
@@ -107,7 +112,7 @@ export default abstract class SimpleManglerPlugin extends BaseManglerPlugin {
    * @inheritDoc
    * @since v0.1.0
    */
-  mangle<File extends ManglerFile>(
+  mangle<File extends WebManglerFile>(
     mangleEngine: MangleEngine<File>,
     files: File[],
   ): File[] {

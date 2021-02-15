@@ -6,7 +6,7 @@ import type {
 import type {
   MangleEngine,
   MangleEngineOptions,
-  ManglerFile,
+  WebManglerFile,
   WebManglerPlugin,
 } from "../../types";
 
@@ -69,7 +69,7 @@ export default abstract class BaseManglerPlugin implements WebManglerPlugin {
    *
    * @inheritDoc
    */
-  abstract mangle<File extends ManglerFile>(
+  abstract mangle<File extends WebManglerFile>(
     engine: MangleEngine<File>,
     files: File[],
   ): File[];

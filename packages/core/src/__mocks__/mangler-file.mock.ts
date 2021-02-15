@@ -4,7 +4,7 @@ type AllowedTypes =
   "html" | "xhtml" |
   "unknown";
 
-export default class ManglerFileMock {
+export default class WebManglerFileMock {
   public content: string;
   public type: string;
 
