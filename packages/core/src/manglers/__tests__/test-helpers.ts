@@ -202,6 +202,9 @@ export function varySpacing(
   testCase: TestCase,
 ): TestCase[] {
   strings = Array.isArray(strings) ? strings : [strings];
+  if (strings.length === 0) {
+    throw new Error("At least one string is required to vary spacing");
+  }
 
   const result: TestCase[] = [testCase];
   strings.forEach((str) => {

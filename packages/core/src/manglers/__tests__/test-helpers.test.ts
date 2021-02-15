@@ -380,26 +380,19 @@ suite("Manglers Test helpers", function() {
   });
 
   suite("::varySpacing", function() {
-    test("string not in test case", function() {
-      const testCase: TestCase = {
-        input: "foo",
-        expected: "bar",
-      };
-
-      const result = varySpacing("definitely not in the test case", testCase);
-      expect(result).to.have.length(1);
-      expect(result[0]).to.equal(testCase);
-    });
+    const DEFAULT_TEST_CASE: TestCase = {
+      input: "foo",
+      expected: "bar",
+    };
 
     test("empty list of characters", function() {
-      const testCase: TestCase = {
-        input: "foo",
-        expected: "bar",
-      };
+      expect(() => varySpacing([], DEFAULT_TEST_CASE)).to.throw();
+    });
 
-      const result = varySpacing([], testCase);
+    test("string not in test case", function() {
+      const result = varySpacing("not in the test case", DEFAULT_TEST_CASE);
       expect(result).to.have.length(1);
-      expect(result[0]).to.equal(testCase);
+      expect(result[0]).to.equal(DEFAULT_TEST_CASE);
     });
 
     test("character in test case", function() {
