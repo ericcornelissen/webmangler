@@ -22,7 +22,6 @@ const expressions: ManglerExpression[] = [
       (?=\\s*${JS_QUOTE_MATCHING_PATTERN})
     `,
     GROUP_ID,
-    "%s",
   ),
 
   // ID selector, e.g. (with prefix "id-"):
@@ -49,12 +48,14 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("#(id-foo)[data-bar]"\);`
   ...["\"", "'", "`"].map((quote) => new SingleGroupManglerExpression(
     `
-      (?<=${quote}[^${quote}]*)
-      #(?<${GROUP_ID}>%s)
+      (?<=
+        ${quote}[^${quote}]*
+        #
+      )
+      (?<${GROUP_ID}>%s)
       (?=${quote}|${CSS_SELECTOR_REQUIRED_AFTER})
     `,
     GROUP_ID,
-    "#%s",
   )),
 ];
 

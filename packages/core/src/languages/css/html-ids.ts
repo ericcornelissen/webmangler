@@ -33,11 +33,11 @@ const expressions: ManglerExpression[] = [
   //  `div { } (#foo) { }`
   new SingleGroupManglerExpression(
     `
-      #(?<${GROUP_ID}>%s)
+      (?<=#)
+      (?<${GROUP_ID}>%s)
       (?=${CSS_SELECTOR_REQUIRED_AFTER})
     `,
     GROUP_ID,
-    "#%s",
   ),
 
   // Href attribute selector, e.g.:
@@ -54,12 +54,12 @@ const expressions: ManglerExpression[] = [
         \\[\\s*href\\s*(?:${ATTR_SELECTOR_METHODS_PATTERN})\\s*
         ${CSS_QUOTE_CAPTURING_GROUP_PATTERN}\\s*
         (?:${URL_BASE_PATTERN})?
+        #
       )
-      #(?<${GROUP_ID}>%s)
+      (?<${GROUP_ID}>%s)
       (?=\\s*${CSS_QUOTE_MATCHING_PATTERN}\\s*\\])
     `,
     GROUP_ID,
-    "#%s",
   ),
 ];
 

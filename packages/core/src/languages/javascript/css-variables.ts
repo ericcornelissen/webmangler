@@ -8,12 +8,14 @@ const GROUP_VARIABLE = "main";
 const expressions: ManglerExpression[] = [
   new SingleGroupManglerExpression(
     `
-      (?<=(?<${GROUP_QUOTE}>"|'|\`)\\s*)
-      --(?<${GROUP_VARIABLE}>%s)
+      (?<=
+        (?<${GROUP_QUOTE}>"|'|\`)\\s*
+        --
+      )
+      (?<${GROUP_VARIABLE}>%s)
       (?=\\s*\\k<${GROUP_QUOTE}>)
     `,
     GROUP_VARIABLE,
-    "--%s",
   ),
 ];
 

@@ -28,7 +28,6 @@ const expressions: ManglerExpression[] = [
       (?=${SELECTOR_REQUIRED_AFTER})
     `,
     GROUP_ATTRIBUTE,
-    "%s",
   )),
 
   // Attribute manipulation, e.g. (with prefix "data-"):
@@ -42,7 +41,6 @@ const expressions: ManglerExpression[] = [
       (?=\\s*\\k<${GROUP_QUOTE}>)
     `,
     GROUP_ATTRIBUTE,
-    "%s",
   ),
 ];
 

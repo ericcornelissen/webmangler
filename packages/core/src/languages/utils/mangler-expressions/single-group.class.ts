@@ -10,11 +10,11 @@ import _ManglerMatch from "../mangler-match.class";
  *
  * @example
  * new SingleGroupManglerExpression(
- *   "--(?<GROUP_NAME>%s)--",
+ *   "(?<=--)(?<GROUP_NAME>%s)(?=--)",
  *   "GROUP_NAME",
- *   "=%s="
  * );
- * // matches "foo" in "--foo--"
+ * // matches "bar" in "foo--bar--" and for the replacement "baz" will change it
+ * // into "foo--baz--".
  *
  * @since v0.1.11
  */
@@ -30,29 +30,22 @@ export default class SingleGroupManglerExpression implements ManglerExpression {
   private readonly groupName: string;
 
   /**
-   * The template for to use to construct replacement strings.
-   */
-  private readonly replaceTemplate: string;
-
-  /**
    * Create an expression from a pattern template with a named group to match
    * and replace.
    *
-   * NOTE: whitespace is automatically removed from `patternTemplate`.
+   * NOTE 1: whitespace is automatically removed from `patternTemplate`.
+   * NOTE 2: the class assumes the provided group is present in the template.
    *
    * @param patternTemplate The generic pattern (only one "%s" allowed).
    * @param groupName The name of a group in `patternTemplate`.
-   * @param replaceTemplate The replacement pattern (only one "%s" allowed).
    * @since v0.1.11
    */
   constructor(
     patternTemplate: string,
     groupName: string,
-    replaceTemplate: string,
   ) {
     this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
-    this.replaceTemplate = replaceTemplate;
   }
 
   /**
@@ -93,8 +86,8 @@ export default class SingleGroupManglerExpression implements ManglerExpression {
     return s.replace(regExp, (...args: string[]): string => {
       const manglerMatch = _ManglerMatch.fromReplace(args);
       const original = manglerMatch.getNamedGroup(this.groupName);
-      const replacement = replacements.get(original);
-      return printf(this.replaceTemplate, replacement);
+      const replacement = replacements.get(original) || "";
+      return replacement;
     });
   }
 

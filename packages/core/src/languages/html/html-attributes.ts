@@ -27,7 +27,6 @@ const expressions: ManglerExpression[] = [
       (?=${SELECTOR_REQUIRED_AFTER})
     `,
     GROUP_ATTRIBUTE,
-    "%s",
   ),
 ];
 

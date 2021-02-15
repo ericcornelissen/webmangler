@@ -14,18 +14,19 @@ const pattern: ManglerExpression[] = [
       (?=\\s*\\k<${GROUP_NAME_QUOTE}>)
     `,
     GROUP_NAME_PATTER,
-    "%s",
   ),
 
   // matches e.g. `document.querySelectorAll(".foo")`
   ...["\"", "'", "`"].map((quote) => new SingleGroupManglerExpression(
     `
-      (?<=${quote}[^${quote}]*)
-      \\.(?<${GROUP_NAME_PATTER}>%s)
+      (?<=
+        ${quote}[^${quote}]*
+        \\.
+      )
+      (?<${GROUP_NAME_PATTER}>%s)
       (?=${quote}|\\s|\\.|\\#|\\[|\\>|\\+|\\~)
     `,
     GROUP_NAME_PATTER,
-    ".%s",
   )),
 ];
 

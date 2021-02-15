@@ -12,12 +12,12 @@ const expressions: ManglerExpression[] = [
       (?<=
         style\\s*=\\s*
         ("[^"]*|'[^']*)
+        --
       )
-      --(?<${GROUP_MATCHED_VARIABLE_NAME}>%s)
+      (?<${GROUP_MATCHED_VARIABLE_NAME}>%s)
       (?=\\s*:)
     `,
     GROUP_MATCHED_VARIABLE_NAME,
-    "--%s",
   ),
 
   // CSS variable declarations in style attributes, e.g.:
@@ -28,12 +28,12 @@ const expressions: ManglerExpression[] = [
         style\\s*=\\s*
         ("[^"]*|'[^']*)
         var\\s*\\(\\s*
+        --
       )
-      --(?<${GROUP_MATCHED_VARIABLE_NAME}>%s)
+      (?<${GROUP_MATCHED_VARIABLE_NAME}>%s)
       (?=\\s*(,|\\)))
     `,
     GROUP_MATCHED_VARIABLE_NAME,
-    "--%s",
   ),
 ];
 

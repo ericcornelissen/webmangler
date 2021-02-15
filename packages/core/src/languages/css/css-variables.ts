@@ -10,11 +10,11 @@ const expressions: ManglerExpression[] = [
   //  `--(foo) : 'bar;`
   new SingleGroupManglerExpression(
     `
-      --(?<${GROUP_VARIABLE}>%s)
+      (?<=--)
+      (?<${GROUP_VARIABLE}>%s)
       (?=\\s*:)
     `,
     GROUP_VARIABLE,
-    "--%s",
   ),
 
   // CSS variable usage, e.g.:
@@ -23,12 +23,14 @@ const expressions: ManglerExpression[] = [
   //  `var ( --foo );`
   new SingleGroupManglerExpression(
     `
-      (?<=var\\s*\\(\\s*)
-      --(?<${GROUP_VARIABLE}>%s)
+      (?<=
+        var\\s*\\(\\s*
+        --
+      )
+      (?<${GROUP_VARIABLE}>%s)
       (?=\\s*(,|\\)))
     `,
     GROUP_VARIABLE,
-    "--%s",
   ),
 ];
 

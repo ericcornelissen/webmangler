@@ -23,7 +23,6 @@ const expressions: ManglerExpression[] = [
       (?=\\s*${HTML_QUOTE_MATCHING_PATTERN})
     `,
     GROUP_ID,
-    "%s",
   ),
 
   // Id usage in hrefs, e.g.:
@@ -36,8 +35,9 @@ const expressions: ManglerExpression[] = [
         href\\s*=\\s*
         ${HTML_QUOTE_CAPTURING_GROUP_PATTERN}\\s*
         (?:${URL_BASE_PATTERN})?
+        #
       )
-      #(?<${GROUP_ID}>%s)
+      (?<${GROUP_ID}>%s)
       (?=
         (?:${URL_QUERY_PATTERN})?
         \\s*
@@ -45,7 +45,6 @@ const expressions: ManglerExpression[] = [
       )
     `,
     GROUP_ID,
-    "#%s",
   ),
 ];
 

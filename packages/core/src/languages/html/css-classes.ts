@@ -16,7 +16,6 @@ const pattern: ManglerExpression[] = [
       (?=\\s|${quote})
     `,
     GROUP_NAME_MAIN,
-    "%s",
   )),
 ];
 
