@@ -549,6 +549,30 @@ suite("Manglers Test helpers", function() {
       });
     });
 
+    test("string appears in test case multiple times", function() {
+      const str = "\"";
+      const testCase: TestCase = {
+        input: `foo${str}bar${str}`,
+        expected: `foo${str}bar${str}`,
+      };
+
+      const result = varySpacing(str, testCase);
+      expect(result).to.have.length(4);
+      expect(result).to.deep.include(testCase);
+      expect(result).to.deep.include({
+        input: `foo ${str}bar ${str}`,
+        expected: `foo ${str}bar ${str}`,
+      });
+      expect(result).to.deep.include({
+        input: `foo${str} bar${str} `,
+        expected: `foo${str} bar${str} `,
+      });
+      expect(result).to.deep.include({
+        input: `foo${str} bar${str} `,
+        expected: `foo${str} bar${str} `,
+      });
+    });
+
     test("value of description", function() {
       const description = "Hello world!";
       const str = ",";

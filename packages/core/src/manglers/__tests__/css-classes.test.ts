@@ -34,15 +34,168 @@ suite("CSS Classes Mangler", function() {
   suite("CSS", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "individual selectors",
+        name: "non-class selectors",
         cases: [
-          { input: ".cls-foo{ }", expected: ".a{ }" },
-          { input: ".cls-foo { }", expected: ".a { }" },
-          { input: ".foo { }", expected: ".foo { }" },
-          { input: "div { }", expected: "div { }" },
-          { input: "#cls-foo { }", expected: "#cls-foo { }" },
-          { input: "#foo { }", expected: "#foo { }" },
-          { input: ":root { }", expected: ":root { }" },
+          {
+            input: ":root { }",
+            expected: ":root { }",
+          },
+          {
+            input: "div { }",
+            expected: "div { }",
+          },
+          {
+            input: "#foobar { }",
+            expected: "#foobar { }",
+          },
+        ],
+      },
+      {
+        name: "individual class selectors",
+        cases: [
+          {
+            input: ".cls-foo { }",
+            expected: ".a { }",
+          },
+          ...varySpacing(["{", "}"], {
+            input: ".cls-foo{}",
+            expected: ".a{}",
+          }),
+          {
+            input: "div { } .cls-foo { }",
+            expected: "div { } .a { }",
+          },
+          {
+            input: ".cls-foo { } #bar { }",
+            expected: ".a { } #bar { }",
+          },
+          {
+            input: "div { } .cls-foo { } #bar { }",
+            expected: "div { } .a { } #bar { }",
+          },
+          {
+            input: ".cls-foo { color: red; }",
+            expected: ".a { color: red; }",
+          },
+        ],
+      },
+      {
+        name: "multiple class selectors",
+        cases: [
+          {
+            input: ".cls-foo { } .cls-bar { }",
+            expected: ".a { } .b { }",
+          },
+          {
+            input: ":root { } .cls-foo { } .cls-bar { }",
+            expected: ":root { } .a { } .b { }",
+          },
+          {
+            input: ".cls-foo { } div { } .cls-bar { }",
+            expected: ".a { } div { } .b { }",
+          },
+          {
+            input: ".cls-foo { } .cls-bar { } span { }",
+            expected: ".a { } .b { } span { }",
+          },
+          {
+            input: ":root { } .cls-foo { } div { } .cls-bar { }",
+            expected: ":root { } .a { } div { } .b { }",
+          },
+          {
+            input: ":root { } .cls-foo { } .cls-bar { } span { }",
+            expected: ":root { } .a { } .b { } span { }",
+          },
+          {
+            input: ".cls-foo { } div { } .cls-bar { } span { }",
+            expected: ".a { } div { } .b { } span { }",
+          },
+          {
+            input: ":root { } .cls-foo { } div { } .cls-bar { } span { }",
+            expected: ":root { } .a { } div { } .b { } span { }",
+          },
+          {
+            input: ".cls-foo { font-size: 12px; } .cls-bar { font-weight: bold; }",
+            expected: ".a { font-size: 12px; } .b { font-weight: bold; }",
+          },
+          {
+            input: ".cls-foo { } .cls-foo { }",
+            expected: ".a { } .a { }",
+          },
+          {
+            input: ".cls-praise { } .cls-the { } .cls-sun { }",
+            expected: ".a { } .b { } .c { }",
+          },
+        ],
+      },
+      {
+        name: "or operator with class selectors",
+        cases: [
+          ...varySpacing(",", {
+            input: "div,.cls-foo { }",
+            expected: "div,.a { }",
+          }),
+          ...varySpacing(",", {
+            input: ".cls-foo,span { }",
+            expected: ".a,span { }",
+          }),
+          ...varySpacing(",", {
+            input: "div,.cls-foo,span { }",
+            expected: "div,.a,span { }",
+          }),
+          ...varySpacing(",", {
+            input: ".cls-foo,.bar { }",
+            expected: ".a,.bar { }",
+          }),
+          ...varySpacing(",", {
+            input: ".foo,.cls-bar { }",
+            expected: ".foo,.a { }",
+          }),
+          ...varySpacing(",", {
+            input: ".cls-foo,.cls-bar { }",
+            expected: ".a,.b { }",
+          }),
+          ...varySpacing(",", {
+            input: ".cls-foo,.cls-foo { }",
+            expected: ".a,.a { }",
+          }),
+        ],
+      },
+      {
+        name: "and operator with class selectors",
+        cases: [
+          {
+            input: "div.cls-foo { }",
+            expected: "div.a { }",
+          },
+          {
+            input: "#foo.cls-bar { }",
+            expected: "#foo.a { }",
+          },
+          {
+            input: ".cls-foo#bar { }",
+            expected: ".a#bar { }",
+          },
+          {
+            input: "div.cls-foo#bar { }",
+            expected: "div.a#bar { }",
+          },
+          {
+            input: ".cls-foo.bar { }",
+            expected: ".a.bar { }",
+          },
+          {
+            input: ".foo.cls-bar { }",
+            expected: ".foo.a { }",
+          },
+          {
+            input: ".cls-foo.cls-bar { }",
+            expected: ".a.b { }",
+          },
+          {
+            input: ".cls-foo.cls-foo { }",
+            expected: ".a.a { }",
+          },
         ],
       },
       {
@@ -74,49 +227,71 @@ suite("CSS Classes Mangler", function() {
             input: ":not(.cls-foo) { }",
             expected: ":not(.a) { }",
           }),
+          {
+            input: "div:not(.cls-foo) { }",
+            expected: "div:not(.a) { }",
+          },
+          {
+            input: "#foo:not(.cls-bar) { }",
+            expected: "#foo:not(.a) { }",
+          },
+          {
+            input: ".foo:not(.cls-bar) { }",
+            expected: ".foo:not(.a) { }",
+          },
+          {
+            input: ".cls-foo:not(.cls-bar) { }",
+            expected: ".a:not(.b) { }",
+          },
+          {
+            input: ".cls-foo:not(.cls-foo) { }",
+            expected: ".a:not(.a) { }",
+          },
         ],
       },
       {
-        name: "or selectors",
+        name: "descendent combinator with class selectors",
         cases: [
-          ...varySpacing(",", {
-            input: "div,.cls-foo { }",
-            expected: "div,.a { }",
-          }),
-          ...varySpacing(",", {
-            input: ".cls-foo,span { }",
-            expected: ".a,span { }",
-          }),
-          ...varySpacing(",", {
-            input: "div,.cls-foo,span { }",
-            expected: "div,.a,span { }",
-          }),
+          {
+            input: "div .cls-foo { }",
+            expected: "div .a { }",
+          },
+          {
+            input: ".cls-foo div { }",
+            expected: ".a div { }",
+          },
+          {
+            input: "#foo .cls-bar { }",
+            expected: "#foo .a { }",
+          },
+          {
+            input: ".cls-foo #bar { }",
+            expected: ".a #bar { }",
+          },
+          {
+            input: "div .cls-foo #bar { }",
+            expected: "div .a #bar { }",
+          },
+          {
+            input: ".cls-foo .bar { }",
+            expected: ".a .bar { }",
+          },
+          {
+            input: ".foo .cls-bar { }",
+            expected: ".foo .a { }",
+          },
+          {
+            input: ".cls-foo .cls-bar { }",
+            expected: ".a .b { }",
+          },
+          {
+            input: ".cls-foo .cls-foo { }",
+            expected: ".a .a { }",
+          },
         ],
       },
       {
-        name: "and selectors",
-        cases: [
-          { input: "div.cls-foo { }", expected: "div.a { }" },
-          { input: "#foo.cls-bar { }", expected: "#foo.a { }" },
-          { input: "#cls-foo.cls-bar { }", expected: "#cls-foo.a { }" },
-          { input: ".cls-foo.cls-bar { }", expected: ".a.b { }" },
-          { input: "div#foo.cls-bar { }", expected: "div#foo.a { }" },
-        ],
-      },
-      {
-        name: "descendent selectors",
-        cases: [
-          { input: "div .cls-foo { }", expected: "div .a { }" },
-          { input: "#foo .cls-bar { }", expected: "#foo .a { }" },
-          { input: "#cls-foo .cls-bar { }", expected: "#cls-foo .a { }" },
-          { input: ".cls-foo div { }", expected: ".a div { }" },
-          { input: ".cls-foo #bar { }", expected: ".a #bar { }" },
-          { input: ".cls-foo #cls-bar { }", expected: ".a #cls-bar { }" },
-          { input: ".cls-foo .cls-bar { }", expected: ".a .b { }" },
-        ],
-      },
-      {
-        name: "child selectors",
+        name: "child combinator with class selectors",
         cases: [
           ...varySpacing(">", {
             input: "div>.cls-foo { }",
@@ -126,10 +301,38 @@ suite("CSS Classes Mangler", function() {
             input: ".cls-foo>div { }",
             expected: ".a>div { }",
           }),
+          ...varySpacing(">", {
+            input: "#foo>.cls-bar { }",
+            expected: "#foo>.a { }",
+          }),
+          ...varySpacing(">", {
+            input: ".cls-foo>#bar { }",
+            expected: ".a>#bar { }",
+          }),
+          ...varySpacing(">", {
+            input: "div>.cls-foo>#bar { }",
+            expected: "div>.a>#bar { }",
+          }),
+          ...varySpacing(">", {
+            input: ".foo>.cls-bar { }",
+            expected: ".foo>.a { }",
+          }),
+          ...varySpacing(">", {
+            input: ".cls-foo>.bar { }",
+            expected: ".a>.bar { }",
+          }),
+          ...varySpacing(">", {
+            input: ".cls-foo>.cls-bar { }",
+            expected: ".a>.b { }",
+          }),
+          ...varySpacing(">", {
+            input: ".cls-foo>.cls-foo { }",
+            expected: ".a>.a { }",
+          }),
         ],
       },
       {
-        name: "sibling selectors",
+        name: "sibling combinator with class selectors",
         cases: [
           ...varySpacing("+", {
             input: "div+.cls-foo { }",
@@ -139,10 +342,38 @@ suite("CSS Classes Mangler", function() {
             input: ".cls-foo+div { }",
             expected: ".a+div { }",
           }),
+          ...varySpacing("+", {
+            input: "#foo+.cls-bar { }",
+            expected: "#foo+.a { }",
+          }),
+          ...varySpacing("+", {
+            input: ".cls-foo+#bar { }",
+            expected: ".a+#bar { }",
+          }),
+          ...varySpacing("+", {
+            input: "div+.cls-foo+#bar { }",
+            expected: "div+.a+#bar { }",
+          }),
+          ...varySpacing("+", {
+            input: ".foo+.cls-bar { }",
+            expected: ".foo+.a { }",
+          }),
+          ...varySpacing("+", {
+            input: ".cls-foo+.bar { }",
+            expected: ".a+.bar { }",
+          }),
+          ...varySpacing("+", {
+            input: ".cls-foo+.cls-bar { }",
+            expected: ".a+.b { }",
+          }),
+          ...varySpacing("+", {
+            input: ".cls-foo+.cls-foo { }",
+            expected: ".a+.a { }",
+          }),
         ],
       },
       {
-        name: "preceded selectors",
+        name: "general sibling combinator with class selectors",
         cases: [
           ...varySpacing("~", {
             input: "div~.cls-foo { }",
@@ -152,36 +383,38 @@ suite("CSS Classes Mangler", function() {
             input: ".cls-foo~div { }",
             expected: ".a~div { }",
           }),
+          ...varySpacing("~", {
+            input: "#foo~.cls-bar { }",
+            expected: "#foo~.a { }",
+          }),
+          ...varySpacing("~", {
+            input: ".cls-foo~#bar { }",
+            expected: ".a~#bar { }",
+          }),
+          ...varySpacing("~", {
+            input: "div~.cls-foo~#bar { }",
+            expected: "div~.a~#bar { }",
+          }),
+          ...varySpacing("~", {
+            input: ".foo~.cls-bar { }",
+            expected: ".foo~.a { }",
+          }),
+          ...varySpacing("~", {
+            input: ".cls-foo~.bar { }",
+            expected: ".a~.bar { }",
+          }),
+          ...varySpacing("~", {
+            input: ".cls-foo~.cls-bar { }",
+            expected: ".a~.b { }",
+          }),
+          ...varySpacing("~", {
+            input: ".cls-foo~.cls-foo { }",
+            expected: ".a~.a { }",
+          }),
         ],
       },
       {
-        name: "multiple classes",
-        cases: [
-          {
-            input: ".cls-foo { } .cls-bar { }",
-            expected: ".a { } .b { }",
-          },
-        ],
-      },
-      {
-        name: "repeated classes",
-        cases: [
-          {
-            input: ".cls-foo { } .cls-foo { }",
-            expected: ".a { } .a { }",
-          },
-          {
-            input: ".cls-foo { } #bar.cls-foo { }",
-            expected: ".a { } #bar.a { }",
-          },
-          {
-            input: ".cls-foo { } #bar.cls-foo { } div .cls-foo { }",
-            expected: ".a { } #bar.a { } div .a { }",
-          },
-        ],
-      },
-      {
-        name: "classes sharing names with other selectors",
+        name: "non-class selectors with class pattern",
         cases: [
           {
             input: "div { } .div { }",
@@ -189,9 +422,8 @@ suite("CSS Classes Mangler", function() {
             pattern: "[a-zA-Z-]+",
           },
           {
-            input: "#foo { } .foo { }",
-            expected: "#foo { } .a { }",
-            pattern: "[a-zA-Z-]+",
+            input: "#cls-foo { } .cls-foo { }",
+            expected: "#cls-foo { } .a { }",
           },
           ...ATTRIBUTE_SELECTORS
             .filter(isValidClassName)
@@ -297,21 +529,24 @@ suite("CSS Classes Mangler", function() {
         name: "corner cases",
         cases: [
           {
-            input: ".cls-foo[href$=\".bar\"]",
-            expected: ".a[href$=\".bar\"]",
-            description: `
-              The ".bar" value used in the href attribute selector, checking
-              for hrefs ending with the ".bar" extension, should not be mangled.
-            `,
+            input: "div{}.cls-foo{}",
+            expected: "div{}.a{}",
+            description: "no spacing between closing `}` and class `.` should not matter",
           },
-          {
-            input: ".cls-a.cls-a.cls-b.cls-b#cls-a.cls-a.cls-b.cls-b { }",
-            expected: ".b.b.a.a#cls-a.b.a.a { }",
-            description: `
-              Repeated classes in a single selector, although meaningless,
-              should be handled correctly.
-            `,
-          },
+          ...varySpacing("\"", {
+            input: ".cls-foo { content: \".cls-foo\" }",
+            expected: ".a { content: \".cls-foo\" }",
+            description: "class-like strings in values should not be mangled",
+          })
+          .map((testCase) => varyQuotes("css", testCase))
+          .flat(),
+          ...varySpacing("\"", {
+            input: ".cls-foo[href$=\".cls-foo\"]",
+            expected: ".a[href$=\".cls-foo\"]",
+            description: "class-like strings in random attributes should not be mangled",
+          })
+          .map((testCase) => varyQuotes("css", testCase))
+          .flat(),
           {
             input: ".cls-foo",
             expected: ".cls-foo",

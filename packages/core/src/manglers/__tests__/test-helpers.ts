@@ -49,6 +49,16 @@ function duplicates<T>(value: T, index: number, arr: T[]): boolean {
 }
 
 /**
+ * Escape any characters that have a special in Regular Expressions in a string.
+ *
+ * @param s The string to escape.
+ * @returns The escaped string.
+ */
+function escapeRegex(s: string): string {
+  return s.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+}
+
+/**
  * Generate an array of length `n` of strings formatted based on the provided
  * template using the index of the string in the array.
  *
@@ -209,17 +219,18 @@ export function varySpacing(
   const result: TestCase[] = [testCase];
   strings.forEach((str) => {
     result.forEach((entry) => {
+      const regExp = new RegExp(escapeRegex(str), "g");
       const spaceBeforeCase = cloneObject(entry, {
-        input: entry.input.replace(str, ` ${str}`),
-        expected: entry.expected.replace(str, ` ${str}`),
+        input: entry.input.replace(regExp, ` ${str}`),
+        expected: entry.expected.replace(regExp, ` ${str}`),
       });
       const spaceAfterCase = cloneObject(entry, {
-        input: entry.input.replace(str, `${str} `),
-        expected: entry.expected.replace(str, `${str} `),
+        input: entry.input.replace(regExp, `${str} `),
+        expected: entry.expected.replace(regExp, `${str} `),
       });
       const spaceSurroundingCase = cloneObject(entry, {
-        input: entry.input.replace(str, ` ${str} `),
-        expected: entry.expected.replace(str, ` ${str} `),
+        input: entry.input.replace(regExp, ` ${str} `),
+        expected: entry.expected.replace(regExp, ` ${str} `),
       });
 
       if (entry.input !== spaceBeforeCase.input) {
