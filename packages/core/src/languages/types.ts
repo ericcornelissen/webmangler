@@ -97,6 +97,7 @@ interface ManglerExpressions {
  * Interface representing a match found by a {@link ManglerExpression}.
  *
  * @since v0.1.0
+ * @deprecated
  */
 interface ManglerMatch {
   /**

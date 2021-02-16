@@ -10,6 +10,7 @@ type NamedGroupsObject = { [key: string]: string };
  * mangler.
  *
  * @since v0.1.0
+ * @deprecated
  */
 export default class _ManglerMatch {
   /**

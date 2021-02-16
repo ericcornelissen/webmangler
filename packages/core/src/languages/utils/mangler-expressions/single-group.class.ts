@@ -2,7 +2,10 @@ import type { ManglerExpression } from "../../types";
 
 import { format as printf } from "util";
 
-import _ManglerMatch from "../mangler-match.class";
+/**
+ * Type of a the groups object of a Regular Expression match.
+ */
+type RegExpMatchGroups = { [key: string]: string };
 
 /**
  * A {@link SingleGroupManglerExpression} is a {@link ManglerExpression}
@@ -56,8 +59,8 @@ export default class SingleGroupManglerExpression implements ManglerExpression {
     const regExp = this.newRegExp(pattern);
     let match: RegExpExecArray | null = null;
     while ((match = regExp.exec(s)) !== null) {
-      const manglerMatch = _ManglerMatch.fromExec(match);
-      yield manglerMatch.getNamedGroup(this.groupName);
+      const groups = match.groups as RegExpMatchGroups;
+      yield groups[this.groupName];
     }
   }
 
@@ -83,9 +86,9 @@ export default class SingleGroupManglerExpression implements ManglerExpression {
   ): string {
     const pattern = Array.from(replacements.keys()).join("|");
     const regExp = this.newRegExp(pattern);
-    return s.replace(regExp, (...args: string[]): string => {
-      const manglerMatch = _ManglerMatch.fromReplace(args);
-      const original = manglerMatch.getNamedGroup(this.groupName);
+    return s.replace(regExp, (...args: unknown[]): string => {
+      const groups = args[args.length - 1] as RegExpMatchGroups;
+      const original = groups[this.groupName];
       const replacement = replacements.get(original);
       return replacement as string;
     });
