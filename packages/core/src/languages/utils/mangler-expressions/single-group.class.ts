@@ -86,8 +86,8 @@ export default class SingleGroupManglerExpression implements ManglerExpression {
     return s.replace(regExp, (...args: string[]): string => {
       const manglerMatch = _ManglerMatch.fromReplace(args);
       const original = manglerMatch.getNamedGroup(this.groupName);
-      const replacement = replacements.get(original) || "";
-      return replacement;
+      const replacement = replacements.get(original);
+      return replacement as string;
     });
   }
 
