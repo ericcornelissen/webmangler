@@ -1,4 +1,6 @@
-import ManglerExpression from "../utils/mangler-expression.class";
+import type { ManglerExpression } from "../types";
+
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_ID = "main";
 const GROUP_QUOTE = "quote";
@@ -14,36 +16,35 @@ const expressions: ManglerExpression[] = [
   //  `<div class="bar" id="(foo)"></div>`
   //  `<div id="(foo)" class="bar"></div>`
   //  `<div disabled id="(foo)" class="bar"></div>`
-  new ManglerExpression(
+  new SingleGroupManglerExpression(
     `
       (?<=\\sid\\s*=\\s*${HTML_QUOTE_CAPTURING_GROUP_PATTERN}\\s*)
       (?<${GROUP_ID}>%s)
       (?=\\s*${HTML_QUOTE_MATCHING_PATTERN})
-    `.replace(/\s/g, ""),
-    ManglerExpression.matchParserForGroup(GROUP_ID),
-    ManglerExpression.matchReplacerBy("%s"),
+    `,
+    GROUP_ID,
   ),
 
   // Id usage in hrefs, e.g.:
   //  `<a href="(#foo)"></a>`
   //  `<a href="https://www.example.com/(#foo)"></a>`
   //  `<a href="https://www.example.com/(#foo)?q=bar"></a>`
-  new ManglerExpression(
+  new SingleGroupManglerExpression(
     `
       (?<=
         href\\s*=\\s*
         ${HTML_QUOTE_CAPTURING_GROUP_PATTERN}\\s*
         (?:${URL_BASE_PATTERN})?
+        #
       )
-      #(?<${GROUP_ID}>%s)
+      (?<${GROUP_ID}>%s)
       (?=
         (?:${URL_QUERY_PATTERN})?
         \\s*
         ${HTML_QUOTE_MATCHING_PATTERN}
       )
-    `.replace(/\s/g, ""),
-    ManglerExpression.matchParserForGroup(GROUP_ID),
-    ManglerExpression.matchReplacerBy("#%s"),
+    `,
+    GROUP_ID,
   ),
 ];
 

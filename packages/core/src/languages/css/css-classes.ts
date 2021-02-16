@@ -1,4 +1,8 @@
-import ManglerExpression from "../utils/mangler-expression.class";
+import type { ManglerExpression } from "../types";
+
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+
+const GROUP_CLASS = "main";
 
 const expressions: ManglerExpression[] = [
   // e.g.
@@ -18,10 +22,13 @@ const expressions: ManglerExpression[] = [
   //  `div + .(foo) { }`
   //  `div ~ .(foo) { }`
   //  `#bar { } .(foo) { }`
-  new ManglerExpression(
-    "\\.(%s)(?=\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s)",
-    ManglerExpression.matchParserForIndex(1),
-    ManglerExpression.matchReplacerBy(".%s"),
+  new SingleGroupManglerExpression(
+    `
+      (?<=\\.)
+      (?<${GROUP_CLASS}>%s)
+      (?=\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s)
+    `,
+    GROUP_CLASS,
   ),
 ];
 
