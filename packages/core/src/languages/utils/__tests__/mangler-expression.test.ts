@@ -140,4 +140,17 @@ suite("ManglerExpression", function() {
       expect(result).to.equal(`cls-${to}bar`);
     });
   });
+
+  test("callable (class is deprecated)", function() {
+    const subject = new ManglerExpression(
+      "%s",
+      (_, match) => [match.getMatchedStr()],
+      (replacement) => replacement,
+    );
+    for (const str of subject.exec("foobar", "[ob]+")) {
+      expect(str).to.equal("oob");
+    }
+    const result = subject.replaceAll("foobar", new Map([["bar", "baz"]]));
+    expect(result).to.equal("foobaz");
+  });
 });

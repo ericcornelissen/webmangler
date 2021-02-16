@@ -5,8 +5,6 @@ import { format as printf } from "util";
 import { toArrayIfNeeded } from "../../helpers";
 import _ManglerMatch from "./mangler-match.class";
 
-const REG_EXP_FLAGS = "gm";
-
 /**
  * A {@link MatchParser} is a function that takes as input a `match` and the
  * `pattern` that produced the match and outputs one or more values that should
@@ -15,6 +13,8 @@ const REG_EXP_FLAGS = "gm";
  * @param pattern The pattern that produced the match.
  * @param match The match that was found in a string.
  * @returns One or more matches that are contained in `match`.
+ * @since v0.1.0
+ * @deprecated
  */
 type MatchParser = (pattern: string, match: ManglerMatch) => string[];
 
@@ -25,6 +25,8 @@ type MatchParser = (pattern: string, match: ManglerMatch) => string[];
  * @param replaceStr The replacement string to be used.
  * @param match The match that was found in a string.
  * @returns The replacement string.
+ * @since v0.1.0
+ * @deprecated
  */
 type MatchReplacer = ((replaceStr: string, match: ManglerMatch) => string);
 
@@ -33,6 +35,8 @@ type MatchReplacer = ((replaceStr: string, match: ManglerMatch) => string);
  * arbitrary sub-patterns.
  *
  * @since v0.1.0
+ * @version v0.1.11
+ * @deprecated
  */
 export default class _ManglerExpression implements ManglerExpression {
   /**
@@ -41,6 +45,8 @@ export default class _ManglerExpression implements ManglerExpression {
    *
    * @param index The index or indices that should be returned for a match.
    * @returns A {@link MatchParser} for the index or indices.
+   * @since v0.1.0
+   * @deprecated
    */
   static matchParserForIndex(index: number | number[]): MatchParser {
     const indices = toArrayIfNeeded(index);
@@ -55,6 +61,8 @@ export default class _ManglerExpression implements ManglerExpression {
    *
    * @param groupName The group or groups that should be returned for a match.
    * @returns A {@link MatchParser} for the group or groups.
+   * @since v0.1.0
+   * @deprecated
    */
   static matchParserForGroup(groupName: string | string[]): MatchParser {
     const groupNames = toArrayIfNeeded(groupName);
@@ -77,6 +85,8 @@ export default class _ManglerExpression implements ManglerExpression {
    *
    * @param s The replacement string template.
    * @returns The {@link MatchReplacer} for `s`.
+   * @since v0.1.0
+   * @deprecated
    */
   static matchReplacerBy(s: string): MatchReplacer {
     return (replacementStr: string, match: ManglerMatch): string => {
@@ -127,6 +137,7 @@ export default class _ManglerExpression implements ManglerExpression {
    * @param matchParser The function to use to parse matches.
    * @param matchReplacer The function to use to replace matches.
    * @since v0.1.0
+   * @deprecated
    */
   constructor(
     patternTemplate: string,
@@ -141,6 +152,7 @@ export default class _ManglerExpression implements ManglerExpression {
   /**
    * @inheritdoc
    * @since v0.1.0
+   * @deprecated
    */
   public * exec(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(pattern);
@@ -154,13 +166,27 @@ export default class _ManglerExpression implements ManglerExpression {
   /**
    * @inheritdoc
    * @since v0.1.0
+   * @deprecated
    */
-  public replace(s: string, pattern: string, to: string): string {
-    const regexp = this.newRegExp(pattern);
+  public replace(s: string, original: string, replacement: string): string {
+    const regexp = this.newRegExp(original);
     return s.replace(regexp, (...args: string[]): string => {
       const manglerMatch = _ManglerMatch.fromReplace(args);
-      return this.replaceMatch(to, manglerMatch);
+      return this.replaceMatch(replacement, manglerMatch);
     });
+  }
+
+  /**
+   * @inheritdoc
+   * @since v0.1.11
+   * @deprecated
+   */
+  public replaceAll(
+    s: string,
+    replacements: Map<string, string>,
+  ): string {
+    replacements.forEach((to, from) => { s = this.replace(s, from, to); });
+    return s;
   }
 
   /**
@@ -171,6 +197,6 @@ export default class _ManglerExpression implements ManglerExpression {
    */
   private newRegExp(pattern: string): RegExp {
     const rawExpr = printf(this.patternTemplate, pattern);
-    return new RegExp(rawExpr, REG_EXP_FLAGS);
+    return new RegExp(rawExpr, "gm");
   }
 }

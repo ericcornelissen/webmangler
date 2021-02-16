@@ -1,12 +1,21 @@
-import ManglerExpression from "../utils/mangler-expression.class";
+import type { ManglerExpression } from "../types";
+
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_QUOTE = "quote";
+const GROUP_VARIABLE = "main";
 
 const expressions: ManglerExpression[] = [
-  new ManglerExpression(
-    `(?<=(?<${GROUP_QUOTE}>"|'|\`)\\s*)--(%s)(?=\\s*\\k<${GROUP_QUOTE}>)`,
-    ManglerExpression.matchParserForIndex(2),
-    ManglerExpression.matchReplacerBy("--%s"),
+  new SingleGroupManglerExpression(
+    `
+      (?<=
+        (?<${GROUP_QUOTE}>"|'|\`)\\s*
+        --
+      )
+      (?<${GROUP_VARIABLE}>%s)
+      (?=\\s*\\k<${GROUP_QUOTE}>)
+    `,
+    GROUP_VARIABLE,
   ),
 ];
 

@@ -10,6 +10,7 @@ type NamedGroupsObject = { [key: string]: string };
  * mangler.
  *
  * @since v0.1.0
+ * @deprecated
  */
 export default class _ManglerMatch {
   /**
@@ -18,6 +19,7 @@ export default class _ManglerMatch {
    * @param match The {@link RegExpExecArray}.
    * @returns The {@link ManglerMatch} for `match`.
    * @since v0.1.0
+   * @deprecated
    */
   static fromExec(match: RegExpExecArray): ManglerMatch {
     return new _ManglerMatch(match, match.groups);
@@ -30,6 +32,7 @@ export default class _ManglerMatch {
    * @param rawMatch The match represented by an array.
    * @returns The {@link ManglerMatch}.
    * @since v0.1.0
+   * @deprecated
    */
   static fromReplace(rawMatch: unknown[]): ManglerMatch {
     return new _ManglerMatch(
@@ -53,6 +56,7 @@ export default class _ManglerMatch {
    *
    * @param groups The matched groups.
    * @param namedGroups The named matched groups.
+   * @deprecated
    */
   private constructor(groups: string[], namedGroups?: NamedGroupsObject) {
     this.groups = groups;
@@ -64,6 +68,7 @@ export default class _ManglerMatch {
    *
    * @returns The full string that was matched.
    * @since v0.1.0
+   * @deprecated
    */
   getMatchedStr(): string {
     return this.groups[0];
@@ -75,6 +80,7 @@ export default class _ManglerMatch {
    * @param index The index of the group.
    * @returns The value of the group, or `""` if the group does not exist.
    * @since v0.1.0
+   * @deprecated
    */
   getGroup(index: number): string {
     return this.groups[index] || "";
@@ -86,6 +92,7 @@ export default class _ManglerMatch {
    * @param name The name of the named group.
    * @returns The value of the group, or `""` if the group does not exist.
    * @since v0.1.0
+   * @deprecated
    */
   getNamedGroup(name: string): string {
     return this.namedGroups[name] || "";

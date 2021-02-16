@@ -28,6 +28,14 @@ export default class ManglerExpressionMock {
     return s.replace(regExp, printf(this.replaceTemplate, to));
   }
 
+  public replaceAll(s: string, replacements: Map<string, string>): string {
+    replacements.forEach((to, from) => {
+      s = this.replace(s, from, to);
+    });
+
+    return s;
+  }
+
   private newRegExp(pattern: string): RegExp {
     const rawExpr = printf(this.patternTemplate, pattern);
     return new RegExp(rawExpr, "gm");

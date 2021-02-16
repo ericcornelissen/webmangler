@@ -2,7 +2,9 @@ import type { TestScenario } from "@webmangler/testing";
 import type { ManglerExpression } from "../languages";
 import type { MangleEngineOptions, ManglerFile } from "../types";
 
-import { expect } from "chai";
+import { expect, use as chaiUse } from "chai";
+import * as sinon from "sinon";
+import * as sinonChai from "sinon-chai";
 
 import ManglerExpressionMock from "../__mocks__/mangler-expression.mock";
 import ManglerFileMock from "../__mocks__/mangler-file.mock";
@@ -17,6 +19,8 @@ interface TestCase {
   options?: MangleEngineOptions;
   patterns: string | string[];
 }
+
+chaiUse(sinonChai);
 
 suite("ManglerEngine", function() {
   const scenarios: TestScenario<TestCase>[] = [
@@ -302,4 +306,20 @@ suite("ManglerEngine", function() {
       }
     });
   }
+
+  test("fallback to deprecated replace method", function() {
+    const replaceStub = sinon.stub();
+    const manglerExpression: ManglerExpression = {
+      exec: () => ["foo"],
+      replace: replaceStub,
+    } as unknown as ManglerExpression;
+
+    const files = [new ManglerFileMock("css", ".foo { } #bar { }")];
+    const expressions = new Map([
+      ["css", [manglerExpression]],
+    ]);
+    const patterns = "[a-z]+";
+    engine(files, expressions, patterns, {});
+    expect(replaceStub).to.have.been.called;
+  });
 });

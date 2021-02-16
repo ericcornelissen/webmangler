@@ -35,6 +35,7 @@ interface WebManglerLanguagePlugin {
  * find and replace patterns by _WebMangler_.
  *
  * @since v0.1.0
+ * @version v0.1.11
  */
 interface ManglerExpression {
   /**
@@ -55,8 +56,19 @@ interface ManglerExpression {
    * @param replacement The string/pattern to replace `original` by.
    * @returns The string with the patterns replaced.
    * @since v0.1.0
+   * @deprecated
    */
   replace(s: string, original: string, replacement: string): string;
+
+  /**
+   * Replace multiple substrings in a string by other substrings.
+   *
+   * @param s The string to replace in.
+   * @param replacements The mapping of strings to replace.
+   * @returns The string with the patterns replaced.
+   * @since v0.1.11
+   */
+  replaceAll(s: string, replacements: Map<string, string>): string;
 }
 
 /**
@@ -85,6 +97,7 @@ interface ManglerExpressions {
  * Interface representing a match found by a {@link ManglerExpression}.
  *
  * @since v0.1.0
+ * @deprecated
  */
 interface ManglerMatch {
   /**
