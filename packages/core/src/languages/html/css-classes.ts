@@ -9,7 +9,7 @@ const pattern: ManglerExpression[] = [
   ...["\"", "'"].map((quote) => new SingleGroupManglerExpression(
     `
       (?<=
-        class\\s*=\\s*${quote}
+        \\sclass\\s*=\\s*${quote}
         ([^${quote}]*\\s)?
       )
       (?<${GROUP_NAME_MAIN}>%s)

@@ -281,11 +281,17 @@ suite("CSS Classes Mangler", function() {
             expected: "div{}.a{}",
             description: "no space between closing `}` and class `.` should not matter",
           },
+          {
+            input: "div{ content: \"foo\" } .cls-foo { }",
+            expected: "div{ content: \"foo\" } .a { }",
+          },
           ...["div { content: \".cls-foo\" }", "div[data-foo=\".cls-bar\"] { }"]
             .map((testCase): TestCase => ({
               input: testCase,
               expected: testCase,
             }))
+            .map((testCase) => varySpacing("\"", testCase))
+            .flat()
             .map((testCase) => varyQuotes("css", testCase))
             .flat(),
         ],

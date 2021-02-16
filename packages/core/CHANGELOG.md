@@ -9,6 +9,9 @@ Versioning].
 ## [Unreleased]
 
 - Improve performance of all built-in manglers.
+- Fix accidental mangling of values of HTML attributes ending in "class".
+- Fix accidental mangling of class-like strings in CSS.
+- Fix cases where classes would not be mangled in JavaScript
 
 ## [0.1.10] - 2021-02-14
 
