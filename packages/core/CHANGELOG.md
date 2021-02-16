@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Improve performance of all built-in manglers.
 
 ## [0.1.10] - 2021-02-14
 

@@ -1,7 +1,7 @@
 import { expect, use as chaiUse } from "chai";
 import * as sinonChai from "sinon-chai";
 
-import ManglerMatchMock from "../../../__mocks__/mangler-match.mock";
+import ManglerMatchMock from "../__mocks__/mangler-match.mock";
 
 import ManglerExpression from "../mangler-expression.class";
 
@@ -139,5 +139,18 @@ suite("ManglerExpression", function() {
       const result = replacer(to, match);
       expect(result).to.equal(`cls-${to}bar`);
     });
+  });
+
+  test("callable (class is deprecated)", function() {
+    const subject = new ManglerExpression(
+      "%s",
+      (_, match) => [match.getMatchedStr()],
+      (replacement) => replacement,
+    );
+    for (const str of subject.exec("foobar", "[ob]+")) {
+      expect(str).to.equal("oob");
+    }
+    const result = subject.replaceAll("foobar", new Map([["bar", "baz"]]));
+    expect(result).to.equal("foobaz");
   });
 });

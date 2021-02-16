@@ -29,7 +29,16 @@ const ALL_UPPERCASE_CHARS: CharSet = [
   "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
 ];
 
+/**
+ * A character set ({@link CharSet}) of all lowercase an uppercase letters.
+ *
+ * @since v0.1.11
+ */
+const ALL_LETTER_CHARS: CharSet =
+  ALL_LOWERCASE_CHARS.concat(ALL_UPPERCASE_CHARS);
+
 export {
+  ALL_LETTER_CHARS,
   ALL_LOWERCASE_CHARS,
   ALL_NUMBER_CHARS,
   ALL_UPPERCASE_CHARS,

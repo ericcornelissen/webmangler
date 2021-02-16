@@ -1,4 +1,8 @@
-import ManglerExpression from "../utils/mangler-expression.class";
+import type { ManglerExpression } from "../../types";
+
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+
+const GROUP_ATTRIBUTE = "main";
 
 const SELECTOR_REQUIRED_BEFORE = "\\[\\s*";
 const SELECTOR_REQUIRED_AFTER = "\\s*(?:\\]|\\=|\\|=|\\~=|\\^=|\\$=|\\*=)";
@@ -12,10 +16,13 @@ const expressions: ManglerExpression[] = [
   //  `[(data-foo)^=bar]`
   //  `[(data-foo)$=bar]`
   //  `[(data-foo)*=bar]`
-  new ManglerExpression(
-    `(?<=${SELECTOR_REQUIRED_BEFORE})(%s)(?=${SELECTOR_REQUIRED_AFTER})`,
-    ManglerExpression.matchParserForIndex(1),
-    ManglerExpression.matchReplacerBy("%s"),
+  new SingleGroupManglerExpression(
+    `
+      (?<=${SELECTOR_REQUIRED_BEFORE})
+      (?<${GROUP_ATTRIBUTE}>%s)
+      (?=${SELECTOR_REQUIRED_AFTER})
+    `,
+    GROUP_ATTRIBUTE,
   ),
 
   // Attribute usage, e.g. (with prefix "data-"):
@@ -23,10 +30,13 @@ const expressions: ManglerExpression[] = [
   //  `attr\((data-foo) number\);`
   //  `attr\((data-foo), 0\);`
   //  `attr\((data-foo) url, "https://www.example.com/"\);`
-  new ManglerExpression(
-    "(?<=attr\\s*\\(\\s*)(%s)(?=(\\s+([a-zA-Z]+|%))?\\s*(,|\\)))",
-    ManglerExpression.matchParserForIndex(1),
-    ManglerExpression.matchReplacerBy("%s"),
+  new SingleGroupManglerExpression(
+    `
+      (?<=attr\\s*\\(\\s*)
+      (?<${GROUP_ATTRIBUTE}>%s)
+      (?=(\\s+([a-zA-Z]+|%))?\\s*(,|\\)))
+    `,
+    GROUP_ATTRIBUTE,
   ),
 ];
 

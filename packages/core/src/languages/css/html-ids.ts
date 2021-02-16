@@ -1,4 +1,6 @@
-import ManglerExpression from "../utils/mangler-expression.class";
+import type { ManglerExpression } from "../../types";
+
+import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
 const GROUP_ID = "main";
 const GROUP_QUOTE = "quote";
@@ -29,10 +31,13 @@ const expressions: ManglerExpression[] = [
   //  `div+(#foo) { }`
   //  `div~(#foo) { }`
   //  `div { } (#foo) { }`
-  new ManglerExpression(
-    `#(%s)(?=${CSS_SELECTOR_REQUIRED_AFTER})`,
-    ManglerExpression.matchParserForIndex(1),
-    ManglerExpression.matchReplacerBy("#%s"),
+  new SingleGroupManglerExpression(
+    `
+      (?<=#)
+      (?<${GROUP_ID}>%s)
+      (?=${CSS_SELECTOR_REQUIRED_AFTER})
+    `,
+    GROUP_ID,
   ),
 
   // Href attribute selector, e.g.:
@@ -43,18 +48,18 @@ const expressions: ManglerExpression[] = [
   //  `[href^="(#foo)"]`
   //  `[href$="(#foo)"]`
   //  `[href*="(#foo)"]`
-  new ManglerExpression(
+  new SingleGroupManglerExpression(
     `
       (?<=
         \\[\\s*href\\s*(?:${ATTR_SELECTOR_METHODS_PATTERN})\\s*
         ${CSS_QUOTE_CAPTURING_GROUP_PATTERN}\\s*
         (?:${URL_BASE_PATTERN})?
+        #
       )
-      #(?<${GROUP_ID}>%s)
+      (?<${GROUP_ID}>%s)
       (?=\\s*${CSS_QUOTE_MATCHING_PATTERN}\\s*\\])
-    `.replace(/\s/g, ""),
-    ManglerExpression.matchParserForGroup(GROUP_ID),
-    ManglerExpression.matchReplacerBy("#%s"),
+    `,
+    GROUP_ID,
   ),
 ];
 

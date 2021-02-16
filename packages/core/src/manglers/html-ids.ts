@@ -1,10 +1,6 @@
 import type { CharSet } from "../types";
 
-import {
-  ALL_LOWERCASE_CHARS,
-  ALL_NUMBER_CHARS,
-  ALL_UPPERCASE_CHARS,
-} from "../characters";
+import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 /**
@@ -153,8 +149,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @since v0.1.7
    */
   static readonly CHARACTER_SET: CharSet = [
-    ...ALL_LOWERCASE_CHARS,
-    ...ALL_UPPERCASE_CHARS,
+    ...ALL_LETTER_CHARS,
     ...ALL_NUMBER_CHARS,
     "-", "_",
   ];
