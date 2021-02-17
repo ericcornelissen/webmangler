@@ -1,6 +1,10 @@
-import type { WebManglerPlugin } from "../types";
-import type { WebManglerLanguagePlugin } from "../../languages";
-import type { MangleEngine, ManglerFile } from "../../types";
+import type {
+  MangleEngine,
+  MangleEngineOptions,
+  WebManglerFile,
+  WebManglerPlugin,
+  WebManglerLanguagePlugin,
+} from "../../types";
 
 /**
  * The {@link MultiMangler} class is a utility to create a {@link
@@ -10,6 +14,7 @@ import type { MangleEngine, ManglerFile } from "../../types";
  * {@link BuiltInManglers}.
  *
  * @since v0.1.0
+ * @version v0.1.11
  */
 export default abstract class MultiMangler implements WebManglerPlugin {
   /**
@@ -18,30 +23,27 @@ export default abstract class MultiMangler implements WebManglerPlugin {
   private readonly plugins: WebManglerPlugin[];
 
   /**
+   * The {@link MangleEngineOptions}.
+   */
+  private readonly _config: MangleEngineOptions[];
+
+  /**
    * Initialize a {@link MultiMangler} with a fixed set of manglers.
    *
    * @param plugins The manglers to include in the {@link MultiMangler}.
    * @since v0.1.0
    */
   constructor(plugins: WebManglerPlugin[]) {
+    this._config = plugins.map((plugin) => plugin.config()).flat();
     this.plugins = plugins;
   }
 
   /**
-   * Mangles the files using every provided mangler (in order).
-   *
    * @inheritDoc
-   * @since v0.1.0
+   * @since v0.1.11
    */
-  mangle<File extends ManglerFile>(
-    mangleEngine: MangleEngine<File>,
-    files: File[],
-  ): File[] {
-    this.plugins.forEach((plugin: WebManglerPlugin) => {
-      files = plugin.mangle(mangleEngine, files);
-    });
-
-    return files;
+  config(): MangleEngineOptions[] {
+    return this._config;
   }
 
   /**
@@ -54,5 +56,23 @@ export default abstract class MultiMangler implements WebManglerPlugin {
     this.plugins.forEach((plugin: WebManglerPlugin) => {
       plugin.use(languagePlugin);
     });
+  }
+
+  /**
+   * Mangles the files using every provided mangler (in order).
+   *
+   * @inheritDoc
+   * @since v0.1.0
+   * @deprecated
+   */
+  mangle<File extends WebManglerFile>(
+    mangleEngine: MangleEngine<File>,
+    files: File[],
+  ): File[] {
+    this.plugins.forEach((plugin: WebManglerPlugin) => {
+      files = plugin.mangle(mangleEngine, files);
+    });
+
+    return files;
   }
 }

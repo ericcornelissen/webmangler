@@ -1,4 +1,4 @@
-import type { WebManglerPlugin } from "./types";
+import type { WebManglerPlugin } from "../types";
 import type { CssClassManglerOptions } from "./css-classes";
 import type { CssVariableManglerOptions } from "./css-variables";
 import type { HtmlAttributeManglerOptions } from "./html-attributes";

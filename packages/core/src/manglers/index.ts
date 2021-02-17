@@ -4,5 +4,3 @@ export { default as CssVariableMangler } from "./css-variables";
 export { default as HtmlAttributeMangler } from "./html-attributes";
 export { default as HtmlIdMangler } from "./html-ids";
 export { default as RecommendedManglers } from "./recommended";
-
-export type { WebManglerPlugin } from "./types";

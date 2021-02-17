@@ -1,4 +1,4 @@
-import type { CharSet } from "../types";
+import type { CharSet } from "../characters";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
@@ -135,6 +135,7 @@ export type HtmlIdManglerOptions = {
  * ```
  *
  * @since v0.1.0
+ * @version v0.1.7
  */
 export default class HtmlIdMangler extends SimpleManglerPlugin {
   /**

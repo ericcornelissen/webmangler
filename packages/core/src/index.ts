@@ -1,6 +1,7 @@
-import type { ManglerFile, WebManglerOptions } from "./types";
+import type { WebManglerFile, WebManglerOptions } from "./types";
 
 import manglerEngine from "./engine";
+import { toArrayIfNeeded } from "./helpers";
 
 /**
  * Mangle a list of files collectively - i.e. mangle matched strings the same in
@@ -10,8 +11,9 @@ import manglerEngine from "./engine";
  * @param options The options for the mangler.
  * @returns The mangled files.
  * @since v0.1.0
+ * @version v0.1.11
  */
-export default function webmangler<File extends ManglerFile>(
+export default function webmangler<File extends WebManglerFile>(
   files: File[],
   options: WebManglerOptions,
 ): File[] {
@@ -20,12 +22,15 @@ export default function webmangler<File extends ManglerFile>(
       plugin.use(languagePlugin);
     }
 
-    files = plugin.mangle(manglerEngine, files);
+    const pluginConfig = plugin.config();
+    const allManglerOptions = toArrayIfNeeded(pluginConfig);
+    for (const manglerOptions of allManglerOptions) {
+      files = manglerEngine(files, manglerOptions);
+    }
   }
 
   return files;
 }
 
-export type { ManglerFile, WebManglerOptions };
-export type { WebManglerPlugin } from "./manglers";
-export type { WebManglerLanguagePlugin } from "./languages";
+export type { WebManglerFile, WebManglerOptions };
+export type { WebManglerPlugin, WebManglerLanguagePlugin } from "./types";

@@ -1,5 +1,9 @@
-import type { ManglerExpression } from "./languages";
-import type { CharSet, ManglerFile } from "./types";
+import type { CharSet } from "./characters";
+import type {
+  MangleEngineOptions,
+  ManglerExpression,
+  WebManglerFile,
+} from "./types";
 
 import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
@@ -31,12 +35,12 @@ function mapToOrderedList(map: Map<string, number>): string[] {
  * @returns A map of the count of each string matching a `pattern`.
  */
 function countInstances(
-  files: ManglerFile[],
+  files: WebManglerFile[],
   expressions: Map<string, ManglerExpression[]>,
   patterns: string[],
 ): Map<string, number> {
   const countMap: Map<string, number> = new Map();
-  files.forEach((file: ManglerFile): void => {
+  files.forEach((file: WebManglerFile): void => {
     const fileExpressions = expressions.get(file.type) as ManglerExpression[];
     patterns.forEach((pattern: string): void => {
       fileExpressions.forEach((expression: ManglerExpression): void => {
@@ -164,7 +168,7 @@ function getMangleMaps(
  * @param mangleMap The mapping defining the mangling.
  * @returns The mangled files.
  */
-function doMangle<File extends ManglerFile>(
+function doMangle<File extends WebManglerFile>(
   files: File[],
   expressions: Map<string, ManglerExpression[]>,
   mangleMap: Map<string, string>,
@@ -195,7 +199,7 @@ function doMangle<File extends ManglerFile>(
  * @param expressions The {@link ManglerExpression}s to be used in mangling.
  * @returns The files supported by the `expressions`.
  */
-function getSupportedFilesOnly<File extends ManglerFile>(
+function getSupportedFilesOnly<File extends WebManglerFile>(
   files: File[],
   expressions: Map<string, ManglerExpression[]>,
 ): File[] {
@@ -209,51 +213,20 @@ function getSupportedFilesOnly<File extends ManglerFile>(
  * @param options The {@link MangleEngineOptions}.
  * @returns All {@link MangleEngineOptions} values.
  */
-function parseOptions(
-  options: MangleEngineOptions,
-): {
+function parseOptions(options: MangleEngineOptions): {
+  expressions: Map<string, ManglerExpression[]>,
+  patterns: string[],
   charSet: CharSet,
   manglePrefix: string,
   reservedNames: string[],
 } {
   return {
+    expressions: options.expressions,
+    patterns: toArrayIfNeeded(options.patterns),
     charSet: options.charSet || NameGenerator.DEFAULT_CHARSET,
     manglePrefix: options.manglePrefix || DEFAULT_MANGLE_PREFIX,
     reservedNames: options.reservedNames || DEFAULT_RESERVED_NAMES,
   };
-}
-
-/**
- * A set of generic options used by the {@link MangleEngine} for mangling.
- *
- * @since v0.1.0
- */
-export type MangleEngineOptions = {
-  /**
-   * The character set for mangled strings.
-   *
-   * @default {@link NameGenerator.DEFAULT_CHARSET}
-   * @since v0.1.7
-   */
-  readonly charSet?: CharSet;
-
-  /**
-   * The prefix to use for mangled strings.
-   *
-   * @default `""`
-   * @since v0.1.0
-   */
-  manglePrefix?: string;
-
-  /**
-   * A list of names and patterns not to be used as mangled string.
-   *
-   * Patterns are supported since v0.1.7.
-   *
-   * @default `[]`
-   * @since v0.1.0
-   */
-  reservedNames?: string[];
 }
 
 /**
@@ -270,21 +243,24 @@ export type MangleEngineOptions = {
  * list may be shorter than the inputted list.
  *
  * @param files The files to mangle.
- * @param expressions The {@link ManglerExpression}s to find strings to mangle.
- * @param patterns The patterns of strings to mangle.
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
+ * @version v0.1.11
  */
-export default function mangle<File extends ManglerFile>(
+export default function mangle<File extends WebManglerFile>(
   files: File[],
-  expressions: Map<string, ManglerExpression[]>,
-  patterns: string | string[],
   options: MangleEngineOptions,
 ): File[] {
+  const {
+    expressions,
+    patterns,
+    manglePrefix,
+    reservedNames,
+    charSet,
+  } = parseOptions(options);
+
   const supportedFiles = getSupportedFilesOnly(files, expressions);
-  const { manglePrefix, reservedNames, charSet } = parseOptions(options);
-  patterns = toArrayIfNeeded(patterns);
 
   const instancesCount = countInstances(supportedFiles, expressions, patterns);
   const [mapToUnique, mapToMangled] = getMangleMaps(

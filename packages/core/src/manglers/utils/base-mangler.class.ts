@@ -1,10 +1,12 @@
-import type { WebManglerPlugin } from "../types";
 import type {
+  MangleEngine,
+  MangleEngineOptions,
   ManglerExpression,
   ManglerExpressions,
+  WebManglerFile,
+  WebManglerPlugin,
   WebManglerLanguagePlugin,
-} from "../../languages";
-import type { MangleEngine, ManglerFile } from "../../types";
+} from "../../types";
 
 /**
  * The {@link BaseManglerPlugin} abstract class provides a basic implementation
@@ -16,6 +18,7 @@ import type { MangleEngine, ManglerFile } from "../../types";
  * {@link WebManglerPlugin}.
  *
  * @since v0.1.0
+ * @version v0.1.11
  */
 export default abstract class BaseManglerPlugin implements WebManglerPlugin {
   /**
@@ -55,11 +58,16 @@ export default abstract class BaseManglerPlugin implements WebManglerPlugin {
   }
 
   /**
+   * @inheritDoc
+   */
+  abstract config(): MangleEngineOptions | MangleEngineOptions[];
+
+  /**
    * Implementation should use `this.expressions` in the call to `engine`.
    *
    * @inheritDoc
    */
-  abstract mangle<File extends ManglerFile>(
+  abstract mangle<File extends WebManglerFile>(
     engine: MangleEngine<File>,
     files: File[],
   ): File[];

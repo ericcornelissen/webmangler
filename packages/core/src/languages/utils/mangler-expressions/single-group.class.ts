@@ -1,4 +1,4 @@
-import type { ManglerExpression } from "../../types";
+import type { ManglerExpression } from "../../../types";
 
 import { format as printf } from "util";
 
@@ -80,10 +80,11 @@ export default class SingleGroupManglerExpression implements ManglerExpression {
    * @inheritdoc
    * @since v0.1.11
    */
-  public replaceAll(
-    s: string,
-    replacements: Map<string, string>,
-  ): string {
+  public replaceAll(s: string, replacements: Map<string, string>): string {
+    if (replacements.size === 0) {
+      return s;
+    }
+
     const pattern = Array.from(replacements.keys()).join("|");
     const regExp = this.newRegExp(pattern);
     return s.replace(regExp, (...args: unknown[]): string => {

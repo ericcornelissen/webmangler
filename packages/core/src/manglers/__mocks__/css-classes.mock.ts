@@ -1,6 +1,7 @@
 import * as sinon from "sinon";
 
 export default {
-  mangle: sinon.stub().callsFake((_, x) => x),
+  config: sinon.stub().returns([{ unique: "css-classes" }]),
+  mangle: sinon.stub().returnsArg(1),
   use: sinon.stub(),
 };

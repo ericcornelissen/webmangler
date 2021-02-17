@@ -1,4 +1,4 @@
-import type { ManglerMatch } from "../types";
+import type { ManglerMatch } from "./mangler-expression.class";
 
 /**
  * Type representing an object of named groups.

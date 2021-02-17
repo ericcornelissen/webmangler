@@ -1,4 +1,4 @@
-import type { ManglerExpression } from "../types";
+import type { ManglerExpression } from "../../types";
 
 import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 
