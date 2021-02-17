@@ -211,10 +211,11 @@ export function varySpacing(
   strings: string | string[],
   testCase: TestCase,
 ): TestCase[] {
-  strings = Array.isArray(strings) ? strings : [strings];
   if (strings.length === 0) {
-    throw new Error("At least one string is required to vary spacing");
+    return [testCase];
   }
+
+  strings = Array.isArray(strings) ? strings : [strings];
 
   const result: TestCase[] = [testCase];
   strings.forEach((str) => {

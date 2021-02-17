@@ -386,7 +386,11 @@ suite("Manglers Test helpers", function() {
     };
 
     test("empty list of characters", function() {
-      expect(() => varySpacing([], DEFAULT_TEST_CASE)).to.throw();
+      const result1 = varySpacing("", DEFAULT_TEST_CASE);
+      expect(result1).to.deep.equal([DEFAULT_TEST_CASE]);
+
+      const result2 = varySpacing([], DEFAULT_TEST_CASE);
+      expect(result2).to.deep.equal([DEFAULT_TEST_CASE]);
     });
 
     test("string not in test case", function() {

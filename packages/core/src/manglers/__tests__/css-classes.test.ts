@@ -9,7 +9,8 @@ import {
   ATTRIBUTE_SELECTORS,
   PSEUDO_ELEMENT_SELECTORS,
   PSEUDO_SELECTORS,
-} from "./css-selectors";
+  SELECTOR_COMBINATORS,
+} from "./css-constants";
 import {
   getArrayOfFormattedStrings,
   isValidClassName,
@@ -147,90 +148,24 @@ suite("CSS Classes Mangler", function() {
         ],
       },
       {
-        name: "or operator",
+        name: "combinators",
         cases: [
           ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
-              input: `${beforeA},${beforeB} { }`,
-              expected: `${afterA},${afterB} { }`,
-            }))
-            .map((testCase) => varySpacing(",", testCase))
+            .map(([beforeA, beforeB, afterA, afterB]): TestCase[] => [
+              ...SELECTOR_COMBINATORS
+                .map((combinator): TestCase[] => {
+                  if (combinator === "" && beforeB.match(/^[a-z]/)) {
+                    return [];
+                  }
+
+                  return varySpacing(combinator, {
+                    input: `${beforeA}${combinator}${beforeB} { }`,
+                    expected: `${afterA}${combinator}${afterB} { }`,
+                  });
+                })
+                .flat(),
+            ])
             .flat(),
-        ],
-      },
-      {
-        name: "and operator",
-        cases: [
-          ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
-              input: `${beforeA}${beforeB} { }`,
-              expected: `${afterA}${afterB} { }`,
-            }))
-            .filter((testCase) => !testCase.expected.match(/\.a[a-z]+/)),
-        ],
-      },
-      {
-        name: "not operator",
-        cases: [
-          ...SELECTORS
-            .map(([selectorBefore, selectorAfter]): TestCase => ({
-              input: `:not(${selectorBefore}) { }`,
-              expected: `:not(${selectorAfter}) { }`,
-            }))
-            .map((testCase) => varySpacing(["(", ")"], testCase))
-            .flat(),
-          ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
-              input: `${beforeA}:not(${beforeB}) { }`,
-              expected: `${afterA}:not(${afterB}) { }`,
-            }))
-            .map((testCase) => varySpacing(["(", ")"], testCase))
-            .flat(),
-        ],
-      },
-      {
-        name: "descendent combinator",
-        cases: [
-          ...SELECTOR_PAIRS.
-            map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
-              input: `${beforeA} ${beforeB} { }`,
-              expected: `${afterA} ${afterB} { }`,
-            })),
-        ],
-      },
-      {
-        name: "child combinator",
-        cases: [
-          ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
-              input: `${beforeA}>${beforeB} { }`,
-              expected: `${afterA}>${afterB} { }`,
-            }))
-            .map((testCase) => varySpacing(">", testCase))
-            .flat(),
-        ],
-      },
-      {
-        name: "sibling combinator",
-        cases: [
-          ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
-              input: `${beforeA}+${beforeB} { }`,
-              expected: `${afterA}+${afterB} { }`,
-            }))
-            .map((testCase) => varySpacing("+", testCase))
-            .flat(),
-        ],
-      },
-      {
-        name: "general sibling combinator",
-        cases: [
-          ...SELECTOR_PAIRS.map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
-            input: `${beforeA}~${beforeB} { }`,
-            expected: `${afterA}~${afterB} { }`,
-          }))
-          .map((testCase) => varySpacing("~", testCase))
-          .flat(),
         ],
       },
       {

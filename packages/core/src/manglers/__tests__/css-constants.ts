@@ -1,27 +1,45 @@
 /**
+ * A list of all CSS attribute selector operators.
+ */
+export const ATTRIBUTE_SELECTOR_OPERATORS: string[] = [
+  "=",
+  "~=",
+  "|=",
+  "^=",
+  "$=",
+  "*=",
+];
+
+/**
  * A list of various CSS attribute selectors. The surrounding square brackets
  * (`[` and `]`) are not included.
  *
  * This list includes at least one of each of the following:
- * - has attribute ([attr])
- * - has data attribute ([data-attr])
- * - has attribute with exact value ([attr=val])
- * - has attribute containing value as word ([attr~=val])
+ * - has attribute (`[attr]`)
+ * - has data attribute (`[data-attr]`)
+ * - has attribute with exact value (`[attr=val]`)
+ * - has attribute containing value as word (`[attr~=val]`)
  * - has attribute with a hyphen-separated list of values beginning, from the
- *   left, with value ([attr^=val])
- * - has attribute starting with value ([attr^=val])
- * - has attribute ending with value ([attr$=val])
- * - has attribute containing value ([attr*=val])
+ *   left, with value (`[attr^=val]`)
+ * - has attribute starting with value (`[attr^=val]`)
+ * - has attribute ending with value (`[attr$=val]`)
+ * - has attribute containing value (`[attr*=val]`)
+ * - has attribute matching value, case insensitive (`[attr=val i]`)
+ * - has attribute matching value, case sensitive (`[attr=val s]`)
  */
 export const ATTRIBUTE_SELECTORS: string[] = [
   "disabled",
-  "data-bar",
-  "target=_blank",
-  "title~=bar",
-  "lang|=en",
-  "href^=https",
+  "data-foobar",
+  "target=\"_blank\"",
+  "title~=\"foo\"",
+  "lang|=\"en-US\"",
+  "href^=\"https\"",
   "href$=\".pdf\"",
-  "href*=bar",
+  "href*=\"bar\"",
+  "data-foo=\"bar\" i",
+  "data-foo=\"bar\" I",
+  "data-hello=\"wOrLd\" s",
+  "data-hello=\"wOrLd\" S",
 ];
 
 /**
@@ -75,11 +93,12 @@ export const PSEUDO_SELECTORS: string[] = [
 ];
 
 /**
- * A list of all CSS selector connectors.
+ * A list of all CSS selector combinators.
  */
-export const SELECTOR_CONNECTORS: string[] = [
-  " ",
+export const SELECTOR_COMBINATORS: string[] = [
   ",",
+  "",
+  " ",
   ">",
   "+",
   "~",

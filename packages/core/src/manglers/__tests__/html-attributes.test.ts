@@ -8,9 +8,9 @@ import * as sinonChai from "sinon-chai";
 import {
   PSEUDO_ELEMENT_SELECTORS,
   PSEUDO_SELECTORS,
-  SELECTOR_CONNECTORS,
+  SELECTOR_COMBINATORS,
   TYPE_OR_UNITS ,
-} from "./css-selectors";
+} from "./css-constants";
 import {
   getArrayOfFormattedStrings,
   varyQuotes,
@@ -53,7 +53,7 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "multiple attribute selectors",
         cases: [
-          ...SELECTOR_CONNECTORS.map((connector) => {
+          ...SELECTOR_COMBINATORS.map((connector) => {
             return {
               input: `div[data-foo]${connector}div[data-bar] { }`,
               expected: `div[data-a]${connector}div[data-b] { }`,
@@ -546,7 +546,7 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "multiple attribute selectors",
         cases: [
-          ...SELECTOR_CONNECTORS.map((connector) => {
+          ...SELECTOR_COMBINATORS.map((connector) => {
             return {
               input: `"[data-foo]${connector}data[data-bar]"`,
               expected: `"[data-a]${connector}data[data-b]"`,
