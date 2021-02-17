@@ -63,6 +63,7 @@ export default abstract class MultiMangler implements WebManglerPlugin {
    *
    * @inheritDoc
    * @since v0.1.0
+   * @deprecated
    */
   mangle<File extends WebManglerFile>(
     mangleEngine: MangleEngine<File>,

@@ -111,6 +111,7 @@ export default abstract class SimpleManglerPlugin extends BaseManglerPlugin {
    *
    * @inheritDoc
    * @since v0.1.0
+   * @deprecated
    */
   mangle<File extends WebManglerFile>(
     mangleEngine: MangleEngine<File>,

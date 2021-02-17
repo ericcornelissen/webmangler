@@ -401,100 +401,61 @@ suite("CSS Variable Mangler", function() {
   });
 
   suite("Configuration", function() {
-    setup(function() {
-      EngineMock.resetHistory();
-    });
-
     test("default patterns", function() {
       const expected = CssVariableMangler.DEFAULT_PATTERNS;
 
-      const cssVariableMangler = new CssVariableMangler();
-      cssVariableMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        expected,
-        sinon.match.any,
-      );
+      const cssClassMangler = new CssVariableMangler();
+      const result = cssClassMangler.config()[0];
+      expect(result).to.deep.include({ patterns: expected });
     });
 
     test("custom pattern", function() {
       const pattern = "foo(bar|baz)-[a-z]+";
 
-      const cssVariableMangler = new CssVariableMangler({ cssVarNamePattern: pattern });
-      cssVariableMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        pattern,
-        sinon.match.any,
-      );
+      const cssClassMangler = new CssVariableMangler({ cssVarNamePattern: pattern });
+      const result = cssClassMangler.config()[0];
+      expect(result).to.deep.include({ patterns: pattern });
     });
 
     test("custom patterns", function() {
       const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
 
-      const cssVariableMangler = new CssVariableMangler({ cssVarNamePattern: patterns });
-      cssVariableMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        patterns,
-        sinon.match.any,
-      );
+      const cssClassMangler = new CssVariableMangler({ cssVarNamePattern: patterns });
+      const result = cssClassMangler.config()[0];
+      expect(result).to.deep.include({ patterns: patterns });
     });
 
     test("default reserved", function() {
       const expected = CssVariableMangler.ALWAYS_RESERVED.concat(CssVariableMangler.DEFAULT_RESERVED);
 
-      const cssVariableMangler = new CssVariableMangler();
-      cssVariableMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.has("reservedNames", expected),
-      );
+      const cssClassMangler = new CssVariableMangler();
+      const result = cssClassMangler.config()[0];
+      expect(result).to.deep.include({ reservedNames: expected });
     });
 
     test("custom reserved", function() {
       const reserved: string[] = ["foo", "bar"];
       const expected = CssVariableMangler.ALWAYS_RESERVED.concat(reserved);
 
-      const cssVariableMangler = new CssVariableMangler({ reservedCssVarNames: reserved });
-      cssVariableMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.has("reservedNames", expected),
-      );
+      const cssClassMangler = new CssVariableMangler({ reservedCssVarNames: reserved });
+      const result = cssClassMangler.config()[0];
+      expect(result).to.deep.include({ reservedNames: expected });
     });
 
     test("default prefix", function() {
       const expected = CssVariableMangler.DEFAULT_PREFIX;
 
-      const cssVariableMangler = new CssVariableMangler();
-      cssVariableMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.has("manglePrefix", expected),
-      );
+      const cssClassMangler = new CssVariableMangler();
+      const result = cssClassMangler.config()[0];
+      expect(result).to.deep.include({ manglePrefix: expected });
     });
 
     test("custom prefix", function() {
       const prefix = "foobar";
 
-      const cssVariableMangler = new CssVariableMangler({ keepCssVarPrefix: prefix });
-      cssVariableMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.has("manglePrefix", prefix),
-      );
+      const cssClassMangler = new CssVariableMangler({ keepCssVarPrefix: prefix });
+      const result = cssClassMangler.config()[0];
+      expect(result).to.deep.include({ manglePrefix: prefix });
     });
   });
 
@@ -546,5 +507,28 @@ suite("CSS Variable Mangler", function() {
         expect(out.content).not.to.have.string(illegalName);
       }
     });
+  });
+
+  test("deprecated mangle function", function() {
+    const files = [new WebManglerFileMock("css", ":root { --foobar: #000; }")];
+    const patterns = ["foo[a-z]+"];
+    const reserved = ["a"];
+    const prefix = "foobar";
+
+    const cssVariableMangler = new CssVariableMangler({
+      cssVarNamePattern: patterns,
+      reservedCssVarNames: reserved,
+      keepCssVarPrefix: prefix,
+    });
+    cssVariableMangler.use(builtInLanguageSupport);
+    cssVariableMangler.mangle(EngineMock, files);
+    expect(EngineMock).to.have.been.calledWith(
+      files,
+      cssVariableMangler.expressions,
+      patterns,
+      sinon.match.has("charSet", CssVariableMangler.CHARACTER_SET)
+        .and(sinon.match.has("reservedNames", CssVariableMangler.ALWAYS_RESERVED.concat(reserved)))
+        .and(sinon.match.has("manglePrefix", prefix)),
+    );
   });
 });
