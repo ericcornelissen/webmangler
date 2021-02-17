@@ -1,4 +1,4 @@
-import type { Char, CharSet } from "./types";
+import type { Char, CharSet } from "./characters";
 
 import { ALL_LOWERCASE_CHARS } from "./characters";
 

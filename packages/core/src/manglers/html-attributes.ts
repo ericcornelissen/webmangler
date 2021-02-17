@@ -1,4 +1,4 @@
-import type { CharSet } from "../types";
+import type { CharSet } from "../characters";
 
 import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";

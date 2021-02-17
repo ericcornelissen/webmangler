@@ -1,5 +1,5 @@
 import type { TestScenario } from "@webmangler/testing";
-import type { CharSet } from "../types";
+import type { CharSet } from "../characters";
 
 import { expect } from "chai";
 

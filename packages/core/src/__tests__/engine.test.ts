@@ -1,5 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
-import type { CharSet, ManglerExpression, WebManglerFile } from "../types";
+import type { CharSet } from "../characters";
+import type { ManglerExpression, WebManglerFile } from "../types";
 
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";

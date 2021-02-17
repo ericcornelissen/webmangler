@@ -1,5 +1,5 @@
+import type { CharSet } from "./characters";
 import type {
-  CharSet,
   MangleEngineOptions,
   ManglerExpression,
   WebManglerFile,
