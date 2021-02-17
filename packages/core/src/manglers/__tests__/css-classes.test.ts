@@ -11,6 +11,7 @@ import {
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
 } from "./css-constants";
+import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import {
   getArrayOfFormattedStrings,
   isValidClassName,
@@ -301,10 +302,16 @@ suite("CSS Classes Mangler", function() {
             input: "<div class=\"cls-foo\"></div>",
             expected: "<div class=\"a\"></div>",
           }),
-          {
-            input: "<img class=\"cls-foo\"/>",
-            expected: "<img class=\"a\"/>",
-          },
+          ...STANDARD_TAGS
+            .map((tag) => ({
+              input: `<${tag} class="cls-foo"></${tag}>`,
+              expected: `<${tag} class="a"></${tag}>`,
+            })),
+          ...SELF_CLOSING_TAGS
+            .map((tag) => ({
+              input: `<${tag} class="cls-foo"/>`,
+              expected: `<${tag} class="a"/>`,
+            })),
           {
             input: "<p class=\"cls-foo\">Hello world!</p>",
             expected: "<p class=\"a\">Hello world!</p>",
@@ -320,6 +327,26 @@ suite("CSS Classes Mangler", function() {
           {
             input: "<div id=\"foo\" class=\"cls-bar\" data-foo=\"bar\"></div>",
             expected: "<div id=\"foo\" class=\"a\" data-foo=\"bar\"></div>",
+          },
+          {
+            input: "<div disabled class=\"cls-foo\"></div>",
+            expected: "<div disabled class=\"a\"></div>",
+          },
+          {
+            input: "<div class=\"cls-foo\" aria-hidden></div>",
+            expected: "<div class=\"a\" aria-hidden></div>",
+          },
+          {
+            input: "<div disabled class=\"cls-foo\" aria-hidden></div>",
+            expected: "<div disabled class=\"a\" aria-hidden></div>",
+          },
+          {
+            input: "<div id=\"foo\" class=\"cls-bar\" aria-hidden></div>",
+            expected: "<div id=\"foo\" class=\"a\" aria-hidden></div>",
+          },
+          {
+            input: "<div disabled class=\"cls-foo\" data-foo=\"bar\"></div>",
+            expected: "<div disabled class=\"a\" data-foo=\"bar\"></div>",
           },
         ],
       },
@@ -589,6 +616,19 @@ suite("CSS Classes Mangler", function() {
                 </p>
               </div>
             `,
+          },
+        ],
+      },
+      {
+        name: "non-class attributes that match the pattern",
+        cases: [
+          {
+            input: "<div id=\"cls-foo\" class=\"cls-foo\"></div>",
+            expected: "<div id=\"cls-foo\" class=\"a\"></div>",
+          },
+          {
+            input: "<div id=\"cls-foo\"></div><div class=\"cls-foo\"></div>",
+            expected: "<div id=\"cls-foo\"></div><div class=\"a\"></div>",
           },
         ],
       },
