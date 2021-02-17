@@ -2,7 +2,7 @@ import type {
   ManglerExpression,
   ManglerExpressions,
   WebManglerLanguagePlugin,
-} from "../types";
+} from "../../types";
 
 /**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of

@@ -14,7 +14,7 @@ import {
 import { isValidIdName, varyQuotes, varySpacing } from "./test-helpers";
 
 import EngineMock from "../../__mocks__/engine.mock";
-import ManglerFileMock from "../../__mocks__/mangler-file.mock";
+import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
 
 import mangleEngine from "../../engine";
 import BuiltInLanguageSupport from "../../languages/builtin";
@@ -361,8 +361,9 @@ suite("HTML ID Mangler", function() {
           });
           htmlIdMangler.use(builtInLanguageSupport);
 
-          const files = [new ManglerFileMock("css", input)];
-          const result = htmlIdMangler.mangle(mangleEngine, files);
+          const files = [new WebManglerFileMock("css", input)];
+          const options = htmlIdMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -577,8 +578,9 @@ suite("HTML ID Mangler", function() {
           });
           htmlIdMangler.use(builtInLanguageSupport);
 
-          const files = [new ManglerFileMock("html", input)];
-          const result = htmlIdMangler.mangle(mangleEngine, files);
+          const files = [new WebManglerFileMock("html", input)];
+          const options = htmlIdMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -958,8 +960,9 @@ suite("HTML ID Mangler", function() {
           });
           htmlIdMangler.use(builtInLanguageSupport);
 
-          const files = [new ManglerFileMock("js", input)];
-          const result = htmlIdMangler.mangle(mangleEngine, files);
+          const files = [new WebManglerFileMock("js", input)];
+          const options = htmlIdMangler.config();
+          const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -970,108 +973,83 @@ suite("HTML ID Mangler", function() {
   });
 
   suite("Configuration", function() {
-    setup(function() {
-      EngineMock.resetHistory();
-    });
-
     test("default patterns", function() {
       const expected = HtmlIdMangler.DEFAULT_PATTERNS;
 
-      const htmlIdMangler = new HtmlIdMangler();
-      htmlIdMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        expected,
-        sinon.match.any,
-      );
+      const cssClassMangler = new HtmlIdMangler();
+      const result = cssClassMangler.config();
+      expect(result).to.deep.include({ patterns: expected });
     });
 
     test("custom pattern", function() {
       const pattern = "foo(bar|baz)-[a-z]+";
 
-      const htmlIdMangler = new HtmlIdMangler({ idNamePattern: pattern });
-      htmlIdMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        pattern,
-        sinon.match.any,
-      );
+      const cssClassMangler = new HtmlIdMangler({ idNamePattern: pattern });
+      const result = cssClassMangler.config();
+      expect(result).to.deep.include({ patterns: pattern });
     });
 
     test("custom patterns", function() {
       const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
 
-      const htmlIdMangler = new HtmlIdMangler({ idNamePattern: patterns });
-      htmlIdMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        patterns,
-        sinon.match.any,
-      );
+      const cssClassMangler = new HtmlIdMangler({ idNamePattern: patterns });
+      const result = cssClassMangler.config();
+      expect(result).to.deep.include({ patterns: patterns });
     });
 
     test("default reserved", function() {
       const expected = HtmlIdMangler.DEFAULT_RESERVED;
 
-      const htmlIdMangler = new HtmlIdMangler();
-      htmlIdMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.has("reservedNames", expected),
-      );
+      const cssClassMangler = new HtmlIdMangler();
+      const result = cssClassMangler.config();
+      expect(result).to.deep.include({ reservedNames: expected });
     });
 
     test("custom reserved", function() {
       const reserved: string[] = ["foo", "bar"];
 
-      const htmlIdMangler = new HtmlIdMangler({ reservedIds: reserved });
-      htmlIdMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.has("reservedNames", reserved),
-      );
+      const cssClassMangler = new HtmlIdMangler({ reservedIds: reserved });
+      const result = cssClassMangler.config();
+      expect(result).to.deep.include({ reservedNames: reserved });
     });
 
     test("default prefix", function() {
       const expected = HtmlIdMangler.DEFAULT_PREFIX;
 
-      const htmlIdMangler = new HtmlIdMangler();
-      htmlIdMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.has("manglePrefix", expected),
-      );
+      const cssClassMangler = new HtmlIdMangler();
+      const result = cssClassMangler.config();
+      expect(result).to.deep.include({ manglePrefix: expected });
     });
 
     test("custom prefix", function() {
       const prefix = "foobar";
 
-      const htmlIdMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
-      htmlIdMangler.mangle(EngineMock, []);
-      expect(EngineMock).to.have.been.calledWith(
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.any,
-        sinon.match.has("manglePrefix", prefix),
-      );
+      const cssClassMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
+      const result = cssClassMangler.config();
+      expect(result).to.deep.include({ manglePrefix: prefix });
     });
   });
 
-  test("no input files", function() {
-    const htmlIdMangler = new HtmlIdMangler({
-      idNamePattern: DEFAULT_PATTERN,
-    });
+  test("deprecated mangle function", function() {
+    const files = [new WebManglerFileMock("css", "#foobar { }")];
+    const patterns = ["foo[a-z]+"];
+    const reserved = ["a"];
+    const prefix = "foobar";
 
-    const result = htmlIdMangler.mangle(mangleEngine, []);
-    expect(result).to.have.lengthOf(0);
+    const htmlIdMangler = new HtmlIdMangler({
+      idNamePattern: patterns,
+      reservedIds: reserved,
+      keepIdPrefix: prefix,
+    });
+    htmlIdMangler.use(builtInLanguageSupport);
+    htmlIdMangler.mangle(EngineMock, files);
+    expect(EngineMock).to.have.been.calledWith(
+      files,
+      htmlIdMangler.expressions,
+      patterns,
+      sinon.match.has("charSet", HtmlIdMangler.CHARACTER_SET)
+        .and(sinon.match.has("reservedNames", reserved))
+        .and(sinon.match.has("manglePrefix", prefix)),
+    );
   });
 });
