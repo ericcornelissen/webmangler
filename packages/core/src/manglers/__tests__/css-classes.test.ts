@@ -273,8 +273,8 @@ suite("CSS Classes Mangler", function() {
         cases: [
           {
             input: ".cls-foo",
-            expected: ".cls-foo",
-            description: "Unclear what should happen with dangling classes...",
+            expected: ".a",
+            description: "mangle dangling classes",
           },
           {
             input: "div{}.cls-foo{}",
@@ -282,8 +282,8 @@ suite("CSS Classes Mangler", function() {
             description: "no space between closing `}` and class `.` should not matter",
           },
           {
-            input: "div{ content: \"foo\" } .cls-foo { }",
-            expected: "div{ content: \"foo\" } .a { }",
+            input: "div { content: \"cls-foo\" } .cls-foo { }",
+            expected: "div { content: \"cls-foo\" } .a { }",
           },
           ...["div { content: \".cls-foo\" }", "div[data-foo=\".cls-bar\"] { }"]
             .map((testCase): TestCase => ({
