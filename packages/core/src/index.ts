@@ -1,7 +1,6 @@
 import type { WebManglerFile, WebManglerOptions } from "./types";
 
 import manglerEngine from "./engine";
-import { toArrayIfNeeded } from "./helpers";
 
 /**
  * Mangle a list of files collectively - i.e. mangle matched strings the same in
@@ -22,8 +21,7 @@ export default function webmangler<File extends WebManglerFile>(
       plugin.use(languagePlugin);
     }
 
-    const allManglerOptions = toArrayIfNeeded(plugin.config());
-    for (const manglerOptions of allManglerOptions) {
+    for (const manglerOptions of plugin.config()) {
       files = manglerEngine(files, manglerOptions);
     }
   }

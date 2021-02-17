@@ -95,14 +95,14 @@ export default abstract class SimpleManglerPlugin extends BaseManglerPlugin {
    * @inheritDoc
    * @since v0.1.11
    */
-  config(): MangleEngineOptions {
-    return {
+  config(): MangleEngineOptions[] {
+    return [{
       expressions: this.expressions,
       patterns: this.patterns,
       charSet: this.charSet,
       reservedNames: this.reserved,
       manglePrefix: this.prefix,
-    };
+    }];
   }
 
   /**

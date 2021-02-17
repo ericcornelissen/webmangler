@@ -341,7 +341,7 @@ suite("CSS Classes Mangler", function() {
           cssClassMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("css", input)];
-          const options = cssClassMangler.config();
+          const options = cssClassMangler.config()[0];
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -652,7 +652,7 @@ suite("CSS Classes Mangler", function() {
           cssClassMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("html", input)];
-          const options = cssClassMangler.config();
+          const options = cssClassMangler.config()[0];
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -921,7 +921,7 @@ suite("CSS Classes Mangler", function() {
           cssClassMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("js", input)];
-          const options = cssClassMangler.config();
+          const options = cssClassMangler.config()[0];
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -1050,7 +1050,7 @@ suite("CSS Classes Mangler", function() {
       cssClassMangler.use(builtInLanguageSupport);
 
       const files = [new WebManglerFileMock("css", content)];
-      const options = cssClassMangler.config();
+      const options = cssClassMangler.config()[0];
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 
@@ -1068,7 +1068,7 @@ suite("CSS Classes Mangler", function() {
       cssClassMangler.use(builtInLanguageSupport);
 
       const files = [new WebManglerFileMock("css", content)];
-      const options = cssClassMangler.config();
+      const options = cssClassMangler.config()[0];
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 

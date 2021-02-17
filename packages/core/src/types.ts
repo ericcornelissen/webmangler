@@ -1,3 +1,5 @@
+import type { CharSet } from "./characters";
+
 /**
  * Interface representing a regular expression-like object that can be used to
  * find and replace patterns by _WebMangler_.
@@ -120,7 +122,7 @@ interface WebManglerPlugin {
    * @returns The {@link MangleEngineOptions}.
    * @since v0.1.11
    */
-  config(): MangleEngineOptions | MangleEngineOptions[];
+  config(): MangleEngineOptions[];
 
   /**
    * Mangle a set of `files` with this {@link WebManglerPlugin}.

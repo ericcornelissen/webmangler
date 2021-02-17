@@ -362,7 +362,7 @@ suite("HTML ID Mangler", function() {
           htmlIdMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("css", input)];
-          const options = htmlIdMangler.config();
+          const options = htmlIdMangler.config()[0];
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -579,7 +579,7 @@ suite("HTML ID Mangler", function() {
           htmlIdMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("html", input)];
-          const options = htmlIdMangler.config();
+          const options = htmlIdMangler.config()[0];
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -961,7 +961,7 @@ suite("HTML ID Mangler", function() {
           htmlIdMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("js", input)];
-          const options = htmlIdMangler.config();
+          const options = htmlIdMangler.config()[0];
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
