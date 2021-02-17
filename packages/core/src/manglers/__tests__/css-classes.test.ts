@@ -341,7 +341,7 @@ suite("CSS Classes Mangler", function() {
           cssClassMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("css", input)];
-          const options = cssClassMangler.config()[0];
+          const options = cssClassMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -652,7 +652,7 @@ suite("CSS Classes Mangler", function() {
           cssClassMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("html", input)];
-          const options = cssClassMangler.config()[0];
+          const options = cssClassMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -921,7 +921,7 @@ suite("CSS Classes Mangler", function() {
           cssClassMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("js", input)];
-          const options = cssClassMangler.config()[0];
+          const options = cssClassMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -937,7 +937,7 @@ suite("CSS Classes Mangler", function() {
       const expected = CssClassMangler.DEFAULT_PATTERNS;
 
       const cssClassMangler = new CssClassMangler();
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ patterns: expected });
     });
 
@@ -945,7 +945,7 @@ suite("CSS Classes Mangler", function() {
       const pattern = "foo(bar|baz)-[a-z]+";
 
       const cssClassMangler = new CssClassMangler({ classNamePattern: pattern });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ patterns: pattern });
     });
 
@@ -953,7 +953,7 @@ suite("CSS Classes Mangler", function() {
       const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
 
       const cssClassMangler = new CssClassMangler({ classNamePattern: patterns });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ patterns: patterns });
     });
 
@@ -961,7 +961,7 @@ suite("CSS Classes Mangler", function() {
       const expected = CssClassMangler.ALWAYS_RESERVED.concat(CssClassMangler.DEFAULT_RESERVED);
 
       const cssClassMangler = new CssClassMangler();
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -970,7 +970,7 @@ suite("CSS Classes Mangler", function() {
       const expected = CssClassMangler.ALWAYS_RESERVED.concat(reserved);
 
       const cssClassMangler = new CssClassMangler({ reservedClassNames: reserved });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -978,7 +978,7 @@ suite("CSS Classes Mangler", function() {
       const expected = CssClassMangler.DEFAULT_PREFIX;
 
       const cssClassMangler = new CssClassMangler();
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ manglePrefix: expected });
     });
 
@@ -986,7 +986,7 @@ suite("CSS Classes Mangler", function() {
       const prefix = "foobar";
 
       const cssClassMangler = new CssClassMangler({ keepClassNamePrefix: prefix });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ manglePrefix: prefix });
     });
   });
@@ -1011,7 +1011,7 @@ suite("CSS Classes Mangler", function() {
       cssClassMangler.use(builtInLanguageSupport);
 
       const files = [new WebManglerFileMock("css", content)];
-      const options = cssClassMangler.config()[0];
+      const options = cssClassMangler.config();
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 
@@ -1029,7 +1029,7 @@ suite("CSS Classes Mangler", function() {
       cssClassMangler.use(builtInLanguageSupport);
 
       const files = [new WebManglerFileMock("css", content)];
-      const options = cssClassMangler.config()[0];
+      const options = cssClassMangler.config();
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 

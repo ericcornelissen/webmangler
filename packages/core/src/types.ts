@@ -122,7 +122,7 @@ interface WebManglerPlugin {
    * @returns The {@link MangleEngineOptions}.
    * @since v0.1.11
    */
-  config(): MangleEngineOptions[];
+  config(): MangleEngineOptions | MangleEngineOptions[];
 
   /**
    * Mangle a set of `files` with this {@link WebManglerPlugin}.

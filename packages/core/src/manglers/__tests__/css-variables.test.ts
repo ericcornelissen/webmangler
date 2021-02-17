@@ -155,7 +155,7 @@ suite("CSS Variable Mangler", function() {
           cssVariableMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("css", input)];
-          const options = cssVariableMangler.config()[0];
+          const options = cssVariableMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -296,7 +296,7 @@ suite("CSS Variable Mangler", function() {
           cssVariableMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("html", input)];
-          const options = cssVariableMangler.config()[0];
+          const options = cssVariableMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -389,7 +389,7 @@ suite("CSS Variable Mangler", function() {
           cssVariableMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("js", input)];
-          const options = cssVariableMangler.config()[0];
+          const options = cssVariableMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -405,7 +405,7 @@ suite("CSS Variable Mangler", function() {
       const expected = CssVariableMangler.DEFAULT_PATTERNS;
 
       const cssClassMangler = new CssVariableMangler();
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ patterns: expected });
     });
 
@@ -413,7 +413,7 @@ suite("CSS Variable Mangler", function() {
       const pattern = "foo(bar|baz)-[a-z]+";
 
       const cssClassMangler = new CssVariableMangler({ cssVarNamePattern: pattern });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ patterns: pattern });
     });
 
@@ -421,7 +421,7 @@ suite("CSS Variable Mangler", function() {
       const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
 
       const cssClassMangler = new CssVariableMangler({ cssVarNamePattern: patterns });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ patterns: patterns });
     });
 
@@ -429,7 +429,7 @@ suite("CSS Variable Mangler", function() {
       const expected = CssVariableMangler.ALWAYS_RESERVED.concat(CssVariableMangler.DEFAULT_RESERVED);
 
       const cssClassMangler = new CssVariableMangler();
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -438,7 +438,7 @@ suite("CSS Variable Mangler", function() {
       const expected = CssVariableMangler.ALWAYS_RESERVED.concat(reserved);
 
       const cssClassMangler = new CssVariableMangler({ reservedCssVarNames: reserved });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -446,7 +446,7 @@ suite("CSS Variable Mangler", function() {
       const expected = CssVariableMangler.DEFAULT_PREFIX;
 
       const cssClassMangler = new CssVariableMangler();
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ manglePrefix: expected });
     });
 
@@ -454,7 +454,7 @@ suite("CSS Variable Mangler", function() {
       const prefix = "foobar";
 
       const cssClassMangler = new CssVariableMangler({ keepCssVarPrefix: prefix });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ manglePrefix: prefix });
     });
   });
@@ -480,7 +480,7 @@ suite("CSS Variable Mangler", function() {
       cssVariableMangler.use(builtInLanguageSupport);
 
       const files = [new WebManglerFileMock("css", content)];
-      const options = cssVariableMangler.config()[0];
+      const options = cssVariableMangler.config();
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 
@@ -498,7 +498,7 @@ suite("CSS Variable Mangler", function() {
       cssVariableMangler.use(builtInLanguageSupport);
 
       const files = [new WebManglerFileMock("css", content)];
-      const options = cssVariableMangler.config()[0];
+      const options = cssVariableMangler.config();
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 

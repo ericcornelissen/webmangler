@@ -312,7 +312,7 @@ suite("HTML Attribute Mangler", function() {
           htmlAttributeMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("css", input)];
-          const options = htmlAttributeMangler.config()[0];
+          const options = htmlAttributeMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -515,7 +515,7 @@ suite("HTML Attribute Mangler", function() {
           htmlAttributeMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("html", input)];
-          const options = htmlAttributeMangler.config()[0];
+          const options = htmlAttributeMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -767,7 +767,7 @@ suite("HTML Attribute Mangler", function() {
           htmlAttributeMangler.use(builtInLanguageSupport);
 
           const files = [new WebManglerFileMock("js", input)];
-          const options = htmlAttributeMangler.config()[0];
+          const options = htmlAttributeMangler.config();
           const result = mangleEngine(files, options);
           expect(result).to.have.length(1);
 
@@ -783,7 +783,7 @@ suite("HTML Attribute Mangler", function() {
       const expected = HtmlAttributeMangler.DEFAULT_PATTERNS;
 
       const cssClassMangler = new HtmlAttributeMangler();
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ patterns: expected });
     });
 
@@ -791,7 +791,7 @@ suite("HTML Attribute Mangler", function() {
       const pattern = "foo(bar|baz)-[a-z]+";
 
       const cssClassMangler = new HtmlAttributeMangler({ attrNamePattern: pattern });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ patterns: pattern });
     });
 
@@ -799,7 +799,7 @@ suite("HTML Attribute Mangler", function() {
       const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
 
       const cssClassMangler = new HtmlAttributeMangler({ attrNamePattern: patterns });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ patterns: patterns });
     });
 
@@ -807,7 +807,7 @@ suite("HTML Attribute Mangler", function() {
       const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(HtmlAttributeMangler.DEFAULT_RESERVED);
 
       const cssClassMangler = new HtmlAttributeMangler();
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -816,7 +816,7 @@ suite("HTML Attribute Mangler", function() {
       const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(reserved);
 
       const cssClassMangler = new HtmlAttributeMangler({ reservedAttrNames: reserved });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -824,7 +824,7 @@ suite("HTML Attribute Mangler", function() {
       const expected = HtmlAttributeMangler.DEFAULT_PREFIX;
 
       const cssClassMangler = new HtmlAttributeMangler();
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ manglePrefix: expected });
     });
 
@@ -832,7 +832,7 @@ suite("HTML Attribute Mangler", function() {
       const prefix = "foobar";
 
       const cssClassMangler = new HtmlAttributeMangler({ keepAttrPrefix: prefix });
-      const result = cssClassMangler.config()[0];
+      const result = cssClassMangler.config();
       expect(result).to.deep.include({ manglePrefix: prefix });
     });
   });
@@ -858,7 +858,7 @@ suite("HTML Attribute Mangler", function() {
       htmlAttributeMangler.use(builtInLanguageSupport);
 
       const files = [new WebManglerFileMock("html", content)];
-      const options = htmlAttributeMangler.config()[0];
+      const options = htmlAttributeMangler.config();
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 
@@ -877,7 +877,7 @@ suite("HTML Attribute Mangler", function() {
       htmlAttributeMangler.use(builtInLanguageSupport);
 
       const files = [new WebManglerFileMock("html", content)];
-      const options = htmlAttributeMangler.config()[0];
+      const options = htmlAttributeMangler.config();
       const result = mangleEngine(files, options);
       expect(result).to.have.lengthOf(1);
 
