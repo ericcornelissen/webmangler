@@ -43,10 +43,7 @@ export default class SingleGroupManglerExpression implements ManglerExpression {
    * @param groupName The name of a group in `patternTemplate`.
    * @since v0.1.11
    */
-  constructor(
-    patternTemplate: string,
-    groupName: string,
-  ) {
+  constructor(patternTemplate: string, groupName: string) {
     this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
   }

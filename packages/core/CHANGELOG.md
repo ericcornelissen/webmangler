@@ -8,12 +8,17 @@ Versioning].
 
 ## [Unreleased]
 
-- Improve performance of all built-in manglers.
 - Fix accidental mangling of class-like strings in CSS.
 - Fix accidental mangling of id-like strings in CSS.
 - Fix accidental mangling of values of HTML attributes with the suffix "class".
 - Fix accidental mangling of values of HTML attributes with the suffix "href".
 - Fix cases where classes would not be mangled in JavaScript
+- Improve the performance of the built-in CSS class mangler.
+- Improve the performance of the built-in HTML attribute mangler.
+
+## [0.1.11] - 2021-02-18
+
+- Improve the performance of the built-in ID mangler.
 
 ## [0.1.10] - 2021-02-14
 
