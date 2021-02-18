@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.12] - 2021-02-19
+
 - Fix accidental mangling of class-like strings in CSS.
 - Fix accidental mangling of id-like strings in CSS.
 - Fix accidental mangling of values of HTML attributes with the suffix "class".
