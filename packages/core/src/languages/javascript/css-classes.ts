@@ -24,7 +24,7 @@ const pattern: ManglerExpression[] = [
         \\.
       )
       (?<${GROUP_NAME_PATTER}>%s)
-      (?=${quote}|\\s|\\.|\\#|\\[|\\>|\\+|\\~)
+      (?=${quote}|\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s)
     `,
     GROUP_NAME_PATTER,
   )),

@@ -8,18 +8,18 @@ const pattern: ManglerExpression[] = [
   // Finds e.g., "cls-a" and "cls-b" in  `<div class="cls-a ignore cls-b">`
   ...["\"", "'"].map((quote) => new NestedGroupExpression(
     `
-      (?<=class\\s*=\\s*${quote})
+      (?<=\\sclass\\s*=\\s*${quote}\\s*)
       (?<${GROUP_NAME_MAIN}>
         (?:[^${quote}]+\\s)?
         %s
         (?:\\s[^${quote}]+)?
       )
-      (?=${quote})
+      (?=\\s*${quote})
     `,
     `
-      (?<=\\s|^)
+      (?<=^|\\s)
       (?<${GROUP_NAME_MAIN}>%s)
-      (?=\\s|$)
+      (?=$|\\s)
     `,
     GROUP_NAME_MAIN,
   )),

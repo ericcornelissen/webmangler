@@ -32,7 +32,7 @@ const expressions: ManglerExpression[] = [
   new SingleGroupManglerExpression(
     `
       (?<=
-        href\\s*=\\s*
+        \\shref\\s*=\\s*
         ${HTML_QUOTE_CAPTURING_GROUP_PATTERN}\\s*
         (?:${URL_BASE_PATTERN})?
         #

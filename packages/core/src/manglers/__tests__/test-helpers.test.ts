@@ -380,26 +380,23 @@ suite("Manglers Test helpers", function() {
   });
 
   suite("::varySpacing", function() {
-    test("string not in test case", function() {
-      const testCase: TestCase = {
-        input: "foo",
-        expected: "bar",
-      };
-
-      const result = varySpacing("definitely not in the test case", testCase);
-      expect(result).to.have.length(1);
-      expect(result[0]).to.equal(testCase);
-    });
+    const DEFAULT_TEST_CASE: TestCase = {
+      input: "foo",
+      expected: "bar",
+    };
 
     test("empty list of characters", function() {
-      const testCase: TestCase = {
-        input: "foo",
-        expected: "bar",
-      };
+      const result1 = varySpacing("", DEFAULT_TEST_CASE);
+      expect(result1).to.deep.equal([DEFAULT_TEST_CASE]);
 
-      const result = varySpacing([], testCase);
+      const result2 = varySpacing([], DEFAULT_TEST_CASE);
+      expect(result2).to.deep.equal([DEFAULT_TEST_CASE]);
+    });
+
+    test("string not in test case", function() {
+      const result = varySpacing("not in the test case", DEFAULT_TEST_CASE);
       expect(result).to.have.length(1);
-      expect(result[0]).to.equal(testCase);
+      expect(result[0]).to.equal(DEFAULT_TEST_CASE);
     });
 
     test("character in test case", function() {
@@ -553,6 +550,30 @@ suite("Manglers Test helpers", function() {
       expect(result).to.deep.include({
         input: `attr ${strs[0]} data-foo ${strs[1]} ;`,
         expected: `attr ${strs[0]} a ${strs[1]} ;`,
+      });
+    });
+
+    test("string appears in test case multiple times", function() {
+      const str = "\"";
+      const testCase: TestCase = {
+        input: `foo${str}bar${str}`,
+        expected: `foo${str}bar${str}`,
+      };
+
+      const result = varySpacing(str, testCase);
+      expect(result).to.have.length(4);
+      expect(result).to.deep.include(testCase);
+      expect(result).to.deep.include({
+        input: `foo ${str}bar ${str}`,
+        expected: `foo ${str}bar ${str}`,
+      });
+      expect(result).to.deep.include({
+        input: `foo${str} bar${str} `,
+        expected: `foo${str} bar${str} `,
+      });
+      expect(result).to.deep.include({
+        input: `foo${str} bar${str} `,
+        expected: `foo${str} bar${str} `,
       });
     });
 

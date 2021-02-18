@@ -22,11 +22,13 @@ const expressions: ManglerExpression[] = [
   //  `div + .(foo) { }`
   //  `div ~ .(foo) { }`
   //  `#bar { } .(foo) { }`
+  //  `.(foo)`
   new SingleGroupManglerExpression(
     `
+      (?<!"[^"}]*|'[^'}]*)
       (?<=\\.)
       (?<${GROUP_CLASS}>%s)
-      (?=\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s)
+      (?=\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s|$)
     `,
     GROUP_CLASS,
   ),

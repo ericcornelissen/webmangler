@@ -5,7 +5,7 @@ import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
 const GROUP_ID = "main";
 const GROUP_QUOTE = "quote";
 
-const CSS_SELECTOR_REQUIRED_AFTER = "\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s";
+const CSS_SELECTOR_REQUIRED_AFTER = "\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s|$";
 
 const CSS_QUOTE_CAPTURING_GROUP_PATTERN = `(?<${GROUP_QUOTE}>"|')`;
 const CSS_QUOTE_MATCHING_PATTERN = `\\k<${GROUP_QUOTE}>`;
@@ -31,8 +31,11 @@ const expressions: ManglerExpression[] = [
   //  `div+(#foo) { }`
   //  `div~(#foo) { }`
   //  `div { } (#foo) { }`
+  //  `div { } (#foo) { }`
+  //  `(#foo)`
   new SingleGroupManglerExpression(
     `
+      (?<!"[^"}]*|'[^'}]*)
       (?<=#)
       (?<${GROUP_ID}>%s)
       (?=${CSS_SELECTOR_REQUIRED_AFTER})

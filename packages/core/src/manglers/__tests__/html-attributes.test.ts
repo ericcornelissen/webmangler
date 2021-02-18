@@ -8,9 +8,9 @@ import * as sinonChai from "sinon-chai";
 import {
   PSEUDO_ELEMENT_SELECTORS,
   PSEUDO_SELECTORS,
-  SELECTOR_CONNECTORS,
+  SELECTOR_COMBINATORS,
   TYPE_OR_UNITS ,
-} from "./css-selectors";
+} from "./css-constants";
 import {
   getArrayOfFormattedStrings,
   varyQuotes,
@@ -53,7 +53,7 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "multiple attribute selectors",
         cases: [
-          ...SELECTOR_CONNECTORS.map((connector) => {
+          ...SELECTOR_COMBINATORS.map((connector) => {
             return {
               input: `div[data-foo]${connector}div[data-bar] { }`,
               expected: `div[data-a]${connector}div[data-b] { }`,
@@ -176,79 +176,7 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "reserved attribute names",
-        cases: [
-          {
-            input: "[data-foo] { }",
-            expected: "[data-b] { }",
-            reserved: ["a"],
-          },
-          {
-            input: "[data-foo] { } [data-bar] { }",
-            expected: "[data-a] { } [data-d] { }",
-            reserved: ["b", "c"],
-          },
-          {
-            input: "[data-praise], [data-the], [data-sun] { }",
-            expected: "[data-c], [data-e], [data-f] { }",
-            reserved: ["a", "b", "d"],
-          },
-        ],
-      },
-      {
-        name: "prefixed mangling",
-        cases: [
-          {
-            input: "[data-foo] { }",
-            expected: "[a] { }",
-            prefix: "",
-            description: "prefix may be omitted",
-          },
-          {
-            input: "[data-foo] { }",
-            expected: "[foo-a] { }",
-            prefix: "foo-",
-            description: "prefix may be changed",
-          },
-        ],
-      },
-      {
-        name: "input attributes and mangled attributes intersect",
-        cases: [
-          {
-            input: "[data-a] { }",
-            pattern: "data-[a-z]",
-            expected: "[data-a] { }",
-          },
-          {
-            input: "[data-b][data-a] { }",
-            pattern: "data-[a-z]",
-            expected: "[data-a][data-b] { }",
-          },
-          {
-            input: "[data-a][data-c][data-b] { }",
-            pattern: "data-[a-z]",
-            expected: "[data-a][data-b][data-c] { }",
-          },
-          {
-            input: "[data-d][data-b][data-c][data-a] { }",
-            pattern: "data-[a-z]",
-            expected: "[data-a][data-b][data-c][data-d] { }",
-          },
-          {
-            input: "[data-d][data-a][data-b][data-c][data-b] { }",
-            pattern: "data-[a-z]",
-            expected: "[data-b][data-c][data-a][data-d][data-a] { }",
-          },
-          {
-            input: "[data-o][data-m][data-foo][data-n] { }",
-            pattern: "data-[a-z]",
-            expected: "[data-a][data-b][data-foo][data-c] { }",
-          },
-        ],
-      },
-      {
-        name: "corner cases",
+        name: "edge cases",
         cases: [
           {
             input: "[data-foo=\"]\"] { }",
@@ -392,43 +320,6 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "reserved attribute names",
-        cases: [
-          {
-            input: "<div data-foo=\"bar\"></div>",
-            expected: "<div data-b=\"bar\"></div>",
-            reserved: ["a"],
-          },
-          {
-            input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
-            expected: "<div data-a=\"bar\" data-d=\"foo\"></div>",
-            reserved: ["b", "c"],
-          },
-          {
-            input: "<div data-praise=\"do\" data-the=\"the\" data-sun=\"thing\"></div>",
-            expected: "<div data-c=\"do\" data-e=\"the\" data-f=\"thing\"></div>",
-            reserved: ["a", "b", "d"],
-          },
-        ],
-      },
-      {
-        name: "prefixed mangling",
-        cases: [
-          {
-            input: "<div data-foo=\"bar\"></div>",
-            expected: "<div a=\"bar\"></div>",
-            prefix: "",
-            description: "prefix may be omitted",
-          },
-          {
-            input: "<div data-bar=\"foobar\"></div>",
-            expected: "<div foo-a=\"foobar\"></div>",
-            prefix: "foo-",
-            description: "prefix may be changed",
-          },
-        ],
-      },
-      {
         name: "input attributes and mangled attributes intersect",
         cases: [
           {
@@ -464,7 +355,7 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "corner cases",
+        name: "edge cases",
         cases: [
           {
             input: "<div data-foo=\">\" data-bar=\"foo\"></div>",
@@ -548,7 +439,7 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "multiple attribute selectors",
         cases: [
-          ...SELECTOR_CONNECTORS.map((connector) => {
+          ...SELECTOR_COMBINATORS.map((connector) => {
             return {
               input: `"[data-foo]${connector}data[data-bar]"`,
               expected: `"[data-a]${connector}data[data-b]"`,
@@ -649,43 +540,6 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "reserved attribute names",
-        cases: [
-          {
-            input: "document.querySelectorAll(\"[data-foo]\");",
-            expected: "document.querySelectorAll(\"[data-b]\");",
-            reserved: ["a"],
-          },
-          {
-            input: "var s1 = \"[data-foo]\"; var s2 = \"[data-bar]\";",
-            expected: "var s1 = \"[data-a]\"; var s2 = \"[data-d]\";",
-            reserved: ["b", "c"],
-          },
-          {
-            input: "var s1 = \"[data-praise][data-the]\"; var s2 = \"[data-sun]\";",
-            expected: "var s1 = \"[data-c][data-e]\"; var s2 = \"[data-f]\";",
-            reserved: ["a", "b", "d"],
-          },
-        ],
-      },
-      {
-        name: "prefixed mangling",
-        cases: [
-          {
-            input: "document.querySelectorAll(\"[data-foo]\");",
-            expected: "document.querySelectorAll(\"[a]\");",
-            prefix: "",
-            description: "prefix may be omitted",
-          },
-          {
-            input: "document.querySelectorAll(\"[data-bar]\");",
-            expected: "document.querySelectorAll(\"[foo-a]\");",
-            prefix: "foo-",
-            description: "prefix may be changed",
-          },
-        ],
-      },
-      {
         name: "input attributes and mangled attributes intersect",
         cases: [
           {
@@ -721,7 +575,7 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "corner cases",
+        name: "edge cases",
         cases: [
           {
             input: "document.querySelectorAll(\".data-foo\");",

@@ -8,6 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix accidental mangling of class-like strings in CSS.
+- Fix accidental mangling of id-like strings in CSS.
+- Fix accidental mangling of values of HTML attributes with the suffix "class".
+- Fix accidental mangling of values of HTML attributes with the suffix "href".
+- Fix accidental mangling of values of HTML attributes with the suffix "style".
+- Fix cases where classes would not be mangled in JavaScript
 - Improve the performance of the built-in CSS class mangler.
 - Improve the performance of the built-in HTML attribute mangler.
 
