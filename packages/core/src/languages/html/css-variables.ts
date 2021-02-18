@@ -10,7 +10,7 @@ const expressions: ManglerExpression[] = [
   new SingleGroupManglerExpression(
     `
       (?<=
-        style\\s*=\\s*
+        \\sstyle\\s*=\\s*
         ("[^"]*|'[^']*)
         --
       )

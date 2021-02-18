@@ -4,7 +4,6 @@ import type { TestCase } from "./types";
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
-import { format as printf } from "util";
 
 import {
   ATTRIBUTE_SELECTOR_OPERATORS,
@@ -223,7 +222,7 @@ suite("HTML ID Mangler", function() {
         ],
       },
       {
-        name: "corner cases",
+        name: "edge cases",
         cases: [
           {
             input: "#id-foo",
@@ -620,7 +619,7 @@ suite("HTML ID Mangler", function() {
         ],
       },
       {
-        name: "corner cases",
+        name: "edge cases",
         cases: [
           {
             input: "<div id></div>",
@@ -979,57 +978,7 @@ suite("HTML ID Mangler", function() {
         ],
       },
       {
-        name: "reserved names",
-        cases: [
-          ...[
-            "document.querySelector(\"#%s\");",
-            "document.getElementById(\"%s\");",
-          ].map((input) => ({
-            input: printf(input, "id-foo"),
-            expected: printf(input, "b"),
-            reserved: ["a"],
-          })),
-          ...[
-            "document.querySelector(\"#%s\");",
-            "document.getElementById(\"%s\");",
-          ].map((input) => ({
-            input: printf(input, "id-foo"),
-            expected: printf(input, "d"),
-            reserved: ["a", "b", "c"],
-          })),
-          ...[
-            "document.querySelector(\"#%s #%s\");",
-            "document.getElementById(\"%s\");document.getElementById(\"%s\");",
-          ].map((input) => ({
-            input: printf(input, "id-foo", "id-bar"),
-            expected: printf(input, "a", "c"),
-            reserved: ["b"],
-          })),
-        ],
-      },
-      {
-        name: "prefixed mangling",
-        cases: [
-          ...[
-            "document.querySelector(\"#%s\");",
-            "document.getElementById(\"%s\");",
-          ].map((input) => ({
-            input: printf(input, "id-foo"),
-            expected: printf(input, "mangled-a"),
-            prefix: "mangled-",
-          })),
-          ...[
-            "document.querySelector(\"#%s #%s\");",
-            "document.getElementById(\"%s\");document.getElementById(\"%s\");",
-          ].map((input) => ({
-            input: printf(input, "id-foo", "id-bar"),
-            expected: printf(input, "id-a", "id-b"),
-            prefix: "id-",
-          })),
-        ],
-      },
-      {
-        name: "corner cases",
+        name: "edge cases",
         cases: [
           {
             input: "document.querySelector(\"#id-foo .id-foo\");",

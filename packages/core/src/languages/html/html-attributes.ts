@@ -10,17 +10,13 @@ const expressions: ManglerExpression[] = [
   //  `<div id="xxx" (data-foo)="bar"></div>`
   //  `<div (data-foo)="bar" id="yyy"></div>`
   //  `<div (data-foo)="bar" (data-bar)="foo"></div>`
-  new NestedGroupExpression(
+  ...["\"", "'"].map((quote) => new NestedGroupExpression(
     `
       (?<=\\<\\s*[a-zA-Z]+\\s+)
       (?<${GROUP_ATTRIBUTE}>
         (?:
-          [^>"']+
-          (?:
-            "[^"]*"
-            |
-            '[^']*'
-          )
+          [^>${quote}]+
+          ${quote}[^${quote}]*${quote}
           \\s
         )*
         %s
@@ -37,7 +33,7 @@ const expressions: ManglerExpression[] = [
       (?=\\=|\\s|$)
     `,
     GROUP_ATTRIBUTE,
-  ),
+  )),
 ];
 
 export default expressions;

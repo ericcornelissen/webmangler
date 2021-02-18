@@ -170,7 +170,7 @@ suite("CSS Classes Mangler", function() {
         ],
       },
       {
-        name: "non-class selectors that match the pattern(s)",
+        name: "non-class substrings that match the pattern(s)",
         cases: [
           {
             input: "div { } .div { }",
@@ -181,6 +181,19 @@ suite("CSS Classes Mangler", function() {
             input: "#cls-foo { } .cls-foo { }",
             expected: "#cls-foo { } .a { }",
           },
+          {
+            input: "div { content: \"cls-foo\" } .cls-foo { }",
+            expected: "div { content: \"cls-foo\" } .a { }",
+          },
+          ...["div { content: \".cls-foo\" }", "div[data-foo=\".cls-bar\"] { }"]
+            .map((testCase): TestCase => ({
+              input: testCase,
+              expected: testCase,
+            }))
+            .map((testCase) => varySpacing("\"", testCase))
+            .flat()
+            .map((testCase) => varyQuotes("css", testCase))
+            .flat(),
           ...ATTRIBUTE_SELECTORS
             .filter(isValidClassName)
             .map((s: string): TestCase => ({
@@ -205,7 +218,7 @@ suite("CSS Classes Mangler", function() {
         ],
       },
       {
-        name: "corner cases",
+        name: "edge cases",
         cases: [
           {
             input: ".cls-foo",
@@ -217,19 +230,6 @@ suite("CSS Classes Mangler", function() {
             expected: "div{}.a{}",
             description: "no space between closing `}` and class `.` should not matter",
           },
-          {
-            input: "div { content: \"cls-foo\" } .cls-foo { }",
-            expected: "div { content: \"cls-foo\" } .a { }",
-          },
-          ...["div { content: \".cls-foo\" }", "div[data-foo=\".cls-bar\"] { }"]
-            .map((testCase): TestCase => ({
-              input: testCase,
-              expected: testCase,
-            }))
-            .map((testCase) => varySpacing("\"", testCase))
-            .flat()
-            .map((testCase) => varyQuotes("css", testCase))
-            .flat(),
         ],
       },
     ];
@@ -481,22 +481,6 @@ suite("CSS Classes Mangler", function() {
               <div></div>
             `,
           },
-          {
-            input: `
-              <div class="cls-praise"></div>
-              <div></div>
-              <div class="cls-the"></div>
-              <div></div>
-              <div class="cls-sun"></div>
-            `,
-            expected: `
-              <div class="a"></div>
-              <div></div>
-              <div class="b"></div>
-              <div></div>
-              <div class="c"></div>
-            `,
-          },
         ],
       },
       {
@@ -634,7 +618,7 @@ suite("CSS Classes Mangler", function() {
         ],
       },
       {
-        name: "corner cases",
+        name: "edge cases",
         cases: [
           {
             input: "<div class></div>",
@@ -647,12 +631,12 @@ suite("CSS Classes Mangler", function() {
           {
             input: "<p>cls-foo</p>",
             expected: "<p>cls-foo</p>",
-            description: "Anything inside tags matching the pattern should be ignored.",
+            description: "anything inside tags matching the pattern should be ignored",
           },
           {
             input: "<p>.cls-foo</p>",
             expected: "<p>.cls-foo</p>",
-            description: "Anything inside tags matching the pattern should be ignored.",
+            description: "anything inside tags matching the pattern should be ignored",
           },
           {
             input: "<div class=\"cls-foo\" class=\"cls-bar\"></div>",
@@ -673,7 +657,7 @@ suite("CSS Classes Mangler", function() {
           {
             input: "<class id=\"foo\"></class>",
             expected: "<class id=\"foo\"></class>",
-            description: "The tag \"class\" shouldn't cause problems.",
+            description: "The tag \"class\" shouldn't cause problems",
           },
         ],
       },
@@ -889,7 +873,7 @@ suite("CSS Classes Mangler", function() {
         ],
       },
       {
-        name: "corner cases",
+        name: "edge cases",
         cases: [
           ...varyQuotes("js", {
             input: "var cls_foo = \"cls-foo\";",
