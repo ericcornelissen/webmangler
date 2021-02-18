@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.11] - 2021-02-18
+
 - Improve performance of all built-in manglers.
 
 ## [0.1.10] - 2021-02-14
