@@ -1,9 +1,7 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
-import { expect, use as chaiUse } from "chai";
-import * as sinon from "sinon";
-import * as sinonChai from "sinon-chai";
+import { expect } from "chai";
 
 import {
   PSEUDO_ELEMENT_SELECTORS,
@@ -17,7 +15,6 @@ import {
   varySpacing,
 } from "./test-helpers";
 
-import EngineMock from "../../__mocks__/engine.mock";
 import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
 
 import mangleEngine from "../../engine";
@@ -25,8 +22,6 @@ import BuiltInLanguageSupport from "../../languages/builtin";
 import HtmlAttributeMangler from "../html-attributes";
 
 const builtInLanguageSupport = new BuiltInLanguageSupport();
-
-chaiUse(sinonChai);
 
 suite("HTML Attribute Mangler", function() {
   const DEFAULT_PATTERN = "data-[a-z-]+";
@@ -740,28 +735,5 @@ suite("HTML Attribute Mangler", function() {
         expect(out.content).not.to.have.string(illegalName);
       }
     });
-  });
-
-  test("deprecated mangle function", function() {
-    const files = [new WebManglerFileMock("css", "[data-foobar] { }")];
-    const patterns = ["foo[a-z]+"];
-    const reserved = ["a"];
-    const prefix = "foobar";
-
-    const htmlAttributeMangler = new HtmlAttributeMangler({
-      attrNamePattern: patterns,
-      reservedAttrNames: reserved,
-      keepAttrPrefix: prefix,
-    });
-    htmlAttributeMangler.use(builtInLanguageSupport);
-    htmlAttributeMangler.mangle(EngineMock, files);
-    expect(EngineMock).to.have.been.calledWith(
-      files,
-      htmlAttributeMangler.expressions,
-      patterns,
-      sinon.match.has("charSet", HtmlAttributeMangler.CHARACTER_SET)
-        .and(sinon.match.has("reservedNames", HtmlAttributeMangler.ALWAYS_RESERVED.concat(reserved)))
-        .and(sinon.match.has("manglePrefix", prefix)),
-    );
   });
 });

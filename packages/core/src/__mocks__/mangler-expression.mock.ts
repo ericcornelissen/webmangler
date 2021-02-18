@@ -23,17 +23,17 @@ export default class ManglerExpressionMock {
     }
   }
 
-  public replace(s: string, pattern: string, to: string): string {
-    const regExp = this.newRegExp(pattern);
-    return s.replace(regExp, printf(this.replaceTemplate, to));
-  }
-
   public replaceAll(s: string, replacements: Map<string, string>): string {
     replacements.forEach((to, from) => {
       s = this.replace(s, from, to);
     });
 
     return s;
+  }
+
+  private replace(s: string, pattern: string, to: string): string {
+    const regExp = this.newRegExp(pattern);
+    return s.replace(regExp, printf(this.replaceTemplate, to));
   }
 
   private newRegExp(pattern: string): RegExp {

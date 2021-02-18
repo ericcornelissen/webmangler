@@ -225,9 +225,4 @@ suite("NestedGroupExpression", function() {
       });
     }
   });
-
-  test("deprecated replace method", function() {
-    const subject = new NestedGroupExpression("(?<g>%s)", "(?<g>%s)", "g");
-    expect(subject.replace).to.throw();
-  });
 });

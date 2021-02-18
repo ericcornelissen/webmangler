@@ -1,9 +1,5 @@
 import type { CharSet } from "../../characters";
-import type {
-  MangleEngine,
-  MangleEngineOptions,
-  WebManglerFile,
-} from "../../types";
+import type { MangleEngineOptions } from "../../types";
 
 import BaseManglerPlugin from "./base-mangler.class";
 
@@ -103,29 +99,5 @@ export default abstract class SimpleManglerPlugin extends BaseManglerPlugin {
       reservedNames: this.reserved,
       manglePrefix: this.prefix,
     };
-  }
-
-  /**
-   * Mangle the `files` with the configured character set, pattern, reserved
-   * values, and prefix.
-   *
-   * @inheritDoc
-   * @since v0.1.0
-   * @deprecated
-   */
-  mangle<File extends WebManglerFile>(
-    mangleEngine: MangleEngine<File>,
-    files: File[],
-  ): File[] {
-    return mangleEngine(
-      files,
-      this.expressions,
-      this.patterns,
-      {
-        charSet: this.charSet,
-        reservedNames: this.reserved,
-        manglePrefix: this.prefix,
-      },
-    );
   }
 }

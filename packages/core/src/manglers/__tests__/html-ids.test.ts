@@ -1,9 +1,7 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
-import { expect, use as chaiUse } from "chai";
-import * as sinon from "sinon";
-import * as sinonChai from "sinon-chai";
+import { expect } from "chai";
 
 import {
   ATTRIBUTE_SELECTOR_OPERATORS,
@@ -15,7 +13,6 @@ import {
 import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import { isValidIdName, varyQuotes, varySpacing } from "./test-helpers";
 
-import EngineMock from "../../__mocks__/engine.mock";
 import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
 
 import mangleEngine from "../../engine";
@@ -51,8 +48,6 @@ const SELECTOR_PAIRS: [string, string, string, string][] = [
   ["#id-foo", "#id-bar", "#a", "#b"],
   ["#id-foo", "#id-foo", "#a", "#a"],
 ];
-
-chaiUse(sinonChai);
 
 suite("HTML ID Mangler", function() {
   suite("CSS", function() {
@@ -1087,28 +1082,5 @@ suite("HTML ID Mangler", function() {
       const result = cssClassMangler.config();
       expect(result).to.deep.include({ manglePrefix: prefix });
     });
-  });
-
-  test("deprecated mangle function", function() {
-    const files = [new WebManglerFileMock("css", "#foobar { }")];
-    const patterns = ["foo[a-z]+"];
-    const reserved = ["a"];
-    const prefix = "foobar";
-
-    const htmlIdMangler = new HtmlIdMangler({
-      idNamePattern: patterns,
-      reservedIds: reserved,
-      keepIdPrefix: prefix,
-    });
-    htmlIdMangler.use(builtInLanguageSupport);
-    htmlIdMangler.mangle(EngineMock, files);
-    expect(EngineMock).to.have.been.calledWith(
-      files,
-      htmlIdMangler.expressions,
-      patterns,
-      sinon.match.has("charSet", HtmlIdMangler.CHARACTER_SET)
-        .and(sinon.match.has("reservedNames", reserved))
-        .and(sinon.match.has("manglePrefix", prefix)),
-    );
   });
 });

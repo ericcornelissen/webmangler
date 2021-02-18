@@ -176,15 +176,7 @@ function doMangle<File extends WebManglerFile>(
   files.forEach((file) => {
     const fileExpressions = expressions.get(file.type) as ManglerExpression[];
     fileExpressions.forEach((expression) => {
-      if (expression.replaceAll === undefined) {
-        mangleMap.forEach((to, from) => {
-          fileExpressions.forEach((expression) => {
-            file.content = expression.replace(file.content, from, to);
-          });
-        });
-      } else {
-        file.content = expression.replaceAll(file.content, mangleMap);
-      }
+      file.content = expression.replaceAll(file.content, mangleMap);
     });
   });
 

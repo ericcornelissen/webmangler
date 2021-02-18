@@ -6,8 +6,6 @@ import * as sinonChai from "sinon-chai";
 
 import {  permuteObjects } from "./test-helpers";
 
-import EngineMock from "../../__mocks__/engine.mock";
-import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
 import CssClassManglerMock from "../__mocks__/css-classes.mock";
 import CssVarManglerMock from "../__mocks__/css-variables.mock";
 import HtmlAttrManglerMock from "../__mocks__/html-attributes.mock";
@@ -403,27 +401,6 @@ suite("Built-in Manglers", function() {
 
   test("no configuration", function() {
     expect(new BuiltInManglers).not.to.throw;
-  });
-
-  test("deprecated mangle function", function() {
-    CssClassManglerMock.mangle.resetHistory();
-    CssVarManglerMock.mangle.resetHistory();
-    HtmlAttrManglerMock.mangle.resetHistory();
-    HtmlIdManglerMock.mangle.resetHistory();
-
-    const files = [new WebManglerFileMock("css", ".foobar { }")];
-    const manglers = new BuiltInManglers();
-    manglers.mangle(EngineMock, files);
-    expect(CssClassManglerMock.mangle).to.have.callCount(1);
-    expect(CssVarManglerMock.mangle).to.have.callCount(1);
-    expect(HtmlAttrManglerMock.mangle).to.have.callCount(1);
-    expect(HtmlIdManglerMock.mangle).to.have.callCount(1);
-
-    manglers.mangle(EngineMock, []);
-    expect(CssClassManglerMock.mangle).to.have.callCount(2);
-    expect(CssVarManglerMock.mangle).to.have.callCount(2);
-    expect(HtmlAttrManglerMock.mangle).to.have.callCount(2);
-    expect(HtmlIdManglerMock.mangle).to.have.callCount(2);
   });
 
   suiteTeardown(function() {

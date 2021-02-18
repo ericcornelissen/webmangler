@@ -62,18 +62,6 @@ export default class SingleGroupManglerExpression implements ManglerExpression {
   }
 
   /**
-   * NOTE: not implemented as this function is deprecated.
-   *
-   * @inheritdoc
-   * @throws Always.
-   * @since v0.1.11
-   * @deprecated
-   */
-  public replace(): string {
-    throw new Error("Not implemented");
-  }
-
-  /**
    * @inheritdoc
    * @since v0.1.11
    */

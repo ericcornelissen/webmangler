@@ -1,9 +1,7 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
-import { expect, use as chaiUse } from "chai";
-import * as sinon from "sinon";
-import * as sinonChai from "sinon-chai";
+import { expect } from "chai";
 
 import {
   ATTRIBUTE_SELECTORS,
@@ -19,7 +17,6 @@ import {
   varySpacing,
 } from "./test-helpers";
 
-import EngineMock from "../../__mocks__/engine.mock";
 import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
 
 import BuiltInLanguageSupport from "../../languages/builtin";
@@ -55,8 +52,6 @@ const SELECTOR_PAIRS: [string, string, string, string][] = [
   [".cls-foo", ".cls-bar", ".a", ".b"],
   [".cls-foo", ".cls-foo", ".a", ".a"],
 ];
-
-chaiUse(sinonChai);
 
 suite("CSS Classes Mangler", function() {
   suite("CSS", function() {
@@ -1033,28 +1028,5 @@ suite("CSS Classes Mangler", function() {
         expect(out.content).not.to.have.string(illegalName);
       }
     });
-  });
-
-  test("deprecated mangle function", function() {
-    const files = [new WebManglerFileMock("css", ".foobar { }")];
-    const patterns = ["foo[a-z]+"];
-    const reserved = ["a"];
-    const prefix = "foobar";
-
-    const cssClassMangler = new CssClassMangler({
-      classNamePattern: patterns,
-      reservedClassNames: reserved,
-      keepClassNamePrefix: prefix,
-    });
-    cssClassMangler.use(builtInLanguageSupport);
-    cssClassMangler.mangle(EngineMock, files);
-    expect(EngineMock).to.have.been.calledWith(
-      files,
-      cssClassMangler.expressions,
-      patterns,
-      sinon.match.has("charSet", CssClassMangler.CHARACTER_SET)
-        .and(sinon.match.has("reservedNames", CssClassMangler.ALWAYS_RESERVED.concat(reserved)))
-        .and(sinon.match.has("manglePrefix", prefix)),
-    );
   });
 });

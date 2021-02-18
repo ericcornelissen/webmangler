@@ -19,18 +19,6 @@ interface ManglerExpression {
   exec(s: string, pattern: string): Iterable<string>;
 
   /**
-   * Replace patterns in a string by other strings.
-   *
-   * @param s The string to replace in.
-   * @param original The string/pattern to replace.
-   * @param replacement The string/pattern to replace `original` by.
-   * @returns The string with the patterns replaced.
-   * @since v0.1.0
-   * @deprecated
-   */
-  replace(s: string, original: string, replacement: string): string;
-
-  /**
    * Replace multiple substrings in a string by other substrings.
    *
    * @param s The string to replace in.
@@ -125,23 +113,6 @@ interface WebManglerPlugin {
   config(): MangleEngineOptions | MangleEngineOptions[];
 
   /**
-   * Mangle a set of `files` with this {@link WebManglerPlugin}.
-   *
-   * It is recommended for the plugin to use the `mangleEngine` to do the
-   * mangling.
-   *
-   * @param mangleEngine The _WebMangler_ core mangling engine.
-   * @param files The files to be mangled.
-   * @returns The mangled files.
-   * @since v0.1.0
-   * @deprecated
-   */
-  mangle<File extends WebManglerFile>(
-    mangleEngine: MangleEngine<File>,
-    files: File[],
-  ): File[];
-
-  /**
    * Instruct the {@link WebManglerPlugin} to use the {@link ManglerExpression}s
    * specified by a {@link WebManglerLanguagePlugin}.
    *
@@ -183,54 +154,6 @@ interface WebManglerLanguagePlugin {
    */
   getLanguages(): string[];
 }
-
-/**
- * Type defining a {@link MangleEngine}, which is a function that performs the
- * search-and-replace part of mangling.
- *
- * NOTE: a {@link MangleEngine} may return fewer files that it was provided
- * with.
- *
- * @param files The files that should be mangled.
- * @param expressions The {@link ManglerExpression}s to find strings to mangle.
- * @param patterns The patterns of string to be mangled.
- * @param options The configuration for mangling.
- * @returns The mangled files.
- * @since v0.1.0
- * @deprecated
- */
-type MangleEngine<File extends WebManglerFile> = (
-  files: File[],
-  expressions: Map<string, ManglerExpression[]>,
-  patterns: string | string[],
-  options: {
-    /**
-     * The character set for mangled strings.
-     *
-     * @default {@link NameGenerator.DEFAULT_CHARSET}
-     * @since v0.1.7
-     */
-    readonly charSet?: CharSet;
-
-    /**
-     * The prefix to use for mangled strings.
-     *
-     * @default `""`
-     * @since v0.1.0
-     */
-    manglePrefix?: string;
-
-    /**
-     * A list of names and patterns not to be used as mangled string.
-     *
-     * Patterns are supported since v0.1.7.
-     *
-     * @default `[]`
-     * @since v0.1.0
-     */
-    reservedNames?: string[];
-  },
-) => File[];
 
 /**
  * A set of generic options used by the {@link MangleEngine} for mangling.
@@ -281,7 +204,6 @@ type MangleEngineOptions = {
 }
 
 export type {
-  MangleEngine,
   MangleEngineOptions,
   ManglerExpression,
   ManglerExpressions,

@@ -204,9 +204,4 @@ suite("SingleGroupManglerExpression", function() {
       });
     }
   });
-
-  test("deprecated replace method", function() {
-    const subject = new SingleGroupManglerExpression("(?<g>%s)", "g");
-    expect(subject.replace).to.throw();
-  });
 });

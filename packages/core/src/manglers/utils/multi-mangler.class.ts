@@ -1,7 +1,5 @@
 import type {
-  MangleEngine,
   MangleEngineOptions,
-  WebManglerFile,
   WebManglerPlugin,
   WebManglerLanguagePlugin,
 } from "../../types";
@@ -56,23 +54,5 @@ export default abstract class MultiMangler implements WebManglerPlugin {
     this.plugins.forEach((plugin: WebManglerPlugin) => {
       plugin.use(languagePlugin);
     });
-  }
-
-  /**
-   * Mangles the files using every provided mangler (in order).
-   *
-   * @inheritDoc
-   * @since v0.1.0
-   * @deprecated
-   */
-  mangle<File extends WebManglerFile>(
-    mangleEngine: MangleEngine<File>,
-    files: File[],
-  ): File[] {
-    this.plugins.forEach((plugin: WebManglerPlugin) => {
-      files = plugin.mangle(mangleEngine, files);
-    });
-
-    return files;
   }
 }
