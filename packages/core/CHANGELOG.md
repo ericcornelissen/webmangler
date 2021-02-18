@@ -8,11 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Improve the performance of the built-in CSS class mangler.
+- Improve the performance of the built-in HTML attribute mangler.
 
 ## [0.1.11] - 2021-02-18
 
-- Improve performance of all built-in manglers.
+- Improve the performance of the built-in ID mangler.
 
 ## [0.1.10] - 2021-02-14
 
