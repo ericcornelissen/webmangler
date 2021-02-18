@@ -2,12 +2,13 @@ import type { TestScenario } from "@webmangler/testing";
 
 import { expect } from "chai";
 
-import SingleGroupManglerExpression from "../single-group.class";
+import NestedGroupExpression from "../nested-group.class";
 
-suite("SingleGroupManglerExpression", function() {
+suite("NestedGroupExpression", function() {
   suite("::exec", function() {
     type TestCase = {
       patternTemplate: string;
+      subPatternTemplate: string;
       group: string;
       pattern: string;
       s: string;
@@ -19,25 +20,28 @@ suite("SingleGroupManglerExpression", function() {
         name: "sample",
         cases: [
           {
-            patternTemplate: "(?<g>%s)",
-            group: "g",
-            pattern: "\\-[a-z]+",
-            s: "foo-bar",
-            expected: ["-bar"],
-          },
-          {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
             pattern: "[a-z]+",
-            s: "foo-bar",
-            expected: ["bar"],
+            s: "var pw = 'correct horse battery staple';",
+            expected: ["horse", "battery"],
           },
           {
-            patternTemplate: "(?<g>%s)(?=\\-)",
+            patternTemplate: "(?<=class=\")(?<g>[^\"]*%s[^\"]*)(?=\")",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s)",
             group: "g",
-            pattern: "[a-z]+",
-            s: "foo-bar",
-            expected: ["foo"],
+            pattern: "cls-[a-z]+",
+            s: "<img class=\"cls-foo cls-bar\">",
+            expected: ["cls-foo", "cls-bar"],
+          },
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            pattern: "data-[a-z]+",
+            s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
+            expected: ["data-foo", "data-bar"],
           },
         ],
       },
@@ -45,14 +49,16 @@ suite("SingleGroupManglerExpression", function() {
         name: "corner cases",
         cases: [
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
             pattern: "[a-z]+",
             s: "",
             expected: [],
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
             pattern: "[a-z]+",
             s: "var m = new Map();",
@@ -67,14 +73,16 @@ suite("SingleGroupManglerExpression", function() {
         for (const testCase of cases) {
           const {
             patternTemplate,
+            subPatternTemplate,
             group,
             pattern,
             s,
             expected,
           } = testCase;
 
-          const subject = new SingleGroupManglerExpression(
+          const subject = new NestedGroupExpression(
             patternTemplate,
+            subPatternTemplate,
             group,
           );
 
@@ -93,6 +101,7 @@ suite("SingleGroupManglerExpression", function() {
   suite("::replaceAll", function() {
     type TestCase = {
       patternTemplate: string;
+      subPatternTemplate: string;
       group: string;
       replacements: Map<string, string>;
       s: string;
@@ -104,33 +113,39 @@ suite("SingleGroupManglerExpression", function() {
         name: "sample",
         cases: [
           {
-            patternTemplate: "(?<g>%s)",
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
             replacements: new Map([
-              ["bar", "baz"],
+              ["horse", "zebra"],
+              ["battery", "cell"],
             ]),
-            s: "foo-bar",
-            expected: "foo-baz",
+            s: "var pw = 'correct horse battery staple';",
+            expected: "var pw = 'correct zebra cell staple';",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
+            patternTemplate: "(?<=class=\")(?<g>[^\"]*%s[^\"]*)(?=\")",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s)",
             group: "g",
             replacements: new Map([
-              ["foo", "oof"],
-              ["bar", "baz"],
+              ["cls-foo", "a"],
+              ["cls-foobar", "b"],
+              ["cls-bar", "c"],
             ]),
-            s: "foo-bar",
-            expected: "foo-baz",
+            s: "<img class=\"cls-foo cls-bar\">",
+            expected: "<img class=\"a c\">",
           },
           {
-            patternTemplate: "(?<g>%s)(?=\\!)",
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
             group: "g",
             replacements: new Map([
-              ["world", "mundo"],
-              ["planet", "planeta"],
+              ["data-foo", "data-a"],
+              ["data-bar", "data-b"],
+              ["data-foobar", "data-c"],
             ]),
-            s: "Hello world! Hey planet!",
-            expected: "Hello mundo! Hey planeta!",
+            s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
+            expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
           },
         ],
       },
@@ -138,21 +153,24 @@ suite("SingleGroupManglerExpression", function() {
         name: "corner cases",
         cases: [
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
             replacements: new Map(),
             s: "",
             expected: "",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
             replacements: new Map(),
-            s: "foo-bar",
-            expected: "foo-bar",
+            s: "var pw = 'correct horse battery staple';",
+            expected: "var pw = 'correct horse battery staple';",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
             replacements: new Map([
               ["foo", "bar"],
@@ -161,7 +179,8 @@ suite("SingleGroupManglerExpression", function() {
             expected: "",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
             replacements: new Map([
               ["foo", "bar"],
@@ -170,7 +189,8 @@ suite("SingleGroupManglerExpression", function() {
             expected: "",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
             replacements: new Map([
               ["foo", "bar"],
@@ -187,17 +207,18 @@ suite("SingleGroupManglerExpression", function() {
         for (const testCase of cases) {
           const {
             patternTemplate,
+            subPatternTemplate,
             group,
             replacements,
             s,
             expected,
           } = testCase;
 
-          const subject = new SingleGroupManglerExpression(
+          const subject = new NestedGroupExpression(
             patternTemplate,
+            subPatternTemplate,
             group,
           );
-
           const result = subject.replaceAll(s, replacements);
           expect(result).to.equal(expected);
         }
@@ -206,7 +227,7 @@ suite("SingleGroupManglerExpression", function() {
   });
 
   test("deprecated replace method", function() {
-    const subject = new SingleGroupManglerExpression("(?<g>%s)", "g");
+    const subject = new NestedGroupExpression("(?<g>%s)", "(?<g>%s)", "g");
     expect(subject.replace).to.throw();
   });
 });

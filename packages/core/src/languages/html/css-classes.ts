@@ -10,9 +10,9 @@ const pattern: ManglerExpression[] = [
     `
       (?<=class\\s*=\\s*${quote})
       (?<${GROUP_NAME_MAIN}>
-        ([^${quote}]+\\s)?
-        (?:%s)
-        (\\s[^${quote}]+)?
+        (?:[^${quote}]+\\s)?
+        %s
+        (?:\\s[^${quote}]+)?
       )
       (?=${quote})
     `,

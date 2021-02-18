@@ -29,16 +29,16 @@ export default class NestedGroupExpression implements ManglerExpression {
    * substrings in the target string that can be processed by the
    * `subPatternTemplate`.
    */
-  private readonly superPatternTemplate: string;
+  private readonly patternTemplate: string;
 
   /**
    * The sub template string to use as (generic) pattern against substrings
-   * produced by `superPatternTemplate`.
+   * produced by `patternTemplate`.
    */
   private readonly subPatternTemplate: string;
 
   /**
-   * The name of the group in `superPatternTemplate` and `subPatternTemplate` to
+   * The name of the group in `patternTemplate` and `subPatternTemplate` to
    * match and replace.
    */
   private readonly groupName: string;
@@ -48,17 +48,17 @@ export default class NestedGroupExpression implements ManglerExpression {
    * NOTE 1: whitespace is automatically removed from both templates.
    * NOTE 2: the class assumes the provided group is present in both templates.
    *
-   * @param superPatternTemplate The top-level template.
+   * @param patternTemplate The top-level template.
    * @param subPatternTemplate The sub template.
    * @param groupName The name of a group in both pattern templates.
    * @since v0.1.12
    */
   constructor(
-    superPatternTemplate: string,
+    patternTemplate: string,
     subPatternTemplate: string,
     groupName: string,
   ) {
-    this.superPatternTemplate = superPatternTemplate.replace(/\s/g, "");
+    this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.subPatternTemplate = subPatternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
   }
@@ -68,7 +68,7 @@ export default class NestedGroupExpression implements ManglerExpression {
    * @since v0.1.12
    */
   public * exec(s: string, pattern: string): IterableIterator<string> {
-    const regExp = this.newRegExp(this.superPatternTemplate, pattern);
+    const regExp = this.newRegExp(this.patternTemplate, pattern);
     let match: RegExpExecArray | null = null;
     while ((match = regExp.exec(s)) !== null) {
       const groups = match.groups as RegExpMatchGroups;
@@ -108,7 +108,7 @@ export default class NestedGroupExpression implements ManglerExpression {
     }
 
     const pattern = Array.from(replacements.keys()).join("|");
-    const regExp = this.newRegExp(this.superPatternTemplate, pattern);
+    const regExp = this.newRegExp(this.patternTemplate, pattern);
     const regExpSub = this.newRegExp(this.subPatternTemplate, pattern);
     return s.replace(regExp, (...args: unknown[]): string => {
       const groups = args[args.length - 1] as RegExpMatchGroups;
@@ -132,7 +132,7 @@ export default class NestedGroupExpression implements ManglerExpression {
    * @returns A {@link RegExp} corresponding to the `template` and `pattern`.
    */
   private newRegExp(template: string, pattern: string): RegExp {
-    const rawExpr = printf(template, pattern);
+    const rawExpr = printf(template, `(?:${pattern})`);
     return new RegExp(rawExpr, "gm");
   }
 }

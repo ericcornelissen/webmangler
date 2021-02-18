@@ -23,7 +23,7 @@ const expressions: ManglerExpression[] = [
           )
           \\s
         )*
-        (?:%s)
+        %s
         (?:
           (?:\\=|\\s)
           [^>]*
@@ -38,23 +38,6 @@ const expressions: ManglerExpression[] = [
     `,
     GROUP_ATTRIBUTE,
   ),
-
-  // new SingleGroupManglerExpression(
-  //   `
-  //     (?<=
-  //       \\<\\s*[a-zA-Z]+\\s+
-  //       (?:
-  //         (?:
-  //           [^>"']+
-  //           (?:\\=\\s*(?:"[^"]*"|'[^']*'))?
-  //         )\\s+
-  //       )*
-  //     )
-  //     (?<${GROUP_ATTRIBUTE}>%s)
-  //     (?=${SELECTOR_REQUIRED_AFTER})
-  //   `,
-  //   GROUP_ATTRIBUTE,
-  // ),
 ];
 
 export default expressions;
