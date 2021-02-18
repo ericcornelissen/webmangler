@@ -4,6 +4,7 @@
     ":semanticCommits",
     "group:all"
   ],
+  "ignoreDeps": ["webmangler"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
