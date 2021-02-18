@@ -141,6 +141,7 @@ module.exports = {
           code: 120,
         }],
 
+        "mocha/no-exclusive-tests": ["error"],
         "mocha/valid-suite-description": ["error", "^[A-Z:]"],
         "mocha/valid-test-description": ["error", "^[a-z0-9]"],
 

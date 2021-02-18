@@ -323,7 +323,7 @@ suite("HTML Attribute Mangler", function() {
     }
   });
 
-  suite.only("HTML", function() {
+  suite("HTML", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "single attribute",
