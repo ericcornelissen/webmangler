@@ -73,7 +73,7 @@ module.exports = {
     "jsdoc/require-returns-type": "off", // Redundant in TypeScript
     "jsdoc/newline-after-description": "error",
     "jsdoc/match-description": ["error", {
-      matchDescription: "^[A-Z].*\\.$",
+      matchDescription: "^([A-Z]|[`\\d_])[\\s\\S]*\\.$",
       tags: {
         param: true,
         returns: "^[A-Z`].*\\.$",
