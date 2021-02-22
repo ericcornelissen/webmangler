@@ -44,6 +44,8 @@ export default class NestedGroupExpression implements ManglerExpression {
   private readonly groupName: string;
 
   /**
+   * Create an expression from a top-level pattern an sub pattern with a single
+   * named group to match and replace.
    *
    * NOTE 1: whitespace is automatically removed from both templates.
    * NOTE 2: the class assumes the provided group is present in both templates.
