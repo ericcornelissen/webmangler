@@ -206,14 +206,12 @@ function getSupportedFilesOnly<File extends WebManglerFile>(
  * @returns All {@link MangleEngineOptions} values.
  */
 function parseOptions(options: MangleEngineOptions): {
-  expressions: Map<string, ManglerExpression[]>,
   patterns: string[],
   charSet: CharSet,
   manglePrefix: string,
   reservedNames: string[],
 } {
   return {
-    expressions: options.expressions,
     patterns: toArrayIfNeeded(options.patterns),
     charSet: options.charSet || NameGenerator.DEFAULT_CHARSET,
     manglePrefix: options.manglePrefix || DEFAULT_MANGLE_PREFIX,
@@ -235,17 +233,18 @@ function parseOptions(options: MangleEngineOptions): {
  * list may be shorter than the inputted list.
  *
  * @param files The files to mangle.
+ * @param expressions The {@link ManglerExpression}s to mangle based on.
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.11
+ * @version v0.1.13
  */
 export default function mangle<File extends WebManglerFile>(
   files: File[],
+  expressions: Map<string, ManglerExpression[]>,
   options: MangleEngineOptions,
 ): File[] {
   const {
-    expressions,
     patterns,
     manglePrefix,
     reservedNames,

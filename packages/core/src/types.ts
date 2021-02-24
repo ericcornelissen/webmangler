@@ -34,6 +34,7 @@ interface ManglerExpression {
  * language.
  *
  * @since v0.1.0
+ * @deprecated
  */
 interface ManglerExpressions {
   /**
@@ -118,6 +119,7 @@ interface WebManglerPlugin {
    *
    * @param languagePlugin The {@link WebManglerLanguagePlugin} to be used.
    * @since v0.1.0
+   * @deprecated
    */
   use(languagePlugin: WebManglerLanguagePlugin): void;
 }
@@ -126,7 +128,7 @@ interface WebManglerPlugin {
  * The interface that every language plugin for _WebMangler_ must implement.
  *
  * @since v0.1.0
- * @version v0.1.9
+ * @version v0.1.13
  */
 interface WebManglerLanguagePlugin {
   /**
@@ -142,8 +144,19 @@ interface WebManglerLanguagePlugin {
    * @param pluginId The identifier of the {@link WebManglerPlugin}.
    * @returns The {@link ManglerExpression}s for the plugin for the language(s).
    * @since v0.1.0
+   * @deprecated
    */
   getExpressionsFor(pluginId: string): ManglerExpressions[];
+
+  /**
+   * Get {@link ManglerExpression}s for a {@link WebManglerPlugin}.
+   *
+   * In the returned map, the key is a language identifier and the value are the
+   * {@link ManglerExpression}s.
+   *
+   * @since v0.1.13
+   */
+  getExpressions(pluginId: string): Map<string, ManglerExpression[]>;
 
   /**
    * Get a list of the languages supported by the {@link
@@ -159,15 +172,23 @@ interface WebManglerLanguagePlugin {
  * A set of generic options used by the {@link MangleEngine} for mangling.
  *
  * @since v0.1.0
- * @version v0.1.11
+ * @version v0.1.13
  */
 type MangleEngineOptions = {
+  /**
+   * The {@link WebManglerPlugin} identifier.
+   *
+   * @since v0.1.13
+   */
+  readonly id: string;
+
   /**
    *The {@link ManglerExpression}s to find strings to mangle.
    *
    * @since v0.1.11
+   * @deprecated
    */
-  readonly expressions: Map<string, ManglerExpression[]>;
+  readonly expressions?: Map<string, ManglerExpression[]>;
 
   /**
    * The pattern(s) to be mangled.
@@ -189,6 +210,7 @@ type MangleEngineOptions = {
    *
    * @default `""`
    * @since v0.1.0
+   * @deprecated Will be changed to `readonly`.
    */
   manglePrefix?: string;
 
@@ -199,6 +221,7 @@ type MangleEngineOptions = {
    *
    * @default `[]`
    * @since v0.1.0
+   * @deprecated Will be changed to `readonly`.
    */
   reservedNames?: string[];
 }

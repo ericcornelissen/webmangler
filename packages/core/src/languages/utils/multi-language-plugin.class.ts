@@ -1,4 +1,8 @@
-import type { ManglerExpressions, WebManglerLanguagePlugin } from "../../types";
+import type {
+  ManglerExpression,
+  ManglerExpressions,
+  WebManglerLanguagePlugin,
+} from "../../types";
 
 /**
  * The {@link MultiLanguagePlugin} class is a utility to create a {@link
@@ -8,6 +12,7 @@ import type { ManglerExpressions, WebManglerLanguagePlugin } from "../../types";
  * BuiltInLanguagesPlugin}.
  *
  * @since v0.1.0
+ * @version v0.1.13
  */
 export default abstract class MultiLanguagePlugin
     implements WebManglerLanguagePlugin {
@@ -32,6 +37,7 @@ export default abstract class MultiLanguagePlugin
    * {@link MultiLanguagePlugin}.
    *
    * @inheritDoc
+   * @deprecated
    */
   getExpressionsFor(manglerId: string): ManglerExpressions[] {
     const result: ManglerExpressions[] = [];
@@ -41,6 +47,20 @@ export default abstract class MultiLanguagePlugin
 
     return result;
   }
+
+  /**
+   * @inheritDoc
+   */
+  getExpressions(manglerId: string): Map<string, ManglerExpression[]> {
+    const result: Map<string, ManglerExpression[]> = new Map();
+    this.plugins.forEach((plugin) => {
+      const pluginExpressions = plugin.getExpressions(manglerId);
+      pluginExpressions.forEach((value, key) => result.set(key, value));
+    });
+
+    return result;
+  }
+
 
   /**
    * Will return all the languages supported by every plugin in the {@link

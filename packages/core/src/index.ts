@@ -1,7 +1,32 @@
-import type { WebManglerFile, WebManglerOptions } from "./types";
+import type {
+  ManglerExpression,
+  WebManglerFile,
+  WebManglerOptions,
+  WebManglerLanguagePlugin,
+} from "./types";
 
 import manglerEngine from "./engine";
-import { toArrayIfNeeded } from "./helpers";
+
+/**
+ * Retrieve the {@link ManglerExpression}s for a given plugin from the {@link
+ * WebManglerLanguagePlugin}s.
+ *
+ * @param languages The {@link WebManglerLanguagePlugin}s.
+ * @param pluginId The plugin identifier.
+ * @returns The {@link ManglerExpression}.
+ */
+function getExpressions(
+  languages: WebManglerLanguagePlugin[],
+  pluginId: string,
+): Map<string, ManglerExpression[]> {
+  const pluginExpressions: Map<string, ManglerExpression[]> = new Map();
+  for (const languagePlugin of languages) {
+    const langExpressions = languagePlugin.getExpressions(pluginId);
+    langExpressions.forEach((value, key) => pluginExpressions.set(key, value));
+  }
+
+  return pluginExpressions;
+}
 
 /**
  * Mangle a list of files collectively - i.e. mangle matched strings the same in
@@ -11,22 +36,16 @@ import { toArrayIfNeeded } from "./helpers";
  * @param options The options for the mangler.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.11
+ * @version v0.1.13
  */
 export default function webmangler<File extends WebManglerFile>(
   files: File[],
   options: WebManglerOptions,
 ): File[] {
-  for (const plugin of options.plugins) {
-    for (const languagePlugin of options.languages) {
-      plugin.use(languagePlugin);
-    }
-
-    const pluginConfig = plugin.config();
-    const allManglerOptions = toArrayIfNeeded(pluginConfig);
-    for (const manglerOptions of allManglerOptions) {
-      files = manglerEngine(files, manglerOptions);
-    }
+  const configs = options.plugins.map((plugin) => plugin.config()).flat();
+  for (const config of configs) {
+    const expressions = getExpressions(options.languages, config.id);
+    files = manglerEngine(files, expressions, config);
   }
 
   return files;

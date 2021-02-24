@@ -263,11 +263,11 @@ suite("HTML ID Mangler", function() {
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          htmlIdMangler.use(builtInLanguageSupport);
+          const expressions = builtInLanguageSupport.getExpressions(HtmlIdMangler._ID);
 
           const files = [new WebManglerFileMock("css", input)];
           const options = htmlIdMangler.config();
-          const result = mangleEngine(files, options);
+          const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -680,11 +680,11 @@ suite("HTML ID Mangler", function() {
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          htmlIdMangler.use(builtInLanguageSupport);
+          const expressions = builtInLanguageSupport.getExpressions(HtmlIdMangler._ID);
 
           const files = [new WebManglerFileMock("html", input)];
           const options = htmlIdMangler.config();
-          const result = mangleEngine(files, options);
+          const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -1012,11 +1012,11 @@ suite("HTML ID Mangler", function() {
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          htmlIdMangler.use(builtInLanguageSupport);
+          const expressions = builtInLanguageSupport.getExpressions(HtmlIdMangler._ID);
 
           const files = [new WebManglerFileMock("js", input)];
           const options = htmlIdMangler.config();
-          const result = mangleEngine(files, options);
+          const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
           const out = result[0];

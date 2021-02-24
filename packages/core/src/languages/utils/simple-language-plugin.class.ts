@@ -14,6 +14,7 @@ import type {
  * WebManglerLanguagePlugin}.
  *
  * @since v0.1.0
+ * @version v0.1.13
  */
 export default abstract class SimpleLanguagePlugin
     implements WebManglerLanguagePlugin {
@@ -55,6 +56,7 @@ export default abstract class SimpleLanguagePlugin
    * when the {@link SimpleLanguagePlugin} was initialized.
    *
    * @inheritDoc
+   * @deprecated
    */
   getExpressionsFor(manglerId: string): ManglerExpressions[] {
     const manglerMatchers = this.expressions.get(manglerId) || [];
@@ -62,6 +64,20 @@ export default abstract class SimpleLanguagePlugin
       language: language,
       expressions: manglerMatchers,
     }));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  getExpressions(manglerId: string): Map<string, ManglerExpression[]> {
+    const manglerExpressions = this.expressions.get(manglerId) || [];
+
+    const result: Map<string, ManglerExpression[]> = new Map();
+    this.languages.forEach((language) => {
+      result.set(language, manglerExpressions);
+    });
+
+    return result;
   }
 
   /**

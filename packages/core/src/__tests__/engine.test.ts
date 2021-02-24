@@ -18,6 +18,7 @@ interface TestCase {
   charSet?: CharSet;
   reservedNames?: string[];
   manglePrefix?: string;
+  id?: string;
 }
 
 suite("ManglerEngine", function() {
@@ -276,8 +277,20 @@ suite("ManglerEngine", function() {
   for (const { name, cases } of scenarios) {
     test(name, function() {
       for (const testCase of cases) {
-        const { expected, description: failureMessage, files } = testCase;
-        const result = engine(files, testCase);
+        const {
+          expected,
+          description: failureMessage,
+          expressions,
+          files,
+        } = testCase;
+
+        const result = engine(files, expressions, {
+          id: "not needed",
+          charSet: testCase.charSet,
+          patterns: testCase.patterns,
+          reservedNames: testCase.reservedNames,
+          manglePrefix: testCase.manglePrefix,
+        });
         expect(result).to.deep.equal(expected, failureMessage);
       }
     });

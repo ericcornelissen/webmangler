@@ -49,6 +49,7 @@ export default abstract class MultiMangler implements WebManglerPlugin {
    *
    * @inheritDoc
    * @since v0.1.0
+   * @deprecated
    */
   use(languagePlugin: WebManglerLanguagePlugin): void {
     this.plugins.forEach((plugin: WebManglerPlugin) => {

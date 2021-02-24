@@ -246,11 +246,11 @@ suite("CSS Classes Mangler", function() {
             reservedClassNames: reservedClassNames,
             keepClassNamePrefix: keepClassNamePrefix,
           });
-          cssClassMangler.use(builtInLanguageSupport);
+          const expressions = builtInLanguageSupport.getExpressions(CssClassMangler._ID);
 
           const files = [new WebManglerFileMock("css", input)];
           const options = cssClassMangler.config();
-          const result = mangleEngine(files, options);
+          const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -675,11 +675,11 @@ suite("CSS Classes Mangler", function() {
             reservedClassNames: reservedClassNames,
             keepClassNamePrefix: keepClassNamePrefix,
           });
-          cssClassMangler.use(builtInLanguageSupport);
+          const expressions = builtInLanguageSupport.getExpressions(CssClassMangler._ID);
 
           const files = [new WebManglerFileMock("html", input)];
           const options = cssClassMangler.config();
-          const result = mangleEngine(files, options);
+          const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -908,11 +908,11 @@ suite("CSS Classes Mangler", function() {
             reservedClassNames: reservedClassNames,
             keepClassNamePrefix: keepClassNamePrefix,
           });
-          cssClassMangler.use(builtInLanguageSupport);
+          const expressions = builtInLanguageSupport.getExpressions(CssClassMangler._ID);
 
           const files = [new WebManglerFileMock("js", input)];
           const options = cssClassMangler.config();
-          const result = mangleEngine(files, options);
+          const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -998,11 +998,11 @@ suite("CSS Classes Mangler", function() {
       const cssClassMangler = new CssClassMangler({
         classNamePattern: "cls-[0-9]+",
       });
-      cssClassMangler.use(builtInLanguageSupport);
+      const expressions = builtInLanguageSupport.getExpressions(CssClassMangler._ID);
 
       const files = [new WebManglerFileMock("css", content)];
       const options = cssClassMangler.config();
-      const result = mangleEngine(files, options);
+      const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -1016,11 +1016,11 @@ suite("CSS Classes Mangler", function() {
         classNamePattern: "cls-[0-9]+",
         reservedClassNames: ["a"],
       });
-      cssClassMangler.use(builtInLanguageSupport);
+      const expressions = builtInLanguageSupport.getExpressions(CssClassMangler._ID);
 
       const files = [new WebManglerFileMock("css", content)];
       const options = cssClassMangler.config();
-      const result = mangleEngine(files, options);
+      const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
