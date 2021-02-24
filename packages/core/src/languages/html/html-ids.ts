@@ -1,6 +1,6 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_ID = "main";
 const GROUP_QUOTE = "quote";
@@ -10,13 +10,13 @@ const HTML_QUOTE_MATCHING_PATTERN = `\\k<${GROUP_QUOTE}>`;
 const URL_BASE_PATTERN = "[a-zA-Z0-9\\-\\_\\/\\:\\.]+";
 const URL_QUERY_PATTERN = "\\?[a-zA-Z0-9\\_\\-\\=\\%]+";
 
-const expressions: ManglerExpression[] = [
+const expressions: MangleExpression[] = [
   // Id definitions, e.g.:
   //  `<div id="(foo)"></div>`
   //  `<div class="bar" id="(foo)"></div>`
   //  `<div id="(foo)" class="bar"></div>`
   //  `<div disabled id="(foo)" class="bar"></div>`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=\\sid\\s*=\\s*${HTML_QUOTE_CAPTURING_GROUP_PATTERN}\\s*)
       (?<${GROUP_ID}>%s)
@@ -29,7 +29,7 @@ const expressions: ManglerExpression[] = [
   //  `<a href="(#foo)"></a>`
   //  `<a href="https://www.example.com/(#foo)"></a>`
   //  `<a href="https://www.example.com/(#foo)?q=bar"></a>`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=
         \\shref\\s*=\\s*

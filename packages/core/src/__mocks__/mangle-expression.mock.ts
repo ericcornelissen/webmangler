@@ -1,6 +1,6 @@
 import { format as printf } from "util";
 
-export default class ManglerExpressionMock {
+export default class MangleExpressionMock {
   private patternTemplate: string;
   private execMatchIndex: number;
   private replaceTemplate: string;

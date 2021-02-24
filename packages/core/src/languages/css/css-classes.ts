@@ -1,10 +1,10 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_CLASS = "main";
 
-const expressions: ManglerExpression[] = [
+const expressions: MangleExpression[] = [
   // e.g.
   //  `.(foo){ }`
   //  `.(foo) { }`
@@ -23,7 +23,7 @@ const expressions: ManglerExpression[] = [
   //  `div ~ .(foo) { }`
   //  `#bar { } .(foo) { }`
   //  `.(foo)`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<!"[^"}]*|'[^'}]*)
       (?<=\\.)

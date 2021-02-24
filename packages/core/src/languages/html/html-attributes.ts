@@ -1,10 +1,10 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { NestedGroupExpression } from "../utils/mangler-expressions";
+import { NestedGroupExpression } from "../utils/mangle-expressions";
 
 const GROUP_ATTRIBUTE = "main";
 
-const expressions: ManglerExpression[] = [
+const expressions: MangleExpression[] = [
   // HTML attributes, e.g. (with prefix "data-"):
   //  `<div (data-foo)="bar"></div>`
   //  `<div id="xxx" (data-foo)="bar"></div>`

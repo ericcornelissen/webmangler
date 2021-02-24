@@ -1,7 +1,7 @@
 import type { CharSet } from "./characters";
 import type {
   MangleEngineOptions,
-  ManglerExpression,
+  MangleExpression,
   WebManglerFile,
 } from "./types";
 
@@ -30,20 +30,20 @@ function mapToOrderedList(map: Map<string, number>): string[] {
  * `patterns` in the provided `files`.
  *
  * @param files The files to be mangled.
- * @param expressions The {@link ManglerExpression}s to base the mangling on.
+ * @param expressions The {@link MangleExpression}s to base the mangling on.
  * @param patterns The patterns of strings to mangle.
  * @returns A map of the count of each string matching a `pattern`.
  */
 function countInstances(
   files: WebManglerFile[],
-  expressions: Map<string, ManglerExpression[]>,
+  expressions: Map<string, MangleExpression[]>,
   patterns: string[],
 ): Map<string, number> {
   const countMap: Map<string, number> = new Map();
   files.forEach((file: WebManglerFile): void => {
-    const fileExpressions = expressions.get(file.type) as ManglerExpression[];
+    const fileExpressions = expressions.get(file.type) as MangleExpression[];
     patterns.forEach((pattern: string): void => {
-      fileExpressions.forEach((expression: ManglerExpression): void => {
+      fileExpressions.forEach((expression: MangleExpression): void => {
         for (const name of expression.exec(file.content, pattern)) {
           const count = countMap.get(name) || 0;
           countMap.set(name, count + 1);
@@ -164,17 +164,17 @@ function getMangleMaps(
  * NOTE: this function assumes all files are supported by the `expressions`.
  *
  * @param files The files to mangle.
- * @param expressions The {@link ManglerExpression}s to base the mangling on.
+ * @param expressions The {@link MangleExpression}s to base the mangling on.
  * @param mangleMap The mapping defining the mangling.
  * @returns The mangled files.
  */
 function doMangle<File extends WebManglerFile>(
   files: File[],
-  expressions: Map<string, ManglerExpression[]>,
+  expressions: Map<string, MangleExpression[]>,
   mangleMap: Map<string, string>,
 ): File[] {
   files.forEach((file) => {
-    const fileExpressions = expressions.get(file.type) as ManglerExpression[];
+    const fileExpressions = expressions.get(file.type) as MangleExpression[];
     fileExpressions.forEach((expression) => {
       file.content = expression.replaceAll(file.content, mangleMap);
     });
@@ -188,12 +188,12 @@ function doMangle<File extends WebManglerFile>(
  * `expressions`.
  *
  * @param files The original lit of files.
- * @param expressions The {@link ManglerExpression}s to be used in mangling.
+ * @param expressions The {@link MangleExpression}s to be used in mangling.
  * @returns The files supported by the `expressions`.
  */
 function getSupportedFilesOnly<File extends WebManglerFile>(
   files: File[],
-  expressions: Map<string, ManglerExpression[]>,
+  expressions: Map<string, MangleExpression[]>,
 ): File[] {
   return files.filter((file) => expressions.get(file.type) !== undefined);
 }
@@ -233,7 +233,7 @@ function parseOptions(options: MangleEngineOptions): {
  * list may be shorter than the inputted list.
  *
  * @param files The files to mangle.
- * @param expressions The {@link ManglerExpression}s to mangle based on.
+ * @param expressions The {@link MangleExpression}s to mangle based on.
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
@@ -241,7 +241,7 @@ function parseOptions(options: MangleEngineOptions): {
  */
 export default function mangle<File extends WebManglerFile>(
   files: File[],
-  expressions: Map<string, ManglerExpression[]>,
+  expressions: Map<string, MangleExpression[]>,
   options: MangleEngineOptions,
 ): File[] {
   const {

@@ -1,4 +1,4 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
 import SimpleLanguagePlugin from "../utils/simple-language-plugin.class";
 
@@ -8,7 +8,7 @@ import htmlAttributeMatchers from "./html-attributes";
 import htmlIdMatchers from "./html-ids";
 
 const languages: string[] = ["js", "cjs", "mjs"];
-const expressions: Map<string, ManglerExpression[]> = new Map();
+const expressions: Map<string, MangleExpression[]> = new Map();
 
 expressions.set("css-class-mangler", cssClassesMatchers);
 expressions.set("css-variable-mangler", cssVariablesMatchers);

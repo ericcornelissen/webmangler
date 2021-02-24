@@ -9,7 +9,7 @@ import {
   varySpacing,
 } from "./test-helpers";
 
-import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
+import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
 import BuiltInLanguageSupport from "../../languages/builtin";
 import mangleEngine from "../../engine";

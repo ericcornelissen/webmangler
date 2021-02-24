@@ -1,4 +1,4 @@
-import type { ManglerExpression } from "../../../types";
+import type { MangleExpression } from "../../../types";
 
 import { format as printf } from "util";
 
@@ -8,7 +8,7 @@ import { format as printf } from "util";
 type RegExpMatchGroups = { [key: string]: string };
 
 /**
- * A {@link NestedGroupExpression} is a {@link ManglerExpression} implementation
+ * A {@link NestedGroupExpression} is a {@link MangleExpression} implementation
  * that matches and replaces in one-level nested substrings.
  *
  * @example
@@ -23,7 +23,7 @@ type RegExpMatchGroups = { [key: string]: string };
  *
  * @since v0.1.12
  */
-export default class NestedGroupExpression implements ManglerExpression {
+export default class NestedGroupExpression implements MangleExpression {
   /**
    * The top-level template string to use as (generic) pattern to find
    * substrings in the target string that can be processed by the

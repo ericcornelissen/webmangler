@@ -1,14 +1,14 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_VARIABLE = "main";
 
-const expressions: ManglerExpression[] = [
+const expressions: MangleExpression[] = [
   // CSS variable declarations, e.g.:
   //  `--(foo): 'bar';`
   //  `--(foo) : 'bar;`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=--)
       (?<${GROUP_VARIABLE}>%s)
@@ -21,7 +21,7 @@ const expressions: ManglerExpression[] = [
   //  `var(--foo);`
   //  `var(--foo, 'bar');`
   //  `var ( --foo );`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=
         var\\s*\\(\\s*

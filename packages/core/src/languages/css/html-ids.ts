@@ -1,6 +1,6 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_ID = "main";
 const GROUP_QUOTE = "quote";
@@ -12,7 +12,7 @@ const CSS_QUOTE_MATCHING_PATTERN = `\\k<${GROUP_QUOTE}>`;
 const ATTR_SELECTOR_METHODS_PATTERN = "\\=|\\|=|\\~=|\\^=|\\$=|\\*=";
 const URL_BASE_PATTERN = "[a-zA-Z0-9\\-\\_\\/\\:\\.]+";
 
-const expressions: ManglerExpression[] = [
+const expressions: MangleExpression[] = [
   // ID selectors, e.g.:
   //  `(#foo){ }`
   //  `(#foo) { }`
@@ -33,7 +33,7 @@ const expressions: ManglerExpression[] = [
   //  `div { } (#foo) { }`
   //  `div { } (#foo) { }`
   //  `(#foo)`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<!"[^"}]*|'[^'}]*)
       (?<=#)
@@ -51,7 +51,7 @@ const expressions: ManglerExpression[] = [
   //  `[href^="(#foo)"]`
   //  `[href$="(#foo)"]`
   //  `[href*="(#foo)"]`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=
         \\[\\s*href\\s*(?:${ATTR_SELECTOR_METHODS_PATTERN})\\s*

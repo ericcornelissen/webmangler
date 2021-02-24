@@ -1,6 +1,6 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_ID = "main";
 const GROUP_QUOTE = "quote";
@@ -10,12 +10,12 @@ const CSS_SELECTOR_REQUIRED_AFTER = "\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s
 const JS_QUOTE_CAPTURING_GROUP_PATTERN = `(?<${GROUP_QUOTE}>"|'|\`)`;
 const JS_QUOTE_MATCHING_PATTERN = `\\k<${GROUP_QUOTE}>`;
 
-const expressions: ManglerExpression[] = [
+const expressions: MangleExpression[] = [
   // Get element by ID, e.g. (with prefix "id-"):
   //  `getElementById\("foo"\);` <-- NO MATCH
   //  `getElementById\("(id-foo)"\);`
   //  `var id = "(id-foo)"; getElementById\(id\);`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=${JS_QUOTE_CAPTURING_GROUP_PATTERN}\\s*)
       (?<${GROUP_ID}>%s)
@@ -33,7 +33,7 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("#(id-foo) div"\);`
   //  `querySelector\("div #(id-foo)"\);`
   //  `querySelector\("#(id-bar) #(id-foo)"\);`
-  //  `querySelector\("#(id-foo),div"\);`ManglerExpression
+  //  `querySelector\("#(id-foo),div"\);`MangleExpression
   //  `querySelector\("div,#(id-foo)"\);`
   //  `querySelector\("#(id-foo),#(id-bar)"\);`
   //  `querySelector\("#(id-foo)>div"\);`
@@ -46,7 +46,7 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("div~#(id-foo)"\);`
   //  `querySelector\("#(id-foo)~#(id-bar)"\);`
   //  `querySelector\("#(id-foo)[data-bar]"\);`
-  ...["\"", "'", "`"].map((quote) => new SingleGroupManglerExpression(
+  ...["\"", "'", "`"].map((quote) => new SingleGroupMangleExpression(
     `
       (?<=
         ${quote}[^${quote}]*

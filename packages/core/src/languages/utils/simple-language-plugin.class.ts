@@ -1,5 +1,5 @@
 import type {
-  ManglerExpression,
+  MangleExpression,
   ManglerExpressions,
   WebManglerLanguagePlugin,
 } from "../../types";
@@ -7,7 +7,7 @@ import type {
 /**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of
  * a {@link WebManglerLanguagePlugin} that works given a set of languages and a
- * map of manglers to {@link ManglerExpression}.
+ * map of manglers to {@link MangleExpression}.
  *
  * It is recommended to extend this class - or {@link MultiLanguagePlugin},
  * depending on your needs - if you're implementing a {@link
@@ -25,9 +25,9 @@ export default abstract class SimpleLanguagePlugin
   private readonly languages: string[];
 
   /**
-   * The {@link ManglerExpression}s for each supported {@link WebManglerPlugin}.
+   * The {@link MangleExpression}s for each supported {@link WebManglerPlugin}.
    */
-  private readonly expressions: Map<string, ManglerExpression[]>;
+  private readonly expressions: Map<string, MangleExpression[]>;
 
   /**
    * Initialize a new {@link SimpleLanguagePlugin}.
@@ -45,7 +45,7 @@ export default abstract class SimpleLanguagePlugin
    */
   constructor(
     languages: string[],
-    expressions: Map<string, ManglerExpression[]>,
+    expressions: Map<string, MangleExpression[]>,
   ) {
     this.languages = languages;
     this.expressions = expressions;
@@ -69,10 +69,10 @@ export default abstract class SimpleLanguagePlugin
   /**
    * @inheritDoc
    */
-  getExpressions(manglerId: string): Map<string, ManglerExpression[]> {
+  getExpressions(manglerId: string): Map<string, MangleExpression[]> {
     const manglerExpressions = this.expressions.get(manglerId) || [];
 
-    const result: Map<string, ManglerExpression[]> = new Map();
+    const result: Map<string, MangleExpression[]> = new Map();
     this.languages.forEach((language) => {
       result.set(language, manglerExpressions);
     });

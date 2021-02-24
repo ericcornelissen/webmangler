@@ -1,5 +1,5 @@
 import type {
-  ManglerExpression,
+  MangleExpression,
   ManglerExpressions,
   WebManglerLanguagePlugin,
 } from "../../types";
@@ -51,8 +51,8 @@ export default abstract class MultiLanguagePlugin
   /**
    * @inheritDoc
    */
-  getExpressions(manglerId: string): Map<string, ManglerExpression[]> {
-    const result: Map<string, ManglerExpression[]> = new Map();
+  getExpressions(manglerId: string): Map<string, MangleExpression[]> {
+    const result: Map<string, MangleExpression[]> = new Map();
     this.plugins.forEach((plugin) => {
       const pluginExpressions = plugin.getExpressions(manglerId);
       pluginExpressions.forEach((value, key) => result.set(key, value));

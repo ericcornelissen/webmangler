@@ -1,13 +1,13 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_ATTRIBUTE = "main";
 
 const SELECTOR_REQUIRED_BEFORE = "\\[\\s*";
 const SELECTOR_REQUIRED_AFTER = "\\s*(?:\\]|\\=|\\|=|\\~=|\\^=|\\$=|\\*=)";
 
-const expressions: ManglerExpression[] = [
+const expressions: MangleExpression[] = [
   // Attribute selectors, e.g. (with prefix "data-"):
   //  `[(data-foo)]`
   //  `[(data-foo)=bar]`
@@ -16,7 +16,7 @@ const expressions: ManglerExpression[] = [
   //  `[(data-foo)^=bar]`
   //  `[(data-foo)$=bar]`
   //  `[(data-foo)*=bar]`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=${SELECTOR_REQUIRED_BEFORE})
       (?<${GROUP_ATTRIBUTE}>%s)
@@ -30,7 +30,7 @@ const expressions: ManglerExpression[] = [
   //  `attr\((data-foo) number\);`
   //  `attr\((data-foo), 0\);`
   //  `attr\((data-foo) url, "https://www.example.com/"\);`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=attr\\s*\\(\\s*)
       (?<${GROUP_ATTRIBUTE}>%s)

@@ -1,6 +1,6 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_ATTRIBUTE = "attribute";
 const GROUP_QUOTE = "quote";
@@ -8,7 +8,7 @@ const GROUP_QUOTE = "quote";
 const SELECTOR_REQUIRED_BEFORE = "\\[\\s*";
 const SELECTOR_REQUIRED_AFTER = "\\s*(?:\\]|\\=|\\|=|\\~=|\\^=|\\$=|\\*=)";
 
-const expressions: ManglerExpression[] = [
+const expressions: MangleExpression[] = [
   // Attribute selector, e.g. (with prefix "data-"):
   //  `querySelector\("div[(data-foo)]"\)`
   //  `querySelector\("[(data-foo)]"\)`
@@ -18,7 +18,7 @@ const expressions: ManglerExpression[] = [
   //  `querySelector\("[(data-foo)^="bar"]"\)`
   //  `querySelector\("[(data-foo)$="bar"]"\)`
   //  `querySelector\("[(data-foo)*="bar"]"\)`
-  ...["\"", "'", "`"].map((quote) => new SingleGroupManglerExpression(
+  ...["\"", "'", "`"].map((quote) => new SingleGroupMangleExpression(
     `
       (?<=
         ${quote}[^${quote}]*
@@ -34,7 +34,7 @@ const expressions: ManglerExpression[] = [
   //  `$el.getAttribute\("(data-praise)"\)`
   //  `$el.removeAttribute\("(data-the)"\)`
   //  `$el.setAttribute\("(data-sun)", "value"\)`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=(?<${GROUP_QUOTE}>"|'|\`)\\s*)
       (?<${GROUP_ATTRIBUTE}>%s)

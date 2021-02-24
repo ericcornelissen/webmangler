@@ -1,18 +1,18 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { CharSet } from "../characters";
-import type { ManglerExpression, WebManglerFile } from "../types";
+import type { MangleExpression, WebManglerFile } from "../types";
 
 import { expect } from "chai";
 
-import ManglerExpressionMock from "../__mocks__/mangler-expression.mock";
-import WebManglerFileMock from "../__mocks__/mangler-file.mock";
+import MangleExpressionMock from "../__mocks__/mangle-expression.mock";
+import WebManglerFileMock from "../__mocks__/web-mangler-file.mock";
 
 import engine from "../engine";
 
 interface TestCase {
   description?: string;
   expected: WebManglerFile[];
-  expressions: Map<string, ManglerExpression[]>;
+  expressions: Map<string, MangleExpression[]>;
   files: WebManglerFile[];
   patterns: string | string[];
   charSet?: CharSet;
@@ -30,7 +30,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".foo { } #bar { }")],
           expected: [new WebManglerFileMock("css", ".a { } #bar { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
         },
@@ -38,7 +38,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".foo { } .cls-bar { }")],
           expected: [new WebManglerFileMock("css", ".foo { } .a { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "cls-[a-z]+",
         },
@@ -57,7 +57,7 @@ suite("ManglerEngine", function() {
             new WebManglerFileMock("css", "#bar { }"),
           ],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
         },
@@ -71,7 +71,7 @@ suite("ManglerEngine", function() {
             new WebManglerFileMock("css", ".b { }"),
           ],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
         },
@@ -85,7 +85,7 @@ suite("ManglerEngine", function() {
             new WebManglerFileMock("css", ".a { } .b { }"),
           ],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
         },
@@ -99,8 +99,8 @@ suite("ManglerEngine", function() {
             new WebManglerFileMock("html", "<div class=\"cls-a cls-b\">"),
           ],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
-            ["html", [new ManglerExpressionMock("cls-(%s)", 1, "cls-%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["html", [new MangleExpressionMock("cls-(%s)", 1, "cls-%s")]],
           ]),
           patterns: "[a-z]+",
         },
@@ -113,7 +113,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".another, .one, .bites, .de_dust { }")],
           expected: [new WebManglerFileMock("css", ".a, .b, .c, .aa { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z_]+",
           charSet: ["a", "b", "c"],
@@ -122,7 +122,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".another, .one, .bites, .de_dust { }")],
           expected: [new WebManglerFileMock("css", ".c, .b, .a, .cc { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z_]+",
           charSet: ["c", "b", "a"],
@@ -131,7 +131,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".foo { } .bar { }")],
           expected: [new WebManglerFileMock("css", ".x { } .xx { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
           charSet: ["x"],
@@ -145,7 +145,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".foo { } .bar { }")],
           expected: [new WebManglerFileMock("css", ".a { } .c { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
           reservedNames: ["b"],
@@ -154,7 +154,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".foo { }")],
           expected: [new WebManglerFileMock("css", ".c { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
           reservedNames: ["a", "b"],
@@ -168,7 +168,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".foo { } .bar { }")],
           expected: [new WebManglerFileMock("css", ".cls-a { } .cls-b { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
           manglePrefix: "cls-",
@@ -182,7 +182,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".foo { } .bar { }")],
           expected: [new WebManglerFileMock("css", ".cls-b { } .cls-c { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
           reservedNames: ["a"],
@@ -234,7 +234,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".foo, .bar { } .bar { }")],
           expected: [new WebManglerFileMock("css", ".b, .a { } .a { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
         },
@@ -247,7 +247,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".a { }")],
           expected: [new WebManglerFileMock("css", ".a { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
           description: "no changes expected if source is already mangled",
@@ -256,7 +256,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".b { } .a { }")],
           expected: [new WebManglerFileMock("css", ".a { } .b { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z]+",
           description: "mangled source may be re-mangled",
@@ -265,7 +265,7 @@ suite("ManglerEngine", function() {
           files: [new WebManglerFileMock("css", ".a-a { }")],
           expected: [new WebManglerFileMock("css", ".a { }")],
           expressions: new Map([
-            ["css", [new ManglerExpressionMock("\\.(%s)", 1, ".%s")]],
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
           ]),
           patterns: "[a-z-]+",
           description: "potential unique prefix can appear in source",

@@ -1,10 +1,10 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { NestedGroupExpression } from "../utils/mangler-expressions";
+import { NestedGroupExpression } from "../utils/mangle-expressions";
 
 const GROUP_NAME_MAIN = "main";
 
-const pattern: ManglerExpression[] = [
+const pattern: MangleExpression[] = [
   // Finds e.g., "cls-a" and "cls-b" in  `<div class="cls-a ignore cls-b">`
   ...["\"", "'"].map((quote) => new NestedGroupExpression(
     `

@@ -2,9 +2,9 @@ import type { TestScenario } from "@webmangler/testing";
 
 import { expect } from "chai";
 
-import SingleGroupManglerExpression from "../single-group.class";
+import SingleGroupMangleExpression from "../single-group.class";
 
-suite("SingleGroupManglerExpression", function() {
+suite("SingleGroupMangleExpression", function() {
   suite("::exec", function() {
     type TestCase = {
       patternTemplate: string;
@@ -73,7 +73,7 @@ suite("SingleGroupManglerExpression", function() {
             expected,
           } = testCase;
 
-          const subject = new SingleGroupManglerExpression(
+          const subject = new SingleGroupMangleExpression(
             patternTemplate,
             group,
           );
@@ -193,7 +193,7 @@ suite("SingleGroupManglerExpression", function() {
             expected,
           } = testCase;
 
-          const subject = new SingleGroupManglerExpression(
+          const subject = new SingleGroupMangleExpression(
             patternTemplate,
             group,
           );

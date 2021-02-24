@@ -1,4 +1,4 @@
-import type { ManglerExpression } from "../../../types";
+import type { MangleExpression } from "../../../types";
 
 import { format as printf } from "util";
 
@@ -8,11 +8,11 @@ import { format as printf } from "util";
 type RegExpMatchGroups = { [key: string]: string };
 
 /**
- * A {@link SingleGroupManglerExpression} is a {@link ManglerExpression}
+ * A {@link SingleGroupMangleExpression} is a {@link MangleExpression}
  * implementation that matches and replaces based on a single named group.
  *
  * @example
- * new SingleGroupManglerExpression(
+ * new SingleGroupMangleExpression(
  *   "(?<=--)(?<GROUP_NAME>%s)(?=--)",
  *   "GROUP_NAME",
  * );
@@ -21,7 +21,7 @@ type RegExpMatchGroups = { [key: string]: string };
  *
  * @since v0.1.11
  */
-export default class SingleGroupManglerExpression implements ManglerExpression {
+export default class SingleGroupMangleExpression implements MangleExpression {
   /**
    * The template string to use as (generic) pattern.
    */

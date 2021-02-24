@@ -1,12 +1,12 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_QUOTE = "quote";
 const GROUP_VARIABLE = "main";
 
-const expressions: ManglerExpression[] = [
-  new SingleGroupManglerExpression(
+const expressions: MangleExpression[] = [
+  new SingleGroupMangleExpression(
     `
       (?<=
         (?<${GROUP_QUOTE}>"|'|\`)\\s*

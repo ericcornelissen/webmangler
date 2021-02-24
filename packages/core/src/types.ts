@@ -1,15 +1,73 @@
 import type { CharSet } from "./characters";
 
 /**
+ * A set of generic options used by the {@link MangleEngine} for mangling.
+ *
+ * @since v0.1.0
+ * @version v0.1.13
+ */
+type MangleEngineOptions = {
+  /**
+   * The {@link WebManglerPlugin} identifier.
+   *
+   * @since v0.1.13
+   */
+  readonly id: string;
+
+  /**
+   *The {@link MangleExpression}s to find strings to mangle.
+   *
+   * @since v0.1.11
+   * @deprecated
+   */
+  readonly expressions?: Map<string, MangleExpression[]>;
+
+  /**
+   * The pattern(s) to be mangled.
+   *
+   * @since v0.1.11
+   */
+  readonly patterns: string | string[];
+
+  /**
+   * The character set for mangled strings.
+   *
+   * @default {@link NameGenerator.DEFAULT_CHARSET}
+   * @since v0.1.7
+   */
+  readonly charSet?: CharSet;
+
+  /**
+   * The prefix to use for mangled strings.
+   *
+   * @default `""`
+   * @since v0.1.0
+   * @deprecated Will be changed to `readonly`.
+   */
+  manglePrefix?: string;
+
+  /**
+   * A list of names and patterns not to be used as mangled string.
+   *
+   * Patterns are supported since v0.1.7.
+   *
+   * @default `[]`
+   * @since v0.1.0
+   * @deprecated Will be changed to `readonly`.
+   */
+  reservedNames?: string[];
+}
+
+/**
  * Interface representing a regular expression-like object that can be used to
  * find and replace patterns by _WebMangler_.
  *
  * @since v0.1.0
- * @version v0.1.11
+ * @version v0.1.13
  */
-interface ManglerExpression {
+interface MangleExpression {
   /**
-   * Execute the {@link ManglerExpression} on a string for a given pattern.
+   * Execute the {@link MangleExpression} on a string for a given pattern.
    *
    * @param s The string to execute the expression on.
    * @param pattern The pattern to execute the expression with.
@@ -30,7 +88,37 @@ interface ManglerExpression {
 }
 
 /**
- * Interface wrapping one ore more {@link ManglerExpression}s for a specific
+ * Interface representing a regular expression-like object that can be used to
+ * find and replace patterns by _WebMangler_.
+ *
+ * @since v0.1.0
+ * @version v0.1.11
+ * @deprecated
+ */
+interface ManglerExpression {
+  /**
+   * Execute the {@link MangleExpression} on a string for a given pattern.
+   *
+   * @param s The string to execute the expression on.
+   * @param pattern The pattern to execute the expression with.
+   * @returns The matched substrings in `s`.
+   * @since v0.1.0
+   */
+  exec(s: string, pattern: string): Iterable<string>;
+
+  /**
+   * Replace multiple substrings in a string by other substrings.
+   *
+   * @param s The string to replace in.
+   * @param replacements The mapping of strings to replace.
+   * @returns The string with the patterns replaced.
+   * @since v0.1.11
+   */
+  replaceAll(s: string, replacements: Map<string, string>): string;
+}
+
+/**
+ * Interface wrapping one ore more {@link MangleExpression}s for a specific
  * language.
  *
  * @since v0.1.0
@@ -45,11 +133,11 @@ interface ManglerExpressions {
   language: string;
 
   /**
-   * The {@link ManglerExpression}s for the `language`.
+   * The {@link MangleExpression}s for the `language`.
    *
    * @since v0.1.0
    */
-  expressions: ManglerExpression[];
+  expressions: MangleExpression[];
 }
 
 /**
@@ -114,7 +202,7 @@ interface WebManglerPlugin {
   config(): MangleEngineOptions | MangleEngineOptions[];
 
   /**
-   * Instruct the {@link WebManglerPlugin} to use the {@link ManglerExpression}s
+   * Instruct the {@link WebManglerPlugin} to use the {@link MangleExpression}s
    * specified by a {@link WebManglerLanguagePlugin}.
    *
    * @param languagePlugin The {@link WebManglerLanguagePlugin} to be used.
@@ -132,31 +220,31 @@ interface WebManglerPlugin {
  */
 interface WebManglerLanguagePlugin {
   /**
-   * Get {@link ManglerExpression}s for one or more languages for a {@link
+   * Get {@link MangleExpression}s for one or more languages for a {@link
    * WebManglerPlugin}.
    *
    * If the {@link WebManglerLanguagePlugin} supports multiple languages it may
    * return a {@link ManglerExpressions} instance for each language.
    *
    * If the {@link WebManglerLanguagePlugin} does not provide support for the
-   * {@link WebManglerPlugin} it should return zero {@link ManglerExpression}s.
+   * {@link WebManglerPlugin} it should return zero {@link MangleExpression}s.
    *
    * @param pluginId The identifier of the {@link WebManglerPlugin}.
-   * @returns The {@link ManglerExpression}s for the plugin for the language(s).
+   * @returns The {@link MangleExpression}s for the plugin for the language(s).
    * @since v0.1.0
    * @deprecated
    */
   getExpressionsFor(pluginId: string): ManglerExpressions[];
 
   /**
-   * Get {@link ManglerExpression}s for a {@link WebManglerPlugin}.
+   * Get {@link MangleExpression}s for a {@link WebManglerPlugin}.
    *
    * In the returned map, the key is a language identifier and the value are the
-   * {@link ManglerExpression}s.
+   * {@link MangleExpression}s.
    *
    * @since v0.1.13
    */
-  getExpressions(pluginId: string): Map<string, ManglerExpression[]>;
+  getExpressions(pluginId: string): Map<string, MangleExpression[]>;
 
   /**
    * Get a list of the languages supported by the {@link
@@ -168,66 +256,9 @@ interface WebManglerLanguagePlugin {
   getLanguages(): string[];
 }
 
-/**
- * A set of generic options used by the {@link MangleEngine} for mangling.
- *
- * @since v0.1.0
- * @version v0.1.13
- */
-type MangleEngineOptions = {
-  /**
-   * The {@link WebManglerPlugin} identifier.
-   *
-   * @since v0.1.13
-   */
-  readonly id: string;
-
-  /**
-   *The {@link ManglerExpression}s to find strings to mangle.
-   *
-   * @since v0.1.11
-   * @deprecated
-   */
-  readonly expressions?: Map<string, ManglerExpression[]>;
-
-  /**
-   * The pattern(s) to be mangled.
-   *
-   * @since v0.1.11
-   */
-  readonly patterns: string | string[];
-
-  /**
-   * The character set for mangled strings.
-   *
-   * @default {@link NameGenerator.DEFAULT_CHARSET}
-   * @since v0.1.7
-   */
-  readonly charSet?: CharSet;
-
-  /**
-   * The prefix to use for mangled strings.
-   *
-   * @default `""`
-   * @since v0.1.0
-   * @deprecated Will be changed to `readonly`.
-   */
-  manglePrefix?: string;
-
-  /**
-   * A list of names and patterns not to be used as mangled string.
-   *
-   * Patterns are supported since v0.1.7.
-   *
-   * @default `[]`
-   * @since v0.1.0
-   * @deprecated Will be changed to `readonly`.
-   */
-  reservedNames?: string[];
-}
-
 export type {
   MangleEngineOptions,
+  MangleExpression,
   ManglerExpression,
   ManglerExpressions,
   WebManglerFile,

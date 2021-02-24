@@ -1,5 +1,5 @@
 import type {
-  ManglerExpression,
+  MangleExpression,
   WebManglerFile,
   WebManglerOptions,
   WebManglerLanguagePlugin,
@@ -8,18 +8,18 @@ import type {
 import manglerEngine from "./engine";
 
 /**
- * Retrieve the {@link ManglerExpression}s for a given plugin from the {@link
+ * Retrieve the {@link MangleExpression}s for a given plugin from the {@link
  * WebManglerLanguagePlugin}s.
  *
  * @param languages The {@link WebManglerLanguagePlugin}s.
  * @param pluginId The plugin identifier.
- * @returns The {@link ManglerExpression}.
+ * @returns The {@link MangleExpression}.
  */
 function getExpressions(
   languages: WebManglerLanguagePlugin[],
   pluginId: string,
-): Map<string, ManglerExpression[]> {
-  const pluginExpressions: Map<string, ManglerExpression[]> = new Map();
+): Map<string, MangleExpression[]> {
+  const pluginExpressions: Map<string, MangleExpression[]> = new Map();
   for (const languagePlugin of languages) {
     const langExpressions = languagePlugin.getExpressions(pluginId);
     langExpressions.forEach((value, key) => pluginExpressions.set(key, value));

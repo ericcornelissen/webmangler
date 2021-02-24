@@ -1,13 +1,13 @@
-import type { ManglerExpression } from "../../types";
+import type { MangleExpression } from "../../types";
 
-import { SingleGroupManglerExpression } from "../utils/mangler-expressions";
+import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_NAME_QUOTE = "q";
 const GROUP_NAME_PATTER = "main";
 
-const pattern: ManglerExpression[] = [
+const pattern: MangleExpression[] = [
   // matches e.g. `el.classList.add("foo")`
-  new SingleGroupManglerExpression(
+  new SingleGroupMangleExpression(
     `
       (?<=(?<${GROUP_NAME_QUOTE}>"|'|\`)\\s*)
       (?<${GROUP_NAME_PATTER}>%s)
@@ -17,7 +17,7 @@ const pattern: ManglerExpression[] = [
   ),
 
   // matches e.g. `document.querySelectorAll(".foo")`
-  ...["\"", "'", "`"].map((quote) => new SingleGroupManglerExpression(
+  ...["\"", "'", "`"].map((quote) => new SingleGroupMangleExpression(
     `
       (?<=
         ${quote}[^${quote}]*

@@ -13,7 +13,7 @@ import {
 import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import { isValidIdName, varyQuotes, varySpacing } from "./test-helpers";
 
-import WebManglerFileMock from "../../__mocks__/mangler-file.mock";
+import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
 import mangleEngine from "../../engine";
 import BuiltInLanguageSupport from "../../languages/builtin";

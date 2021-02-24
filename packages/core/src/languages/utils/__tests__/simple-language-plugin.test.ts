@@ -1,16 +1,16 @@
 import type { TestScenario } from "@webmangler/testing";
-import type { ManglerExpression } from "../../../types";
+import type { MangleExpression } from "../../../types";
 
 import { expect } from "chai";
 
-import ManglerExpressionMock from "../../../__mocks__/mangler-expression.mock";
+import MangleExpressionMock from "../../../__mocks__/mangle-expression.mock";
 
 import SimpleLanguagePlugin from "../simple-language-plugin.class";
 
 class ConcretePlugin extends SimpleLanguagePlugin {
   constructor(
     languages: string[],
-    expressions: Map<string, ManglerExpression[]>,
+    expressions: Map<string, MangleExpression[]>,
   ) {
     super(languages, expressions);
   }
@@ -21,7 +21,7 @@ suite("SimpleLanguagePlugin", function() {
     type TestCase = {
       testIds: string[],
       languages: string[];
-      expressions: Map<string, ManglerExpression[]>;
+      expressions: Map<string, MangleExpression[]>;
     };
 
     const scenarios: TestScenario<TestCase>[] = [
@@ -32,23 +32,23 @@ suite("SimpleLanguagePlugin", function() {
             testIds: ["foo"],
             languages: ["js"],
             expressions: new Map([
-              ["bar", [new ManglerExpressionMock("", 0, "")]],
+              ["bar", [new MangleExpressionMock("", 0, "")]],
             ]),
           },
           {
             testIds: ["foo"],
             languages: ["js"],
             expressions: new Map([
-              ["foo", [new ManglerExpressionMock("", 0, "")]],
-              ["bar", [new ManglerExpressionMock("", 1, "")]],
+              ["foo", [new MangleExpressionMock("", 0, "")]],
+              ["bar", [new MangleExpressionMock("", 1, "")]],
             ]),
           },
           {
             testIds: ["bar"],
             languages: ["js"],
             expressions: new Map([
-              ["foo", [new ManglerExpressionMock("", 0, "")]],
-              ["bar", [new ManglerExpressionMock("", 1, "")]],
+              ["foo", [new MangleExpressionMock("", 0, "")]],
+              ["bar", [new MangleExpressionMock("", 1, "")]],
             ]),
           },
         ],
@@ -60,7 +60,7 @@ suite("SimpleLanguagePlugin", function() {
             testIds: ["foo"],
             languages: [],
             expressions: new Map([
-              ["bar", [new ManglerExpressionMock("", 0, "")]],
+              ["bar", [new MangleExpressionMock("", 0, "")]],
             ]),
           },
           {
