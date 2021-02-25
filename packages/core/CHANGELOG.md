@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.13] - 2021-02-25
+
 - Fix accidental mangling of CSS variable-like strings in CSS.
 - Fix accidental mangling of HTML attribute-like strings in CSS.
 - Support mangling IDs in the HTML `for` attribute.
