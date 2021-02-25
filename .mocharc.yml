@@ -2,6 +2,7 @@
 
 recursive: true
 reporter: dot
+timeout: 5000
 ui: tdd
 require:
   - ts-node/register

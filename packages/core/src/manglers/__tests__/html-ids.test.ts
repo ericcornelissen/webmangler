@@ -21,32 +21,33 @@ import HtmlIdMangler from "../html-ids";
 
 const builtInLanguageSupport = new BuiltInLanguageSupport();
 
-const DEFAULT_PATTERN = "id[-_][a-zA-Z-_]+";
-const SELECTORS: [string, string][] = [
-  ["div", "div"],
-  ["#foobar", "#foobar"],
-  [".foobar", ".foobar"],
-  ["[data-foo]", "[data-foo]"],
-  ["#id-foobar", "#a"],
+const DEFAULT_PATTERN = "id-[a-z]+";
+const SELECTORS: { before: string, after: string }[] = [
+  { before: ":root", after: ":root" },
+  { before: "div", after: "div" },
+  { before: "#foobar", after: "#foobar" },
+  { before: ".foobar", after: ".foobar" },
+  { before: "[data-foobar]", after: "[data-foobar]" },
+  { before: "#id-foobar", after: "#a" },
 ];
-const SELECTOR_PAIRS: [string, string, string, string][] = [
-  ["div", "span", "div", "span"],
-  ["#foo", "#bar", "#foo", "#bar"],
-  [".foo", ".bar", ".foo", ".bar"],
-  ["div", "#foobar", "div", "#foobar"],
-  ["div", ".foobar", "div", ".foobar"],
-  ["#foobar", "div", "#foobar", "div"],
-  ["#foo", ".bar", "#foo", ".bar"],
-  [".foobar", "div", ".foobar", "div"],
-  [".foo", "#bar", ".foo", "#bar"],
-  ["div", "#id-foo", "div", "#a"],
-  ["#id-foo", "div", "#a", "div"],
-  [".foo", "#id-bar", ".foo", "#a"],
-  ["#id-foo", ".bar", "#a", ".bar"],
-  ["#foo", "#id-bar", "#foo", "#a"],
-  ["#id-foo", "#bar", "#a", "#bar"],
-  ["#id-foo", "#id-bar", "#a", "#b"],
-  ["#id-foo", "#id-foo", "#a", "#a"],
+const SELECTOR_PAIRS: { beforeA: string, beforeB: string, afterA: string, afterB: string }[] = [
+  { beforeA: "div", beforeB: "span", afterA: "div", afterB: "span" },
+  { beforeA: "#foo", beforeB: "#bar", afterA: "#foo", afterB: "#bar" },
+  { beforeA: ".foo", beforeB: ".bar", afterA: ".foo", afterB: ".bar" },
+  { beforeA: "div", beforeB: "#foobar", afterA: "div", afterB: "#foobar" },
+  { beforeA: "div", beforeB: ".foobar", afterA: "div", afterB: ".foobar" },
+  { beforeA: "#foo", beforeB: ".bar", afterA: "#foo", afterB: ".bar" },
+  { beforeA: ".foo", beforeB: "#bar", afterA: ".foo", afterB: "#bar" },
+  { beforeA: "#foobar", beforeB: "div", afterA: "#foobar", afterB: "div" },
+  { beforeA: ".foobar", beforeB: "div", afterA: ".foobar", afterB: "div" },
+  { beforeA: "div", beforeB: "#id-foo", afterA: "div", afterB: "#a" },
+  { beforeA: "#id-foo", beforeB: "div", afterA: "#a", afterB: "div" },
+  { beforeA: ".foo", beforeB: "#id-bar", afterA: ".foo", afterB: "#a" },
+  { beforeA: "#id-foo", beforeB: ".bar", afterA: "#a", afterB: ".bar" },
+  { beforeA: "#foo", beforeB: "#id-bar", afterA: "#foo", afterB: "#a" },
+  { beforeA: "#id-foo", beforeB: "#bar", afterA: "#a", afterB: "#bar" },
+  { beforeA: "#id-foo", beforeB: "#id-bar", afterA: "#a", afterB: "#b" },
+  { beforeA: "#id-foobar", beforeB: "#id-foobar", afterA: "#a", afterB: "#a" },
 ];
 
 suite("HTML ID Mangler", function() {
@@ -54,114 +55,101 @@ suite("HTML ID Mangler", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "individual selectors",
-        cases: [
-          ...SELECTORS
-            .map(([before, after]) => ({
-              input: `${before}{}`,
-              expected: `${after}{}`,
-            }))
-            .map((testCase) => varySpacing(["{", "}"], testCase))
-            .flat(),
-          ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]) => ({
+        cases: SELECTORS
+          .map(({ before, after }): TestCase[] => [
+            {
+              input: `${before} { }`,
+              expected: `${after} { }`,
+            },
+            {
+              input: `:not(${before}) { }`,
+              expected: `:not(${after}) { }`,
+            },
+            {
+              input: `${before} { color: red; }`,
+              expected: `${after} { color: red; }`,
+            },
+            ...PSEUDO_SELECTORS
+              .map((pseudoSelector: string): TestCase[] => [
+                {
+                  input: `${before}:${pseudoSelector} { }`,
+                  expected: `${after}:${pseudoSelector} { }`,
+                },
+              ])
+              .flat(),
+            ...PSEUDO_ELEMENT_SELECTORS
+              .map((pseudoElementSelector: string): TestCase[] => [
+                {
+                  input: `${before}:${pseudoElementSelector} { }`,
+                  expected: `${after}:${pseudoElementSelector} { }`,
+                },
+              ])
+              .flat(),
+            ...ATTRIBUTE_SELECTORS
+              .map((attributeSelector: string): TestCase[] => [
+                {
+                  input: `${before}[${attributeSelector}] { }`,
+                  expected: `${after}[${attributeSelector}] { }`,
+                },
+              ])
+              .flat(),
+          ])
+          .flat(),
+      },
+      {
+        name: "multiple selectors",
+        cases: SELECTOR_PAIRS
+          .map(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
+            {
               input: `${beforeA} { } ${beforeB} { }`,
               expected: `${afterA} { } ${afterB} { }`,
-            })),
-          {
-            input: "#id-foo { color: red; }",
-            expected: "#a { color: red; }",
-          },
-          {
-            input: "#id-foo { font-size: 12px; } #id-bar { font-weight: bold; }",
-            expected: "#a { font-size: 12px; } #b { font-weight: bold; }",
-          },
-          {
-            input: ":root { } #id-foo { } #id-bar { }",
-            expected: ":root { } #a { } #b { }",
-          },
-          {
-            input: "#id-foo { } div { } #id-bar { }",
-            expected: "#a { } div { } #b { }",
-          },
-          {
-            input: "#id-foo { } #id-bar { } span { }",
-            expected: "#a { } #b { } span { }",
-          },
-          {
-            input: ":root { } #id-foo { } div { } #id-bar { }",
-            expected: ":root { } #a { } div { } #b { }",
-          },
-          {
-            input: ":root { } #id-foo { } #id-bar { } span { }",
-            expected: ":root { } #a { } #b { } span { }",
-          },
-          {
-            input: "#id-foo { } div { } #id-bar { } span { }",
-            expected: "#a { } div { } #b { } span { }",
-          },
-          {
-            input: ":root { } #id-foo { } div { } #id-bar { } span { }",
-            expected: ":root { } #a { } div { } #b { } span { }",
-          },
-          {
-            input: "#id-praise { } #id-the { } #id-sun { }",
-            expected: "#a { } #b { } #c { }",
-          },
-        ],
+            },
+            ...SELECTOR_COMBINATORS
+              .filter((combinator) => combinator !== "")
+              .map((combinator): TestCase[] => [
+                ...varySpacing(combinator, {
+                  input: `${beforeA}${combinator}${beforeB} { }`,
+                  expected: `${afterA}${combinator}${afterB} { }`,
+                }),
+              ])
+              .flat(),
+            {
+              input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
+              expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } ${beforeB} { }`,
+              expected: `:root { } ${afterA} { } ${afterB} { }`,
+            },
+            {
+              input: `${beforeA} { } div { } ${beforeB} { }`,
+              expected: `${afterA} { } div { } ${afterB} { }`,
+            },
+            {
+              input: `${beforeA} { } ${beforeB} { } span { }`,
+              expected: `${afterA} { } ${afterB} { } span { }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } div { } ${beforeB} { }`,
+              expected: `:root { } ${afterA} { } div { } ${afterB} { }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } ${beforeB} { } span { }`,
+              expected: `:root { } ${afterA} { } ${afterB} { } span { }`,
+            },
+            {
+              input: `${beforeA} { } div { } ${beforeB} { } span { }`,
+              expected: `${afterA} { } div { } ${afterB} { } span { }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } div { } ${beforeB} { } span { }`,
+              expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
+            },
+          ])
+          .flat(),
       },
       {
-        name: "pseudo selectors",
-        cases: [
-          ...SELECTORS
-            .map(([selectorBefore, selectorAfter]): TestCase[] => [
-              ...PSEUDO_SELECTORS.map((pseudoSelector: string): TestCase => ({
-                input: `${selectorBefore}:${pseudoSelector} { }`,
-                expected: `${selectorAfter}:${pseudoSelector} { }`,
-              })),
-              ...PSEUDO_ELEMENT_SELECTORS.map((pseudoElementSelector: string): TestCase => ({
-                input: `${selectorBefore}:${pseudoElementSelector} { }`,
-                expected: `${selectorAfter}:${pseudoElementSelector} { }`,
-              })),
-            ])
-            .flat(),
-        ],
-      },
-      {
-        name: "attribute selectors",
-        cases: [
-          ...SELECTORS
-            .map(([selectorBefore, selectorAfter]): TestCase[] => [
-              ...ATTRIBUTE_SELECTORS.map((attributeSelector: string): TestCase => ({
-                input: `${selectorBefore}[${attributeSelector}] { }`,
-                expected: `${selectorAfter}[${attributeSelector}] { }`,
-              })),
-            ])
-            .flat(),
-        ],
-      },
-      {
-        name: "combinators",
-        cases: [
-          ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase[] => [
-              ...SELECTOR_COMBINATORS
-                .map((combinator): TestCase[] => {
-                  if (combinator === "" && beforeB.match(/^[a-z]/)) {
-                    return [];
-                  }
-
-                  return varySpacing(combinator, {
-                    input: `${beforeA}${combinator}${beforeB} { }`,
-                    expected: `${afterA}${combinator}${afterB} { }`,
-                  });
-                })
-                .flat(),
-            ])
-            .flat(),
-        ],
-      },
-      {
-        name: "in href attribute selector",
+        name: "in attribute selectors",
         cases: [
           ...ATTRIBUTE_SELECTOR_OPERATORS
             .map((x): TestCase => ({
@@ -175,45 +163,51 @@ suite("HTML ID Mangler", function() {
         ],
       },
       {
-        name: "non-id selectors that match the pattern(s)",
+        name: "other selectors that match the pattern(s)",
         cases: [
           {
             input: "div { } #div { }",
             expected: "div { } #a { }",
-            pattern: "[a-zA-Z-]+",
+            pattern: "[a-z]+",
           },
           {
-            input: ".foo { } #foo { }",
-            expected: ".foo { } #a { }",
-            pattern: "[a-zA-Z-]+",
+            input: ".id-foo { } #id-foo { }",
+            expected: ".id-foo { } #a { }",
           },
           ...ATTRIBUTE_SELECTORS
             .filter(isValidIdName)
-            .map((s: string): TestCase => {
-              return {
-                input: `div[${s}] { } #${s} { }`,
-                expected: `div[${s}] { } #a { }`,
-                pattern: "[a-zA-Z-]+",
-              };
-            }),
+            .map((s: string): TestCase => ({
+              input: `div[${s}] { } #${s} { }`,
+              expected: `div[${s}] { } #a { }`,
+              pattern: "[a-zA-Z-]+",
+            })),
           ...PSEUDO_SELECTORS
             .filter(isValidIdName)
-            .map((s: string): TestCase => {
-              return {
-                input: `input:${s} { } #${s} { }`,
-                expected: `input:${s} { } #a { }`,
-                pattern: "[a-zA-Z-]+",
-              };
-            }),
+            .map((s: string): TestCase => ({
+              input: `input:${s} { } #${s} { }`,
+              expected: `input:${s} { } #a { }`,
+              pattern: "[a-zA-Z-]+",
+            })),
           ...PSEUDO_ELEMENT_SELECTORS
             .filter(isValidIdName)
-            .map((s: string): TestCase => {
-              return {
-                input: `div::${s} { } #${s} { }`,
-                expected: `div::${s} { } #a { }`,
-                pattern: "[a-zA-Z-]+",
-              };
-            }),
+            .map((s: string): TestCase => ({
+              input: `div::${s} { } #${s} { }`,
+              expected: `div::${s} { } #a { }`,
+              pattern: "[a-zA-Z-]+",
+            })),
+        ],
+      },
+      {
+        name: "strings that match the pattern",
+        cases: [
+          ...varySpacing("css", {
+            input: "div { content: \"#id-foo\"; } #id-foo { }",
+            expected: "div { content: \"#id-foo\"; } #a { }",
+          }),
+          ...varySpacing("css", {
+            input: "div[data-foo=\"#id-foo\"] { } #id-foo { }",
+            expected: "div[data-foo=\"#id-foo\"] { } #a { }",
+          }),
         ],
       },
       {
@@ -222,26 +216,13 @@ suite("HTML ID Mangler", function() {
           {
             input: "#id-foo",
             expected: "#a",
-            description: "mangle dangling ids",
+            description: "dangling id selectors should be mangled",
           },
           {
             input: "div{}#id-foo{}",
             expected: "div{}#a{}",
-            description: "no space between closing `}` and id `#` should not matter",
+            description: "lack of spacing around curly braces should not prevent mangling",
           },
-          {
-            input: "div { content: \"id-foo\" } #id-foo { }",
-            expected: "div { content: \"id-foo\" } #a { }",
-          },
-          ...["div { content: \"#id-foo\" }", "div[data-foo=\"#id-bar\"] { }"]
-            .map((testCase): TestCase => ({
-              input: testCase,
-              expected: testCase,
-            }))
-            .map((testCase) => varySpacing("\"", testCase))
-            .flat()
-            .map((testCase) => varyQuotes("css", testCase))
-            .flat(),
         ],
       },
     ];

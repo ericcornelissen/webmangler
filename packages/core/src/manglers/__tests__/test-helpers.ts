@@ -82,15 +82,33 @@ export function getArrayOfFormattedStrings(
 }
 
 /**
+ * Check if the provided string is a valid HTML attribute name.
+ *
+ * @example
+ * const isValid = isValidAttributeName("data-foo");
+ * // isValid === true
+ *
+ * @example
+ * const isValid = isValidIdName("spaces are not allowed in attribute names");
+ * // isValid === false
+ *
+ * @param attrName The string of interest.
+ * @returns `true` if `attrName` is a valid attribute name, `false` otherwise.
+ */
+export function isValidAttributeName(attrName: string): boolean {
+  return /^[a-zA-Z][a-zA-Z0-9_-]+$/.test(attrName);
+}
+
+/**
  * Check if the provided string is a valid class name.
  *
  * @example
- * const validClassName = isValidClassName("foo");
- * // validClassName === true
+ * const isValid = isValidClassName("foo");
+ * // isValid === true
  *
  * @example
- * const invalidClassName = isValidClassName(".foo");
- * // invalidClassName === false
+ * const isValid = isValidClassName(".foo");
+ * // isValid === false
  *
  * @param className The string of interest.
  * @returns `true` if `className` is a valid class name, `false` otherwise.
@@ -103,12 +121,12 @@ export function isValidClassName(className: string): boolean {
  * Check if the provided string is a valid id name.
  *
  * @example
- * const invalidIdName = isValidIdName("foo");
- * // invalidIdName === true
+ * const isValid = isValidIdName("foo");
+ * // isValid === true
  *
  * @example
- * const invalidIdName = isValidIdName("#foo");
- * // invalidIdName === false
+ * const isValid = isValidIdName("#foo");
+ * // isValid === false
  *
  * @param idName The string of interest.
  * @returns `true` if `idName` is a valid id name, `false` otherwise.

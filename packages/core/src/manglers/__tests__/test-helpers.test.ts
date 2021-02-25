@@ -6,6 +6,7 @@ import { expect } from "chai";
 
 import {
   getArrayOfFormattedStrings,
+  isValidAttributeName,
   isValidClassName,
   isValidIdName,
   permuteObjects,
@@ -13,7 +14,7 @@ import {
   varySpacing,
 } from "./test-helpers";
 
-suite("Manglers Test helpers", function() {
+suite("Manglers Test Helpers", function() {
   suite("::getArrayOfFormattedStrings", function() {
     test("n is 0", function() {
       const result = getArrayOfFormattedStrings(0, "%s");
@@ -32,6 +33,49 @@ suite("Manglers Test helpers", function() {
       const result = getArrayOfFormattedStrings(5, "(%s)");
       for (const i in result) {
         expect(result[i]).to.equal(`(${i})`);
+      }
+    });
+  });
+
+  suite("::isValidAttributeName", function() {
+    test("valid attribute names", function() {
+      const names: string[] = [
+        "foo",
+        "bar",
+        "foo-bar",
+        "foo_bar",
+        "Hello_World",
+        "a_0-",
+      ];
+
+      for (const name of names) {
+        const valid = isValidAttributeName(name);
+        expect(valid).to.be.true;
+      }
+    });
+
+    test("invalid attribute names", function() {
+      const names: string[] = [
+        "",
+        ".foo",
+        "bar.",
+        "foo=bar",
+        "-foobar",
+        "0foobar",
+        "1foobar",
+        "2foobar",
+        "3foobar",
+        "4foobar",
+        "5foobar",
+        "6foobar",
+        "7foobar",
+        "8foobar",
+        "9foobar",
+      ];
+
+      for (const name of names) {
+        const valid = isValidAttributeName(name);
+        expect(valid).to.be.false;
       }
     });
   });

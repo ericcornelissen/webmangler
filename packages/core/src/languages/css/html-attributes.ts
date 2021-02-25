@@ -18,6 +18,7 @@ const expressions: MangleExpression[] = [
   //  `[(data-foo)*=bar]`
   new SingleGroupMangleExpression(
     `
+      (?<!"[^"}]*|'[^'}]*)
       (?<=${SELECTOR_REQUIRED_BEFORE})
       (?<${GROUP_ATTRIBUTE}>%s)
       (?=${SELECTOR_REQUIRED_AFTER})
@@ -32,6 +33,7 @@ const expressions: MangleExpression[] = [
   //  `attr\((data-foo) url, "https://www.example.com/"\);`
   new SingleGroupMangleExpression(
     `
+      (?<!"[^";]*|'[^';]*)
       (?<=attr\\s*\\(\\s*)
       (?<${GROUP_ATTRIBUTE}>%s)
       (?=(\\s+([a-zA-Z]+|%))?\\s*(,|\\)))

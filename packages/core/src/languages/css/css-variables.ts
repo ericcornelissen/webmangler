@@ -10,6 +10,7 @@ const expressions: MangleExpression[] = [
   //  `--(foo) : 'bar;`
   new SingleGroupMangleExpression(
     `
+      (?<!"[^";]*|'[^';]*)
       (?<=--)
       (?<${GROUP_VARIABLE}>%s)
       (?=\\s*:)
@@ -23,6 +24,7 @@ const expressions: MangleExpression[] = [
   //  `var ( --foo );`
   new SingleGroupMangleExpression(
     `
+      (?<!"[^";]*|'[^';]*)
       (?<=
         var\\s*\\(\\s*
         --

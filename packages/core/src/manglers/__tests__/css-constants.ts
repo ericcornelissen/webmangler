@@ -43,6 +43,35 @@ export const ATTRIBUTE_SELECTORS: string[] = [
 ];
 
 /**
+ * A list of various CSS properties.
+ */
+export const CSS_PROPERTIES = [
+  "background",
+  "color",
+  "font",
+];
+
+/**
+ * A list of various CSS values. None of these are strings.
+ */
+export const CSS_VALUES_NO_STRINGS: string[] = [
+  "#000",
+  "#ABCDEF",
+  "12px",
+  "black",
+  "serif",
+];
+
+/**
+ * A list of various CSS values.
+ */
+export const CSS_VALUES: string[] = [
+  ...CSS_VALUES_NO_STRINGS,
+  "\"foo\"",
+  "'bar'",
+];
+
+/**
  * A list of all standard pseudo element selectors. The "::"-prefix is not
  * included.
  */

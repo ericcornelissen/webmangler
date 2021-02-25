@@ -4,13 +4,16 @@ import type { TestCase } from "./types";
 import { expect } from "chai";
 
 import {
+  ATTRIBUTE_SELECTOR_OPERATORS,
+  CSS_VALUES,
   PSEUDO_ELEMENT_SELECTORS,
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
-  TYPE_OR_UNITS ,
+  TYPE_OR_UNITS,
 } from "./css-constants";
 import {
   getArrayOfFormattedStrings,
+  isValidAttributeName,
   varyQuotes,
   varySpacing,
 } from "./test-helpers";
@@ -23,193 +26,286 @@ import HtmlAttributeMangler from "../html-attributes";
 
 const builtInLanguageSupport = new BuiltInLanguageSupport();
 
-suite("HTML Attribute Mangler", function() {
-  const DEFAULT_PATTERN = "data-[a-z-]+";
+const DEFAULT_PATTERN = "data-[a-z]+";
+const SELECTORS: {before: string, after: string}[] = [
+  { before: ":root", after: ":root" },
+  { before: "div", after: "div" },
+  { before: "#foobar", after: "#foobar" },
+  { before: ".foobar", after: ".foobar" },
+  { before: "[data-foo]", after: "[data-a]" },
+  { before: "[href]", after: "[href]" },
+  { before: "div[data-foo]", after: "div[data-a]" },
+  { before: "div[href]", after: "div[href]" },
+  { before: "#foo[data-bar]", after: "#foo[data-a]" },
+  { before: "#foobar[href]", after: "#foobar[href]" },
+  { before: ".foo[data-bar]", after: ".foo[data-a]" },
+  { before: ".foobar[href]", after: ".foobar[href]" },
+];
+const SELECTOR_PAIRS: { beforeA: string, beforeB: string, afterA: string, afterB: string }[] = [
+  { beforeA: "div", beforeB: "span", afterA: "div", afterB: "span" },
+  { beforeA: "#foo", beforeB: "#bar", afterA: "#foo", afterB: "#bar" },
+  { beforeA: ".foo", beforeB: ".bar", afterA: ".foo", afterB: ".bar" },
+  { beforeA: "div", beforeB: "#foobar", afterA: "div", afterB: "#foobar" },
+  { beforeA: "div", beforeB: ".foobar", afterA: "div", afterB: ".foobar" },
+  { beforeA: "#foo", beforeB: ".bar", afterA: "#foo", afterB: ".bar" },
+  { beforeA: ".foo", beforeB: "#bar", afterA: ".foo", afterB: "#bar" },
+  { beforeA: "#foobar", beforeB: "div", afterA: "#foobar", afterB: "div" },
+  { beforeA: ".foobar", beforeB: "div", afterA: ".foobar", afterB: "div" },
+  { beforeA: "[data-foo]", beforeB: "[data-bar]", afterA: "[data-a]", afterB: "[data-b]" },
+  { beforeA: "[data-foo]", beforeB: "[href]", afterA: "[data-a]", afterB: "[href]" },
+  { beforeA: "[href]", beforeB: "[data-bar]", afterA: "[href]", afterB: "[data-a]" },
+  { beforeA: "[data-foo]", beforeB: "[data-foo]", afterA: "[data-a]", afterB: "[data-a]" },
+];
+const ATTRIBUTES: { before: string, after: string }[] = [
+  { before: "href", after: "href" },
+  { before: "data-foo", after: "data-a" },
+];
 
+suite("HTML Attribute Mangler", function() {
   suite("CSS", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "single attribute selector",
+        name: "individual selectors",
+        cases: SELECTORS
+          .map(({ before, after }): TestCase[] => [
+            {
+              input: `${before} { }`,
+              expected: `${after} { }`,
+            },
+            {
+              input: `:not(${before}) { }`,
+              expected: `:not(${after}) { }`,
+            },
+            {
+              input: `${before} { color: red; }`,
+              expected: `${after} { color: red; }`,
+            },
+            ...PSEUDO_SELECTORS
+              .map((pseudoSelector: string): TestCase[] => [
+                {
+                  input: `${before}:${pseudoSelector} { }`,
+                  expected: `${after}:${pseudoSelector} { }`,
+                },
+              ])
+              .flat(),
+            ...PSEUDO_ELEMENT_SELECTORS
+              .map((pseudoElementSelector: string): TestCase[] => [
+                {
+                  input: `${before}:${pseudoElementSelector} { }`,
+                  expected: `${after}:${pseudoElementSelector} { }`,
+                },
+              ])
+              .flat(),
+            ...ATTRIBUTE_SELECTOR_OPERATORS
+              .map((operator) => ({
+                operator,
+                input: `[${before}${operator}"bar"]{ }`,
+                expected: `[${after}${operator}"bar"]{ }`,
+              }))
+              .map((testCase) => varySpacing(testCase.operator, testCase))
+              .flat()
+              .map((testCase) => varyQuotes("css", testCase))
+              .flat(),
+          ])
+          .flat()
+          .map((testCase) => varySpacing(["[", "]"], testCase))
+          .flat(),
+      },
+      {
+        name: "multiple selectors",
+        cases: SELECTOR_PAIRS
+          .map(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
+            {
+              input: `${beforeA} { } ${beforeB} { }`,
+              expected: `${afterA} { } ${afterB} { }`,
+            },
+            ...SELECTOR_COMBINATORS
+              .map((connector) => ({
+                connector,
+                input: `[${beforeA}]${connector}[${beforeB}] { }`,
+                expected: `[${afterA}]${connector}[${afterB}] { }`,
+              }))
+              .map((testCase) => varySpacing(testCase.connector, testCase))
+              .flat(),
+            {
+              input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
+              expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } ${beforeB} { }`,
+              expected: `:root { } ${afterA} { } ${afterB} { }`,
+            },
+            {
+              input: `${beforeA} { } div { } ${beforeB} { }`,
+              expected: `${afterA} { } div { } ${afterB} { }`,
+            },
+            {
+              input: `${beforeA} { } ${beforeB} { } span { }`,
+              expected: `${afterA} { } ${afterB} { } span { }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } div { } ${beforeB} { }`,
+              expected: `:root { } ${afterA} { } div { } ${afterB} { }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } ${beforeB} { } span { }`,
+              expected: `:root { } ${afterA} { } ${afterB} { } span { }`,
+            },
+            {
+              input: `${beforeA} { } div { } ${beforeB} { } span { }`,
+              expected: `${afterA} { } div { } ${afterB} { } span { }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } div { } ${beforeB} { } span { }`,
+              expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
+            },
+          ])
+          .flat()
+          .map((testCase) => varySpacing(["[", "]"], testCase))
+          .flat(),
+      },
+      {
+        name: "value usage",
+        cases: ATTRIBUTES
+          .map(({ before, after }): TestCase[] => [
+            {
+              input: `div { content: attr(${before}); }`,
+              expected: `div { content: attr(${after}); }`,
+            },
+            ...TYPE_OR_UNITS
+              .map((typeOrUnit): TestCase[] => [
+                {
+                  input: `div { content: attr(${before} ${typeOrUnit}); }`,
+                  expected: `div { content: attr(${after} ${typeOrUnit}); }`,
+                },
+              ])
+              .flat(),
+            ...CSS_VALUES
+              .map((value): TestCase[] => [
+                {
+                  input: `div { content: attr(${before},${value}); }`,
+                  expected: `div { content: attr(${after},${value}); }`,
+                },
+                ...TYPE_OR_UNITS
+                  .map((typeOrUnit): { value: string, typeOrUnit: string } => ({ value, typeOrUnit }))
+                  .map(({ value, typeOrUnit }): TestCase[] => [
+                    {
+                      input: `div { content: attr(${before} ${typeOrUnit},${value}); }`,
+                      expected: `div { content: attr(${after} ${typeOrUnit},${value}); }`,
+                    },
+                  ])
+                  .flat()
+                  .map((testCase) => varySpacing(",", testCase))
+                  .flat(),
+              ])
+              .flat(),
+          ])
+          .flat()
+          .map((testCase) => varyQuotes("css", testCase))
+          .flat(),
+      },
+      {
+        name: "other selectors that match the pattern(s)",
         cases: [
-          ...varySpacing(["[", "]"], {
-            input: "[data-foo] { }",
-            expected: "[data-a] { }",
-          }),
-          ...varySpacing(["[", "]"], {
-            input: "div[data-foo] { }",
+          {
+            input: "div[div] { }",
             expected: "div[data-a] { }",
-          }),
-          ...varySpacing(["[", "]"], {
-            input: "a[href] { }",
-            expected: "a[href] { }",
-          }),
-        ],
-      },
-      {
-        name: "multiple attribute selectors",
-        cases: [
-          ...SELECTOR_COMBINATORS.map((connector) => {
-            return {
-              input: `div[data-foo]${connector}div[data-bar] { }`,
-              expected: `div[data-a]${connector}div[data-b] { }`,
-            };
-          }),
-          {
-            input: "div[data-foo] { } p[data-bar] { }",
-            expected: "div[data-a] { } p[data-b] { }",
-          },
-          {
-            input: "div[data-foo][data-bar] { }",
-            expected: "div[data-a][data-b] { }",
-          },
-          {
-            input: "div[data-foo][data-foo] { }",
-            expected: "div[data-a][data-a] { }",
-          },
-          {
-            input: "div[data-praise].foo[data-the]#bar[data-sun] { }",
-            expected: "div[data-a].foo[data-b]#bar[data-c] { }",
-          },
-          {
-            input: "div[data-foo] { } a[href] { }",
-            expected: "div[data-a] { } a[href] { }",
-          },
-          {
-            input: "a[href] { } div[data-foo] { }",
-            expected: "a[href] { } div[data-a] { }",
-          },
-        ],
-      },
-      {
-        name: "attribute value selector",
-        cases: [
-          ...varyQuotes("css", {
-            input: "[data-foo=\"bar\"] { }",
-            expected: "[data-a=\"bar\"] { }",
-          }),
-          ...varySpacing(["[", "]"], {
-            input: "[data-foo=\"bar\"] { }",
-            expected: "[data-a=\"bar\"] { }",
-          }),
-          ...varySpacing("=", {
-            input: "[data-foo=\"bar\"] { }",
-            expected: "[data-a=\"bar\"] { }",
-          }),
-          ...varySpacing("|=", {
-            input: "[data-foo|=\"bar\"] { }",
-            expected: "[data-a|=\"bar\"] { }",
-          }),
-          ...varySpacing("~=", {
-            input: "[data-foo~=\"bar\"] { }",
-            expected: "[data-a~=\"bar\"] { }",
-          }),
-          ...varySpacing("^=", {
-            input: "[data-foo^=\"bar\"] { }",
-            expected: "[data-a^=\"bar\"] { }",
-          }),
-          ...varySpacing("$=", {
-            input: "[data-foo$=\"bar\"] { }",
-            expected: "[data-a$=\"bar\"] { }",
-          }),
-          ...varySpacing("*=", {
-            input: "[data-foo*=\"bar\"] { }",
-            expected: "[data-a*=\"bar\"] { }",
-          }),
-        ],
-      },
-      {
-        name: "attribute selectors with pseudo selectors",
-        cases: [
-          ...PSEUDO_SELECTORS.map((s: string): TestCase => ({
-            input: `[data-foo]:${s} { }`,
-            expected: `[data-a]:${s} { }`,
-          })),
-          ...PSEUDO_ELEMENT_SELECTORS.map((s: string): TestCase => ({
-            input: `[data-foo]::${s} { }`,
-            expected: `[data-a]::${s} { }`,
-          })),
-        ],
-      },
-      {
-        name: "inverted attribute selectors",
-        cases: [
-          ...varySpacing(["(", ")"], {
-            input: ":not([data-foo]) { }",
-            expected: ":not([data-a]) { }",
-          }),
-        ],
-      },
-      {
-        name: "attribute usage",
-        cases: [
-          ...varySpacing(["(", ")"], {
-            input: "div { content: attr(data-foo); }",
-            expected: "div { content: attr(data-a); }",
-          }),
-          ...varySpacing(["(", ")"], {
-            input: `div { content: attr(data-foo ${TYPE_OR_UNITS[0]}); }`,
-            expected: `div { content: attr(data-a ${TYPE_OR_UNITS[0]}); }`,
-          }),
-          ...TYPE_OR_UNITS.map((typeOrUnit) => {
-            return {
-              input: `div { content: attr(data-foo ${typeOrUnit}); }`,
-              expected: `div { content: attr(data-a ${typeOrUnit}); }`,
-            };
-          }),
-          ...varyQuotes("css", {
-            input: "div { content: attr(data-foo, \"bar\"); }",
-            expected: "div { content: attr(data-a, \"bar\"); }",
-          }),
-          ...varySpacing(["(", ")"], {
-            input: "div { content: attr(data-foo, \"bar\"); }",
-            expected: "div { content: attr(data-a, \"bar\"); }",
-          }),
-          ...varySpacing([","], {
-            input: "div { content: attr(data-foo,\"bar\"); }",
-            expected: "div { content: attr(data-a,\"bar\"); }",
-          }),
-        ],
-      },
-      {
-        name: "edge cases",
-        cases: [
-          {
-            input: "[data-foo=\"]\"] { }",
-            expected: "[data-a=\"]\"] { }",
-          },
-          {
-            input: "[data-foo=\"[\"] { }",
-            expected: "[data-a=\"[\"] { }",
-          },
-          {
-            input: "[data-foo=\"=\"] { }",
-            expected: "[data-a=\"=\"] { }",
+            pattern: "[a-z]+",
           },
           {
             input: "#data-foo[data-foo] { }",
             expected: "#data-foo[data-a] { }",
           },
           {
-            input: "#data-foo { }",
-            expected: "#data-foo { }",
-          },
-          {
-            input: ".data-foo { }",
-            expected: ".data-foo { }",
-          },
-          {
             input: ".data-foo[data-foo] { }",
             expected: ".data-foo[data-a] { }",
           },
+          ...PSEUDO_SELECTORS
+            .filter(isValidAttributeName)
+            .map((s: string): TestCase => ({
+              input: `input:${s} { } [${s}] { }`,
+              expected: `input:${s} { } [data-a] { }`,
+              pattern: "[a-zA-Z-]+",
+            })),
+          ...PSEUDO_ELEMENT_SELECTORS
+            .filter(isValidAttributeName)
+            .map((s: string): TestCase => ({
+              input: `div::${s} { } [${s}] { }`,
+              expected: `div::${s} { } [data-a] { }`,
+              pattern: "[a-zA-Z-]+",
+            })),
+        ],
+      },
+      {
+        name: "strings that match the pattern",
+        cases: [
+          ...varySpacing("css", {
+            input: "div[data-foo] { content: \"[data-foo]\"; }",
+            expected: "div[data-a] { content: \"[data-foo]\"; }",
+          }),
+          ...varySpacing("css", {
+            input: "div[data-foo] { content: \"attr(data-foo);\"; }",
+            expected: "div[data-a] { content: \"attr(data-foo);\"; }",
+          }),
+          ...ATTRIBUTE_SELECTOR_OPERATORS
+            .map((operator: string): TestCase[] => [
+              {
+                input: `div[data-foo${operator}"data-foo"] { }`,
+                expected: `div[data-a${operator}"data-foo"] { }`,
+              },
+              {
+                input: `div[data-foo${operator}"attr(data-foo)"] { }`,
+                expected: `div[data-a${operator}"attr(data-foo)"] { }`,
+              },
+            ])
+            .flat()
+            .map((testCase) => varySpacing("css", testCase))
+            .flat(),
+          ...varySpacing("css", {
+            input: "div { content: \"[data-foo]\"; font: attr(data-foo); }",
+            expected: "div { content: \"[data-foo]\"; font: attr(data-a); }",
+          }),
+          ...varySpacing("css", {
+            input: "div { content: \"attr(data-foo);\"; font: attr(data-foo); }",
+            expected: "div { content: \"attr(data-foo);\"; font: attr(data-a); }",
+          }),
+        ],
+      },
+      {
+        name: "edge cases, selectors",
+        cases: [
           {
-            input: "div { }",
-            expected: "div { }",
-            pattern: "[a-z]+",
+            input: "[data-foo]",
+            expected: "[data-a]",
+            description: "dangling attribute selectors should be mangled",
           },
           {
-            input: "div[class] { }",
-            expected: "div[data-a] { }",
-            pattern: "[a-z]+",
+            input: "div{}[data-foo]{}",
+            expected: "div{}[data-a]{}",
+            description: "lack of spacing around curly braces should not prevent mangling",
+          },
+          ...["[", "]", "="]
+            .map((unexpectedString): TestCase => ({
+              input: `[data-foo="${unexpectedString}"] { }`,
+              expected: `[data-a="${unexpectedString}"] { }`,
+              description: "unexpected attribute values should not prevent mangling",
+            }))
+            .map((testCase) => varySpacing("css", testCase))
+            .flat(),
+        ],
+      },
+      {
+        name: "edge cases, usage",
+        cases: [
+          {
+            input: ":root{color: attr(data-foo);}",
+            expected: ":root{color: attr(data-a);}",
+            description: "lack of spacing around curly braces should not prevent mangling",
+          },
+          {
+            input: ":root { color: attr(data-foo) }",
+            expected: ":root { color: attr(data-a) }",
+            description: "lack of semicolon should not prevent mangling",
           },
         ],
       },

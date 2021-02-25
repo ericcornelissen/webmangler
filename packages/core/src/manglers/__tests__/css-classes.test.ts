@@ -25,170 +25,145 @@ import CssClassMangler from "../css-classes";
 
 const builtInLanguageSupport = new BuiltInLanguageSupport();
 
-const DEFAULT_PATTERN = "cls[-_][a-zA-Z-_]+";
-const SELECTORS: [string, string][] = [
-  ["div", "div"],
-  ["#foobar", "#foobar"],
-  [".foobar", ".foobar"],
-  ["[data-foo]", "[data-foo]"],
-  [".cls-foobar", ".a"],
+const DEFAULT_PATTERN = "cls-[a-z]+";
+const SELECTORS: { before: string, after: string }[] = [
+  { before: ":root", after: ":root" },
+  { before: "div", after: "div" },
+  { before: "#foobar", after: "#foobar" },
+  { before: ".foobar", after: ".foobar" },
+  { before: "[data-foobar]", after: "[data-foobar]" },
+  { before: ".cls-foobar", after: ".a" },
 ];
-const SELECTOR_PAIRS: [string, string, string, string][] = [
-  ["div", "span", "div", "span"],
-  ["#foo", "#bar", "#foo", "#bar"],
-  [".foo", ".bar", ".foo", ".bar"],
-  ["div", "#foobar", "div", "#foobar"],
-  ["div", ".foobar", "div", ".foobar"],
-  ["#foobar", "div", "#foobar", "div"],
-  ["#foo", ".bar", "#foo", ".bar"],
-  [".foobar", "div", ".foobar", "div"],
-  [".foo", "#bar", ".foo", "#bar"],
-  ["div", ".cls-foo", "div", ".a"],
-  [".cls-foo", "div", ".a", "div"],
-  ["#foo", ".cls-bar", "#foo", ".a"],
-  [".cls-foo", "#bar", ".a", "#bar"],
-  [".foo", ".cls-bar", ".foo", ".a"],
-  [".cls-foo", ".bar", ".a", ".bar"],
-  [".cls-foo", ".cls-bar", ".a", ".b"],
-  [".cls-foo", ".cls-foo", ".a", ".a"],
+const SELECTOR_PAIRS: { beforeA: string, beforeB: string, afterA: string, afterB: string }[] = [
+  { beforeA: "div", beforeB: "span", afterA: "div", afterB: "span" },
+  { beforeA: "#foo", beforeB: "#bar", afterA: "#foo", afterB: "#bar" },
+  { beforeA: ".foo", beforeB: ".bar", afterA: ".foo", afterB: ".bar" },
+  { beforeA: "div", beforeB: "#foobar", afterA: "div", afterB: "#foobar" },
+  { beforeA: "div", beforeB: ".foobar", afterA: "div", afterB: ".foobar" },
+  { beforeA: "#foo", beforeB: ".bar", afterA: "#foo", afterB: ".bar" },
+  { beforeA: ".foo", beforeB: "#bar", afterA: ".foo", afterB: "#bar" },
+  { beforeA: "#foobar", beforeB: "div", afterA: "#foobar", afterB: "div" },
+  { beforeA: ".foobar", beforeB: "div", afterA: ".foobar", afterB: "div" },
+  { beforeA: "div", beforeB: ".cls-foo", afterA: "div", afterB: ".a" },
+  { beforeA: ".cls-foo", beforeB: "div", afterA: ".a", afterB: "div" },
+  { beforeA: ".foo", beforeB: ".cls-bar", afterA: ".foo", afterB: ".a" },
+  { beforeA: ".cls-foo", beforeB: ".bar", afterA: ".a", afterB: ".bar" },
+  { beforeA: "#foo", beforeB: ".cls-bar", afterA: "#foo", afterB: ".a" },
+  { beforeA: ".cls-foo", beforeB: "#bar", afterA: ".a", afterB: "#bar" },
+  { beforeA: ".cls-foo", beforeB: ".cls-bar", afterA: ".a", afterB: ".b" },
+  { beforeA: ".cls-foobar", beforeB: ".cls-foobar", afterA: ".a", afterB: ".a" },
 ];
 
-suite("CSS Classes Mangler", function() {
+suite("CSS Class Mangler", function() {
   suite("CSS", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "individual selectors",
-        cases: [
-          ...SELECTORS
-            .map(([before, after]) => ({
-              input: `${before}{}`,
-              expected: `${after}{}`,
-            }))
-            .map((testCase) => varySpacing(["{", "}"], testCase))
-            .flat(),
-          ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]) => ({
+        cases: SELECTORS
+          .map(({ before, after }): TestCase[] => [
+            {
+              input: `${before} { }`,
+              expected: `${after} { }`,
+            },
+            {
+              input: `:not(${before}) { }`,
+              expected: `:not(${after}) { }`,
+            },
+            {
+              input: `${before} { color: red; }`,
+              expected: `${after} { color: red; }`,
+            },
+            ...PSEUDO_SELECTORS
+              .map((pseudoSelector: string): TestCase[] => [
+                {
+                  input: `${before}:${pseudoSelector} { }`,
+                  expected: `${after}:${pseudoSelector} { }`,
+                },
+              ])
+              .flat(),
+            ...PSEUDO_ELEMENT_SELECTORS
+              .map((pseudoElementSelector: string): TestCase[] => [
+                {
+                  input: `${before}:${pseudoElementSelector} { }`,
+                  expected: `${after}:${pseudoElementSelector} { }`,
+                },
+              ])
+              .flat(),
+            ...ATTRIBUTE_SELECTORS
+              .map((attributeSelector: string): TestCase[] => [
+                {
+                  input: `${before}[${attributeSelector}] { }`,
+                  expected: `${after}[${attributeSelector}] { }`,
+                },
+              ])
+              .flat(),
+          ])
+          .flat(),
+      },
+      {
+        name: "multiple selectors",
+        cases: SELECTOR_PAIRS
+          .map(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
+            {
               input: `${beforeA} { } ${beforeB} { }`,
               expected: `${afterA} { } ${afterB} { }`,
-            })),
-          {
-            input: ".cls-foo { color: red; }",
-            expected: ".a { color: red; }",
-          },
-          {
-            input: ".cls-foo { font-size: 12px; } .cls-bar { font-weight: bold; }",
-            expected: ".a { font-size: 12px; } .b { font-weight: bold; }",
-          },
-          {
-            input: ":root { } .cls-foo { } .cls-bar { }",
-            expected: ":root { } .a { } .b { }",
-          },
-          {
-            input: ".cls-foo { } div { } .cls-bar { }",
-            expected: ".a { } div { } .b { }",
-          },
-          {
-            input: ".cls-foo { } .cls-bar { } span { }",
-            expected: ".a { } .b { } span { }",
-          },
-          {
-            input: ":root { } .cls-foo { } div { } .cls-bar { }",
-            expected: ":root { } .a { } div { } .b { }",
-          },
-          {
-            input: ":root { } .cls-foo { } .cls-bar { } span { }",
-            expected: ":root { } .a { } .b { } span { }",
-          },
-          {
-            input: ".cls-foo { } div { } .cls-bar { } span { }",
-            expected: ".a { } div { } .b { } span { }",
-          },
-          {
-            input: ":root { } .cls-foo { } div { } .cls-bar { } span { }",
-            expected: ":root { } .a { } div { } .b { } span { }",
-          },
-          {
-            input: ".cls-praise { } .cls-the { } .cls-sun { }",
-            expected: ".a { } .b { } .c { }",
-          },
-        ],
+            },
+            ...SELECTOR_COMBINATORS
+              .filter((combinator) => combinator !== "")
+              .map((combinator): TestCase[] => [
+                ...varySpacing(combinator, {
+                  input: `${beforeA}${combinator}${beforeB} { }`,
+                  expected: `${afterA}${combinator}${afterB} { }`,
+                }),
+              ])
+              .flat(),
+            {
+              input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
+              expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } ${beforeB} { }`,
+              expected: `:root { } ${afterA} { } ${afterB} { }`,
+            },
+            {
+              input: `${beforeA} { } div { } ${beforeB} { }`,
+              expected: `${afterA} { } div { } ${afterB} { }`,
+            },
+            {
+              input: `${beforeA} { } ${beforeB} { } span { }`,
+              expected: `${afterA} { } ${afterB} { } span { }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } div { } ${beforeB} { }`,
+              expected: `:root { } ${afterA} { } div { } ${afterB} { }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } ${beforeB} { } span { }`,
+              expected: `:root { } ${afterA} { } ${afterB} { } span { }`,
+            },
+            {
+              input: `${beforeA} { } div { } ${beforeB} { } span { }`,
+              expected: `${afterA} { } div { } ${afterB} { } span { }`,
+            },
+            {
+              input: `:root { } ${beforeA} { } div { } ${beforeB} { } span { }`,
+              expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
+            },
+          ])
+          .flat(),
       },
       {
-        name: "pseudo selectors",
-        cases: [
-          ...SELECTORS
-            .map(([selectorBefore, selectorAfter]): TestCase[] => [
-              ...PSEUDO_SELECTORS.map((pseudoSelector: string): TestCase => ({
-                input: `${selectorBefore}:${pseudoSelector} { }`,
-                expected: `${selectorAfter}:${pseudoSelector} { }`,
-              })),
-              ...PSEUDO_ELEMENT_SELECTORS.map((pseudoElementSelector: string): TestCase => ({
-                input: `${selectorBefore}:${pseudoElementSelector} { }`,
-                expected: `${selectorAfter}:${pseudoElementSelector} { }`,
-              })),
-            ])
-            .flat(),
-        ],
-      },
-      {
-        name: "attribute selectors",
-        cases: [
-          ...SELECTORS
-            .map(([selectorBefore, selectorAfter]): TestCase[] => [
-              ...ATTRIBUTE_SELECTORS.map((attributeSelector: string): TestCase => ({
-                input: `${selectorBefore}[${attributeSelector}] { }`,
-                expected: `${selectorAfter}[${attributeSelector}] { }`,
-              })),
-            ])
-            .flat(),
-        ],
-      },
-      {
-        name: "combinators",
-        cases: [
-          ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase[] => [
-              ...SELECTOR_COMBINATORS
-                .map((combinator): TestCase[] => {
-                  if (combinator === "" && beforeB.match(/^[a-z]/)) {
-                    return [];
-                  }
-
-                  return varySpacing(combinator, {
-                    input: `${beforeA}${combinator}${beforeB} { }`,
-                    expected: `${afterA}${combinator}${afterB} { }`,
-                  });
-                })
-                .flat(),
-            ])
-            .flat(),
-        ],
-      },
-      {
-        name: "non-class substrings that match the pattern(s)",
+        name: "other selectors that match the pattern(s)",
         cases: [
           {
             input: "div { } .div { }",
             expected: "div { } .a { }",
-            pattern: "[a-zA-Z-]+",
+            pattern: "[a-z]+",
           },
           {
             input: "#cls-foo { } .cls-foo { }",
             expected: "#cls-foo { } .a { }",
           },
-          {
-            input: "div { content: \"cls-foo\" } .cls-foo { }",
-            expected: "div { content: \"cls-foo\" } .a { }",
-          },
-          ...["div { content: \".cls-foo\" }", "div[data-foo=\".cls-bar\"] { }"]
-            .map((testCase): TestCase => ({
-              input: testCase,
-              expected: testCase,
-            }))
-            .map((testCase) => varySpacing("\"", testCase))
-            .flat()
-            .map((testCase) => varyQuotes("css", testCase))
-            .flat(),
           ...ATTRIBUTE_SELECTORS
             .filter(isValidClassName)
             .map((s: string): TestCase => ({
@@ -213,17 +188,30 @@ suite("CSS Classes Mangler", function() {
         ],
       },
       {
+        name: "strings that match the pattern",
+        cases: [
+          ...varySpacing("css", {
+            input: "div { content: \".cls-foo\"; } .cls-foo { }",
+            expected: "div { content: \".cls-foo\"; } .a { }",
+          }),
+          ...varySpacing("css", {
+            input: "div[data-foo=\".cls-foo\"] { } .cls-foo { }",
+            expected: "div[data-foo=\".cls-foo\"] { } .a { }",
+          }),
+        ],
+      },
+      {
         name: "edge cases",
         cases: [
           {
             input: ".cls-foo",
             expected: ".a",
-            description: "mangle dangling classes",
+            description: "dangling class selectors should be mangled",
           },
           {
             input: "div{}.cls-foo{}",
             expected: "div{}.a{}",
-            description: "no space between closing `}` and class `.` should not matter",
+            description: "lack of spacing around curly braces should not prevent mangling",
           },
         ],
       },
@@ -695,7 +683,7 @@ suite("CSS Classes Mangler", function() {
         name: "query selectors with one selector",
         cases: [
           ...SELECTORS
-            .map(([before, after]): TestCase => ({
+            .map(({ before, after }): TestCase => ({
               input: `document.querySelectorAll("${before}");`,
               expected: `document.querySelectorAll("${after}");`,
             }))
@@ -729,10 +717,10 @@ suite("CSS Classes Mangler", function() {
         name: "query selector with attribute selector",
         cases: [
           ...SELECTORS
-            .map(([selectorBefore, selectorAfter]): TestCase[] => [
+            .map(({ before, after }): TestCase[] => [
               ...ATTRIBUTE_SELECTORS.map((attributeSelector: string): TestCase => ({
-                input: `querySelectorAll("${selectorBefore}[${attributeSelector}]");`,
-                expected: `querySelectorAll("${selectorAfter}[${attributeSelector}]");`,
+                input: `querySelectorAll("${before}[${attributeSelector}]");`,
+                expected: `querySelectorAll("${after}[${attributeSelector}]");`,
               })),
             ])
             .flat(),
@@ -742,7 +730,7 @@ suite("CSS Classes Mangler", function() {
         name: "query selector with or operator",
         cases: [
           ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
+            .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `document.querySelectorAll("${beforeA},${beforeB}");`,
               expected: `document.querySelectorAll("${afterA},${afterB}");`,
             }))
@@ -754,7 +742,7 @@ suite("CSS Classes Mangler", function() {
         name: "query selector with and operator",
         cases: [
           ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
+            .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `document.querySelectorAll("${beforeA}${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}${afterB}");`,
             }))
@@ -765,14 +753,14 @@ suite("CSS Classes Mangler", function() {
         name: "query selector with not operator",
         cases: [
           ...SELECTORS
-            .map(([selectorBefore, selectorAfter]): TestCase => ({
-              input: `document.querySelectorAll(":not(${selectorBefore})");`,
-              expected: `document.querySelectorAll(":not(${selectorAfter})");`,
+            .map(({ before, after }): TestCase => ({
+              input: `document.querySelectorAll(":not(${before})");`,
+              expected: `document.querySelectorAll(":not(${after})");`,
             }))
             .map((testCase) => varySpacing(["(", ")"], testCase))
             .flat(),
           ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
+            .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `document.querySelectorAll("${beforeA}:not(${beforeB})");`,
               expected: `document.querySelectorAll("${afterA}:not(${afterB})");`,
             }))
@@ -784,7 +772,7 @@ suite("CSS Classes Mangler", function() {
         name: "query selector with descendent combinator",
         cases: [
           ...SELECTOR_PAIRS.
-            map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
+            map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `document.querySelectorAll("${beforeA} ${beforeB}");`,
               expected: `document.querySelectorAll("${afterA} ${afterB}");`,
             })),
@@ -794,7 +782,7 @@ suite("CSS Classes Mangler", function() {
         name: "query selector with child combinator",
         cases: [
           ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
+            .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `document.querySelectorAll("${beforeA}>${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}>${afterB}");`,
             }))
@@ -806,7 +794,7 @@ suite("CSS Classes Mangler", function() {
         name: "query selector with sibling combinator",
         cases: [
           ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
+            .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `document.querySelectorAll("${beforeA}+${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}+${afterB}");`,
             }))
@@ -818,7 +806,7 @@ suite("CSS Classes Mangler", function() {
         name: "query selector with general sibling combinator",
         cases: [
           ...SELECTOR_PAIRS
-            .map(([beforeA, beforeB, afterA, afterB]): TestCase => ({
+            .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `document.querySelectorAll("${beforeA}~${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}~${afterB}");`,
             }))
