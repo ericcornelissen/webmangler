@@ -1,13 +1,10 @@
-import { expect, use as chaiUse } from "chai";
+import { expect } from "chai";
 import * as sinon from "sinon";
-import * as sinonChai from "sinon-chai";
 import * as cosmiconfig from "cosmiconfig";
 
 import { DEFAULT_CONFIG_PATHS } from "../constants";
 import { DEFAULT_CONFIG } from "../default";
 import { getConfiguration } from "../loader";
-
-chaiUse(sinonChai);
 
 suite("Configuration loader", function() {
   let cosmiconfigStub: sinon.SinonStub;

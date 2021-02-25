@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Include overall statistics when outputting mangling statistics.
+- Use cosmiconfig to load configuration files.
 
 ## [0.1.3] - 2021-02-12
 
