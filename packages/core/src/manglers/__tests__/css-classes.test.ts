@@ -60,7 +60,7 @@ suite("CSS Class Mangler", function() {
       {
         name: "individual selectors",
         cases: SELECTORS
-          .map(({ before, after }): TestCase[] => [
+          .flatMap(({ before, after }): TestCase[] => [
             {
               input: `${before} { }`,
               expected: `${after} { }`,
@@ -74,49 +74,44 @@ suite("CSS Class Mangler", function() {
               expected: `${after} { color: red; }`,
             },
             ...PSEUDO_SELECTORS
-              .map((pseudoSelector: string): TestCase[] => [
+              .flatMap((pseudoSelector: string): TestCase[] => [
                 {
                   input: `${before}:${pseudoSelector} { }`,
                   expected: `${after}:${pseudoSelector} { }`,
                 },
-              ])
-              .flat(),
+              ]),
             ...PSEUDO_ELEMENT_SELECTORS
-              .map((pseudoElementSelector: string): TestCase[] => [
+              .flatMap((pseudoElement: string): TestCase[] => [
                 {
-                  input: `${before}:${pseudoElementSelector} { }`,
-                  expected: `${after}:${pseudoElementSelector} { }`,
+                  input: `${before}:${pseudoElement} { }`,
+                  expected: `${after}:${pseudoElement} { }`,
                 },
-              ])
-              .flat(),
+              ]),
             ...ATTRIBUTE_SELECTORS
-              .map((attributeSelector: string): TestCase[] => [
+              .flatMap((attributeSelector: string): TestCase[] => [
                 {
                   input: `${before}[${attributeSelector}] { }`,
                   expected: `${after}[${attributeSelector}] { }`,
                 },
-              ])
-              .flat(),
-          ])
-          .flat(),
+              ]),
+          ]),
       },
       {
         name: "multiple selectors",
         cases: SELECTOR_PAIRS
-          .map(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
+          .flatMap(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
             {
               input: `${beforeA} { } ${beforeB} { }`,
               expected: `${afterA} { } ${afterB} { }`,
             },
             ...SELECTOR_COMBINATORS
-              .filter((combinator) => combinator !== "")
-              .map((combinator): TestCase[] => [
+              .filter((combinator: string): boolean => combinator !== "")
+              .flatMap((combinator: string): TestCase[] => [
                 ...varySpacing(combinator, {
                   input: `${beforeA}${combinator}${beforeB} { }`,
                   expected: `${afterA}${combinator}${afterB} { }`,
                 }),
-              ])
-              .flat(),
+              ]),
             {
               input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
               expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
@@ -149,8 +144,7 @@ suite("CSS Class Mangler", function() {
               input: `:root { } ${beforeA} { } div { } ${beforeB} { } span { }`,
               expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
             },
-          ])
-          .flat(),
+          ]),
       },
       {
         name: "other selectors that match the pattern(s)",
@@ -164,27 +158,33 @@ suite("CSS Class Mangler", function() {
             input: "#cls-foo { } .cls-foo { }",
             expected: "#cls-foo { } .a { }",
           },
-          ...ATTRIBUTE_SELECTORS
-            .filter(isValidClassName)
-            .map((s: string): TestCase => ({
-              input: `div[${s}] { } .${s} { }`,
-              expected: `div[${s}] { } .a { }`,
-              pattern: "[a-zA-Z-]+",
-            })),
           ...PSEUDO_SELECTORS
             .filter(isValidClassName)
-            .map((s: string): TestCase => ({
-              input: `input:${s} { } .${s} { }`,
-              expected: `input:${s} { } .a { }`,
-              pattern: "[a-zA-Z-]+",
-            })),
+            .flatMap((pseudoSelector: string): TestCase[] => [
+              {
+                input: `input:${pseudoSelector} { } .${pseudoSelector} { }`,
+                expected: `input:${pseudoSelector} { } .a { }`,
+                pattern: "[a-zA-Z-]+",
+              },
+            ]),
           ...PSEUDO_ELEMENT_SELECTORS
             .filter(isValidClassName)
-            .map((s: string): TestCase => ({
-              input: `div::${s} { } .${s} { }`,
-              expected: `div::${s} { } .a { }`,
-              pattern: "[a-zA-Z-]+",
-            })),
+            .flatMap((pseudoElement: string): TestCase[] => [
+              {
+                input: `div::${pseudoElement} { } .${pseudoElement} { }`,
+                expected: `div::${pseudoElement} { } .a { }`,
+                pattern: "[a-zA-Z-]+",
+              },
+            ]),
+          ...ATTRIBUTE_SELECTORS
+            .filter(isValidClassName)
+            .flatMap((attributeSelector: string): TestCase[] => [
+              {
+                input: `div[${attributeSelector}] { } .${attributeSelector} { }`,
+                expected: `div[${attributeSelector}] { } .a { }`,
+                pattern: "[a-zA-Z-]+",
+              },
+            ]),
         ],
       },
       {

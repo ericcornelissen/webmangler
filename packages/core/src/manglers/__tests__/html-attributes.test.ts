@@ -67,7 +67,7 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "individual selectors",
         cases: SELECTORS
-          .map(({ before, after }): TestCase[] => [
+          .flatMap(({ before, after }): TestCase[] => [
             {
               input: `${before} { }`,
               expected: `${after} { }`,
@@ -81,52 +81,45 @@ suite("HTML Attribute Mangler", function() {
               expected: `${after} { color: red; }`,
             },
             ...PSEUDO_SELECTORS
-              .map((pseudoSelector: string): TestCase[] => [
+              .flatMap((pseudoSelector: string): TestCase[] => [
                 {
                   input: `${before}:${pseudoSelector} { }`,
                   expected: `${after}:${pseudoSelector} { }`,
                 },
-              ])
-              .flat(),
+              ]),
             ...PSEUDO_ELEMENT_SELECTORS
-              .map((pseudoElementSelector: string): TestCase[] => [
+              .flatMap((pseudoElement: string): TestCase[] => [
                 {
-                  input: `${before}:${pseudoElementSelector} { }`,
-                  expected: `${after}:${pseudoElementSelector} { }`,
+                  input: `${before}:${pseudoElement} { }`,
+                  expected: `${after}:${pseudoElement} { }`,
                 },
-              ])
-              .flat(),
+              ]),
             ...ATTRIBUTE_SELECTOR_OPERATORS
-              .map((operator) => ({
-                operator,
-                input: `[${before}${operator}"bar"]{ }`,
-                expected: `[${after}${operator}"bar"]{ }`,
-              }))
-              .map((testCase) => varySpacing(testCase.operator, testCase))
-              .flat()
-              .map((testCase) => varyQuotes("css", testCase))
-              .flat(),
+              .flatMap((operator: string): TestCase[] => [
+                ...varySpacing(operator, {
+                  input: `[${before}${operator}"bar"]{ }`,
+                  expected: `[${after}${operator}"bar"]{ }`,
+                }),
+              ])
+              .flatMap((testCase) => varyQuotes("css", testCase)),
           ])
-          .flat()
-          .map((testCase) => varySpacing(["[", "]"], testCase))
-          .flat(),
+          .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
       },
       {
         name: "multiple selectors",
         cases: SELECTOR_PAIRS
-          .map(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
+          .flatMap(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
             {
               input: `${beforeA} { } ${beforeB} { }`,
               expected: `${afterA} { } ${afterB} { }`,
             },
             ...SELECTOR_COMBINATORS
-              .map((connector) => ({
-                connector,
-                input: `[${beforeA}]${connector}[${beforeB}] { }`,
-                expected: `[${afterA}]${connector}[${afterB}] { }`,
-              }))
-              .map((testCase) => varySpacing(testCase.connector, testCase))
-              .flat(),
+              .flatMap((connector: string): TestCase[] => [
+                ...varySpacing(connector, {
+                  input: `[${beforeA}]${connector}[${beforeB}] { }`,
+                  expected: `[${afterA}]${connector}[${afterB}] { }`,
+                }),
+              ]),
             {
               input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
               expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
@@ -160,49 +153,41 @@ suite("HTML Attribute Mangler", function() {
               expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
             },
           ])
-          .flat()
-          .map((testCase) => varySpacing(["[", "]"], testCase))
-          .flat(),
+          .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
       },
       {
         name: "value usage",
         cases: ATTRIBUTES
-          .map(({ before, after }): TestCase[] => [
+          .flatMap(({ before, after }): TestCase[] => [
             {
               input: `div { content: attr(${before}); }`,
               expected: `div { content: attr(${after}); }`,
             },
             ...TYPE_OR_UNITS
-              .map((typeOrUnit): TestCase[] => [
+              .flatMap((typeOrUnit): TestCase[] => [
                 {
                   input: `div { content: attr(${before} ${typeOrUnit}); }`,
                   expected: `div { content: attr(${after} ${typeOrUnit}); }`,
                 },
-              ])
-              .flat(),
+              ]),
             ...CSS_VALUES
-              .map((value): TestCase[] => [
+              .flatMap((value): TestCase[] => [
                 {
                   input: `div { content: attr(${before},${value}); }`,
                   expected: `div { content: attr(${after},${value}); }`,
                 },
                 ...TYPE_OR_UNITS
                   .map((typeOrUnit): { value: string, typeOrUnit: string } => ({ value, typeOrUnit }))
-                  .map(({ value, typeOrUnit }): TestCase[] => [
+                  .flatMap(({ value, typeOrUnit }): TestCase[] => [
                     {
                       input: `div { content: attr(${before} ${typeOrUnit},${value}); }`,
                       expected: `div { content: attr(${after} ${typeOrUnit},${value}); }`,
                     },
                   ])
-                  .flat()
-                  .map((testCase) => varySpacing(",", testCase))
-                  .flat(),
-              ])
-              .flat(),
+                  .flatMap((testCase) => varySpacing(",", testCase)),
+              ]),
           ])
-          .flat()
-          .map((testCase) => varyQuotes("css", testCase))
-          .flat(),
+          .flatMap((testCase) => varyQuotes("css", testCase)),
       },
       {
         name: "other selectors that match the pattern(s)",
@@ -222,18 +207,22 @@ suite("HTML Attribute Mangler", function() {
           },
           ...PSEUDO_SELECTORS
             .filter(isValidAttributeName)
-            .map((s: string): TestCase => ({
-              input: `input:${s} { } [${s}] { }`,
-              expected: `input:${s} { } [data-a] { }`,
-              pattern: "[a-zA-Z-]+",
-            })),
+            .flatMap((pseudoSelector: string): TestCase[] => [
+              {
+                input: `input:${pseudoSelector} { } [${pseudoSelector}] { }`,
+                expected: `input:${pseudoSelector} { } [data-a] { }`,
+                pattern: "[a-zA-Z-]+",
+              },
+            ]),
           ...PSEUDO_ELEMENT_SELECTORS
             .filter(isValidAttributeName)
-            .map((s: string): TestCase => ({
-              input: `div::${s} { } [${s}] { }`,
-              expected: `div::${s} { } [data-a] { }`,
-              pattern: "[a-zA-Z-]+",
-            })),
+            .flatMap((pseudoElement: string): TestCase[] => [
+              {
+                input: `div::${pseudoElement} { } [${pseudoElement}] { }`,
+                expected: `div::${pseudoElement} { } [data-a] { }`,
+                pattern: "[a-zA-Z-]+",
+              },
+            ]),
         ],
       },
       {
@@ -248,7 +237,7 @@ suite("HTML Attribute Mangler", function() {
             expected: "div[data-a] { content: \"attr(data-foo);\"; }",
           }),
           ...ATTRIBUTE_SELECTOR_OPERATORS
-            .map((operator: string): TestCase[] => [
+            .flatMap((operator: string): TestCase[] => [
               {
                 input: `div[data-foo${operator}"data-foo"] { }`,
                 expected: `div[data-a${operator}"data-foo"] { }`,
@@ -258,9 +247,7 @@ suite("HTML Attribute Mangler", function() {
                 expected: `div[data-a${operator}"attr(data-foo)"] { }`,
               },
             ])
-            .flat()
-            .map((testCase) => varySpacing("css", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing("css", testCase)),
           ...varySpacing("css", {
             input: "div { content: \"[data-foo]\"; font: attr(data-foo); }",
             expected: "div { content: \"[data-foo]\"; font: attr(data-a); }",
@@ -285,13 +272,14 @@ suite("HTML Attribute Mangler", function() {
             description: "lack of spacing around curly braces should not prevent mangling",
           },
           ...["[", "]", "="]
-            .map((unexpectedString): TestCase => ({
-              input: `[data-foo="${unexpectedString}"] { }`,
-              expected: `[data-a="${unexpectedString}"] { }`,
-              description: "unexpected attribute values should not prevent mangling",
-            }))
-            .map((testCase) => varySpacing("css", testCase))
-            .flat(),
+            .flatMap((unexpectedString: string): TestCase[] => [
+              {
+                input: `[data-foo="${unexpectedString}"] { }`,
+                expected: `[data-a="${unexpectedString}"] { }`,
+                description: "unexpected attribute values should not prevent mangling",
+              },
+            ])
+            .flatMap((testCase) => varySpacing("css", testCase)),
         ],
       },
       {

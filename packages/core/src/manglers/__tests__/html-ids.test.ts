@@ -56,7 +56,7 @@ suite("HTML ID Mangler", function() {
       {
         name: "individual selectors",
         cases: SELECTORS
-          .map(({ before, after }): TestCase[] => [
+          .flatMap(({ before, after }): TestCase[] => [
             {
               input: `${before} { }`,
               expected: `${after} { }`,
@@ -70,49 +70,44 @@ suite("HTML ID Mangler", function() {
               expected: `${after} { color: red; }`,
             },
             ...PSEUDO_SELECTORS
-              .map((pseudoSelector: string): TestCase[] => [
+              .flatMap((pseudoSelector: string): TestCase[] => [
                 {
                   input: `${before}:${pseudoSelector} { }`,
                   expected: `${after}:${pseudoSelector} { }`,
                 },
-              ])
-              .flat(),
+              ]),
             ...PSEUDO_ELEMENT_SELECTORS
-              .map((pseudoElementSelector: string): TestCase[] => [
+              .flatMap((pseudoElement: string): TestCase[] => [
                 {
-                  input: `${before}:${pseudoElementSelector} { }`,
-                  expected: `${after}:${pseudoElementSelector} { }`,
+                  input: `${before}:${pseudoElement} { }`,
+                  expected: `${after}:${pseudoElement} { }`,
                 },
-              ])
-              .flat(),
+              ]),
             ...ATTRIBUTE_SELECTORS
-              .map((attributeSelector: string): TestCase[] => [
+              .flatMap((attributeSelector: string): TestCase[] => [
                 {
                   input: `${before}[${attributeSelector}] { }`,
                   expected: `${after}[${attributeSelector}] { }`,
                 },
-              ])
-              .flat(),
-          ])
-          .flat(),
+              ]),
+          ]),
       },
       {
         name: "multiple selectors",
         cases: SELECTOR_PAIRS
-          .map(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
+          .flatMap(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
             {
               input: `${beforeA} { } ${beforeB} { }`,
               expected: `${afterA} { } ${afterB} { }`,
             },
             ...SELECTOR_COMBINATORS
               .filter((combinator) => combinator !== "")
-              .map((combinator): TestCase[] => [
+              .flatMap((combinator: string): TestCase[] => [
                 ...varySpacing(combinator, {
                   input: `${beforeA}${combinator}${beforeB} { }`,
                   expected: `${afterA}${combinator}${afterB} { }`,
                 }),
-              ])
-              .flat(),
+              ]),
             {
               input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
               expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
@@ -145,21 +140,20 @@ suite("HTML ID Mangler", function() {
               input: `:root { } ${beforeA} { } div { } ${beforeB} { } span { }`,
               expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
             },
-          ])
-          .flat(),
+          ]),
       },
       {
         name: "in attribute selectors",
         cases: [
           ...ATTRIBUTE_SELECTOR_OPERATORS
-            .map((x): TestCase => ({
-              input: `[href${x}"#id-foo"]`,
-              expected: `[href${x}"#a"]`,
-            }))
-            .map((testCase) => varySpacing("\"", testCase))
-            .flat()
-            .map((testCase) => varyQuotes("css", testCase))
-            .flat(),
+            .flatMap((operator: string): TestCase[] => [
+              ...varySpacing(operator, {
+                input: `[href${operator}"#id-foo"] { }`,
+                expected: `[href${operator}"#a"] { }`,
+              }),
+            ])
+            .flatMap((testCase) => varySpacing("\"", testCase))
+            .flatMap((testCase) => varyQuotes("css", testCase)),
         ],
       },
       {
@@ -174,27 +168,33 @@ suite("HTML ID Mangler", function() {
             input: ".id-foo { } #id-foo { }",
             expected: ".id-foo { } #a { }",
           },
-          ...ATTRIBUTE_SELECTORS
-            .filter(isValidIdName)
-            .map((s: string): TestCase => ({
-              input: `div[${s}] { } #${s} { }`,
-              expected: `div[${s}] { } #a { }`,
-              pattern: "[a-zA-Z-]+",
-            })),
           ...PSEUDO_SELECTORS
             .filter(isValidIdName)
-            .map((s: string): TestCase => ({
-              input: `input:${s} { } #${s} { }`,
-              expected: `input:${s} { } #a { }`,
-              pattern: "[a-zA-Z-]+",
-            })),
+            .flatMap((pseudoSelector: string): TestCase[] => [
+              {
+                input: `input:${pseudoSelector} { } #${pseudoSelector} { }`,
+                expected: `input:${pseudoSelector} { } #a { }`,
+                pattern: "[a-zA-Z-]+",
+              },
+            ]),
           ...PSEUDO_ELEMENT_SELECTORS
             .filter(isValidIdName)
-            .map((s: string): TestCase => ({
-              input: `div::${s} { } #${s} { }`,
-              expected: `div::${s} { } #a { }`,
-              pattern: "[a-zA-Z-]+",
-            })),
+            .flatMap((pseudoElement: string): TestCase[] => [
+              {
+                input: `div::${pseudoElement} { } #${pseudoElement} { }`,
+                expected: `div::${pseudoElement} { } #a { }`,
+                pattern: "[a-zA-Z-]+",
+              },
+            ]),
+          ...ATTRIBUTE_SELECTORS
+            .filter(isValidIdName)
+            .flatMap((attribute: string): TestCase[] => [
+              {
+                input: `div[${attribute}] { } #${attribute} { }`,
+                expected: `div[${attribute}] { } #a { }`,
+                pattern: "[a-zA-Z-]+",
+              },
+            ]),
         ],
       },
       {

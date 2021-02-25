@@ -56,12 +56,13 @@ suite("CSS Variable Mangler", function() {
         name: "declarations",
         cases: [
           ...CSS_VALUES
-            .map((value): TestCase => ({
-              input: `:root{--foo:${value};}`,
-              expected: `:root{--a:${value};}`,
-            }))
-            .map((testCase) => varySpacing(["{", ":", ";", "}"], testCase))
-            .flat(),
+            .flatMap((value: string): TestCase[] => [
+              {
+                input: `:root{--foo:${value};}`,
+                expected: `:root{--a:${value};}`,
+              },
+            ])
+            .flatMap((testCase) => varySpacing(["{", ":", ";", "}"], testCase)),
           {
             input: ":root { background: purple; --foo: black; }",
             expected: ":root { background: purple; --a: black; }",
@@ -117,12 +118,13 @@ suite("CSS Variable Mangler", function() {
         name: "usage with fallback",
         cases: [
           ...CSS_VALUES
-            .map((value) => ({
-              input: `div { color: var(--foo,${value}); }`,
-              expected: `div { color: var(--a,${value}); }`,
-            }))
-            .map((testCase) => varySpacing(["(", ",", ")"], testCase))
-            .flat(),
+            .flatMap((value: string): TestCase[] => [
+              {
+                input: `div { color: var(--foo,${value}); }`,
+                expected: `div { color: var(--a,${value}); }`,
+              },
+            ])
+            .flatMap((testCase) => varySpacing(["(", ",", ")"], testCase)),
           {
             input: "div { background: black; color: var(--foo, yellow); }",
             expected: "div { background: black; color: var(--a, yellow); }",
@@ -226,13 +228,14 @@ suite("CSS Variable Mangler", function() {
             description: "lack of semicolon should not prevent mangling",
           },
           ...["{", "}", ":"]
-            .map((unexpectedString): TestCase => ({
-              input: `:root { --foo: "${unexpectedString}" }`,
-              expected: `:root { --a: "${unexpectedString}" }`,
-              description: "unexpected string values should not prevent mangling",
-            }))
-            .map((testCase) => varySpacing("css", testCase))
-            .flat(),
+            .flatMap((unexpectedString: string): TestCase[] => [
+              {
+                input: `:root { --foo: "${unexpectedString}" }`,
+                expected: `:root { --a: "${unexpectedString}" }`,
+                description: "unexpected string values should not prevent mangling",
+              },
+            ])
+            .flatMap((testCase) => varySpacing("css", testCase)),
         ],
       },
       {
