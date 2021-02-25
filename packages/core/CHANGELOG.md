@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Support mangling IDs in the HTML `for` attribute.
 
 ## [0.1.12] - 2021-02-19
 

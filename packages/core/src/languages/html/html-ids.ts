@@ -16,9 +16,13 @@ const expressions: MangleExpression[] = [
   //  `<div class="bar" id="(foo)"></div>`
   //  `<div id="(foo)" class="bar"></div>`
   //  `<div disabled id="(foo)" class="bar"></div>`
+  //  `<label for="(foo)"></label>`
+  //  `<label class="bar" for="(foo)"></label>`
+  //  `<label for="(foo)" class="bar"></label>`
+  //  `<label disabled for="(foo)" class="bar"></label>`
   new SingleGroupMangleExpression(
     `
-      (?<=\\sid\\s*=\\s*${HTML_QUOTE_CAPTURING_GROUP_PATTERN}\\s*)
+      (?<=\\s(id|for)\\s*=\\s*${HTML_QUOTE_CAPTURING_GROUP_PATTERN}\\s*)
       (?<${GROUP_ID}>%s)
       (?=\\s*${HTML_QUOTE_MATCHING_PATTERN})
     `,

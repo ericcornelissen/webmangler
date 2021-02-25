@@ -278,7 +278,12 @@ suite("HTML ID Mangler", function() {
   });
 
   suite("HTML", function() {
-    const ATTR_SAMPLE: string[] = ["id=\"", "href=\"#", "href=\"/foo/bar#"];
+    const ATTR_SAMPLE: string[] = [
+      "id=\"",
+      "for=\"",
+      "href=\"#",
+      "href=\"/foo/bar#",
+    ];
 
     const scenarios: TestScenario<TestCase>[] = [
       {
