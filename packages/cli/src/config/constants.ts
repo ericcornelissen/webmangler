@@ -4,3 +4,5 @@ export const DEFAULT_CONFIG_PATHS: string[] = [
   ".webmanglerrc.js",
   "webmangler.config.js",
 ];
+
+export const MODULE_NAME = "webmangler";
