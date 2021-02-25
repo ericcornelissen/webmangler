@@ -8,6 +8,11 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.4] - 2021-02-25
+
+- Increase minimum `webmangler` peerDependency to `^0.1.13`.
 - Include overall statistics when outputting mangling statistics.
 - Use cosmiconfig to load configuration files.
 

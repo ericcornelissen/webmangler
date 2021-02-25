@@ -1,4 +1,4 @@
-import type { ManglerFile } from "webmangler";
+import type { WebManglerFile } from "webmangler";
 
 /**
  * The _WebMangler_ CLI representation of a File. It extends the {@link
@@ -6,7 +6,7 @@ import type { ManglerFile } from "webmangler";
  *
  * @since v0.1.0
  */
-interface WebManglerCliFile extends ManglerFile {
+interface WebManglerCliFile extends WebManglerFile {
   /**
    * The original file size in bytes.
    *
