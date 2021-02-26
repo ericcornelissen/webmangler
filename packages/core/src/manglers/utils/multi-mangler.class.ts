@@ -1,8 +1,4 @@
-import type {
-  MangleEngineOptions,
-  WebManglerPlugin,
-  WebManglerLanguagePlugin,
-} from "../../types";
+import type { MangleEngineOptions, WebManglerPlugin } from "../../types";
 
 /**
  * The {@link MultiMangler} class is a utility to create a {@link
@@ -12,14 +8,9 @@ import type {
  * {@link BuiltInManglers}.
  *
  * @since v0.1.0
- * @version v0.1.11
+ * @version v0.1.14
  */
 export default abstract class MultiMangler implements WebManglerPlugin {
-  /**
-   * The {@link WebManglerPlugin}s in the {@link MultiMangler}.
-   */
-  private readonly plugins: WebManglerPlugin[];
-
   /**
    * The {@link MangleEngineOptions}.
    */
@@ -33,7 +24,6 @@ export default abstract class MultiMangler implements WebManglerPlugin {
    */
   constructor(plugins: WebManglerPlugin[]) {
     this._config = plugins.map((plugin) => plugin.config()).flat();
-    this.plugins = plugins;
   }
 
   /**
@@ -42,18 +32,5 @@ export default abstract class MultiMangler implements WebManglerPlugin {
    */
   config(): MangleEngineOptions[] {
     return this._config;
-  }
-
-  /**
-   * Uses the language plugin in every provided mangler.
-   *
-   * @inheritDoc
-   * @since v0.1.0
-   * @deprecated
-   */
-  use(languagePlugin: WebManglerLanguagePlugin): void {
-    this.plugins.forEach((plugin: WebManglerPlugin) => {
-      plugin.use(languagePlugin);
-    });
   }
 }

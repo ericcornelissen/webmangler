@@ -48,7 +48,7 @@ interface SimpleManglerOptions {
  * {@link WebManglerPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.13
+ * @version v0.1.14
  */
 export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
@@ -102,14 +102,5 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
       reservedNames: this.reserved,
       manglePrefix: this.prefix,
     };
-  }
-
-  /**
-   * @inheritDoc
-   * @since v0.1.13
-   * @deprecated
-   */
-  use(): void {
-    throw new Error("Deprecated method not implemented.");
   }
 }

@@ -14,12 +14,9 @@ import * as CssClassMangler from "../css-classes";
 import * as CssVarMangler from "../css-variables";
 import * as HtmlAttrMangler from "../html-attributes";
 
-import BuiltInLanguageSupport from "../../languages/builtin";
 import RecommendedManglers from "../recommended";
 
 chaiUse(sinonChai);
-
-const builtInLanguageSupport = new BuiltInLanguageSupport();
 
 suite("Recommended Manglers", function() {
   const DEFAULT_CLASS_NAME_OPTIONS = { classNamePattern: "cls[-_][a-z-_]+" };
@@ -56,7 +53,6 @@ suite("Recommended Manglers", function() {
 
     setup(function() {
       CssClassManglerMock.config.resetHistory();
-      CssClassManglerMock.use.resetHistory();
     });
 
     test("mangling when class pattern is set", function() {
@@ -72,18 +68,6 @@ suite("Recommended Manglers", function() {
       }
     });
 
-    test("using language plugins when class pattern is set", function() {
-      for (const _options of ALL_NON_CSS_CLASS_OPTIONS) {
-        const options = Object.assign({}, _options, DEFAULT_CLASS_NAME_OPTIONS);
-
-        const mangler = new RecommendedManglers(options);
-        mangler.use(builtInLanguageSupport);
-        expect(CssClassManglerMock.use).to.have.been.calledOnce;
-
-        CssClassManglerMock.use.resetHistory();
-      }
-    });
-
     test("mangling when class pattern is NOT set", function() {
       for (const options of ALL_NON_CSS_CLASS_OPTIONS) {
         const mangler = new RecommendedManglers(options);
@@ -92,16 +76,6 @@ suite("Recommended Manglers", function() {
         expect(result).to.deep.include(CssClassManglerMock.config()[0]);
 
         CssClassManglerMock.config.resetHistory();
-      }
-    });
-
-    test("using language plugins when class pattern is NOT set", function() {
-      for (const options of ALL_NON_CSS_CLASS_OPTIONS) {
-        const mangler = new RecommendedManglers(options);
-        mangler.use(builtInLanguageSupport);
-        expect(CssClassManglerMock.use).to.have.been.calledOnce;
-
-        CssClassManglerMock.use.resetHistory();
       }
     });
 
@@ -115,16 +89,6 @@ suite("Recommended Manglers", function() {
         expect(result).not.to.deep.include(CssClassManglerMock.config()[0]);
 
         CssClassManglerMock.config.resetHistory();
-      }
-    });
-
-    test("using language plugins when the CSS class mangler is disabled", function() {
-      for (const _options of ALL_NON_CSS_CLASS_OPTIONS) {
-        const options = Object.assign({}, _options, DISABLE_CSS_CLASS_MANGLING);
-
-        const mangler = new RecommendedManglers(options);
-        mangler.use(builtInLanguageSupport);
-        expect(CssClassManglerMock.use).not.to.have.been.called;
       }
     });
   });
@@ -144,7 +108,6 @@ suite("Recommended Manglers", function() {
 
     setup(function() {
       CssVarManglerMock.config.resetHistory();
-      CssVarManglerMock.use.resetHistory();
     });
 
     test("mangling when CSS variable pattern is set", function() {
@@ -160,18 +123,6 @@ suite("Recommended Manglers", function() {
       }
     });
 
-    test("using language plugins when CSS variable pattern is set", function() {
-      for (const _options of ALL_NON_CSS_VAR_OPTIONS) {
-        const options = Object.assign({}, _options, DEFAULT_CSS_VAR_OPTIONS);
-
-        const mangler = new RecommendedManglers(options);
-        mangler.use(builtInLanguageSupport);
-        expect(CssVarManglerMock.use).to.have.been.calledOnce;
-
-        CssVarManglerMock.use.resetHistory();
-      }
-    });
-
     test("mangling when CSS variable pattern is NOT set", function() {
       for (const options of ALL_NON_CSS_VAR_OPTIONS) {
         const mangler = new RecommendedManglers(options);
@@ -180,16 +131,6 @@ suite("Recommended Manglers", function() {
         expect(result).to.deep.include(CssVarManglerMock.config()[0]);
 
         CssVarManglerMock.config.resetHistory();
-      }
-    });
-
-    test("using language plugins when CSS variable pattern is NOT set", function() {
-      for (const options of ALL_NON_CSS_VAR_OPTIONS) {
-        const mangler = new RecommendedManglers(options);
-        mangler.use(builtInLanguageSupport);
-        expect(CssVarManglerMock.use).to.have.been.calledOnce;
-
-        CssVarManglerMock.use.resetHistory();
       }
     });
 
@@ -203,16 +144,6 @@ suite("Recommended Manglers", function() {
         expect(result).not.to.deep.include(CssVarManglerMock.config()[0]);
 
         CssVarManglerMock.config.resetHistory();
-      }
-    });
-
-    test("using language plugins when the CSS variable mangler is disabled", function() {
-      for (const _options of ALL_NON_CSS_VAR_OPTIONS) {
-        const options = Object.assign({}, _options, DISABLE_CSS_VAR_MANGLING);
-
-        const mangler = new RecommendedManglers(options);
-        mangler.use(builtInLanguageSupport);
-        expect(CssVarManglerMock.use).not.to.have.been.called;
       }
     });
   });
@@ -232,7 +163,6 @@ suite("Recommended Manglers", function() {
 
     setup(function() {
       HtmlAttrManglerMock.config.resetHistory();
-      HtmlAttrManglerMock.use.resetHistory();
     });
 
     test("mangling when HTML attributes pattern is set", function() {
@@ -248,18 +178,6 @@ suite("Recommended Manglers", function() {
       }
     });
 
-    test("using language plugins when HTML attributes pattern is set", function() {
-      for (const _options of ALL_NON_HTML_ATTR_OPTIONS) {
-        const options = Object.assign({}, _options, DEFAULT_HTML_ATTR_OPTIONS);
-
-        const mangler = new RecommendedManglers(options);
-        mangler.use(builtInLanguageSupport);
-        expect(HtmlAttrManglerMock.use).to.have.been.calledOnce;
-
-        HtmlAttrManglerMock.use.resetHistory();
-      }
-    });
-
     test("mangling when HTML attributes pattern is NOT set", function() {
       for (const options of ALL_NON_HTML_ATTR_OPTIONS) {
         const mangler = new RecommendedManglers(options);
@@ -268,16 +186,6 @@ suite("Recommended Manglers", function() {
         expect(result).to.deep.include(HtmlAttrManglerMock.config()[0]);
 
         HtmlAttrManglerMock.config.resetHistory();
-      }
-    });
-
-    test("using language plugins when HTML attributes pattern is NOT set", function() {
-      for (const options of ALL_NON_HTML_ATTR_OPTIONS) {
-        const mangler = new RecommendedManglers(options);
-        mangler.use(builtInLanguageSupport);
-        expect(HtmlAttrManglerMock.use).to.have.been.calledOnce;
-
-        HtmlAttrManglerMock.use.resetHistory();
       }
     });
 
@@ -291,16 +199,6 @@ suite("Recommended Manglers", function() {
         expect(result).not.to.deep.include(HtmlAttrManglerMock.config()[0]);
 
         HtmlAttrManglerMock.config.resetHistory();
-      }
-    });
-
-    test("using language plugins when the HTML attribute mangler is disabled", function() {
-      for (const _options of ALL_NON_HTML_ATTR_OPTIONS) {
-        const options = Object.assign({}, _options, DISABLE_HTML_ATTR_MANGLING);
-
-        const mangler = new RecommendedManglers(options);
-        mangler.use(builtInLanguageSupport);
-        expect(HtmlAttrManglerMock.use).not.to.have.been.called;
       }
     });
   });

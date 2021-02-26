@@ -1,8 +1,4 @@
-import type {
-  MangleExpression,
-  ManglerExpressions,
-  WebManglerLanguagePlugin,
-} from "../../types";
+import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
 
 /**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of
@@ -14,7 +10,7 @@ import type {
  * WebManglerLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.13
+ * @version v0.1.14
  */
 export default abstract class SimpleLanguagePlugin
     implements WebManglerLanguagePlugin {
@@ -49,21 +45,6 @@ export default abstract class SimpleLanguagePlugin
   ) {
     this.languages = languages;
     this.expressions = expressions;
-  }
-
-  /**
-   * Will return all the {@link ManglerExpressions} for the mangler configured
-   * when the {@link SimpleLanguagePlugin} was initialized.
-   *
-   * @inheritDoc
-   * @deprecated
-   */
-  getExpressionsFor(manglerId: string): ManglerExpressions[] {
-    const manglerMatchers = this.expressions.get(manglerId) || [];
-    return this.languages.map((language: string): ManglerExpressions => ({
-      language: language,
-      expressions: manglerMatchers,
-    }));
   }
 
   /**

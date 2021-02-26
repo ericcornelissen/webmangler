@@ -11,28 +11,28 @@ suite("Built-in HTML Language Support", function() {
   test(`has support for the ${CssClassMangler._ID} mangler`, function() {
     const plugin = new JavaScriptLanguageSupport();
 
-    const expressions = plugin.getExpressionsFor(CssClassMangler._ID);
+    const expressions = plugin.getExpressions(CssClassMangler._ID);
     expect(expressions).to.have.length.above(0);
   });
 
   test(`has support for the ${CssVariableMangler._ID} mangler`, function() {
     const plugin = new JavaScriptLanguageSupport();
 
-    const expressions = plugin.getExpressionsFor(CssVariableMangler._ID);
+    const expressions = plugin.getExpressions(CssVariableMangler._ID);
     expect(expressions).to.have.length.above(0);
   });
 
   test(`has support for the ${HtmlAttributeMangler._ID} mangler`, function() {
     const plugin = new JavaScriptLanguageSupport();
 
-    const expressions = plugin.getExpressionsFor(HtmlAttributeMangler._ID);
+    const expressions = plugin.getExpressions(HtmlAttributeMangler._ID);
     expect(expressions).to.have.length.above(0);
   });
 
   test(`has support for the ${HtmlIdMangler._ID} mangler`, function() {
     const plugin = new JavaScriptLanguageSupport();
 
-    const expressions = plugin.getExpressionsFor(HtmlIdMangler._ID);
+    const expressions = plugin.getExpressions(HtmlIdMangler._ID);
     expect(expressions).to.have.length.above(0);
   });
 

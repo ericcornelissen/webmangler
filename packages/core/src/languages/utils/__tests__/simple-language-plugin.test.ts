@@ -17,7 +17,7 @@ class ConcretePlugin extends SimpleLanguagePlugin {
 }
 
 suite("SimpleLanguagePlugin", function() {
-  suite("::getExpressionsFor", function() {
+  suite("::getExpressions", function() {
     type TestCase = {
       testIds: string[],
       languages: string[];
@@ -80,14 +80,18 @@ suite("SimpleLanguagePlugin", function() {
 
           const plugin = new ConcretePlugin(languages, expressions);
           for (const testId of testIds) {
-            const result = plugin.getExpressionsFor(testId);
+            const result = plugin.getExpressions(testId);
             expect(result).to.have.lengthOf(languages.length);
 
-            const resultLanguages = result.map((entry) => entry.language);
+            const resultLanguages: string[] = [];
+            const resultExpressions: MangleExpression[][] = [];
+            result.forEach((expressions, language) => {
+              resultLanguages.push(language);
+              resultExpressions.push(expressions);
+            });
             expect(resultLanguages).to.deep.equal(languages);
 
             const expectedExpressions = expressions.get(testId) || [];
-            const resultExpressions = result.map((entry) => entry.expressions);
             for (const _expressions of resultExpressions) {
               expect(_expressions).to.deep.equal(expectedExpressions);
             }
