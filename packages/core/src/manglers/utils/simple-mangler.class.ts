@@ -25,7 +25,7 @@ interface SimpleManglerOptions {
    *
    * @since v0.1.14
    */
-  expressions: MangleExpressionOptions[];
+  expressions: MangleExpressionOptions<unknown>[];
 
   /**
    * One or more patterns that should be mangled.
@@ -74,7 +74,7 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
    * TODO.
    */
-  private readonly expressions: MangleExpressionOptions[];
+  private readonly expressions: MangleExpressionOptions<unknown>[];
 
   /**
    * The pattern(s) to be mangled.

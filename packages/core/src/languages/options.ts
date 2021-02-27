@@ -3,14 +3,7 @@
  *
  * @since v0.1.14
  */
-type QuerySelectorsOptions = {
-  /**
-   * TODO.
-   *
-   * @since v0.1.14
-   */
-  prefix: "." | "#";
-};
+type AttributeOptions = null;
 
 /**
  * TODO.
@@ -24,6 +17,20 @@ type MultiValueAttributesOptions = {
    * @since v0.1.14
    */
   attributeNames: string[];
+};
+
+/**
+ * TODO.
+ *
+ * @since v0.1.14
+ */
+type QuerySelectorsOptions = {
+  /**
+   * TODO.
+   *
+   * @since v0.1.14
+   */
+  prefix: "\\." | "#";
 };
 
 /**
@@ -57,7 +64,8 @@ type SingleValueAttributesOptions = {
 };
 
 export type {
-  QuerySelectorsOptions,
+  AttributeOptions,
   MultiValueAttributesOptions,
+  QuerySelectorsOptions,
   SingleValueAttributesOptions,
 };

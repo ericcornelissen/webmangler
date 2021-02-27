@@ -11,7 +11,7 @@ interface MangleOptions extends MangleEngineOptions {
    *
    * @version v0.1.14
    */
-  readonly expressions: MangleExpressionOptions[];
+  readonly expressions: MangleExpressionOptions<unknown>[];
 }
 
 /**
@@ -99,7 +99,7 @@ interface MangleExpression {
  *
  * @since v0.1.14
  */
-type MangleExpressionOptions = {
+type MangleExpressionOptions<T> = {
   /**
    * TODO.
    *
@@ -112,7 +112,7 @@ type MangleExpressionOptions = {
    *
    * @since v0.1.14
    */
-  readonly options: unknown;
+  readonly options: T;
 };
 
 /**

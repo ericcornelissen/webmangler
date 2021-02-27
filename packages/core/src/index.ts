@@ -17,7 +17,7 @@ import manglerEngine from "./engine";
  */
 export function getExpressions(
   languagePlugins: WebManglerLanguagePlugin[],
-  expressionsOptions: MangleExpressionOptions[],
+  expressionsOptions: MangleExpressionOptions<unknown>[],
 ): Map<string, MangleExpression[]> {
   const pluginExpressions: Map<string, MangleExpression[]> = new Map();
   for (const languagePlugin of languagePlugins) {

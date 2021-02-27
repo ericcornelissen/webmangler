@@ -1,10 +1,12 @@
 import type { CharSet } from "../characters";
+import type { AttributeOptions } from "../languages/options";
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
-const ATTRIBUTE_OPTIONS: MangleExpressionOptions = {
+const ATTRIBUTE_OPTIONS:
+    MangleExpressionOptions<AttributeOptions> = {
   name: "attributes",
   options: null,
 };
