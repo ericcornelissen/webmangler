@@ -320,7 +320,7 @@ suite("HTML Attribute Mangler", function() {
             keepAttrPrefix: keepAttrPrefix,
           });
           const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressions);
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -487,7 +487,7 @@ suite("HTML Attribute Mangler", function() {
             keepAttrPrefix: keepAttrPrefix,
           });
           const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressions);
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -703,7 +703,7 @@ suite("HTML Attribute Mangler", function() {
             keepAttrPrefix: keepAttrPrefix,
           });
           const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressions);
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -795,7 +795,7 @@ suite("HTML Attribute Mangler", function() {
         keepAttrPrefix: "",
       });
       const options = htmlAttributeMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressions);
+      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
@@ -815,7 +815,7 @@ suite("HTML Attribute Mangler", function() {
         keepAttrPrefix: "",
       });
       const options = htmlAttributeMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressions);
+      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);

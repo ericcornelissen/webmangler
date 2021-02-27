@@ -7,38 +7,65 @@ const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
 
 /**
- * TODO.
+ * Get a {@link MangleExpression} to match attribute selector values in CSS,
+ * e.g. `bar` in `[data-foo="bar"] { }` or `sun` in `[data-praise="thesun"] { }`
+ * if the value prefix is "the".
  *
- * @param options TODO.
- * @returns TODO.
+ * @param attributeNames A list of attribute names.
+ * @param valuePrefix An expression of the required prefix for values.
+ * @param valueSuffix An expression of the required suffix for values.
+ * @returns The {@link MangleExpression} to match attribute values in CSS.
+ */
+function newAttributeSelectorSingleValueExpression(
+  attributeNames: string[],
+  valuePrefix: string,
+  valueSuffix: string,
+): MangleExpression {
+  const attributeNamesExpression = attributeNames.join("|");
+  return new SingleGroupMangleExpression(
+    `
+      (?<=
+        \\[\\s*(?:${attributeNamesExpression})
+        \\s*
+        (?:\\=|\\~=|\\|=|\\^=|\\$=|\\*=)
+        \\s*
+        (?<${GROUP_QUOTE}>"|')
+        \\s*
+        ${valuePrefix}
+      )
+      (?<${GROUP_MAIN}>%s)
+      (?=
+        ${valueSuffix}
+        \\s*
+        \\k<${GROUP_QUOTE}>
+        \\s*
+        \\]
+      )
+    `,
+    GROUP_MAIN,
+  );
+}
+
+/**
+ * Get the set of {@link MangleExpression}s to match single-value attribute
+ * values in CSS. This will match:
+ * - Attribute selector values (e.g. `bar` in `[data-foo="bar"] { }`).
+ *
+ * @param options The {@link SingleValueAttributesOptions}.
+ * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
  */
-export default function singleValueAttributes(
+export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributesOptions,
 ): MangleExpression[] {
-  const attributeNames = options.attributeNames.join("|");
+  const valuePrefix = options.valuePrefix ? options.valuePrefix : "";
+  const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
+
   return [
-    new SingleGroupMangleExpression(
-      `
-        (?<=
-          \\[\\s*(?:${attributeNames})
-          \\s*
-          (?:\\=|\\~=|\\|=|\\^=|\\$=|\\*=)
-          \\s*
-          (?<${GROUP_QUOTE}>"|')
-          \\s*
-          ${options.valuePrefix ? options.valuePrefix : ""}
-        )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          ${options.valueSuffix ? options.valueSuffix : ""}
-          \\s*
-          \\k<${GROUP_QUOTE}>
-          \\s*
-          \\]
-        )
-      `,
-      GROUP_MAIN,
+    newAttributeSelectorSingleValueExpression(
+      options.attributeNames,
+      valuePrefix,
+      valueSuffix,
     ),
   ];
 }

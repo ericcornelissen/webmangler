@@ -9,20 +9,21 @@ import type {
 import manglerEngine from "./engine";
 
 /**
- * TODO.
+ * Retrieve the {@link MangleExpression}s for a given plugin, given its {@link
+ * MangleExpressionOptions}, from the {@link WebManglerLanguagePlugin}s.
  *
- * @param languagePlugins TODO.
- * @param expressionsOptions TODO.
- * @returns TODO.
+ * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
+ * @param expressionOptions The {@link MangleExpressionOptions}.
+ * @returns The {@link MangleExpression}s.
  */
 export function getExpressions(
   languagePlugins: WebManglerLanguagePlugin[],
-  expressionsOptions: MangleExpressionOptions<unknown>[],
+  expressionOptions: MangleExpressionOptions<unknown>[],
 ): Map<string, MangleExpression[]> {
   const pluginExpressions: Map<string, MangleExpression[]> = new Map();
   for (const languagePlugin of languagePlugins) {
     const languageExpressions: MangleExpression[] = [];
-    for (const { name, options } of expressionsOptions) {
+    for (const { name, options } of expressionOptions) {
       const expressions = languagePlugin.getExpressionsFor(name, options);
       languageExpressions.push(...expressions);
     }
@@ -52,7 +53,11 @@ export default function webmangler<File extends WebManglerFile>(
 ): File[] {
   const configs = options.plugins.map((plugin) => plugin.options()).flat();
   for (const config of configs) {
-    const expressions = getExpressions(options.languages, config.expressions);
+    const expressions = getExpressions(
+      options.languages,
+      config.expressionOptions,
+    );
+
     files = manglerEngine(files, expressions, config);
   }
 

@@ -1,14 +1,15 @@
 import type { MangleExpression } from "../../types";
+import type { ExpressionFactory } from "../utils/simple-language-plugin.class";
 
 import SimpleLanguagePlugin from "../utils/simple-language-plugin.class";
 
-import attributes from "./attributes";
+import attributeExpressionFactory from "./attributes";
 import cssClassesMatchers from "./css-classes";
 import cssVariablesMatchers from "./css-variables";
 import htmlAttributeMatchers from "./html-attributes";
 import htmlIdMatchers from "./html-ids";
-import multiValueAttributes from "./multi-value-attributes";
-import singleValueAttributes from "./single-value-attributes";
+import multiValueAttributeExpressionFactory from "./multi-value-attributes";
+import singleValueAttributeExpressionFactory from "./single-value-attributes";
 
 const languages: string[] = ["html", "xhtml"];
 const expressions: Map<string, MangleExpression[]> = new Map();
@@ -18,10 +19,10 @@ expressions.set("css-variable-mangler", cssVariablesMatchers);
 expressions.set("html-attribute-mangler", htmlAttributeMatchers);
 expressions.set("html-id-mangler", htmlIdMatchers);
 
-const map: Map<string, (options: any) => MangleExpression[]> = new Map();
-map.set("attributes", attributes);
-map.set("singleValueAttributes", singleValueAttributes);
-map.set("multiValueAttributes", multiValueAttributes);
+const map: Map<string, ExpressionFactory> = new Map();
+map.set("attributes", attributeExpressionFactory);
+map.set("singleValueAttributes", singleValueAttributeExpressionFactory);
+map.set("multiValueAttributes", multiValueAttributeExpressionFactory);
 
 /**
  * This {@link WebManglerLanguagePlugin} provides HTML support for the built-in

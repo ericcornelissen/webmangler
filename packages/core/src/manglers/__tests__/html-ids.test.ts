@@ -248,7 +248,7 @@ suite("HTML ID Mangler", function() {
             keepIdPrefix: keepIdPrefix,
           });
           const options = htmlIdMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressions);
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -671,7 +671,7 @@ suite("HTML ID Mangler", function() {
             keepIdPrefix: keepIdPrefix,
           });
           const options = htmlIdMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressions);
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -1004,7 +1004,7 @@ suite("HTML ID Mangler", function() {
             keepIdPrefix: keepIdPrefix,
           });
           const options = htmlIdMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressions);
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);

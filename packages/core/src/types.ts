@@ -1,17 +1,19 @@
 import type { CharSet } from "./characters";
 
 /**
- * TODO.
+ * Interface representing the options a _WebMangler_ plugin has to configure
+ * the _WebMangler_ core.
  *
- * @version v0.1.14
+ * @since v0.1.14
  */
 interface MangleOptions extends MangleEngineOptions {
   /**
-   * TODO.
+   * The {@link MangleExpressionOptions} for every set of {@link
+   * MangleExpression}s that should be used when mangling.
    *
-   * @version v0.1.14
+   * @since v0.1.14
    */
-  readonly expressions: MangleExpressionOptions<unknown>[];
+  readonly expressionOptions: MangleExpressionOptions<unknown>[];
 }
 
 /**
@@ -95,20 +97,30 @@ interface MangleExpression {
 }
 
 /**
- * TODO.
+ * Type representing a wrapper for the configuration of a set of {@link
+ * MangleExpression}s.
+ *
+ * @example
+ * type OptionsType = { value: string };
+ * const options = MangleExpressionOptions<OptionsType> = {
+ *   name: "expression-group-name",
+ *   options: {
+ *     value: "foobar",
+ *   },
+ * };
  *
  * @since v0.1.14
  */
 type MangleExpressionOptions<T> = {
   /**
-   * TODO.
+   * The name of the set of {@link MangleExpression}s.
    *
    * @since v0.1.14
    */
   readonly name: string
 
   /**
-   * TODO.
+   * The configuration for the set of {@link MangleExpression}s.
    *
    * @since v0.1.14
    */
@@ -194,11 +206,12 @@ interface WebManglerPlugin {
  */
 interface WebManglerLanguagePlugin {
   /**
-   * TODO.
+   * Get a named set of {@link MangleExpression}s in accordance with an object
+   * of options for the set.
    *
-   * @param name TODO.
-   * @param options TODO.
-   * @returns TODO.
+   * @param name The name of the set of {@link MangleExpression}s.
+   * @param options The options for the set of {@link MangleExpression}s.
+   * @returns A set of {@link MangleExpression}s in accordance with `options`.
    * @since v0.1.14
    */
   getExpressionsFor(name: string, options: unknown): MangleExpression[];

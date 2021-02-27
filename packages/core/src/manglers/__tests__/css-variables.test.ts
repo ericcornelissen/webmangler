@@ -276,7 +276,7 @@ suite.skip("CSS Variable Mangler", function() {
             keepCssVarPrefix: keepCssVarPrefix,
           });
           const options = cssVariableMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressions);
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -537,7 +537,7 @@ suite.skip("CSS Variable Mangler", function() {
             keepCssVarPrefix: keepCssVarPrefix,
           });
           const options = cssVariableMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressions);
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -590,7 +590,7 @@ suite.skip("CSS Variable Mangler", function() {
             keepCssVarPrefix: keepCssVarPrefix,
           });
           const options = cssVariableMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressions);
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -682,7 +682,7 @@ suite.skip("CSS Variable Mangler", function() {
         cssVarNamePattern: "[0-9]+",
       });
       const options = cssVariableMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressions);
+      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
@@ -701,7 +701,7 @@ suite.skip("CSS Variable Mangler", function() {
         reservedCssVarNames: ["a"],
       });
       const options = cssVariableMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressions);
+      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);

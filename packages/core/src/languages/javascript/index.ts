@@ -1,4 +1,5 @@
 import type { MangleExpression } from "../../types";
+import type { ExpressionFactory } from "../utils/simple-language-plugin.class";
 
 import SimpleLanguagePlugin from "../utils/simple-language-plugin.class";
 
@@ -15,8 +16,8 @@ expressions.set("css-variable-mangler", cssVariablesMatchers);
 expressions.set("html-attribute-mangler", htmlAttributeMatchers);
 expressions.set("html-id-mangler", htmlIdMatchers);
 
-const map: Map<string, (options: any) => MangleExpression[]> = new Map();
-// TODO map.set("querySelectors", querySelectors);
+const map: Map<string, ExpressionFactory> = new Map();
+// TODO map.set("example", example);
 
 /**
  * This {@link WebManglerLanguagePlugin} provides JavaScript support for the

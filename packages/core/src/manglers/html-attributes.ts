@@ -217,7 +217,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
       patterns: HtmlAttributeMangler.getPatterns(options.attrNamePattern),
       reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
-      expressions: [
+      expressionOptions: [
         ATTRIBUTE_OPTIONS,
       ],
     });

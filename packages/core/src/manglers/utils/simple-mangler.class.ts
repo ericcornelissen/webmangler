@@ -21,11 +21,11 @@ interface SimpleManglerOptions {
   charSet: CharSet;
 
   /**
-   * TODO.
+   * The {@link MangleExpressionOptions} to use when mangling.
    *
    * @since v0.1.14
    */
-  expressions: MangleExpressionOptions<unknown>[];
+  expressionOptions: MangleExpressionOptions<unknown>[];
 
   /**
    * One or more patterns that should be mangled.
@@ -72,9 +72,9 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   private readonly charSet: CharSet;
 
   /**
-   * TODO.
+   * The {@link MangleExpressionOptions} for mangling.
    */
-  private readonly expressions: MangleExpressionOptions<unknown>[];
+  private readonly expressionOptions: MangleExpressionOptions<unknown>[];
 
   /**
    * The pattern(s) to be mangled.
@@ -100,7 +100,7 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   constructor(id: string, options: SimpleManglerOptions) {
     this.id = id;
     this.charSet = options.charSet;
-    this.expressions = options.expressions;
+    this.expressionOptions = options.expressionOptions;
     this.patterns = options.patterns;
     this.prefix = options.prefix;
     this.reserved = options.reserved;
@@ -129,7 +129,7 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
     return {
       id: this.id,
       charSet: this.charSet,
-      expressions: this.expressions,
+      expressionOptions: this.expressionOptions,
       manglePrefix: this.prefix,
       patterns: this.patterns,
       reservedNames: this.reserved,

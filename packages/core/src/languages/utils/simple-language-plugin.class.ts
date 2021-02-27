@@ -1,6 +1,14 @@
 import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
 
 /**
+ * A function that produces a set of {@link MangleExpression}s given the set's
+ * options.
+ *
+ * @since v0.1.14
+ */
+export type ExpressionFactory = (options: any) => MangleExpression[];
+
+/**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of
  * a {@link WebManglerLanguagePlugin} that works given a set of languages and a
  * map of manglers to {@link MangleExpression}.
@@ -26,9 +34,10 @@ export default abstract class SimpleLanguagePlugin
   private readonly expressions: Map<string, MangleExpression[]>;
 
   /**
-   * TODO
+   * A map from {@link MangleExpression}-set names to a functions that produce
+   * the respective {@link MangleExpression}s given the set's options.
    */
-  private readonly tmp: Map<string, (options: unknown) => MangleExpression[]>;
+  private readonly expressionFactories: Map<string, ExpressionFactory>;
 
   /**
    * Initialize a new {@link SimpleLanguagePlugin}.
@@ -42,7 +51,7 @@ export default abstract class SimpleLanguagePlugin
    *
    * @param languages Supported language, including aliases.
    * @param expressions The expressions for supported {@link WebManglerPlugin}.
-   * @param expressions2 TODO.
+   * @param expressionFactories The {@link ExpressionFactory}s to use.
    * @since v0.1.0
    * @version v0.1.14
    * @deprecated
@@ -50,23 +59,23 @@ export default abstract class SimpleLanguagePlugin
   constructor(
     languages: string[],
     expressions: Map<string, MangleExpression[]>,
-    expressions2: Map<string, (options: unknown) => MangleExpression[]>,
+    expressionFactories: Map<string, ExpressionFactory>,
   ) {
     this.languages = languages;
     this.expressions = expressions;
-    this.tmp = expressions2;
+    this.expressionFactories = expressionFactories;
   }
 
   /**
    * @inheritDoc
    */
   getExpressionsFor(name: string, options: unknown): MangleExpression[] {
-    const fn = this.tmp.get(name);
-    if (fn === undefined) {
+    const expressionFactory = this.expressionFactories.get(name);
+    if (expressionFactory === undefined) {
       return [];
     }
 
-    return fn(options);
+    return expressionFactory(options);
   }
 
   /**

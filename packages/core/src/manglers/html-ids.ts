@@ -216,7 +216,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
       patterns: HtmlIdMangler.getPatterns(options.idNamePattern),
       reserved: HtmlIdMangler.getReserved(options.reservedIds),
       prefix: HtmlIdMangler.getPrefix(options.keepIdPrefix),
-      expressions: [
+      expressionOptions: [
         QUERY_SELECTOR_EXPRESSION,
         ID_ATTRIBUTE_EXPRESSION,
         HREF_ATTRIBUTE_EXPRESSION,
