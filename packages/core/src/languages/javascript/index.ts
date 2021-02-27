@@ -15,6 +15,9 @@ expressions.set("css-variable-mangler", cssVariablesMatchers);
 expressions.set("html-attribute-mangler", htmlAttributeMatchers);
 expressions.set("html-id-mangler", htmlIdMatchers);
 
+const map: Map<string, (options: any) => MangleExpression[]> = new Map();
+// TODO map.set("querySelectors", querySelectors);
+
 /**
  * This {@link WebManglerLanguagePlugin} provides JavaScript support for the
  * built-in {@link WebManglerPlugin}s.
@@ -26,12 +29,13 @@ expressions.set("html-id-mangler", htmlIdMatchers);
  * });
  *
  * @since v0.1.0
+ * @version v0.1.14
  */
 export default class JavaScriptLanguageSupport extends SimpleLanguagePlugin {
   /**
    * Instantiate a new {@link JavaScriptLanguageSupport} plugin.
    */
   constructor() {
-    super(languages, expressions);
+    super(languages, expressions, map);
   }
 }

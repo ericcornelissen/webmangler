@@ -1,7 +1,20 @@
 import type { CharSet } from "../characters";
+import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
+
+const QUERY_SELECTOR_EXPRESSION: MangleExpressionOptions = {
+  name: "querySelectors",
+  options: { prefix: "\\." },
+};
+
+const CLASS_ATTRIBUTE_EXPRESSION: MangleExpressionOptions = {
+  name: "multiValueAttributes",
+  options: {
+    attributeNames: ["class"],
+  },
+};
 
 /**
  * The options for _WebMangler_'s built-in CSS class mangler.
@@ -134,7 +147,7 @@ export type CssClassManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.7
+ * @version v0.1.14
  */
 export default class CssClassMangler extends SimpleManglerPlugin {
   /**
@@ -194,6 +207,10 @@ export default class CssClassMangler extends SimpleManglerPlugin {
       patterns: CssClassMangler.getPatterns(options.classNamePattern),
       reserved: CssClassMangler.getReserved(options.reservedClassNames),
       prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
+      expressions: [
+        QUERY_SELECTOR_EXPRESSION,
+        CLASS_ATTRIBUTE_EXPRESSION,
+      ],
     });
   }
 

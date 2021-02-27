@@ -1,6 +1,20 @@
 import type { CharSet } from "./characters";
 
 /**
+ * TODO.
+ *
+ * @version v0.1.14
+ */
+interface MangleOptions extends MangleEngineOptions {
+  /**
+   * TODO.
+   *
+   * @version v0.1.14
+   */
+  readonly expressions: MangleExpressionOptions[];
+}
+
+/**
  * A set of generic options used by the {@link MangleEngine} for mangling.
  *
  * @since v0.1.0
@@ -11,6 +25,7 @@ type MangleEngineOptions = {
    * The {@link WebManglerPlugin} identifier.
    *
    * @since v0.1.13
+   * @deprecated
    */
   readonly id: string;
 
@@ -80,6 +95,27 @@ interface MangleExpression {
 }
 
 /**
+ * TODO.
+ *
+ * @since v0.1.14
+ */
+type MangleExpressionOptions = {
+  /**
+   * TODO.
+   *
+   * @since v0.1.14
+   */
+  readonly name: string
+
+  /**
+   * TODO.
+   *
+   * @since v0.1.14
+   */
+  readonly options: unknown;
+};
+
+/**
  * Type defining the information required by _WebMangler_ about files.
  *
  * NOTE: The _WebMangler_ core **will not** read or write files for you.
@@ -137,8 +173,17 @@ interface WebManglerPlugin {
    *
    * @returns The {@link MangleEngineOptions}.
    * @since v0.1.11
+   * @deprecated
    */
   config(): MangleEngineOptions | MangleEngineOptions[];
+
+  /**
+   * Get the plugin's options for the _WebMangler_ core.
+   *
+   * @returns The {@link MangleOptions} (one or more).
+   * @since v0.1.14
+   */
+  options(): MangleOptions | MangleOptions[];
 }
 
 /**
@@ -149,12 +194,23 @@ interface WebManglerPlugin {
  */
 interface WebManglerLanguagePlugin {
   /**
+   * TODO.
+   *
+   * @param name TODO.
+   * @param options TODO.
+   * @returns TODO.
+   * @since v0.1.14
+   */
+  getExpressionsFor(name: string, options: unknown): MangleExpression[];
+
+  /**
    * Get {@link MangleExpression}s for a {@link WebManglerPlugin}.
    *
    * In the returned map, the key is a language identifier and the value are the
    * {@link MangleExpression}s.
    *
    * @since v0.1.13
+   * @deprecated
    */
   getExpressions(pluginId: string): Map<string, MangleExpression[]>;
 
@@ -169,8 +225,10 @@ interface WebManglerLanguagePlugin {
 }
 
 export type {
+  MangleOptions,
   MangleEngineOptions,
   MangleExpression,
+  MangleExpressionOptions,
   WebManglerFile,
   WebManglerOptions,
   WebManglerPlugin,

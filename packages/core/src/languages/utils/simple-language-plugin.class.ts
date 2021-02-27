@@ -26,6 +26,11 @@ export default abstract class SimpleLanguagePlugin
   private readonly expressions: Map<string, MangleExpression[]>;
 
   /**
+   * TODO
+   */
+  private readonly tmp: Map<string, (options: unknown) => MangleExpression[]>;
+
+  /**
    * Initialize a new {@link SimpleLanguagePlugin}.
    *
    * @example
@@ -37,18 +42,36 @@ export default abstract class SimpleLanguagePlugin
    *
    * @param languages Supported language, including aliases.
    * @param expressions The expressions for supported {@link WebManglerPlugin}.
+   * @param expressions2 TODO.
    * @since v0.1.0
+   * @version v0.1.14
+   * @deprecated
    */
   constructor(
     languages: string[],
     expressions: Map<string, MangleExpression[]>,
+    expressions2: Map<string, (options: unknown) => MangleExpression[]>,
   ) {
     this.languages = languages;
     this.expressions = expressions;
+    this.tmp = expressions2;
   }
 
   /**
    * @inheritDoc
+   */
+  getExpressionsFor(name: string, options: unknown): MangleExpression[] {
+    const fn = this.tmp.get(name);
+    if (fn === undefined) {
+      return [];
+    }
+
+    return fn(options);
+  }
+
+  /**
+   * @inheritdoc
+   * @deprecated
    */
   getExpressions(manglerId: string): Map<string, MangleExpression[]> {
     const manglerExpressions = this.expressions.get(manglerId) || [];

@@ -31,6 +31,20 @@ export default abstract class MultiLanguagePlugin
   /**
    * @inheritDoc
    */
+  getExpressionsFor(name: string, options: unknown): MangleExpression[] {
+    const result: MangleExpression[] = [];
+    this.plugins.forEach((plugin) => {
+      const pluginExpressions = plugin.getExpressionsFor(name, options);
+      result.push(...pluginExpressions);
+    });
+
+    return result;
+  }
+
+  /**
+   * @inheritDoc
+   * @deprecated
+   */
   getExpressions(manglerId: string): Map<string, MangleExpression[]> {
     const result: Map<string, MangleExpression[]> = new Map();
     this.plugins.forEach((plugin) => {

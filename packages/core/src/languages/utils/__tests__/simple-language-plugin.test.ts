@@ -12,7 +12,7 @@ class ConcretePlugin extends SimpleLanguagePlugin {
     languages: string[],
     expressions: Map<string, MangleExpression[]>,
   ) {
-    super(languages, expressions);
+    super(languages, expressions, new Map());
   }
 }
 

@@ -192,6 +192,9 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
       patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
       reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
       prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),
+      expressions: [
+        // TODO
+      ],
     });
   }
 

@@ -1,5 +1,6 @@
 import type {
   MangleExpression,
+  MangleExpressionOptions,
   WebManglerFile,
   WebManglerOptions,
   WebManglerLanguagePlugin,
@@ -8,21 +9,28 @@ import type {
 import manglerEngine from "./engine";
 
 /**
- * Retrieve the {@link MangleExpression}s for a given plugin from the {@link
- * WebManglerLanguagePlugin}s.
+ * TODO.
  *
- * @param languages The {@link WebManglerLanguagePlugin}s.
- * @param pluginId The plugin identifier.
- * @returns The {@link MangleExpression}.
+ * @param languagePlugins TODO.
+ * @param expressionsOptions TODO.
+ * @returns TODO.
  */
-function getExpressions(
-  languages: WebManglerLanguagePlugin[],
-  pluginId: string,
+export function getExpressions(
+  languagePlugins: WebManglerLanguagePlugin[],
+  expressionsOptions: MangleExpressionOptions[],
 ): Map<string, MangleExpression[]> {
   const pluginExpressions: Map<string, MangleExpression[]> = new Map();
-  for (const languagePlugin of languages) {
-    const langExpressions = languagePlugin.getExpressions(pluginId);
-    langExpressions.forEach((value, key) => pluginExpressions.set(key, value));
+  for (const languagePlugin of languagePlugins) {
+    const languageExpressions: MangleExpression[] = [];
+    for (const { name, options } of expressionsOptions) {
+      const expressions = languagePlugin.getExpressionsFor(name, options);
+      languageExpressions.push(...expressions);
+    }
+
+    const languages = languagePlugin.getLanguages();
+    for (const language of languages) {
+      pluginExpressions.set(language, languageExpressions);
+    }
   }
 
   return pluginExpressions;
@@ -36,15 +44,15 @@ function getExpressions(
  * @param options The options for the mangler.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.13
+ * @version v0.1.14
  */
 export default function webmangler<File extends WebManglerFile>(
   files: File[],
   options: WebManglerOptions,
 ): File[] {
-  const configs = options.plugins.map((plugin) => plugin.config()).flat();
+  const configs = options.plugins.map((plugin) => plugin.options()).flat();
   for (const config of configs) {
-    const expressions = getExpressions(options.languages, config.id);
+    const expressions = getExpressions(options.languages, config.expressions);
     files = manglerEngine(files, expressions, config);
   }
 
