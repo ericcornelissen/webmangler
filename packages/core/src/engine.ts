@@ -69,7 +69,7 @@ function countInstances(
  * @param charSet The character set to use to generate mangle strings.
  * @returns A mapping defining the mangling.
  */
-function mangleInstances(
+function getMangleMap(
   instances: Map<string, number>,
   manglePrefix: string,
   reservedNames: string[],
@@ -89,10 +89,8 @@ function mangleInstances(
 }
 
 /**
- * Convert a direct mapping from input to mangled output into safe, two-step
- * mangling. The first-step map can be used to mangle the input into a state
- * where the second map can be used to safely mangle. For more details see
- * {@link getMangleMaps}.
+ * Convert a direct mapping from input to mangled output into a safe, two-step
+ * mangling that prevents problems due to double mangling.
  *
  * @param mangleMap The mapping defining a direct mangling from input to output.
  * @returns A two-step mapping defining the mangling from input to output.
@@ -100,59 +98,31 @@ function mangleInstances(
 function getSafeTwoStepMangleMapping(
   mangleMap: Map<string, string>,
 ): [Map<string, string>, Map<string, string>] {
-  const mapToUnique: Map<string, string> = new Map();
-  const mapToMangled: Map<string, string> = new Map();
+  const mangleOutStrings = Array.from(mangleMap.values());
+  const uniqueNameGenerator = new NameGenerator(mangleOutStrings);
 
-  const nameGenerator = new NameGenerator();
-  while (mapToUnique.size !== mangleMap.size) {
-    const uniquePrefix = nameGenerator.nextName();
-    if (!mangleMap.has(uniquePrefix)) {
-      for (const [key, value] of mangleMap) {
-        const intermediateValue = `${uniquePrefix}-${value}`;
-        if (mangleMap.has(intermediateValue)) {
-          mapToUnique.clear();
-          mapToMangled.clear();
-          break;
-        }
-
-        mapToUnique.set(key, intermediateValue);
-        mapToMangled.set(intermediateValue, value);
-      }
+  const map1 = new Map();
+  const map2 = new Map();
+  mangleMap.forEach((mangledName, originalName) => {
+    // Filter out ineffective mappings
+    if (mangledName === originalName) {
+      return;
     }
-  }
 
-  return [mapToUnique, mapToMangled];
-}
+    if (mangleMap.has(mangledName)) {
+      // Use an intermediate mangling value when mangling if the mangled value
+      // could be re-mangled be another mapping.
+      const uniqueName = uniqueNameGenerator.nextName();
+      map1.set(originalName, uniqueName);
+      map2.set(uniqueName, mangledName);
+    } else {
+      // Just mangle if the mangled name does not appear in the mangle map and
+      // therefore cannot be re-mangled.
+      map1.set(originalName, mangledName);
+    }
+  });
 
-/**
- * Convert a list of strings to mangle (including the number of times they
- * will be replaced) into a two-step mapping that defines a mangling.
- *
- * This function produces a pair of two mappings. The first mapping must be used
- * to convert the strings to mangle into unique values that can subsequently be
- * safely mangled using the second mapping. This ensures values mangled are not
- * mangled again by subsequent mappings.
- *
- * @param instances The strings to mangle and the number of times they appear.
- * @param manglePrefix The prefix to be used for mangled values.
- * @param reservedNames Strings and patterns not to be used as mangled strings.
- * @param charSet The character set to use to generate mangle strings.
- * @returns Two maps to perform safe two-step mangling.
- */
-function getMangleMaps(
-  instances: Map<string, number>,
-  manglePrefix: string,
-  reservedNames: string[],
-  charSet: CharSet,
-): [Map<string, string>, Map<string, string>] {
-  const mangleMap = mangleInstances(
-    instances,
-    manglePrefix,
-    reservedNames,
-    charSet,
-  );
-
-  return getSafeTwoStepMangleMapping(mangleMap);
+  return [map1, map2];
 }
 
 /**
@@ -173,10 +143,12 @@ function doMangle<File extends WebManglerFile>(
   expressions: Map<string, MangleExpression[]>,
   mangleMap: Map<string, string>,
 ): File[] {
+  const [map1, map2] = getSafeTwoStepMangleMapping(mangleMap);
   files.forEach((file) => {
     const fileExpressions = expressions.get(file.type) as MangleExpression[];
     fileExpressions.forEach((expression) => {
-      file.content = expression.replaceAll(file.content, mangleMap);
+      file.content = expression.replaceAll(file.content, map1);
+      file.content = expression.replaceAll(file.content, map2);
     });
   });
 
@@ -237,7 +209,7 @@ function parseOptions(options: MangleEngineOptions): {
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.13
+ * @version v0.1.14
  */
 export default function mangle<File extends WebManglerFile>(
   files: File[],
@@ -254,13 +226,12 @@ export default function mangle<File extends WebManglerFile>(
   const supportedFiles = getSupportedFilesOnly(files, expressions);
 
   const instancesCount = countInstances(supportedFiles, expressions, patterns);
-  const [mapToUnique, mapToMangled] = getMangleMaps(
+  const mangleMap = getMangleMap(
     instancesCount,
     manglePrefix,
     reservedNames,
     charSet,
   );
 
-  const intermediateFiles = doMangle(supportedFiles, expressions, mapToUnique);
-  return doMangle(intermediateFiles, expressions, mapToMangled);
+  return doMangle(supportedFiles, expressions, mangleMap);
 }
