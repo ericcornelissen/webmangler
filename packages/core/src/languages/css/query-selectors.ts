@@ -1,5 +1,5 @@
 import type { MangleExpression } from "../../types";
-import type { QuerySelectorsOptions } from "../options";
+import type { QuerySelectorOptions } from "../options";
 
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
@@ -29,12 +29,12 @@ function newCssSelectorExpression(prefix: string): MangleExpression {
  * will match:
  * - CSS selectors (e.g. `foobar` in `.foobar { }`).
  *
- * @param options The {@link QuerySelectorsOptions}.
+ * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
  */
 export default function querySelectorExpressionFactory(
-  options: QuerySelectorsOptions,
+  options: QuerySelectorOptions,
 ): MangleExpression[] {
   return [
     newCssSelectorExpression(options.prefix),

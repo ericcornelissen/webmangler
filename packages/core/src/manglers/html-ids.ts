@@ -1,7 +1,7 @@
 import type { CharSet } from "../characters";
 import type {
-  QuerySelectorsOptions,
-  SingleValueAttributesOptions,
+  QuerySelectorOptions,
+  SingleValueAttributeOptions,
 } from "../languages/options";
 import type { MangleExpressionOptions } from "../types";
 
@@ -9,13 +9,13 @@ import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 const QUERY_SELECTOR_EXPRESSION:
-    MangleExpressionOptions<QuerySelectorsOptions> = {
+    MangleExpressionOptions<QuerySelectorOptions> = {
   name: "querySelectors",
   options: { prefix: "#" },
 };
 
 const ID_ATTRIBUTE_EXPRESSION:
-    MangleExpressionOptions<SingleValueAttributesOptions> = {
+    MangleExpressionOptions<SingleValueAttributeOptions> = {
   name: "singleValueAttributes",
   options: {
     attributeNames: ["id", "for"],
@@ -23,7 +23,7 @@ const ID_ATTRIBUTE_EXPRESSION:
 };
 
 const HREF_ATTRIBUTE_EXPRESSION:
-    MangleExpressionOptions<SingleValueAttributesOptions> = {
+    MangleExpressionOptions<SingleValueAttributeOptions> = {
   name: "singleValueAttributes",
   options: {
     attributeNames: ["href"],

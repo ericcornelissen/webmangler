@@ -1,5 +1,5 @@
 import type { MangleExpression } from "../../types";
-import type { SingleValueAttributesOptions } from "../options";
+import type { SingleValueAttributeOptions } from "../options";
 
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
@@ -48,12 +48,12 @@ function newElementAttributeSingleValueExpression(
  * values in HTML. This will match:
  * - Attribute values (e.g. `bar` in `<div data-foo="bar"></div>`).
  *
- * @param options The {@link SingleValueAttributesOptions}.
+ * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
  */
 export default function singleValueAttributeExpressionFactory(
-  options: SingleValueAttributesOptions,
+  options: SingleValueAttributeOptions,
 ): MangleExpression[] {
   const valuePrefix = options.valuePrefix ? options.valuePrefix : "";
   const valueSuffix = options.valueSuffix ? options.valueSuffix : "";

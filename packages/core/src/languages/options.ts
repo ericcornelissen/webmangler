@@ -65,7 +65,7 @@ type CssDeclarationValueOptions = {
  *
  * @since v0.1.14
  */
-type MultiValueAttributesOptions = {
+type MultiValueAttributeOptions = {
   /**
    * The names of attributes to match.
    *
@@ -80,7 +80,7 @@ type MultiValueAttributesOptions = {
  *
  * @since v0.1.14
  */
-type QuerySelectorsOptions = {
+type QuerySelectorOptions = {
   /**
    * The prefix required on th CSS query selector.
    *
@@ -97,7 +97,7 @@ type QuerySelectorsOptions = {
  *
  * @since v0.1.14
  */
-type SingleValueAttributesOptions = {
+type SingleValueAttributeOptions = {
   /**
    * The names of attributes to match.
    *
@@ -128,7 +128,7 @@ export type {
   AttributeOptions,
   CssDeclarationPropertyOptions,
   CssDeclarationValueOptions,
-  MultiValueAttributesOptions,
-  QuerySelectorsOptions,
-  SingleValueAttributesOptions,
+  MultiValueAttributeOptions,
+  QuerySelectorOptions,
+  SingleValueAttributeOptions,
 };

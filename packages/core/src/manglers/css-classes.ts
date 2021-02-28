@@ -1,7 +1,7 @@
 import type { CharSet } from "../characters";
 import type {
-  MultiValueAttributesOptions,
-  QuerySelectorsOptions,
+  MultiValueAttributeOptions,
+  QuerySelectorOptions,
 } from "../languages/options";
 import type { MangleExpressionOptions } from "../types";
 
@@ -9,13 +9,13 @@ import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 const QUERY_SELECTOR_EXPRESSION:
-    MangleExpressionOptions<QuerySelectorsOptions> = {
+    MangleExpressionOptions<QuerySelectorOptions> = {
   name: "querySelectors",
   options: { prefix: "\\." },
 };
 
 const CLASS_ATTRIBUTE_EXPRESSION:
-    MangleExpressionOptions<MultiValueAttributesOptions> = {
+    MangleExpressionOptions<MultiValueAttributeOptions> = {
   name: "multiValueAttributes",
   options: {
     attributeNames: ["class"],
