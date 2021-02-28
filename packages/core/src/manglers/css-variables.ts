@@ -8,7 +8,7 @@ import type { MangleExpressionOptions } from "../types";
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
-const CSS_VARIABLE_DECLARATION_EXPRESSION:
+const CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS:
     MangleExpressionOptions<CssDeclarationPropertyOptions> = {
   name: "css-declaration-properties",
   options: {
@@ -16,7 +16,7 @@ const CSS_VARIABLE_DECLARATION_EXPRESSION:
   },
 };
 
-const CSS_VARIABLE_USAGE_EXPRESSION:
+const CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<CssDeclarationValueOptions> = {
   name: "css-declaration-values",
   options: {
@@ -215,8 +215,8 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
       reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
       prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),
       expressionOptions: [
-        CSS_VARIABLE_DECLARATION_EXPRESSION,
-        CSS_VARIABLE_USAGE_EXPRESSION,
+        CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS,
+        CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS,
       ],
     });
   }

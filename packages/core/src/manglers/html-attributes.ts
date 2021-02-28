@@ -5,7 +5,7 @@ import type { MangleExpressionOptions } from "../types";
 import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
-const ATTRIBUTE_OPTIONS:
+const ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<AttributeOptions> = {
   name: "attributes",
   options: null,
@@ -218,7 +218,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
       reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
       expressionOptions: [
-        ATTRIBUTE_OPTIONS,
+        ATTRIBUTE_EXPRESSION_OPTIONS,
       ],
     });
   }

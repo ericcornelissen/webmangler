@@ -8,13 +8,13 @@ import type { MangleExpressionOptions } from "../types";
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
-const QUERY_SELECTOR_EXPRESSION:
+const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     MangleExpressionOptions<QuerySelectorOptions> = {
   name: "query-selectors",
   options: { prefix: "#" },
 };
 
-const ID_ATTRIBUTE_EXPRESSION:
+const ID_ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<SingleValueAttributeOptions> = {
   name: "single-value-attributes",
   options: {
@@ -22,7 +22,7 @@ const ID_ATTRIBUTE_EXPRESSION:
   },
 };
 
-const HREF_ATTRIBUTE_EXPRESSION:
+const HREF_ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<SingleValueAttributeOptions> = {
   name: "single-value-attributes",
   options: {
@@ -217,9 +217,9 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
       reserved: HtmlIdMangler.getReserved(options.reservedIds),
       prefix: HtmlIdMangler.getPrefix(options.keepIdPrefix),
       expressionOptions: [
-        QUERY_SELECTOR_EXPRESSION,
-        ID_ATTRIBUTE_EXPRESSION,
-        HREF_ATTRIBUTE_EXPRESSION,
+        QUERY_SELECTOR_EXPRESSION_OPTIONS,
+        ID_ATTRIBUTE_EXPRESSION_OPTIONS,
+        HREF_ATTRIBUTE_EXPRESSION_OPTIONS,
       ],
     });
   }

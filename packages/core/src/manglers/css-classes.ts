@@ -8,13 +8,15 @@ import type { MangleExpressionOptions } from "../types";
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
-const QUERY_SELECTOR_EXPRESSION:
+const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     MangleExpressionOptions<QuerySelectorOptions> = {
   name: "query-selectors",
-  options: { prefix: "\\." },
+  options: {
+    prefix: "\\.",
+  },
 };
 
-const CLASS_ATTRIBUTE_EXPRESSION:
+const CLASS_ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<MultiValueAttributeOptions> = {
   name: "multi-value-attributes",
   options: {
@@ -214,8 +216,8 @@ export default class CssClassMangler extends SimpleManglerPlugin {
       reserved: CssClassMangler.getReserved(options.reservedClassNames),
       prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
       expressionOptions: [
-        QUERY_SELECTOR_EXPRESSION,
-        CLASS_ATTRIBUTE_EXPRESSION,
+        QUERY_SELECTOR_EXPRESSION_OPTIONS,
+        CLASS_ATTRIBUTE_EXPRESSION_OPTIONS,
       ],
     });
   }
