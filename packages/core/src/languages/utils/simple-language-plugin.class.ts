@@ -35,7 +35,7 @@ export default abstract class SimpleLanguagePlugin
 
   /**
    * A map from {@link MangleExpression}-set names to a functions that produce
-   * the respective {@link MangleExpression}s given the set's options.
+   * the respective set of {@link MangleExpression}s given the set's options.
    */
   private readonly expressionFactories: Map<string, ExpressionFactory>;
 

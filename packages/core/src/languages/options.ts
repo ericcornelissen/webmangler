@@ -75,16 +75,14 @@ type MultiValueAttributeOptions = {
 };
 
 /**
- * The options for the set of {@link MangleExpression}s that match the CSS query
+ * The options for the set of {@link MangleExpression}s that match CSS query
  * selectors.
  *
  * @since v0.1.14
  */
 type QuerySelectorOptions = {
   /**
-   * The prefix required on th CSS query selector.
-   *
-   * Currently allowed are the prefix for classes (`"\\."`) and IDs (`"#"`).
+   * The prefix required on the CSS query selector.
    *
    * @since v0.1.14
    */

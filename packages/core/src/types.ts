@@ -1,8 +1,8 @@
 import type { CharSet } from "./characters";
 
 /**
- * Interface representing the options a _WebMangler_ plugin has to configure
- * the _WebMangler_ core.
+ * Interface representing the options a {@link WebManglerPlugin} has to
+ * configure the _WebMangler_ core.
  *
  * @since v0.1.14
  */
@@ -10,6 +10,9 @@ interface MangleOptions extends MangleEngineOptions {
   /**
    * The {@link MangleExpressionOptions} for every set of {@link
    * MangleExpression}s that should be used when mangling.
+   *
+   * By providing multiple options for the same set of {@link MangleExpression}s
+   * the _WebMangler_ core will use a set with each configuration when mangling.
    *
    * @since v0.1.14
    */
@@ -192,7 +195,7 @@ interface WebManglerPlugin {
   /**
    * Get the plugin's options for the _WebMangler_ core.
    *
-   * @returns The {@link MangleOptions} (one or more).
+   * @returns The {@link MangleOptions}.
    * @since v0.1.14
    */
   options(): MangleOptions | MangleOptions[];
