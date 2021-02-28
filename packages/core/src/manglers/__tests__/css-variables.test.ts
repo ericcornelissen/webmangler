@@ -23,9 +23,9 @@ import CssVariableMangler from "../css-variables";
 
 const builtInLanguages = [new BuiltInLanguageSupport()];
 
-const DEFAULT_PATTERN = "[a-z-]+";
+const DEFAULT_PATTERN = "[a-z]+";
 
-suite.skip("CSS Variable Mangler", function() {
+suite("CSS Variable Mangler", function() {
   suite("CSS", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
@@ -321,7 +321,7 @@ suite.skip("CSS Variable Mangler", function() {
           },
           {
             input: "<div style=\"--foo: red; --bar: blue;\"></div>",
-            expected: "<div style=\"--a: red; --b: blue;\"></div>",
+            expected: "<div style=\"--b: red; --a: blue;\"></div>",
           },
           {
             input: "<div style=\"--foo: red; --foo: blue;\"></div>",
@@ -397,7 +397,7 @@ suite.skip("CSS Variable Mangler", function() {
           },
           {
             input: "<div style=\"color: var(--foo); font: var(--bar);\"></div>",
-            expected: "<div style=\"color: var(--a); font: var(--b);\"></div>",
+            expected: "<div style=\"color: var(--b); font: var(--a);\"></div>",
           },
           {
             input: "<div style=\"color: var(--foo); font: var(--foo);\"></div>",
@@ -549,7 +549,7 @@ suite.skip("CSS Variable Mangler", function() {
     }
   });
 
-  suite("JavaScript", function() {
+  suite.skip("JavaScript", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",

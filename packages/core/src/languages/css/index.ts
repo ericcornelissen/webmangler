@@ -5,6 +5,8 @@ import SimpleLanguagePlugin from "../utils/simple-language-plugin.class";
 
 import attributeExpressionFactory from "./attributes";
 import cssClassesMatchers from "./css-classes";
+import cssDeclarationPropertyExpressionFactory from "./css-properties";
+import cssDeclarationValueExpressionFactory from "./css-values";
 import cssVariablesMatchers from "./css-variables";
 import htmlAttributeMatchers from "./html-attributes";
 import htmlIdMatchers from "./html-ids";
@@ -21,6 +23,8 @@ expressions.set("html-id-mangler", htmlIdMatchers);
 
 const map: Map<string, ExpressionFactory> = new Map();
 map.set("attributes", attributeExpressionFactory);
+map.set("cssDeclarationProperties", cssDeclarationPropertyExpressionFactory);
+map.set("cssDeclarationValues", cssDeclarationValueExpressionFactory);
 map.set("querySelectors", querySelectorExpressionFactory);
 map.set("singleValueAttributes", singleValueAttributeExpressionFactory);
 
