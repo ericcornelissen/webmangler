@@ -10,13 +10,13 @@ import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 const QUERY_SELECTOR_EXPRESSION:
     MangleExpressionOptions<QuerySelectorOptions> = {
-  name: "querySelectors",
+  name: "query-selectors",
   options: { prefix: "\\." },
 };
 
 const CLASS_ATTRIBUTE_EXPRESSION:
     MangleExpressionOptions<MultiValueAttributeOptions> = {
-  name: "multiValueAttributes",
+  name: "multi-value-attributes",
   options: {
     attributeNames: ["class"],
   },

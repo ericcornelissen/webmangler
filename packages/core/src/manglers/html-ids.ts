@@ -10,13 +10,13 @@ import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 const QUERY_SELECTOR_EXPRESSION:
     MangleExpressionOptions<QuerySelectorOptions> = {
-  name: "querySelectors",
+  name: "query-selectors",
   options: { prefix: "#" },
 };
 
 const ID_ATTRIBUTE_EXPRESSION:
     MangleExpressionOptions<SingleValueAttributeOptions> = {
-  name: "singleValueAttributes",
+  name: "single-value-attributes",
   options: {
     attributeNames: ["id", "for"],
   },
@@ -24,7 +24,7 @@ const ID_ATTRIBUTE_EXPRESSION:
 
 const HREF_ATTRIBUTE_EXPRESSION:
     MangleExpressionOptions<SingleValueAttributeOptions> = {
-  name: "singleValueAttributes",
+  name: "single-value-attributes",
   options: {
     attributeNames: ["href"],
     valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\:\\.]*#", // URL

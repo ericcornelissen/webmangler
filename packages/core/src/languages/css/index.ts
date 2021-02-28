@@ -23,10 +23,10 @@ expressions.set("html-id-mangler", htmlIdMatchers);
 
 const map: Map<string, ExpressionFactory> = new Map();
 map.set("attributes", attributeExpressionFactory);
-map.set("cssDeclarationProperties", cssDeclarationPropertyExpressionFactory);
-map.set("cssDeclarationValues", cssDeclarationValueExpressionFactory);
-map.set("querySelectors", querySelectorExpressionFactory);
-map.set("singleValueAttributes", singleValueAttributeExpressionFactory);
+map.set("css-declaration-properties", cssDeclarationPropertyExpressionFactory);
+map.set("css-declaration-values", cssDeclarationValueExpressionFactory);
+map.set("query-selectors", querySelectorExpressionFactory);
+map.set("single-value-attributes", singleValueAttributeExpressionFactory);
 
 /**
  * This {@link WebManglerLanguagePlugin} provides CSS support for the built-in

@@ -10,7 +10,7 @@ import SimpleManglerPlugin from "./utils/simple-mangler.class";
 
 const CSS_VARIABLE_DECLARATION_EXPRESSION:
     MangleExpressionOptions<CssDeclarationPropertyOptions> = {
-  name: "cssDeclarationProperties",
+  name: "css-declaration-properties",
   options: {
     prefix: "--",
   },
@@ -18,7 +18,7 @@ const CSS_VARIABLE_DECLARATION_EXPRESSION:
 
 const CSS_VARIABLE_USAGE_EXPRESSION:
     MangleExpressionOptions<CssDeclarationValueOptions> = {
-  name: "cssDeclarationValues",
+  name: "css-declaration-values",
   options: {
     prefix: "var\\s*\\(\\s*--",
     suffix: "\\s*(,[^\\)]+)?\\)",
