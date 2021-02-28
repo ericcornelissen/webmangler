@@ -25,21 +25,16 @@ function newAttributeSelectorSingleValueExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
-        \\[\\s*(?:${attributeNamesExpression})
-        \\s*
-        (?:\\=|\\~=|\\|=|\\^=|\\$=|\\*=)
-        \\s*
-        (?<${GROUP_QUOTE}>"|')
-        \\s*
+        \\[\\s*(?:${attributeNamesExpression})\\s*
+        (?:\\=|\\~=|\\|=|\\^=|\\$=|\\*=)\\s*
+        (?<${GROUP_QUOTE}>"|')\\s*
         ${valuePrefix}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
         ${valueSuffix}
-        \\s*
-        \\k<${GROUP_QUOTE}>
-        \\s*
-        \\]
+        \\s*\\k<${GROUP_QUOTE}>
+        \\s*\\]
       )
     `,
     GROUP_MAIN,

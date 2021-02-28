@@ -13,12 +13,7 @@ const GROUP_MAIN = "main";
 function newElementAttributeExpressions(): MangleExpression[] {
   return ["\"", "'"].map((quote) => new NestedGroupExpression(
     `
-      (?<=
-        \\<
-        \\s*
-        [a-zA-Z0-9]+
-        \\s+
-      )
+      (?<=\\<\\s*[a-zA-Z0-9]+\\s+)
       (?<${GROUP_MAIN}>
         (?:
           [^>${quote}]+

@@ -16,10 +16,7 @@ function newAttributeSelectorExpression(): MangleExpression {
       (?<!"[^"}]*|'[^'}]*)
       (?<=\\[\\s*)
       (?<${GROUP_MAIN}>%s)
-      (?=
-        \\s*
-        (?:\\]|\\=|\\~=|\\|=|\\^=|\\$=|\\*=)
-      )
+      (?=\\s*(?:\\]|\\=|\\~=|\\|=|\\^=|\\$=|\\*=))
     `,
     GROUP_MAIN,
   );
@@ -35,9 +32,7 @@ function newAttributeUsageExpression(): MangleExpression {
   return new SingleGroupMangleExpression(
     `
       (?<!"[^";]*|'[^';]*)
-      (?<=
-        attr\\s*\\(\\s*
-      )
+      (?<=attr\\s*\\(\\s*)
       (?<${GROUP_MAIN}>%s)
       (?=
         (\\s+([a-zA-Z]+|%))?

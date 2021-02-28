@@ -21,8 +21,7 @@ function newCssDeclarationPropertyExpression(
     `
       (?<!"[^";]*|'[^';]*)
       (?<=
-        (?:\\;|\\{)
-        \\s*
+        (?:\\;|\\{)\\s*
         ${prefix}
       )
       (?<${GROUP_MAIN}>%s)
@@ -49,6 +48,7 @@ export default function cssDeclarationPropertyExpressionFactory(
 ): MangleExpression[] {
   const prefix = options.prefix ? options.prefix : "";
   const suffix = options.suffix ? options.suffix : "";
+
   return [
     newCssDeclarationPropertyExpression(prefix, suffix),
   ];

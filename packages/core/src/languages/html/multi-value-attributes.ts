@@ -19,11 +19,8 @@ function newElementAttributeMultiValueExpressions(
   return ["\"", "'"].map((quote) => new NestedGroupExpression(
     `
       (?<=
-        \\s
-        (?:${attributeNamesExpression})
-        \\s*=\\s*
-        ${quote}
-        \\s*
+        \\s(?:${attributeNamesExpression})\\s*=\\s*
+        ${quote}\\s*
       )
       (?<${GROUP_MAIN}>
         (?:[^${quote}]+\\s)?

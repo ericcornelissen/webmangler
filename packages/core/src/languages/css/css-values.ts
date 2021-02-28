@@ -48,6 +48,7 @@ export default function cssDeclarationValueExpressionFactory(
 ): MangleExpression[] {
   const prefix = options.prefix ? options.prefix : "";
   const suffix = options.suffix ? options.suffix : "";
+
   return [
     newCssDeclarationValueExpression(prefix, suffix),
   ];

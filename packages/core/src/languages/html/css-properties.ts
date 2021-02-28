@@ -20,11 +20,8 @@ function newStyleDeclarationPropertyExpressions(
   return ["\"", "'"].map((quote) => new NestedGroupExpression(
     `
       (?<=
-        \\s
-        style
-        \\s*=\\s*
-        ${quote}
-        \\s*
+        \\sstyle\\s*=\\s*
+        ${quote}\\s*
       )
       (?<${GROUP_MAIN}>
         (?:[^${quote}]+)?
