@@ -401,41 +401,6 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "input attributes and mangled attributes intersect",
-        cases: [
-          {
-            input: "<div data-a></div>",
-            pattern: "data-[a-z]",
-            expected: "<div data-a></div>",
-          },
-          {
-            input: "<div data-b data-a></div>",
-            pattern: "data-[a-z]",
-            expected: "<div data-a data-b></div>",
-          },
-          {
-            input: "<div data-a data-c data-b></div>",
-            pattern: "data-[a-z]",
-            expected: "<div data-a data-b data-c></div>",
-          },
-          {
-            input: "<div data-d data-b data-c data-a></div>",
-            pattern: "data-[a-z]",
-            expected: "<div data-a data-b data-c data-d></div>",
-          },
-          {
-            input: "<div data-d data-a data-b data-c data-b></div>",
-            pattern: "data-[a-z]",
-            expected: "<div data-b data-c data-a data-d data-a></div>",
-          },
-          {
-            input: "<div data-o data-m data-foo data-n></div>",
-            pattern: "data-[a-z]",
-            expected: "<div data-a data-b data-foo data-c></div>",
-          },
-        ],
-      },
-      {
         name: "edge cases",
         cases: [
           {
@@ -619,41 +584,6 @@ suite("HTML Attribute Mangler", function() {
             input: "let attr = \"data-foo\"; $el.setAttribute(attr, \"bar\");",
             expected: "let attr = \"data-a\"; $el.setAttribute(attr, \"bar\");",
           }),
-        ],
-      },
-      {
-        name: "input attributes and mangled attributes intersect",
-        cases: [
-          {
-            input: "querySelector(\"[data-a]\");",
-            pattern: "data-[a-z]",
-            expected: "querySelector(\"[data-a]\");",
-          },
-          {
-            input: "querySelector(\"[data-b][data-a]\");",
-            pattern: "data-[a-z]",
-            expected: "querySelector(\"[data-a][data-b]\");",
-          },
-          {
-            input: "querySelector(\"[data-a][data-c][data-b]\");",
-            pattern: "data-[a-z]",
-            expected: "querySelector(\"[data-a][data-b][data-c]\");",
-          },
-          {
-            input: "var selector = \"[data-d][data-b][data-c][data-a]\";",
-            pattern: "data-[a-z]",
-            expected: "var selector = \"[data-a][data-b][data-c][data-d]\";",
-          },
-          {
-            input: "var s = \"[data-d][data-a][data-b][data-c][data-b]\";",
-            pattern: "data-[a-z]",
-            expected: "var s = \"[data-b][data-c][data-a][data-d][data-a]\";",
-          },
-          {
-            input: "var selector = \"[data-o][data-m][data-foo][data-n]\";",
-            pattern: "data-[a-z]",
-            expected: "var selector = \"[data-a][data-b][data-foo][data-c]\";",
-          },
         ],
       },
       {

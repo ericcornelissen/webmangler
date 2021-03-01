@@ -7,6 +7,7 @@ import { ALL_LOWERCASE_CHARS } from "./characters";
  * and unique strings.
  *
  * @since v0.1.0
+ * @version v0.1.14
  */
 export default class NameGenerator {
   /**
@@ -22,7 +23,7 @@ export default class NameGenerator {
   private readonly reserved: RegExp[];
 
   /**
-   * The list of characters available to generate names with.
+   * The set of characters available to generate names with.
    */
   private readonly charSet: CharSet;
 
@@ -30,7 +31,7 @@ export default class NameGenerator {
    * The last returned name.
    *
    * The value should not be considered defined before {@link
-   * NameGenerator.nextName} is called.
+   * NameGenerator.nextName} is called at least once.
    */
   private current = "";
 
@@ -52,13 +53,19 @@ export default class NameGenerator {
    * generated.
    *
    * @param reserved A list of reserved names or expressions.
-   * @param charSet The character set to be used.
+   * @param charSet A {@link CharSet}.
+   * @throws If `charSet` is empty.
    * @since v0.1.0
+   * @version v0.1.14
    */
   constructor(
     reserved: string[] = [],
     charSet: CharSet = NameGenerator.DEFAULT_CHARSET,
   ) {
+    if (charSet.length === 0) {
+      throw new TypeError("character set cannot be empty");
+    }
+
     this.reserved = reserved.map((rawExpr) => new RegExp(`^${rawExpr}$`));
     this.charSet = charSet;
   }
@@ -68,6 +75,7 @@ export default class NameGenerator {
    *
    * @returns The next shortest, safe, and unique string.
    * @since v0.1.0
+   * @version v0.1.7
    */
   nextName(): string {
     this.current = this.tick(this.current);
@@ -79,7 +87,7 @@ export default class NameGenerator {
   }
 
   /**
-   * Check with a string is reserved in the {@link NameGenerator}.
+   * Check if a string is reserved in this {@link NameGenerator}.
    *
    * @param s The string of interest.
    * @returns `true` if `s` is reserved, `false` otherwise.
@@ -89,7 +97,8 @@ export default class NameGenerator {
   }
 
   /**
-   * Get the next shortest string after the provided string.
+   * Get the next shortest string after the provided string. This may return a
+   * string that is reserved in this {@link NameGenerator}.
    *
    * @param s The current string.
    * @returns The next string.

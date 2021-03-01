@@ -241,4 +241,8 @@ suite("NameGenerator", function() {
       }
     });
   }
+
+  test("empty character set", function() {
+    expect(() => new NameGenerator([], [])).to.throw("character set cannot be empty");
+  });
 });

@@ -241,6 +241,99 @@ suite("ManglerEngine", function() {
       ],
     },
     {
+      name: "strings to mangle intersect with mangled string",
+      cases: [
+        {
+          files: [new WebManglerFileMock("css", ".a, .b { }")],
+          expected: [new WebManglerFileMock("css", ".a, .b { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".c, .a { }")],
+          expected: [new WebManglerFileMock("css", ".a, .b { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".b, .a { }")],
+          expected: [new WebManglerFileMock("css", ".a, .b { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".b, .a, .z { } .a.b { }")],
+          expected: [new WebManglerFileMock("css", ".a, .b, .c { } .b.a { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".b, .z, .a { } .a.b { }")],
+          expected: [new WebManglerFileMock("css", ".a, .c, .b { } .b.a { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".z, .b, .a { } .a.b { }")],
+          expected: [new WebManglerFileMock("css", ".c, .a, .b { } .b.a { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".b, .a, .x, .y { }")],
+          expected: [new WebManglerFileMock("css", ".a, .b, .c, .d { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".b, .a, .c, .d { }")],
+          expected: [new WebManglerFileMock("css", ".a, .b, .c, .d { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".d, .c, .b, .a { }")],
+          expected: [new WebManglerFileMock("css", ".a, .b, .c, .d { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".c, .d, .b, .a { }")],
+          expected: [new WebManglerFileMock("css", ".a, .b, .c, .d { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+        {
+          files: [new WebManglerFileMock("css", ".x, .a, .b { }")],
+          expected: [new WebManglerFileMock("css", ".a, .b, .c { }")],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock("\\.(%s)", 1, ".%s")]],
+          ]),
+          patterns: "[a-z]+",
+        },
+      ],
+    },
+    {
       name: "corner cases",
       cases: [
         {

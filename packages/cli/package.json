@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/yargs": "16.0.0",
     "@webmangler/testing": "0.1.0",
-    "typescript": "4.1.5",
+    "typescript": "4.2.2",
     "webmangler": "0.1.13"
   },
   "peerDependencies": {
