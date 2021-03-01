@@ -214,10 +214,13 @@ interface WebManglerLanguagePlugin {
    *
    * @param name The name of the set of {@link MangleExpression}s.
    * @param options The options for the set of {@link MangleExpression}s.
-   * @returns A set of {@link MangleExpression}s in accordance with `options`.
+   * @returns The {@link MangleExpression}s for every supported language.
    * @since v0.1.14
    */
-  getExpressionsFor(name: string, options: unknown): MangleExpression[];
+  getExpressionsFor(
+    name: string,
+    options: unknown,
+  ): Map<string, MangleExpression[]>;
 
   /**
    * Get {@link MangleExpression}s for a {@link WebManglerPlugin}.

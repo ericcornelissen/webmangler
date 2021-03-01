@@ -69,13 +69,19 @@ export default abstract class SimpleLanguagePlugin
   /**
    * @inheritDoc
    */
-  getExpressionsFor(name: string, options: unknown): MangleExpression[] {
+  getExpressionsFor(
+    name: string,
+    options: unknown,
+  ): Map<string, MangleExpression[]> {
+    const map: Map<string, MangleExpression[]> = new Map();
+
     const expressionFactory = this.expressionFactories.get(name);
     if (expressionFactory === undefined) {
-      return [];
+      return map;
     }
 
-    return expressionFactory(options);
+    const expressions = expressionFactory(options);
+    return this.languages.reduce((m, lang) => m.set(lang, expressions), map);
   }
 
   /**

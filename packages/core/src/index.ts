@@ -22,15 +22,12 @@ export function getExpressions(
 ): Map<string, MangleExpression[]> {
   const pluginExpressions: Map<string, MangleExpression[]> = new Map();
   for (const languagePlugin of languagePlugins) {
-    const languageExpressions: MangleExpression[] = [];
     for (const { name, options } of expressionOptions) {
-      const expressions = languagePlugin.getExpressionsFor(name, options);
-      languageExpressions.push(...expressions);
-    }
-
-    const languages = languagePlugin.getLanguages();
-    for (const language of languages) {
-      pluginExpressions.set(language, languageExpressions);
+      const expressionsMap = languagePlugin.getExpressionsFor(name, options);
+      expressionsMap.forEach((newExpressions, language) => {
+        const expressions = pluginExpressions.get(language) || [];
+        pluginExpressions.set(language, expressions.concat(newExpressions));
+      });
     }
   }
 

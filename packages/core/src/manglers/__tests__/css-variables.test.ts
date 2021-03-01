@@ -321,7 +321,7 @@ suite("CSS Variable Mangler", function() {
           },
           {
             input: "<div style=\"--foo: red; --bar: blue;\"></div>",
-            expected: "<div style=\"--b: red; --a: blue;\"></div>",
+            expected: "<div style=\"--a: red; --b: blue;\"></div>",
           },
           {
             input: "<div style=\"--foo: red; --foo: blue;\"></div>",
@@ -397,7 +397,7 @@ suite("CSS Variable Mangler", function() {
           },
           {
             input: "<div style=\"color: var(--foo); font: var(--bar);\"></div>",
-            expected: "<div style=\"color: var(--b); font: var(--a);\"></div>",
+            expected: "<div style=\"color: var(--a); font: var(--b);\"></div>",
           },
           {
             input: "<div style=\"color: var(--foo); font: var(--foo);\"></div>",

@@ -31,11 +31,14 @@ export default abstract class MultiLanguagePlugin
   /**
    * @inheritDoc
    */
-  getExpressionsFor(name: string, options: unknown): MangleExpression[] {
-    const result: MangleExpression[] = [];
+  getExpressionsFor(
+    name: string,
+    options: unknown,
+  ): Map<string, MangleExpression[]> {
+    const result: Map<string, MangleExpression[]> = new Map();
     this.plugins.forEach((plugin) => {
       const pluginExpressions = plugin.getExpressionsFor(name, options);
-      result.push(...pluginExpressions);
+      pluginExpressions.forEach((expr, lang) => result.set(lang, expr));
     });
 
     return result;
