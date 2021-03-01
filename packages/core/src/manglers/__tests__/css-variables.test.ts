@@ -549,7 +549,7 @@ suite("CSS Variable Mangler", function() {
     }
   });
 
-  suite.skip("JavaScript", function() {
+  suite("JavaScript", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",

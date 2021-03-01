@@ -464,7 +464,7 @@ suite("HTML Attribute Mangler", function() {
     }
   });
 
-  suite.skip("JavaScript", function() {
+  suite("JavaScript", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "single attribute selectors",

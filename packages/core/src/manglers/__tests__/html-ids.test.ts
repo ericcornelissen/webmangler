@@ -683,7 +683,7 @@ suite("HTML ID Mangler", function() {
     }
   });
 
-  suite.skip("JavaScript", function() {
+  suite("JavaScript", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "id query selector",

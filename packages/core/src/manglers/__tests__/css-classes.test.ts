@@ -680,7 +680,7 @@ suite("CSS Class Mangler", function() {
     }
   });
 
-  suite.skip("JavaScript", function() {
+  suite("JavaScript", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "query selectors with one selector",
