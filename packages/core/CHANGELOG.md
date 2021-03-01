@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Improve mangling performance.
 
 ## [0.1.13] - 2021-02-25
 
