@@ -6,7 +6,7 @@ import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
  *
  * @since v0.1.14
  */
-export type ExpressionFactory = (options: any) => MangleExpression[];
+export type ExpressionFactory = (options: any) => MangleExpression[]; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of
