@@ -22,6 +22,7 @@
   },
   "scripts": {
     "clean": "rm -rf lib/",
+    "precompile": "npm run clean",
     "compile": "tsc",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
