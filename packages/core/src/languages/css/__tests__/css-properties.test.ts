@@ -1,15 +1,32 @@
 import type { TestScenario } from "@webmangler/testing";
+import type { CssDeclarationPropertyOptions } from "../../options";
 
 import { expect } from "chai";
+
+import { matchesAsExpected } from "../../__tests__/test-helpers";
 
 import cssDeclarationPropertyExpressionFactory from "../css-properties";
 
 type TestCase = {
-  s: string;
+  /**
+   * The input string to match against.
+   */
+  input: string;
+
+  /**
+   * The pattern to use for matching.
+   */
   pattern: string;
+
+  /**
+   * The expected matches.
+   */
   expected: string[];
-  prefix?: string;
-  suffix?: string;
+
+  /**
+   * The factory options.
+   */
+  options: CssDeclarationPropertyOptions;
 };
 
 suite("CSS - CSS Property Expression Factory", function() {
@@ -18,26 +35,32 @@ suite("CSS - CSS Property Expression Factory", function() {
       name: "sample",
       cases: [
         {
-          s: "div { color: red; }",
+          input: "div { color: red; }",
           pattern: "[a-z]+",
           expected: ["color"],
+          options: { },
         },
         {
-          s: "div { color: red; font: serif; }",
+          input: "div { color: red; font: serif; }",
           pattern: "[a-z]+",
           expected: ["color", "font"],
+          options: { },
         },
         {
-          s: "div { color: red; font-size: 12px; }",
+          input: "div { color: red; font-size: 12px; }",
           pattern: "[a-z]+",
           expected: ["size"],
-          prefix: "font-",
+          options: {
+            prefix: "font-",
+          },
         },
         {
-          s: "div { padding-left: 3px; margin-left: 14px; }",
+          input: "div { padding-left: 3px; margin-left: 14px; }",
           pattern: "[a-z]+",
           expected: ["padding", "margin"],
-          suffix: "-left",
+          options: {
+            suffix: "-left",
+          },
         },
       ],
     },
@@ -47,26 +70,15 @@ suite("CSS - CSS Property Expression Factory", function() {
     test(name, function() {
       for (const testCase of cases) {
         const {
-          s,
+          input,
           pattern,
           expected,
-          prefix,
-          suffix,
+          options,
         } = testCase;
 
-        const expressions = cssDeclarationPropertyExpressionFactory({
-          prefix: prefix,
-          suffix: suffix,
-        });
-
-        const someExpressionMatches = expressions.some((expression) => {
-          const _matched = expression.exec(s, pattern);
-          const matched = Array.from(_matched);
-          return matched.every((s) => expected.includes(s))
-            && expected.every((s) => matched.includes(s));
-        });
-
-        expect(someExpressionMatches).to.equal(true, `in "${s}"`);
+        const expressions = cssDeclarationPropertyExpressionFactory(options);
+        const result = matchesAsExpected(expressions, input, pattern, expected);
+        expect(result).to.equal(true, `in "${input}"`);
       }
     });
   }

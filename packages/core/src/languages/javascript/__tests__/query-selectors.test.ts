@@ -1,14 +1,32 @@
 import type { TestScenario } from "@webmangler/testing";
+import type { QuerySelectorOptions } from "../../options";
 
 import { expect } from "chai";
+
+import { matchesAsExpected } from "../../__tests__/test-helpers";
 
 import querySelectorExpressionFactory from "../query-selectors";
 
 type TestCase = {
-  s: string;
+  /**
+   * The input string to match against.
+   */
+  input: string;
+
+  /**
+   * The pattern to use for matching.
+   */
   pattern: string;
+
+  /**
+   * The expected matches.
+   */
   expected: string[];
-  prefix: "\\." | "#";
+
+  /**
+   * The factory options.
+   */
+  options: QuerySelectorOptions;
 };
 
 suite("JavaScript - Query Selector Expression Factory", function() {
@@ -17,28 +35,36 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       name: "sample",
       cases: [
         {
-          s: "document.querySelectorAll(\".foobar\");",
+          input: "document.querySelectorAll(\".foobar\");",
           pattern: "[a-z]+",
           expected: ["foobar"],
-          prefix: "\\.",
+          options: {
+            prefix: "\\.",
+          },
         },
         {
-          s: "document.querySelectorAll(\".foobar\");",
+          input: "document.querySelectorAll(\".foobar\");",
           pattern: "[a-z]+",
           expected: [],
-          prefix: "#",
+          options: {
+            prefix: "#",
+          },
         },
         {
-          s: "document.querySelectorAll(\"#foobar\");",
+          input: "document.querySelectorAll(\"#foobar\");",
           pattern: "[a-z]+",
           expected: [],
-          prefix: "\\.",
+          options: {
+            prefix: "\\.",
+          },
         },
         {
-          s: "document.querySelectorAll(\"#foobar\");",
+          input: "document.querySelectorAll(\"#foobar\");",
           pattern: "[a-z]+",
           expected: ["foobar"],
-          prefix: "#",
+          options: {
+            prefix: "#",
+          },
         },
       ],
     },
@@ -48,24 +74,15 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     test(name, function() {
       for (const testCase of cases) {
         const {
-          s,
+          input,
           pattern,
           expected,
-          prefix,
+          options,
         } = testCase;
 
-        const expressions = querySelectorExpressionFactory({
-          prefix: prefix,
-        });
-
-        const someExpressionMatches = expressions.some((expression) => {
-          const _matched = expression.exec(s, pattern);
-          const matched = Array.from(_matched);
-          return matched.every((s) => expected.includes(s))
-            && expected.every((s) => matched.includes(s));
-        });
-
-        expect(someExpressionMatches).to.equal(true, `in "${s}"`);
+        const expressions = querySelectorExpressionFactory(options);
+        const result = matchesAsExpected(expressions, input, pattern, expected);
+        expect(result).to.equal(true, `in "${input}"`);
       }
     });
   }

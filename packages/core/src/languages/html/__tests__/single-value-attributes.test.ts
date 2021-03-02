@@ -1,16 +1,32 @@
 import type { TestScenario } from "@webmangler/testing";
+import type { SingleValueAttributeOptions } from "../../options";
 
 import { expect } from "chai";
+
+import { matchesAsExpected } from "../../__tests__/test-helpers";
 
 import singleValueAttributeExpressionFactory from "../single-value-attributes";
 
 type TestCase = {
-  s: string;
+  /**
+   * The input string to match against.
+   */
+  input: string;
+
+  /**
+   * The pattern to use for matching.
+   */
   pattern: string;
+
+  /**
+   * The expected matches.
+   */
   expected: string[];
-  attributeNames: string[];
-  valuePrefix?: string;
-  valueSuffix?: string;
+
+  /**
+   * The factory options.
+   */
+  options: SingleValueAttributeOptions;
 };
 
 suite("HTML - Single Value Attribute Expression Factory", function() {
@@ -19,30 +35,38 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
       name: "sample",
       cases: [
         {
-          s: "<div id=\"foobar\"></div>",
-          attributeNames: ["id"],
+          input: "<div id=\"foobar\"></div>",
           pattern: "[a-z]+",
           expected: ["foobar"],
+          options: {
+            attributeNames: ["id"],
+          },
         },
         {
-          s: "<div id=\"foo\"><div id=\"bar\"></div></div>",
-          attributeNames: ["id"],
+          input: "<div id=\"foo\"><div id=\"bar\"></div></div>",
           pattern: "[a-z]+",
           expected: ["foo", "bar"],
+          options: {
+            attributeNames: ["id"],
+          },
         },
         {
-          s: "<div id=\"foobar\"></div>",
-          attributeNames: ["id"],
+          input: "<div id=\"foobar\"></div>",
           pattern: "[a-z]+",
           expected: ["bar"],
-          valuePrefix: "foo",
+          options: {
+            attributeNames: ["id"],
+            valuePrefix: "foo",
+          },
         },
         {
-          s: "<div id=\"foobar\"></div>",
-          attributeNames: ["id"],
+          input: "<div id=\"foobar\"></div>",
           pattern: "[a-z]+",
           expected: ["foo"],
-          valueSuffix: "bar",
+          options: {
+            attributeNames: ["id"],
+            valueSuffix: "bar",
+          },
         },
       ],
     },
@@ -52,28 +76,15 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
     test(name, function() {
       for (const testCase of cases) {
         const {
-          s,
+          input,
           pattern,
           expected,
-          attributeNames,
-          valuePrefix,
-          valueSuffix,
+          options,
         } = testCase;
 
-        const expressions = singleValueAttributeExpressionFactory({
-          attributeNames: attributeNames,
-          valuePrefix: valuePrefix,
-          valueSuffix: valueSuffix,
-        });
-
-        const someExpressionMatches = expressions.some((expression) => {
-          const _matched = expression.exec(s, pattern);
-          const matched = Array.from(_matched);
-          return matched.every((s) => expected.includes(s))
-            && expected.every((s) => matched.includes(s));
-        });
-
-        expect(someExpressionMatches).to.equal(true, `in "${s}"`);
+        const expressions = singleValueAttributeExpressionFactory(options);
+        const result = matchesAsExpected(expressions, input, pattern, expected);
+        expect(result).to.equal(true, `in "${input}"`);
       }
     });
   }

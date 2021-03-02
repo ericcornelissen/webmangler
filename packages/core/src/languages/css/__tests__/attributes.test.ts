@@ -2,11 +2,24 @@ import type { TestScenario } from "@webmangler/testing";
 
 import { expect } from "chai";
 
+import { matchesAsExpected } from "../../__tests__/test-helpers";
+
 import attributeExpressionFactory from "../attributes";
 
 type TestCase = {
-  s: string;
+  /**
+   * The input string to match against.
+   */
+  input: string;
+
+  /**
+   * The pattern to use for matching.
+   */
   pattern: string;
+
+  /**
+   * The expected matches.
+   */
   expected: string[];
 };
 
@@ -16,17 +29,17 @@ suite("CSS - Attribute Expression Factory", function() {
       name: "attribute selector",
       cases: [
         {
-          s: "[data-foo] { }",
+          input: "[data-foo] { }",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
         },
         {
-          s: "div[data-foo] { }",
+          input: "div[data-foo] { }",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
         },
         {
-          s: "[data-foo][data-bar] { }",
+          input: "[data-foo][data-bar] { }",
           pattern: "[a-z\\-]+",
           expected: ["data-foo", "data-bar"],
         },
@@ -36,17 +49,17 @@ suite("CSS - Attribute Expression Factory", function() {
       name: "attribute usage",
       cases: [
         {
-          s: "div { content: attr(data-foo); }",
+          input: "div { content: attr(data-foo); }",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
         },
         {
-          s: "div { content: attr(data-foo, \"bar\"); }",
+          input: "div { content: attr(data-foo, \"bar\"); }",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
         },
         {
-          s: "div { content: attr(data-foo px); }",
+          input: "div { content: attr(data-foo px); }",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
         },
@@ -58,21 +71,14 @@ suite("CSS - Attribute Expression Factory", function() {
     test(name, function() {
       for (const testCase of cases) {
         const {
-          s,
+          input,
           pattern,
           expected,
         } = testCase;
 
         const expressions = attributeExpressionFactory();
-
-        const someExpressionMatches = expressions.some((expression) => {
-          const _matched = expression.exec(s, pattern);
-          const matched = Array.from(_matched);
-          return matched.every((s) => expected.includes(s))
-            && expected.every((s) => matched.includes(s));
-        });
-
-        expect(someExpressionMatches).to.equal(true, `in "${s}"`);
+        const result = matchesAsExpected(expressions, input, pattern, expected);
+        expect(result).to.equal(true, `in "${input}"`);
       }
     });
   }

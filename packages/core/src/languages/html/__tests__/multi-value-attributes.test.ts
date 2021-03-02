@@ -1,14 +1,32 @@
 import type { TestScenario } from "@webmangler/testing";
+import type { MultiValueAttributeOptions } from "../../options";
 
 import { expect } from "chai";
+
+import { matchesAsExpected } from "../../__tests__/test-helpers";
 
 import multiValueAttributeExpressionFactory from "../multi-value-attributes";
 
 type TestCase = {
-  s: string;
+  /**
+   * The input string to match against.
+   */
+  input: string;
+
+  /**
+   * The pattern to use for matching.
+   */
   pattern: string;
+
+  /**
+   * The expected matches.
+   */
   expected: string[];
-  attributeNames: string[];
+
+  /**
+   * The factory options.
+   */
+  options: MultiValueAttributeOptions;
 };
 
 suite("HTML - Multi Value Attribute Expression Factory", function() {
@@ -17,22 +35,28 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
       name: "sample",
       cases: [
         {
-          s: "<div class=\"foobar\"></div>",
-          attributeNames: ["class"],
+          input: "<div class=\"foobar\"></div>",
           pattern: "[a-z]+",
           expected: ["foobar"],
+          options: {
+            attributeNames: ["class"],
+          },
         },
         {
-          s: "<div class=\"foo bar\"></div>",
-          attributeNames: ["class"],
+          input: "<div class=\"foo bar\"></div>",
           pattern: "[a-z]+",
           expected: ["foo", "bar"],
+          options: {
+            attributeNames: ["class"],
+          },
         },
         {
-          s: "<div class=\"praise the sun\"></div>",
-          attributeNames: ["class"],
+          input: "<div class=\"praise the sun\"></div>",
           pattern: "[a-z]{3}",
           expected: ["the", "sun"],
+          options: {
+            attributeNames: ["class"],
+          },
         },
       ],
     },
@@ -42,24 +66,15 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
     test(name, function() {
       for (const testCase of cases) {
         const {
-          s,
+          input,
           pattern,
           expected,
-          attributeNames,
+          options,
         } = testCase;
 
-        const expressions = multiValueAttributeExpressionFactory({
-          attributeNames: attributeNames,
-        });
-
-        const someExpressionMatches = expressions.some((expression) => {
-          const _matched = expression.exec(s, pattern);
-          const matched = Array.from(_matched);
-          return matched.every((s) => expected.includes(s))
-            && expected.every((s) => matched.includes(s));
-        });
-
-        expect(someExpressionMatches).to.equal(true, `in "${s}"`);
+        const expressions = multiValueAttributeExpressionFactory(options);
+        const result = matchesAsExpected(expressions, input, pattern, expected);
+        expect(result).to.equal(true, `in "${input}"`);
       }
     });
   }

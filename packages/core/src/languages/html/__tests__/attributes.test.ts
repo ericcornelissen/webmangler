@@ -2,11 +2,24 @@ import type { TestScenario } from "@webmangler/testing";
 
 import { expect } from "chai";
 
+import { matchesAsExpected } from "../../__tests__/test-helpers";
+
 import attributeExpressionFactory from "../attributes";
 
 type TestCase = {
-  s: string;
+  /**
+   * The input string to match against.
+   */
+  input: string;
+
+  /**
+   * The pattern to use for matching.
+   */
   pattern: string;
+
+  /**
+   * The expected matches.
+   */
   expected: string[];
 };
 
@@ -16,27 +29,27 @@ suite("HTML - Attribute Expression Factory", function() {
       name: "sample",
       cases: [
         {
-          s: "<div data-foo></div>",
+          input: "<div data-foo></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
         },
         {
-          s: "<div data-foo=\"bar\"></div>",
+          input: "<div data-foo=\"bar\"></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
         },
         {
-          s: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
+          input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo", "data-bar"],
         },
         {
-          s: "<div data-foo='bar'></div>",
+          input: "<div data-foo='bar'></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
         },
         {
-          s: "<div data-foo='bar' data-bar='foo'></div>",
+          input: "<div data-foo='bar' data-bar='foo'></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo", "data-bar"],
         },
@@ -48,21 +61,14 @@ suite("HTML - Attribute Expression Factory", function() {
     test(name, function() {
       for (const testCase of cases) {
         const {
-          s,
+          input,
           pattern,
           expected,
         } = testCase;
 
         const expressions = attributeExpressionFactory();
-
-        const someExpressionMatches = expressions.some((expression) => {
-          const _matched = expression.exec(s, pattern);
-          const matched = Array.from(_matched);
-          return matched.every((s) => expected.includes(s))
-            && expected.every((s) => matched.includes(s));
-        });
-
-        expect(someExpressionMatches).to.equal(true, `in "${s}"`);
+        const result = matchesAsExpected(expressions, input, pattern, expected);
+        expect(result).to.equal(true, `in "${input}"`);
       }
     });
   }
