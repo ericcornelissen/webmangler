@@ -84,9 +84,21 @@ type QuerySelectorOptions = {
   /**
    * The prefix required on the CSS query selector.
    *
+   * NOTE: it is recommended to only ever use one of `"\\."`, `"#"`, and
+   * `"\\["`.
+   *
    * @since v0.1.14
    */
-  prefix: "\\." | "#";
+  prefix?: string;
+
+  /**
+   * The suffix required on the CSS query selector.
+   *
+   * NOTE: it is recommended to only ever use `"\\]"`.
+   *
+   * @since v0.1.14
+   */
+  suffix?: string;
 };
 
 /**

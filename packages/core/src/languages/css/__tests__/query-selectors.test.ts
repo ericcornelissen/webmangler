@@ -35,19 +35,17 @@ suite("CSS - Query Selector Expression Factory", function() {
       name: "sample",
       cases: [
         {
+          input: "div { }",
+          pattern: "[a-z]+",
+          expected: ["div"],
+          options: { },
+        },
+        {
           input: ".foobar { }",
           pattern: "[a-z]+",
           expected: ["foobar"],
           options: {
             prefix: "\\.",
-          },
-        },
-        {
-          input: ".foobar { }",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            prefix: "#",
           },
         },
         {
@@ -64,6 +62,23 @@ suite("CSS - Query Selector Expression Factory", function() {
           expected: ["foobar"],
           options: {
             prefix: "#",
+          },
+        },
+        {
+          input: "header, footer { }",
+          pattern: "[a-z]+",
+          expected: ["head", "foot"],
+          options: {
+            suffix: "er",
+          },
+        },
+        {
+          input: "[foobar] { }",
+          pattern: "[a-z]+",
+          expected: ["foobar"],
+          options: {
+            prefix: "\\[",
+            suffix: "\\]",
           },
         },
       ],

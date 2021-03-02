@@ -35,6 +35,12 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       name: "sample",
       cases: [
         {
+          input: "document.querySelectorAll(\"div\");",
+          pattern: "[a-z]+",
+          expected: ["div"],
+          options: { },
+        },
+        {
           input: "document.querySelectorAll(\".foobar\");",
           pattern: "[a-z]+",
           expected: ["foobar"],
@@ -53,17 +59,18 @@ suite("JavaScript - Query Selector Expression Factory", function() {
         {
           input: "document.querySelectorAll(\"#foobar\");",
           pattern: "[a-z]+",
-          expected: [],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: "document.querySelectorAll(\"#foobar\");",
-          pattern: "[a-z]+",
           expected: ["foobar"],
           options: {
             prefix: "#",
+          },
+        },
+        {
+          input: "document.querySelectorAll(\"[foobar]\");",
+          pattern: "[a-z]+",
+          expected: ["foobar"],
+          options: {
+            prefix: "\\[",
+            suffix: "\\]",
           },
         },
       ],

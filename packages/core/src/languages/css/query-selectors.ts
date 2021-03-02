@@ -9,16 +9,23 @@ const GROUP_MAIN = "main";
  * Get a {@link MangleExpression} to match query selectors in CSS, e.g. `foobar`
  * in `.foobar { }`.
  *
- * @param prefix The query selector prefix (e.g. `"\\."` or `"#"`).
+ * @param selectorPrefix The query selector prefix.
+ * @param selectorSuffix The query selector suffix.
  * @returns The {@link MangleExpression} to match query selectors in CSS.
  */
-function newCssSelectorExpression(prefix: string): MangleExpression {
+function newCssSelectorExpression(
+  selectorPrefix: string,
+  selectorSuffix: string,
+): MangleExpression {
   return new SingleGroupMangleExpression(
     `
       (?<!"[^"}]*|'[^'}]*)
-      (?<=${prefix})
+      (?<=${selectorPrefix})
       (?<${GROUP_MAIN}>%s)
-      (?=\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s|$)
+      (?=
+        ${selectorSuffix}
+        (?:\\{|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s|$)
+      )
     `,
     GROUP_MAIN,
   );
@@ -36,7 +43,10 @@ function newCssSelectorExpression(prefix: string): MangleExpression {
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): MangleExpression[] {
+  const selectorPrefix = options.prefix ? options.prefix : "";
+  const selectorSuffix = options.suffix ? options.suffix : "";
+
   return [
-    newCssSelectorExpression(options.prefix),
+    newCssSelectorExpression(selectorPrefix, selectorSuffix),
   ];
 }
