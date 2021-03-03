@@ -20,6 +20,7 @@
   },
   "scripts": {
     "clean": "rm -rf languages/ manglers/ *.js *.d.ts",
+    "precompile": "npm run clean",
     "compile": "tsc",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
