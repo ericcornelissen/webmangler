@@ -16,13 +16,14 @@ import {
 
 import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
-import BuiltInLanguageSupport from "../../languages/builtin";
 import mangleEngine from "../../engine";
+import { getExpressions } from "../../index";
+import BuiltInLanguageSupport from "../../languages/builtin";
 import CssVariableMangler from "../css-variables";
 
-const builtInLanguageSupport = new BuiltInLanguageSupport();
+const builtInLanguages = [new BuiltInLanguageSupport()];
 
-const DEFAULT_PATTERN = "[a-z-]+";
+const DEFAULT_PATTERN = "[a-z]+";
 
 suite("CSS Variable Mangler", function() {
   suite("CSS", function() {
@@ -267,15 +268,16 @@ suite("CSS Variable Mangler", function() {
             description: failureMessage,
           } = testCase;
 
+          const files = [new WebManglerFileMock("css", input)];
+
           const cssVariableMangler = new CssVariableMangler({
             cssVarNamePattern: cssVarNamePattern || DEFAULT_PATTERN,
             reservedCssVarNames: reservedCssVarNames,
             keepCssVarPrefix: keepCssVarPrefix,
           });
-          const expressions = builtInLanguageSupport.getExpressions(CssVariableMangler._ID);
+          const options = cssVariableMangler.options();
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-          const files = [new WebManglerFileMock("css", input)];
-          const options = cssVariableMangler.config();
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
@@ -527,15 +529,16 @@ suite("CSS Variable Mangler", function() {
             description: failureMessage,
           } = testCase;
 
+          const files = [new WebManglerFileMock("html", input)];
+
           const cssVariableMangler = new CssVariableMangler({
             cssVarNamePattern: cssVarNamePattern || DEFAULT_PATTERN,
             reservedCssVarNames: reservedCssVarNames,
             keepCssVarPrefix: keepCssVarPrefix,
           });
-          const expressions = builtInLanguageSupport.getExpressions(CssVariableMangler._ID);
+          const options = cssVariableMangler.options();
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-          const files = [new WebManglerFileMock("html", input)];
-          const options = cssVariableMangler.config();
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
@@ -579,15 +582,16 @@ suite("CSS Variable Mangler", function() {
             description: failureMessage,
           } = testCase;
 
+          const files = [new WebManglerFileMock("js", input)];
+
           const cssVariableMangler = new CssVariableMangler({
             cssVarNamePattern: cssVarNamePattern || DEFAULT_PATTERN,
             reservedCssVarNames: reservedCssVarNames,
             keepCssVarPrefix: keepCssVarPrefix,
           });
-          const expressions = builtInLanguageSupport.getExpressions(CssVariableMangler._ID);
+          const options = cssVariableMangler.options();
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-          const files = [new WebManglerFileMock("js", input)];
-          const options = cssVariableMangler.config();
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
@@ -672,13 +676,14 @@ suite("CSS Variable Mangler", function() {
     });
 
     test("without extra reserved", function() {
+      const files = [new WebManglerFileMock("css", content)];
+
       const cssVariableMangler = new CssVariableMangler({
         cssVarNamePattern: "[0-9]+",
       });
-      const expressions = builtInLanguageSupport.getExpressions(CssVariableMangler._ID);
+      const options = cssVariableMangler.options();
+      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-      const files = [new WebManglerFileMock("css", content)];
-      const options = cssVariableMangler.config();
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
 
@@ -689,14 +694,15 @@ suite("CSS Variable Mangler", function() {
     });
 
     test("with extra reserved", function() {
+      const files = [new WebManglerFileMock("css", content)];
+
       const cssVariableMangler = new CssVariableMangler({
         cssVarNamePattern: "[0-9]+",
         reservedCssVarNames: ["a"],
       });
-      const expressions = builtInLanguageSupport.getExpressions(CssVariableMangler._ID);
+      const options = cssVariableMangler.options();
+      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-      const files = [new WebManglerFileMock("css", content)];
-      const options = cssVariableMangler.config();
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
 

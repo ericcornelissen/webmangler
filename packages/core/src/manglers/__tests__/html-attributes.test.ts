@@ -21,10 +21,11 @@ import {
 import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
 import mangleEngine from "../../engine";
+import { getExpressions } from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import HtmlAttributeMangler from "../html-attributes";
 
-const builtInLanguageSupport = new BuiltInLanguageSupport();
+const builtInLanguages = [new BuiltInLanguageSupport()];
 
 const DEFAULT_PATTERN = "data-[a-z]+";
 const SELECTORS: {before: string, after: string}[] = [
@@ -311,15 +312,16 @@ suite("HTML Attribute Mangler", function() {
             description: failureMessage,
           } = testCase;
 
+          const files = [new WebManglerFileMock("css", input)];
+
           const htmlAttributeMangler = new HtmlAttributeMangler({
             attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
             reservedAttrNames: reservedAttrNames,
             keepAttrPrefix: keepAttrPrefix,
           });
-          const expressions = builtInLanguageSupport.getExpressions(HtmlAttributeMangler._ID);
+          const options = htmlAttributeMangler.options();
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-          const files = [new WebManglerFileMock("css", input)];
-          const options = htmlAttributeMangler.config();
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
@@ -442,15 +444,16 @@ suite("HTML Attribute Mangler", function() {
             description: failureMessage,
           } = testCase;
 
+          const files = [new WebManglerFileMock("html", input)];
+
           const htmlAttributeMangler = new HtmlAttributeMangler({
             attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
             reservedAttrNames: reservedAttrNames,
             keepAttrPrefix: keepAttrPrefix,
           });
-          const expressions = builtInLanguageSupport.getExpressions(HtmlAttributeMangler._ID);
+          const options = htmlAttributeMangler.options();
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-          const files = [new WebManglerFileMock("html", input)];
-          const options = htmlAttributeMangler.config();
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
@@ -622,15 +625,16 @@ suite("HTML Attribute Mangler", function() {
             description: failureMessage,
           } = testCase;
 
+          const files = [new WebManglerFileMock("js", input)];
+
           const htmlAttributeMangler = new HtmlAttributeMangler({
             attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
             reservedAttrNames: reservedAttrNames,
             keepAttrPrefix: keepAttrPrefix,
           });
-          const expressions = builtInLanguageSupport.getExpressions(HtmlAttributeMangler._ID);
+          const options = htmlAttributeMangler.options();
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-          const files = [new WebManglerFileMock("js", input)];
-          const options = htmlAttributeMangler.config();
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
@@ -714,14 +718,15 @@ suite("HTML Attribute Mangler", function() {
     });
 
     test("without extra reserved", function() {
+      const files = [new WebManglerFileMock("html", content)];
+
       const htmlAttributeMangler = new HtmlAttributeMangler({
         attrNamePattern: "data-[0-9]+",
         keepAttrPrefix: "",
       });
-      const expressions = builtInLanguageSupport.getExpressions(HtmlAttributeMangler._ID);
+      const options = htmlAttributeMangler.options();
+      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-      const files = [new WebManglerFileMock("html", content)];
-      const options = htmlAttributeMangler.config();
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
 
@@ -732,15 +737,16 @@ suite("HTML Attribute Mangler", function() {
     });
 
     test("with extra reserved", function() {
+      const files = [new WebManglerFileMock("html", content)];
+
       const htmlAttributeMangler = new HtmlAttributeMangler({
         attrNamePattern: "data-[0-9]+",
         reservedAttrNames: ["a"],
         keepAttrPrefix: "",
       });
-      const expressions = builtInLanguageSupport.getExpressions(HtmlAttributeMangler._ID);
+      const options = htmlAttributeMangler.options();
+      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-      const files = [new WebManglerFileMock("html", content)];
-      const options = htmlAttributeMangler.config();
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
 

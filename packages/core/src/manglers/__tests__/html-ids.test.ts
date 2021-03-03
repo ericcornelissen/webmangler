@@ -16,10 +16,11 @@ import { isValidIdName, varyQuotes, varySpacing } from "./test-helpers";
 import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
 import mangleEngine from "../../engine";
+import { getExpressions } from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import HtmlIdMangler from "../html-ids";
 
-const builtInLanguageSupport = new BuiltInLanguageSupport();
+const builtInLanguages = [new BuiltInLanguageSupport()];
 
 const DEFAULT_PATTERN = "id-[a-z]+";
 const SELECTORS: { before: string, after: string }[] = [
@@ -239,15 +240,16 @@ suite("HTML ID Mangler", function() {
             description: failureMessage,
           } = testCase;
 
+          const files = [new WebManglerFileMock("css", input)];
+
           const htmlIdMangler = new HtmlIdMangler({
             idNamePattern: idNamePattern || DEFAULT_PATTERN,
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          const expressions = builtInLanguageSupport.getExpressions(HtmlIdMangler._ID);
+          const options = htmlIdMangler.options();
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-          const files = [new WebManglerFileMock("css", input)];
-          const options = htmlIdMangler.config();
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
@@ -661,15 +663,16 @@ suite("HTML ID Mangler", function() {
             description: failureMessage,
           } = testCase;
 
+          const files = [new WebManglerFileMock("html", input)];
+
           const htmlIdMangler = new HtmlIdMangler({
             idNamePattern: idNamePattern || DEFAULT_PATTERN,
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          const expressions = builtInLanguageSupport.getExpressions(HtmlIdMangler._ID);
+          const options = htmlIdMangler.options();
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-          const files = [new WebManglerFileMock("html", input)];
-          const options = htmlIdMangler.config();
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 
@@ -993,15 +996,16 @@ suite("HTML ID Mangler", function() {
             description: failureMessage,
           } = testCase;
 
+          const files = [new WebManglerFileMock("js", input)];
+
           const htmlIdMangler = new HtmlIdMangler({
             idNamePattern: idNamePattern || DEFAULT_PATTERN,
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          const expressions = builtInLanguageSupport.getExpressions(HtmlIdMangler._ID);
+          const options = htmlIdMangler.options();
+          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
 
-          const files = [new WebManglerFileMock("js", input)];
-          const options = htmlIdMangler.config();
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
 

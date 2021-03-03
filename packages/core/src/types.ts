@@ -1,16 +1,36 @@
 import type { CharSet } from "./characters";
 
 /**
+ * Interface representing the options a {@link WebManglerPlugin} has to
+ * configure the _WebMangler_ core.
+ *
+ * @since v0.1.14
+ */
+interface MangleOptions extends MangleEngineOptions {
+  /**
+   * The {@link MangleExpressionOptions} for every set of {@link
+   * MangleExpression}s that should be used when mangling.
+   *
+   * By providing multiple options for the same set of {@link MangleExpression}s
+   * the _WebMangler_ core will use a set with each configuration when mangling.
+   *
+   * @since v0.1.14
+   */
+  readonly expressionOptions: MangleExpressionOptions<unknown>[];
+}
+
+/**
  * A set of generic options used by the {@link MangleEngine} for mangling.
  *
  * @since v0.1.0
  * @version v0.1.14
  */
-type MangleEngineOptions = {
+interface MangleEngineOptions {
   /**
    * The {@link WebManglerPlugin} identifier.
    *
    * @since v0.1.13
+   * @deprecated
    */
   readonly id: string;
 
@@ -80,6 +100,37 @@ interface MangleExpression {
 }
 
 /**
+ * Type representing a wrapper for the configuration of a set of {@link
+ * MangleExpression}s.
+ *
+ * @example
+ * type OptionsType = { value: string };
+ * const options = MangleExpressionOptions<OptionsType> = {
+ *   name: "expression-group-name",
+ *   options: {
+ *     value: "foobar",
+ *   },
+ * };
+ *
+ * @since v0.1.14
+ */
+interface MangleExpressionOptions<T> {
+  /**
+   * The name of the set of {@link MangleExpression}s.
+   *
+   * @since v0.1.14
+   */
+  readonly name: string
+
+  /**
+   * The configuration for the set of {@link MangleExpression}s.
+   *
+   * @since v0.1.14
+   */
+  readonly options: T;
+}
+
+/**
  * Type defining the information required by _WebMangler_ about files.
  *
  * NOTE: The _WebMangler_ core **will not** read or write files for you.
@@ -137,8 +188,17 @@ interface WebManglerPlugin {
    *
    * @returns The {@link MangleEngineOptions}.
    * @since v0.1.11
+   * @deprecated
    */
   config(): MangleEngineOptions | MangleEngineOptions[];
+
+  /**
+   * Get the plugin's options for the _WebMangler_ core.
+   *
+   * @returns The {@link MangleOptions}.
+   * @since v0.1.14
+   */
+  options(): MangleOptions | MangleOptions[];
 }
 
 /**
@@ -149,12 +209,27 @@ interface WebManglerPlugin {
  */
 interface WebManglerLanguagePlugin {
   /**
+   * Get a named set of {@link MangleExpression}s in accordance with an object
+   * of options for the set.
+   *
+   * @param name The name of the set of {@link MangleExpression}s.
+   * @param options The options for the set of {@link MangleExpression}s.
+   * @returns The {@link MangleExpression}s for every supported language.
+   * @since v0.1.14
+   */
+  getExpressionsFor(
+    name: string,
+    options: unknown,
+  ): Map<string, MangleExpression[]>;
+
+  /**
    * Get {@link MangleExpression}s for a {@link WebManglerPlugin}.
    *
    * In the returned map, the key is a language identifier and the value are the
    * {@link MangleExpression}s.
    *
    * @since v0.1.13
+   * @deprecated
    */
   getExpressions(pluginId: string): Map<string, MangleExpression[]>;
 
@@ -169,8 +244,10 @@ interface WebManglerLanguagePlugin {
 }
 
 export type {
+  MangleOptions,
   MangleEngineOptions,
   MangleExpression,
+  MangleExpressionOptions,
   WebManglerFile,
   WebManglerOptions,
   WebManglerPlugin,

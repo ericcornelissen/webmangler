@@ -58,7 +58,7 @@ suite("Recommended Manglers", function() {
     });
 
     setup(function() {
-      CssClassManglerMock.config.resetHistory();
+      CssClassManglerMock.options.resetHistory();
     });
 
     test("mangling when class pattern is set", function() {
@@ -66,22 +66,22 @@ suite("Recommended Manglers", function() {
         const options = Object.assign({}, _options, DEFAULT_CLASS_NAME_OPTIONS);
 
         const mangler = new RecommendedManglers(options);
-        const result = mangler.config();
-        expect(CssClassManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(CssClassManglerMock.config());
+        const result = mangler.options();
+        expect(CssClassManglerMock.options).to.have.callCount(1);
+        expect(result).to.deep.include(CssClassManglerMock.options());
 
-        CssClassManglerMock.config.resetHistory();
+        CssClassManglerMock.options.resetHistory();
       }
     });
 
     test("mangling when class pattern is NOT set", function() {
       for (const options of ALL_NON_CSS_CLASS_OPTIONS) {
         const mangler = new RecommendedManglers(options);
-        const result = mangler.config();
-        expect(CssClassManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(CssClassManglerMock.config());
+        const result = mangler.options();
+        expect(CssClassManglerMock.options).to.have.callCount(1);
+        expect(result).to.deep.include(CssClassManglerMock.options());
 
-        CssClassManglerMock.config.resetHistory();
+        CssClassManglerMock.options.resetHistory();
       }
     });
 
@@ -90,11 +90,11 @@ suite("Recommended Manglers", function() {
         const options = Object.assign({}, _options, DISABLE_CSS_CLASS_MANGLING);
 
         const mangler = new RecommendedManglers(options);
-        const result = mangler.config();
-        expect(CssClassManglerMock.config).to.have.callCount(0);
-        expect(result).not.to.deep.include(CssClassManglerMock.config());
+        const result = mangler.options();
+        expect(CssClassManglerMock.options).to.have.callCount(0);
+        expect(result).not.to.deep.include(CssClassManglerMock.options());
 
-        CssClassManglerMock.config.resetHistory();
+        CssClassManglerMock.options.resetHistory();
       }
     });
   });
@@ -113,7 +113,7 @@ suite("Recommended Manglers", function() {
     });
 
     setup(function() {
-      CssVarManglerMock.config.resetHistory();
+      CssVarManglerMock.options.resetHistory();
     });
 
     test("mangling when CSS variable pattern is set", function() {
@@ -121,22 +121,22 @@ suite("Recommended Manglers", function() {
         const options = Object.assign({}, _options, DEFAULT_CSS_VAR_OPTIONS);
 
         const mangler = new RecommendedManglers(options);
-        const result = mangler.config();
-        expect(CssVarManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(CssVarManglerMock.config());
+        const result = mangler.options();
+        expect(CssVarManglerMock.options).to.have.callCount(1);
+        expect(result).to.deep.include(CssVarManglerMock.options());
 
-        CssVarManglerMock.config.resetHistory();
+        CssVarManglerMock.options.resetHistory();
       }
     });
 
     test("mangling when CSS variable pattern is NOT set", function() {
       for (const options of ALL_NON_CSS_VAR_OPTIONS) {
         const mangler = new RecommendedManglers(options);
-        const result = mangler.config();
-        expect(CssVarManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(CssVarManglerMock.config());
+        const result = mangler.options();
+        expect(CssVarManglerMock.options).to.have.callCount(1);
+        expect(result).to.deep.include(CssVarManglerMock.options());
 
-        CssVarManglerMock.config.resetHistory();
+        CssVarManglerMock.options.resetHistory();
       }
     });
 
@@ -145,11 +145,11 @@ suite("Recommended Manglers", function() {
         const options = Object.assign({}, _options, DISABLE_CSS_VAR_MANGLING);
 
         const mangler = new RecommendedManglers(options);
-        const result = mangler.config();
-        expect(CssVarManglerMock.config).to.have.callCount(0);
-        expect(result).not.to.deep.include(CssVarManglerMock.config());
+        const result = mangler.options();
+        expect(CssVarManglerMock.options).to.have.callCount(0);
+        expect(result).not.to.deep.include(CssVarManglerMock.options());
 
-        CssVarManglerMock.config.resetHistory();
+        CssVarManglerMock.options.resetHistory();
       }
     });
   });
@@ -168,7 +168,7 @@ suite("Recommended Manglers", function() {
     });
 
     setup(function() {
-      HtmlAttrManglerMock.config.resetHistory();
+      HtmlAttrManglerMock.options.resetHistory();
     });
 
     test("mangling when HTML attributes pattern is set", function() {
@@ -176,22 +176,22 @@ suite("Recommended Manglers", function() {
         const options = Object.assign({}, _options, DEFAULT_HTML_ATTR_OPTIONS);
 
         const mangler = new RecommendedManglers(options);
-        const result = mangler.config();
-        expect(HtmlAttrManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(HtmlAttrManglerMock.config());
+        const result = mangler.options();
+        expect(HtmlAttrManglerMock.options).to.have.callCount(1);
+        expect(result).to.deep.include(HtmlAttrManglerMock.options());
 
-        HtmlAttrManglerMock.config.resetHistory();
+        HtmlAttrManglerMock.options.resetHistory();
       }
     });
 
     test("mangling when HTML attributes pattern is NOT set", function() {
       for (const options of ALL_NON_HTML_ATTR_OPTIONS) {
         const mangler = new RecommendedManglers(options);
-        const result = mangler.config();
-        expect(HtmlAttrManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(HtmlAttrManglerMock.config());
+        const result = mangler.options();
+        expect(HtmlAttrManglerMock.options).to.have.callCount(1);
+        expect(result).to.deep.include(HtmlAttrManglerMock.options());
 
-        HtmlAttrManglerMock.config.resetHistory();
+        HtmlAttrManglerMock.options.resetHistory();
       }
     });
 
@@ -200,17 +200,22 @@ suite("Recommended Manglers", function() {
         const options = Object.assign({}, _options, DISABLE_HTML_ATTR_MANGLING);
 
         const mangler = new RecommendedManglers(options);
-        const result = mangler.config();
-        expect(HtmlAttrManglerMock.config).to.have.callCount(0);
-        expect(result).not.to.deep.include(HtmlAttrManglerMock.config());
+        const result = mangler.options();
+        expect(HtmlAttrManglerMock.options).to.have.callCount(0);
+        expect(result).not.to.deep.include(HtmlAttrManglerMock.options());
 
-        HtmlAttrManglerMock.config.resetHistory();
+        HtmlAttrManglerMock.options.resetHistory();
       }
     });
   });
 
   test("no configuration", function() {
-    expect(new RecommendedManglers).not.to.throw;
+    expect(() => new RecommendedManglers()).not.to.throw();
+  });
+
+  test("deprecated .config method", function() {
+    const mangler = new RecommendedManglers({});
+    expect(() => mangler.config()).not.to.throw();
   });
 
   suiteTeardown(function() {

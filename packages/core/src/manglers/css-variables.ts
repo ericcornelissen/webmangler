@@ -1,7 +1,29 @@
 import type { CharSet } from "../characters";
+import type {
+  CssDeclarationPropertyOptions,
+  CssDeclarationValueOptions,
+} from "../languages/options";
+import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
+
+const CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS:
+    MangleExpressionOptions<CssDeclarationPropertyOptions> = {
+  name: "css-declaration-properties",
+  options: {
+    prefix: "--",
+  },
+};
+
+const CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS:
+    MangleExpressionOptions<CssDeclarationValueOptions> = {
+  name: "css-declaration-values",
+  options: {
+    prefix: "var\\s*\\(\\s*--",
+    suffix: "\\s*(,[^\\)]+)?\\)",
+  },
+};
 
 /**
  * The options for _WebMangler_'s built-in CSS variables mangler.
@@ -132,7 +154,7 @@ export type CssVariableManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.7
+ * @version v0.1.14
  */
 export default class CssVariableMangler extends SimpleManglerPlugin {
   /**
@@ -192,6 +214,10 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
       patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
       reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
       prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),
+      expressionOptions: [
+        CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS,
+        CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS,
+      ],
     });
   }
 

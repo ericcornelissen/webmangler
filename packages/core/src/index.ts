@@ -1,5 +1,6 @@
 import type {
   MangleExpression,
+  MangleExpressionOptions,
   WebManglerFile,
   WebManglerOptions,
   WebManglerLanguagePlugin,
@@ -8,21 +9,27 @@ import type {
 import manglerEngine from "./engine";
 
 /**
- * Retrieve the {@link MangleExpression}s for a given plugin from the {@link
- * WebManglerLanguagePlugin}s.
+ * Retrieve the {@link MangleExpression}s for a given plugin, given its {@link
+ * MangleExpressionOptions}, from the {@link WebManglerLanguagePlugin}s.
  *
- * @param languages The {@link WebManglerLanguagePlugin}s.
- * @param pluginId The plugin identifier.
- * @returns The {@link MangleExpression}.
+ * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
+ * @param expressionOptions The {@link MangleExpressionOptions}.
+ * @returns The {@link MangleExpression}s.
+ * @version v0.1.14
  */
-function getExpressions(
-  languages: WebManglerLanguagePlugin[],
-  pluginId: string,
+export function getExpressions(
+  languagePlugins: WebManglerLanguagePlugin[],
+  expressionOptions: MangleExpressionOptions<unknown>[],
 ): Map<string, MangleExpression[]> {
   const pluginExpressions: Map<string, MangleExpression[]> = new Map();
-  for (const languagePlugin of languages) {
-    const langExpressions = languagePlugin.getExpressions(pluginId);
-    langExpressions.forEach((value, key) => pluginExpressions.set(key, value));
+  for (const languagePlugin of languagePlugins) {
+    for (const { name, options } of expressionOptions) {
+      const expressionsMap = languagePlugin.getExpressionsFor(name, options);
+      expressionsMap.forEach((newExpressions, language) => {
+        const expressions = pluginExpressions.get(language) || [];
+        pluginExpressions.set(language, expressions.concat(newExpressions));
+      });
+    }
   }
 
   return pluginExpressions;
@@ -36,15 +43,19 @@ function getExpressions(
  * @param options The options for the mangler.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.13
+ * @version v0.1.14
  */
 export default function webmangler<File extends WebManglerFile>(
   files: File[],
   options: WebManglerOptions,
 ): File[] {
-  const configs = options.plugins.map((plugin) => plugin.config()).flat();
+  const configs = options.plugins.map((plugin) => plugin.options()).flat();
   for (const config of configs) {
-    const expressions = getExpressions(options.languages, config.id);
+    const expressions = getExpressions(
+      options.languages,
+      config.expressionOptions,
+    );
+
     files = manglerEngine(files, expressions, config);
   }
 

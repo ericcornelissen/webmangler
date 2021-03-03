@@ -1,7 +1,15 @@
 import type { CharSet } from "../characters";
+import type { AttributeOptions } from "../languages/options";
+import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import SimpleManglerPlugin from "./utils/simple-mangler.class";
+
+const ATTRIBUTE_EXPRESSION_OPTIONS:
+    MangleExpressionOptions<AttributeOptions> = {
+  name: "attributes",
+  options: null,
+};
 
 /**
  * The options for _WebMangler_'s built-in HTML Attributes mangler.
@@ -147,7 +155,7 @@ export type HtmlAttributeManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.7
+ * @version v0.1.14
  */
 export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**
@@ -209,6 +217,9 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
       patterns: HtmlAttributeMangler.getPatterns(options.attrNamePattern),
       reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
+      expressionOptions: [
+        ATTRIBUTE_EXPRESSION_OPTIONS,
+      ],
     });
   }
 

@@ -1,11 +1,16 @@
 import type { CharSet } from "../../characters";
-import type { MangleEngineOptions, WebManglerPlugin } from "../../types";
+import type {
+  MangleOptions,
+  MangleEngineOptions,
+  MangleExpressionOptions,
+  WebManglerPlugin,
+} from "../../types";
 
 /**
  * Interface defining the configuration of a {@link SimpleLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.7
+ * @version v0.1.14
  */
 interface SimpleManglerOptions {
   /**
@@ -14,6 +19,13 @@ interface SimpleManglerOptions {
    * @since v0.1.7
    */
   charSet: CharSet;
+
+  /**
+   * The {@link MangleExpressionOptions} to use when mangling.
+   *
+   * @since v0.1.14
+   */
+  expressionOptions: MangleExpressionOptions<unknown>[];
 
   /**
    * One or more patterns that should be mangled.
@@ -39,13 +51,11 @@ interface SimpleManglerOptions {
 
 /**
  * The {@link SimpleManglerPlugin} abstract class provides an implementation of
- * a {@link WebManglerPlugin} that deals with the handling of {@link
- * WebManglerLanguagePlugin} and implements {@link WebManglerPlugin.mangle} for
- * a given character set, set of patterns, reserved values, and prefix.
+ * a {@link WebManglerPlugin} that deals with implementing the API if it is
+ * provided with the appropriate data.
  *
- * It is recommended to extend this class - or {@link BaseManglerPlugin} or
- * {@link MultiMangler}, depending on your needs - if you're implementing a
- * {@link WebManglerPlugin}.
+ * It is recommended to extend this class - or {@link MultiMangler}, depending
+ * on your needs - if you're implementing a {@link WebManglerPlugin}.
  *
  * @since v0.1.0
  * @version v0.1.14
@@ -62,14 +72,14 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   private readonly charSet: CharSet;
 
   /**
+   * The {@link MangleExpressionOptions} for mangling.
+   */
+  private readonly expressionOptions: MangleExpressionOptions<unknown>[];
+
+  /**
    * The pattern(s) to be mangled.
    */
   private readonly patterns: string | string[];
-
-  /**
-   * The reserved names not to be used by this mangler.
-   */
-  private readonly reserved: string[];
 
   /**
    * The prefix to be used by this mangler.
@@ -77,30 +87,52 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   private readonly prefix: string;
 
   /**
+   * The reserved names not to be used by this mangler.
+   */
+  private readonly reserved: string[];
+
+  /**
    * Initialize a new {@link WebManglerPlugin}.
    *
    * @param id The identifier for the {@link WebManglerPlugin}.
-   * @param options The character set, patterns, reserved values, and prefix.
+   * @param options The {@link SimpleManglerOptions}.
    */
   constructor(id: string, options: SimpleManglerOptions) {
     this.id = id;
     this.charSet = options.charSet;
+    this.expressionOptions = options.expressionOptions;
     this.patterns = options.patterns;
-    this.reserved = options.reserved;
     this.prefix = options.prefix;
+    this.reserved = options.reserved;
   }
 
   /**
    * @inheritDoc
    * @since v0.1.11
+   * @deprecated
    */
   config(): MangleEngineOptions {
     return {
       id: this.id,
-      patterns: this.patterns,
       charSet: this.charSet,
-      reservedNames: this.reserved,
       manglePrefix: this.prefix,
+      patterns: this.patterns,
+      reservedNames: this.reserved,
+    };
+  }
+
+  /**
+   * @inheritDoc
+   * @since v0.1.14
+   */
+  options(): MangleOptions {
+    return {
+      id: this.id,
+      charSet: this.charSet,
+      expressionOptions: this.expressionOptions,
+      manglePrefix: this.prefix,
+      patterns: this.patterns,
+      reservedNames: this.reserved,
     };
   }
 }
