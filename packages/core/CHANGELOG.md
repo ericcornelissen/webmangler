@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.14] - 2021-03-03
+
 - Improve mangling performance.
 
 ## [0.1.13] - 2021-02-25
