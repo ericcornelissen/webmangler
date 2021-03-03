@@ -6,10 +6,7 @@ import * as sinonChai from "sinon-chai";
 
 import {  permuteObjects } from "./test-helpers";
 
-import CssClassManglerMock from "../__mocks__/css-classes.mock";
-import CssVarManglerMock from "../__mocks__/css-variables.mock";
-import HtmlAttrManglerMock from "../__mocks__/html-attributes.mock";
-import HtmlIdManglerMock from "../__mocks__/html-ids.mock";
+import WebManglerPluginMock from "../../__mocks__/web-mangler-plugin.mock";
 
 import * as CssClassMangler from "../css-classes";
 import * as CssVarMangler from "../css-variables";
@@ -32,12 +29,22 @@ suite("Built-in Manglers", function() {
     DEFAULT_HTML_ID_OPTIONS,
   ];
 
+  let CssClassManglerMock: WebManglerPluginMock;
+  let CssVarManglerMock: WebManglerPluginMock;
+  let HtmlAttrManglerMock: WebManglerPluginMock;
+  let HtmlIdManglerMock: WebManglerPluginMock;
+
   let CssClassManglerStub: sinon.SinonStub;
   let CssVarManglerStub: sinon.SinonStub;
   let HtmlAttrManglerStub: sinon.SinonStub;
   let HtmlIdManglerStub: sinon.SinonStub;
 
   suiteSetup(function() {
+    CssClassManglerMock = new WebManglerPluginMock();
+    CssVarManglerMock = new WebManglerPluginMock();
+    HtmlAttrManglerMock = new WebManglerPluginMock();
+    HtmlIdManglerMock = new WebManglerPluginMock();
+
     CssClassManglerStub = sinon.stub(CssClassMangler, "default").returns(CssClassManglerMock);
     CssVarManglerStub = sinon.stub(CssVarMangler, "default").returns(CssVarManglerMock);
     HtmlAttrManglerStub = sinon.stub(HtmlAttrMangler, "default").returns(HtmlAttrManglerMock);
@@ -68,7 +75,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(CssClassManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(CssClassManglerMock.config()[0]);
+        expect(result).to.deep.include(CssClassManglerMock.config());
 
         CssClassManglerMock.config.resetHistory();
       }
@@ -79,7 +86,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(CssClassManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(CssClassManglerMock.config()[0]);
+        expect(result).to.deep.include(CssClassManglerMock.config());
 
         CssClassManglerMock.config.resetHistory();
       }
@@ -92,7 +99,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(CssClassManglerMock.config).to.have.callCount(0);
-        expect(result).not.to.deep.include(CssClassManglerMock.config()[0]);
+        expect(result).not.to.deep.include(CssClassManglerMock.config());
 
         CssClassManglerMock.config.resetHistory();
       }
@@ -123,7 +130,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(CssVarManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(CssVarManglerMock.config()[0]);
+        expect(result).to.deep.include(CssVarManglerMock.config());
 
         CssVarManglerMock.config.resetHistory();
       }
@@ -134,7 +141,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(CssVarManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(CssVarManglerMock.config()[0]);
+        expect(result).to.deep.include(CssVarManglerMock.config());
 
         CssVarManglerMock.config.resetHistory();
       }
@@ -147,7 +154,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(CssVarManglerMock.config).to.have.callCount(0);
-        expect(result).not.to.deep.include(CssVarManglerMock.config()[0]);
+        expect(result).not.to.deep.include(CssVarManglerMock.config());
 
         CssVarManglerMock.config.resetHistory();
       }
@@ -178,7 +185,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(HtmlAttrManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(HtmlAttrManglerMock.config()[0]);
+        expect(result).to.deep.include(HtmlAttrManglerMock.config());
 
         HtmlAttrManglerMock.config.resetHistory();
       }
@@ -189,7 +196,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(HtmlAttrManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(HtmlAttrManglerMock.config()[0]);
+        expect(result).to.deep.include(HtmlAttrManglerMock.config());
 
         HtmlAttrManglerMock.config.resetHistory();
       }
@@ -202,7 +209,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(HtmlAttrManglerMock.config).to.have.callCount(0);
-        expect(result).not.to.deep.include(HtmlAttrManglerMock.config()[0]);
+        expect(result).not.to.deep.include(HtmlAttrManglerMock.config());
 
         HtmlAttrManglerMock.config.resetHistory();
       }
@@ -233,7 +240,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(HtmlIdManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(HtmlIdManglerMock.config()[0]);
+        expect(result).to.deep.include(HtmlIdManglerMock.config());
 
         HtmlIdManglerMock.config.resetHistory();
       }
@@ -244,7 +251,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(HtmlIdManglerMock.config).to.have.callCount(1);
-        expect(result).to.deep.include(HtmlIdManglerMock.config()[0]);
+        expect(result).to.deep.include(HtmlIdManglerMock.config());
 
         HtmlIdManglerMock.config.resetHistory();
       }
@@ -257,7 +264,7 @@ suite("Built-in Manglers", function() {
         const mangler = new BuiltInManglers(options);
         const result = mangler.config();
         expect(HtmlIdManglerMock.config).to.have.callCount(0);
-        expect(result).not.to.deep.include(HtmlIdManglerMock.config()[0]);
+        expect(result).not.to.deep.include(HtmlIdManglerMock.config());
 
         HtmlIdManglerMock.config.resetHistory();
       }
