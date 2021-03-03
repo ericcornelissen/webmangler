@@ -1,4 +1,5 @@
 import type { TestScenario } from "@webmangler/testing";
+import type { TestCase } from "../../__tests__/test-types";
 import type { QuerySelectorOptions } from "../../options";
 
 import { expect } from "chai";
@@ -7,30 +8,8 @@ import { matchesAsExpected } from "../../__tests__/test-helpers";
 
 import querySelectorExpressionFactory from "../query-selectors";
 
-type TestCase = {
-  /**
-   * The input string to match against.
-   */
-  input: string;
-
-  /**
-   * The pattern to use for matching.
-   */
-  pattern: string;
-
-  /**
-   * The expected matches.
-   */
-  expected: string[];
-
-  /**
-   * The factory options.
-   */
-  options: QuerySelectorOptions;
-};
-
 suite("JavaScript - Query Selector Expression Factory", function() {
-  const scenarios: TestScenario<TestCase>[] = [
+  const scenarios: TestScenario<TestCase<QuerySelectorOptions>>[] = [
     {
       name: "sample",
       cases: [

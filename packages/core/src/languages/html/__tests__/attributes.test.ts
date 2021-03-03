@@ -1,4 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
+import type { TestCase } from "../../__tests__/test-types";
+import type { AttributeOptions } from "../../options";
 
 import { expect } from "chai";
 
@@ -6,25 +8,8 @@ import { matchesAsExpected } from "../../__tests__/test-helpers";
 
 import attributeExpressionFactory from "../attributes";
 
-type TestCase = {
-  /**
-   * The input string to match against.
-   */
-  input: string;
-
-  /**
-   * The pattern to use for matching.
-   */
-  pattern: string;
-
-  /**
-   * The expected matches.
-   */
-  expected: string[];
-};
-
 suite("HTML - Attribute Expression Factory", function() {
-  const scenarios: TestScenario<TestCase>[] = [
+  const scenarios: TestScenario<TestCase<AttributeOptions>>[] = [
     {
       name: "sample",
       cases: [
@@ -32,26 +17,31 @@ suite("HTML - Attribute Expression Factory", function() {
           input: "<div data-foo></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
+          options: null,
         },
         {
           input: "<div data-foo=\"bar\"></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
+          options: null,
         },
         {
           input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo", "data-bar"],
+          options: null,
         },
         {
           input: "<div data-foo='bar'></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo"],
+          options: null,
         },
         {
           input: "<div data-foo='bar' data-bar='foo'></div>",
           pattern: "[a-z\\-]+",
           expected: ["data-foo", "data-bar"],
+          options: null,
         },
       ],
     },
