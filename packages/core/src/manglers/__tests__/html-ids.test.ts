@@ -1021,7 +1021,7 @@ suite("HTML ID Mangler", function() {
       const expected = HtmlIdMangler.DEFAULT_PATTERNS;
 
       const cssClassMangler = new HtmlIdMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: expected });
     });
 
@@ -1029,7 +1029,7 @@ suite("HTML ID Mangler", function() {
       const pattern = "foo(bar|baz)-[a-z]+";
 
       const cssClassMangler = new HtmlIdMangler({ idNamePattern: pattern });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: pattern });
     });
 
@@ -1037,7 +1037,7 @@ suite("HTML ID Mangler", function() {
       const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
 
       const cssClassMangler = new HtmlIdMangler({ idNamePattern: patterns });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: patterns });
     });
 
@@ -1045,7 +1045,7 @@ suite("HTML ID Mangler", function() {
       const expected = HtmlIdMangler.DEFAULT_RESERVED;
 
       const cssClassMangler = new HtmlIdMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -1053,7 +1053,7 @@ suite("HTML ID Mangler", function() {
       const reserved: string[] = ["foo", "bar"];
 
       const cssClassMangler = new HtmlIdMangler({ reservedIds: reserved });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ reservedNames: reserved });
     });
 
@@ -1061,7 +1061,7 @@ suite("HTML ID Mangler", function() {
       const expected = HtmlIdMangler.DEFAULT_PREFIX;
 
       const cssClassMangler = new HtmlIdMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ manglePrefix: expected });
     });
 
@@ -1069,7 +1069,7 @@ suite("HTML ID Mangler", function() {
       const prefix = "foobar";
 
       const cssClassMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ manglePrefix: prefix });
     });
   });

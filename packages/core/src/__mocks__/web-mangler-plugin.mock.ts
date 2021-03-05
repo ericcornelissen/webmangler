@@ -1,3 +1,5 @@
+import type { SinonStub } from "sinon";
+
 import type { WebManglerPlugin } from "../types";
 
 import * as sinon from "sinon";
@@ -5,11 +7,17 @@ import * as sinon from "sinon";
 let uniqueId = 0;
 
 export default class WebManglerPluginMock implements WebManglerPlugin {
-  public readonly config: sinon.SinonStub;
-  public readonly options: sinon.SinonStub;
+  public readonly options: SinonStub;
 
-  constructor(configStub?: sinon.SinonStub, optionsStub?: sinon.SinonStub) {
-    this.config = configStub || sinon.stub().returns({ id: uniqueId++ });
-    this.options = optionsStub || sinon.stub().returns({ id: uniqueId++ });
+  constructor(optionsStub?: SinonStub) {
+    this.options = WebManglerPluginMock.getOptionsStub(optionsStub);
+  }
+
+  private static getOptionsStub(providedStub?: SinonStub): SinonStub {
+    if (providedStub) {
+      return providedStub;
+    }
+
+    return sinon.stub().returns({ id: uniqueId++ });
   }
 }

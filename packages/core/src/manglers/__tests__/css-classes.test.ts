@@ -919,7 +919,7 @@ suite("CSS Class Mangler", function() {
       const expected = CssClassMangler.DEFAULT_PATTERNS;
 
       const cssClassMangler = new CssClassMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: expected });
     });
 
@@ -927,7 +927,7 @@ suite("CSS Class Mangler", function() {
       const pattern = "foo(bar|baz)-[a-z]+";
 
       const cssClassMangler = new CssClassMangler({ classNamePattern: pattern });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: pattern });
     });
 
@@ -935,7 +935,7 @@ suite("CSS Class Mangler", function() {
       const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
 
       const cssClassMangler = new CssClassMangler({ classNamePattern: patterns });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: patterns });
     });
 
@@ -943,7 +943,7 @@ suite("CSS Class Mangler", function() {
       const expected = CssClassMangler.ALWAYS_RESERVED.concat(CssClassMangler.DEFAULT_RESERVED);
 
       const cssClassMangler = new CssClassMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -952,7 +952,7 @@ suite("CSS Class Mangler", function() {
       const expected = CssClassMangler.ALWAYS_RESERVED.concat(reserved);
 
       const cssClassMangler = new CssClassMangler({ reservedClassNames: reserved });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -960,7 +960,7 @@ suite("CSS Class Mangler", function() {
       const expected = CssClassMangler.DEFAULT_PREFIX;
 
       const cssClassMangler = new CssClassMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ manglePrefix: expected });
     });
 
@@ -968,7 +968,7 @@ suite("CSS Class Mangler", function() {
       const prefix = "foobar";
 
       const cssClassMangler = new CssClassMangler({ keepClassNamePrefix: prefix });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ manglePrefix: prefix });
     });
   });

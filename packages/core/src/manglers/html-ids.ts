@@ -166,11 +166,14 @@ export type HtmlIdManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.7
+ * @version v0.1.14
  */
 export default class HtmlIdMangler extends SimpleManglerPlugin {
   /**
    * The identifier of the {@link HtmlIdMangler} {@link WebManglerPlugin}.
+   *
+   * @since v0.1.0
+   * @deprecated
    */
   static readonly _ID = "html-id-mangler";
 
@@ -178,6 +181,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * The character set used by {@link HtmlIdMangler}.
    *
    * @since v0.1.7
+   * @deprecated
    */
   static readonly CHARACTER_SET: CharSet = [
     ...ALL_LETTER_CHARS,
@@ -189,6 +193,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * The default patterns used by a {@link HtmlIdMangler}.
    *
    * @since v0.1.0
+   * @deprecated
    */
   static readonly DEFAULT_PATTERNS: string[] = ["id-[a-zA-Z-_]+"];
 
@@ -196,6 +201,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * The default prefix used by a {@link HtmlIdMangler}.
    *
    * @since v0.1.0
+   * @deprecated
    */
   static readonly DEFAULT_PREFIX = "";
 
@@ -203,6 +209,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * The default reserved names used by a {@link HtmlIdMangler}.
    *
    * @since v0.1.0
+   * @deprecated
    */
   static readonly DEFAULT_RESERVED: string[] = [];
 
@@ -213,7 +220,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @since v0.1.0
    */
   constructor(options: HtmlIdManglerOptions={}) {
-    super(HtmlIdMangler._ID, {
+    super({
       charSet: HtmlIdMangler.CHARACTER_SET,
       patterns: HtmlIdMangler.getPatterns(options.idNamePattern),
       reserved: HtmlIdMangler.getReserved(options.reservedIds),

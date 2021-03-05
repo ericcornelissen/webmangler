@@ -1,59 +1,80 @@
-import { expect } from "chai";
+import type { WebManglerLanguagePlugin } from "../../types";
 
-import CssClassMangler from "../../manglers/css-classes";
-import CssVariableMangler from "../../manglers/css-variables";
-import HtmlAttributeMangler from "../../manglers/html-attributes";
-import HtmlIdMangler from "../../manglers/html-ids";
+import { expect, use as chaiUse } from "chai";
+import * as sinon from "sinon";
+import * as sinonChai from "sinon-chai";
 
-import BuiltInLanguageSupport from "../builtin";
-import CssLanguageSupport from "../css";
-import HtmlLanguageSupport from "../html";
-import JavaScriptLanguageSupport from "../javascript";
+import WebManglerPluginLanguageMock from "../../__mocks__/web-mangler-language-plugin.mock";
+
+import * as CssLanguagePlugin from "../css";
+import * as HtmlLanguagePlugin from "../html";
+import * as JavaScriptLanguagePlugin from "../javascript";
+
+import BuiltInLanguagesPlugin from "../builtin";
+
+chaiUse(sinonChai);
 
 suite("Built-in Language Supports", function() {
-  test(`has support for the ${CssClassMangler._ID} mangler`, function() {
-    const plugin = new BuiltInLanguageSupport();
+  let plugin: WebManglerLanguagePlugin;
 
-    const expressions = plugin.getExpressions(CssClassMangler._ID);
-    expect(expressions).to.have.length.above(0);
+  let CssLanguagePluginMock: WebManglerLanguagePlugin;
+  let HtmlLanguagePluginMock: WebManglerLanguagePlugin;
+  let JavaScriptLanguagePluginMock: WebManglerLanguagePlugin;
+
+  let CssLanguagePluginModuleStub: sinon.SinonStub;
+  let HtmlLanguagePluginModuleStub: sinon.SinonStub;
+  let JavaScriptLanguagePluginModuleStub: sinon.SinonStub;
+
+  suiteSetup(function() {
+    CssLanguagePluginMock = new WebManglerPluginLanguageMock();
+    CssLanguagePluginModuleStub = sinon.stub(CssLanguagePlugin, "default");
+    CssLanguagePluginModuleStub.returns(CssLanguagePluginMock);
+
+    HtmlLanguagePluginMock = new WebManglerPluginLanguageMock();
+    HtmlLanguagePluginModuleStub = sinon.stub(HtmlLanguagePlugin, "default");
+    HtmlLanguagePluginModuleStub.returns(HtmlLanguagePluginMock);
+
+    JavaScriptLanguagePluginMock = new WebManglerPluginLanguageMock();
+    JavaScriptLanguagePluginModuleStub = sinon.stub(JavaScriptLanguagePlugin, "default");
+    JavaScriptLanguagePluginModuleStub.returns(JavaScriptLanguagePluginMock);
   });
 
-  test(`has support for the ${CssVariableMangler._ID} mangler`, function() {
-    const plugin = new BuiltInLanguageSupport();
-
-    const expressions = plugin.getExpressions(CssVariableMangler._ID);
-    expect(expressions).to.have.length.above(0);
+  setup(function() {
+    plugin = new BuiltInLanguagesPlugin();
   });
 
-  test(`has support for the ${HtmlAttributeMangler._ID} mangler`, function() {
-    const plugin = new BuiltInLanguageSupport();
+  test("get expressions", function() {
+    const name = "foo";
+    const options = "bar";
 
-    const expressions = plugin.getExpressions(HtmlAttributeMangler._ID);
-    expect(expressions).to.have.length.above(0);
-  });
+    const result = plugin.getExpressionsFor(name, options);
+    expect(result).to.have.length.above(0);
 
-  test(`has support for the ${HtmlIdMangler._ID} mangler`, function() {
-    const plugin = new BuiltInLanguageSupport();
+    const cssExpr = CssLanguagePluginMock.getExpressionsFor(name, options);
+    const htmlExpr = HtmlLanguagePluginMock.getExpressionsFor(name, options);
+    const jsExpr = JavaScriptLanguagePluginMock.getExpressionsFor(name, options);
 
-    const expressions = plugin.getExpressions(HtmlIdMangler._ID);
-    expect(expressions).to.have.length.above(0);
+    const hasSameValueAsResult = (v: unknown, k: string): void => {
+      expect(result.get(k)).to.equal(v);
+    };
+
+    cssExpr.forEach(hasSameValueAsResult);
+    htmlExpr.forEach(hasSameValueAsResult);
+    jsExpr.forEach(hasSameValueAsResult);
   });
 
   test("get languages", function() {
-    const plugin = new BuiltInLanguageSupport();
-
     const result = plugin.getLanguages();
+    expect(result).to.have.length.above(0);
 
-    for (const language of new CssLanguageSupport().getLanguages()) {
-      expect(result).to.include(language);
-    }
+    expect(result).to.deep.include.members(CssLanguagePluginMock.getLanguages());
+    expect(result).to.deep.include.members(HtmlLanguagePluginMock.getLanguages());
+    expect(result).to.deep.include.members(JavaScriptLanguagePluginMock.getLanguages());
+  });
 
-    for (const language of new HtmlLanguageSupport().getLanguages()) {
-      expect(result).to.include(language);
-    }
-
-    for (const language of new JavaScriptLanguageSupport().getLanguages()) {
-      expect(result).to.include(language);
-    }
+  suiteTeardown(function() {
+    CssLanguagePluginModuleStub.restore();
+    HtmlLanguagePluginModuleStub.restore();
+    JavaScriptLanguagePluginModuleStub.restore();
   });
 });

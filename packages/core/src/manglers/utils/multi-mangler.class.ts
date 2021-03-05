@@ -1,8 +1,4 @@
-import type {
-  MangleOptions,
-  MangleEngineOptions,
-  WebManglerPlugin,
-} from "../../types";
+import type { MangleOptions, WebManglerPlugin } from "../../types";
 
 /**
  * The {@link MultiMangler} class is a utility to create a {@link
@@ -12,14 +8,9 @@ import type {
  * {@link BuiltInManglers}.
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.15
  */
 export default abstract class MultiMangler implements WebManglerPlugin {
-  /**
-   * The {@link MangleEngineOptions}.
-   */
-  private readonly _config: MangleEngineOptions[];
-
   /**
    * The {@link MangleOptions} of every {@link WebManglerPlugin} included.
    */
@@ -32,17 +23,7 @@ export default abstract class MultiMangler implements WebManglerPlugin {
    * @since v0.1.0
    */
   constructor(plugins: WebManglerPlugin[]) {
-    this._config = plugins.map((plugin) => plugin.config()).flat();
     this._options = plugins.map((plugin) => plugin.options()).flat();
-  }
-
-  /**
-   * @inheritDoc
-   * @since v0.1.11
-   * @deprecated
-   */
-  config(): MangleEngineOptions[] {
-    return this._config;
   }
 
   /**

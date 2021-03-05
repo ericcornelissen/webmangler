@@ -159,6 +159,9 @@ export type CssVariableManglerOptions = {
 export default class CssVariableMangler extends SimpleManglerPlugin {
   /**
    * The identifier of the {@link CssClassMangler} {@link WebManglerPlugin}.
+   *
+   * @since v0.1.0
+   * @deprecated
    */
   static readonly _ID = "css-variable-mangler";
 
@@ -167,6 +170,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * illegal CSS variable names.
    *
    * @since v0.1.7
+   * @deprecated
    */
   static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-).*"];
 
@@ -174,6 +178,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * The character set used by {@link CssVariableMangler}.
    *
    * @since v0.1.7
+   * @deprecated
    */
   static readonly CHARACTER_SET: CharSet = [
     ...ALL_LETTER_CHARS,
@@ -185,6 +190,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * The default patterns used by a {@link CssVariableMangler}.
    *
    * @since v0.1.0
+   * @deprecated
    */
   static readonly DEFAULT_PATTERNS: string[] = ["[a-zA-Z-]+"];
 
@@ -192,6 +198,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * The default prefix used by a {@link CssVariableMangler}.
    *
    * @since v0.1.0
+   * @deprecated
    */
   static readonly DEFAULT_PREFIX = "";
 
@@ -199,6 +206,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * The default reserved names used by a {@link CssVariableMangler}.
    *
    * @since v0.1.0
+   * @deprecated
    */
   static readonly DEFAULT_RESERVED: string[] = [];
 
@@ -209,7 +217,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * @since v0.1.0
    */
   constructor(options: CssVariableManglerOptions={}) {
-    super(CssVariableMangler._ID, {
+    super({
       charSet: CssVariableMangler.CHARACTER_SET,
       patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
       reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),

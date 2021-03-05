@@ -275,11 +275,6 @@ suite("Built-in Manglers", function() {
     expect(() => new BuiltInManglers()).not.to.throw();
   });
 
-  test("deprecated .config method", function() {
-    const mangler = new BuiltInManglers({});
-    expect(() => mangler.config()).not.to.throw();
-  });
-
   suiteTeardown(function() {
     CssClassManglerStub.restore();
     CssVarManglerStub.restore();

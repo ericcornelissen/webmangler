@@ -378,7 +378,6 @@ suite("ManglerEngine", function() {
         } = testCase;
 
         const result = engine(files, expressions, {
-          id: "not needed",
           charSet: testCase.charSet,
           patterns: testCase.patterns,
           reservedNames: testCase.reservedNames,

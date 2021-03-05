@@ -1,25 +1,11 @@
-import type { MangleExpression } from "../../types";
 import type { ExpressionFactory } from "../utils/simple-language-plugin.class";
 
 import SimpleLanguagePlugin from "../utils/simple-language-plugin.class";
-
 import attributeExpressionFactory from "./attributes";
-import cssClassesMatchers from "./css-classes";
 import cssDeclarationPropertyExpressionFactory from "./css-properties";
 import cssDeclarationValueExpressionFactory from "./css-values";
-import cssVariablesMatchers from "./css-variables";
-import htmlAttributeMatchers from "./html-attributes";
-import htmlIdMatchers from "./html-ids";
 import querySelectorExpressionFactory from "./query-selectors";
 import singleValueAttributeExpressionFactory from "./single-value-attributes";
-
-const languages: string[] = ["css"];
-const expressions: Map<string, MangleExpression[]> = new Map();
-
-expressions.set("css-class-mangler", cssClassesMatchers);
-expressions.set("css-variable-mangler", cssVariablesMatchers);
-expressions.set("html-attribute-mangler", htmlAttributeMatchers);
-expressions.set("html-id-mangler", htmlIdMatchers);
 
 const map: Map<string, ExpressionFactory> = new Map();
 map.set("attributes", attributeExpressionFactory);
@@ -29,23 +15,48 @@ map.set("query-selectors", querySelectorExpressionFactory);
 map.set("single-value-attributes", singleValueAttributeExpressionFactory);
 
 /**
- * This {@link WebManglerLanguagePlugin} provides CSS support for the built-in
- * {@link WebManglerPlugin}s.
+ * This {@link WebManglerLanguagePlugin} provides support for mangling the
+ * following in CSS:
+ *
+ * - Attributes
+ * - CSS declaration properties
+ * - CSS declaration values
+ * - Query selectors
+ * - Single-value attribute values
  *
  * @example
  * webmangler({
- *   plugins: [], // any built-in plugin(s)
- *   languages: [new CssLanguageSupport()],
+ *   plugins: [
+ *     // any compatible plugins, e.g. the built-in plugins
+ *   ],
+ *   languages: [
+ *     new CssLanguagePlugin(),
+ *   ],
  * });
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.15
  */
-export default class CssLanguageSupport extends SimpleLanguagePlugin {
+export default class CssLanguagePlugin extends SimpleLanguagePlugin {
   /**
-   * Instantiate a new {@link CssLanguageSupport} plugin.
+   * The language aliases supported by the {@link CssLanguagePlugin}.
+   */
+  private static languages: string[] = [
+    "css",
+  ];
+
+  /**
+   * The {@link ExpressionFactory}s provided by the {@link CssLanguagePlugin}.
+   */
+  private static expressionFactories: Map<string, ExpressionFactory> = map;
+
+  /**
+   * Instantiate a new {@link CssLanguagePlugin} plugin.
    */
   constructor() {
-    super(languages, expressions, map);
+    super(
+      CssLanguagePlugin.languages,
+      CssLanguagePlugin.expressionFactories,
+    );
   }
 }

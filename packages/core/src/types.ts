@@ -23,17 +23,9 @@ interface MangleOptions extends MangleEngineOptions {
  * A set of generic options used by the {@link MangleEngine} for mangling.
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.15
  */
 interface MangleEngineOptions {
-  /**
-   * The {@link WebManglerPlugin} identifier.
-   *
-   * @since v0.1.13
-   * @deprecated
-   */
-  readonly id: string;
-
   /**
    * The pattern(s) to be mangled.
    *
@@ -180,18 +172,9 @@ interface WebManglerOptions {
  * The interface that every plugin for _WebMangler_ must implement.
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.15
  */
 interface WebManglerPlugin {
-  /**
-   * Get the plugin's configuration for {@link MangleEngine}.
-   *
-   * @returns The {@link MangleEngineOptions}.
-   * @since v0.1.11
-   * @deprecated
-   */
-  config(): MangleEngineOptions | MangleEngineOptions[];
-
   /**
    * Get the plugin's options for the _WebMangler_ core.
    *
@@ -205,7 +188,7 @@ interface WebManglerPlugin {
  * The interface that every language plugin for _WebMangler_ must implement.
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.15
  */
 interface WebManglerLanguagePlugin {
   /**
@@ -221,17 +204,6 @@ interface WebManglerLanguagePlugin {
     name: string,
     options: unknown,
   ): Map<string, MangleExpression[]>;
-
-  /**
-   * Get {@link MangleExpression}s for a {@link WebManglerPlugin}.
-   *
-   * In the returned map, the key is a language identifier and the value are the
-   * {@link MangleExpression}s.
-   *
-   * @since v0.1.13
-   * @deprecated
-   */
-  getExpressions(pluginId: string): Map<string, MangleExpression[]>;
 
   /**
    * Get a list of the languages supported by the {@link

@@ -650,7 +650,7 @@ suite("HTML Attribute Mangler", function() {
       const expected = HtmlAttributeMangler.DEFAULT_PATTERNS;
 
       const cssClassMangler = new HtmlAttributeMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: expected });
     });
 
@@ -658,7 +658,7 @@ suite("HTML Attribute Mangler", function() {
       const pattern = "foo(bar|baz)-[a-z]+";
 
       const cssClassMangler = new HtmlAttributeMangler({ attrNamePattern: pattern });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: pattern });
     });
 
@@ -666,7 +666,7 @@ suite("HTML Attribute Mangler", function() {
       const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
 
       const cssClassMangler = new HtmlAttributeMangler({ attrNamePattern: patterns });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: patterns });
     });
 
@@ -674,7 +674,7 @@ suite("HTML Attribute Mangler", function() {
       const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(HtmlAttributeMangler.DEFAULT_RESERVED);
 
       const cssClassMangler = new HtmlAttributeMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -683,7 +683,7 @@ suite("HTML Attribute Mangler", function() {
       const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(reserved);
 
       const cssClassMangler = new HtmlAttributeMangler({ reservedAttrNames: reserved });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -691,7 +691,7 @@ suite("HTML Attribute Mangler", function() {
       const expected = HtmlAttributeMangler.DEFAULT_PREFIX;
 
       const cssClassMangler = new HtmlAttributeMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ manglePrefix: expected });
     });
 
@@ -699,7 +699,7 @@ suite("HTML Attribute Mangler", function() {
       const prefix = "foobar";
 
       const cssClassMangler = new HtmlAttributeMangler({ keepAttrPrefix: prefix });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ manglePrefix: prefix });
     });
   });

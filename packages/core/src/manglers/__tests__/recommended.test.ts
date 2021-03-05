@@ -213,11 +213,6 @@ suite("Recommended Manglers", function() {
     expect(() => new RecommendedManglers()).not.to.throw();
   });
 
-  test("deprecated .config method", function() {
-    const mangler = new RecommendedManglers({});
-    expect(() => mangler.config()).not.to.throw();
-  });
-
   suiteTeardown(function() {
     CssClassManglerStub.restore();
     CssVarManglerStub.restore();

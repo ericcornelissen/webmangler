@@ -607,7 +607,7 @@ suite("CSS Variable Mangler", function() {
       const expected = CssVariableMangler.DEFAULT_PATTERNS;
 
       const cssClassMangler = new CssVariableMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: expected });
     });
 
@@ -615,7 +615,7 @@ suite("CSS Variable Mangler", function() {
       const pattern = "foo(bar|baz)-[a-z]+";
 
       const cssClassMangler = new CssVariableMangler({ cssVarNamePattern: pattern });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: pattern });
     });
 
@@ -623,7 +623,7 @@ suite("CSS Variable Mangler", function() {
       const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
 
       const cssClassMangler = new CssVariableMangler({ cssVarNamePattern: patterns });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ patterns: patterns });
     });
 
@@ -631,7 +631,7 @@ suite("CSS Variable Mangler", function() {
       const expected = CssVariableMangler.ALWAYS_RESERVED.concat(CssVariableMangler.DEFAULT_RESERVED);
 
       const cssClassMangler = new CssVariableMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -640,7 +640,7 @@ suite("CSS Variable Mangler", function() {
       const expected = CssVariableMangler.ALWAYS_RESERVED.concat(reserved);
 
       const cssClassMangler = new CssVariableMangler({ reservedCssVarNames: reserved });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ reservedNames: expected });
     });
 
@@ -648,7 +648,7 @@ suite("CSS Variable Mangler", function() {
       const expected = CssVariableMangler.DEFAULT_PREFIX;
 
       const cssClassMangler = new CssVariableMangler();
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ manglePrefix: expected });
     });
 
@@ -656,7 +656,7 @@ suite("CSS Variable Mangler", function() {
       const prefix = "foobar";
 
       const cssClassMangler = new CssVariableMangler({ keepCssVarPrefix: prefix });
-      const result = cssClassMangler.config();
+      const result = cssClassMangler.options();
       expect(result).to.deep.include({ manglePrefix: prefix });
     });
   });

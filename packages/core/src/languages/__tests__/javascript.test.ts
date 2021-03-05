@@ -1,44 +1,43 @@
-import { expect } from "chai";
+import type { WebManglerLanguagePlugin } from "../../types";
+import type {
+  AttributeOptions,
+  CssDeclarationPropertyOptions,
+  QuerySelectorOptions,
+} from "../options";
 
-import CssClassMangler from "../../manglers/css-classes";
-import CssVariableMangler from "../../manglers/css-variables";
-import HtmlAttributeMangler from "../../manglers/html-attributes";
-import HtmlIdMangler from "../../manglers/html-ids";
+import { expect } from "chai";
 
 import JavaScriptLanguageSupport from "../javascript";
 
-suite("Built-in HTML Language Support", function() {
-  test(`has support for the ${CssClassMangler._ID} mangler`, function() {
-    const plugin = new JavaScriptLanguageSupport();
+suite("Built-in JavaScript Language Support", function() {
+  let plugin: WebManglerLanguagePlugin;
 
-    const expressions = plugin.getExpressions(CssClassMangler._ID);
-    expect(expressions).to.have.length.above(0);
+  setup(function() {
+    plugin = new JavaScriptLanguageSupport();
   });
 
-  test(`has support for the ${CssVariableMangler._ID} mangler`, function() {
-    const plugin = new JavaScriptLanguageSupport();
+  test("has support for mangling 'attributes'", function() {
+    const options: AttributeOptions = null;
 
-    const expressions = plugin.getExpressions(CssVariableMangler._ID);
-    expect(expressions).to.have.length.above(0);
+    const result = plugin.getExpressionsFor("attributes", options);
+    expect(result).to.have.length.above(0);
   });
 
-  test(`has support for the ${HtmlAttributeMangler._ID} mangler`, function() {
-    const plugin = new JavaScriptLanguageSupport();
+  test("has support for mangling 'css-declaration-properties'", function() {
+    const options: CssDeclarationPropertyOptions = { };
 
-    const expressions = plugin.getExpressions(HtmlAttributeMangler._ID);
-    expect(expressions).to.have.length.above(0);
+    const result = plugin.getExpressionsFor("css-declaration-properties", options);
+    expect(result).to.have.length.above(0);
   });
 
-  test(`has support for the ${HtmlIdMangler._ID} mangler`, function() {
-    const plugin = new JavaScriptLanguageSupport();
+  test("has support for mangling 'query-selectors'", function() {
+    const options: QuerySelectorOptions = { };
 
-    const expressions = plugin.getExpressions(HtmlIdMangler._ID);
-    expect(expressions).to.have.length.above(0);
+    const result = plugin.getExpressionsFor("query-selectors", options);
+    expect(result).to.have.length.above(0);
   });
 
   test("get languages", function() {
-    const plugin = new JavaScriptLanguageSupport();
-
     const result = plugin.getLanguages();
     expect(result).to.include("js");
     expect(result).to.include("cjs");

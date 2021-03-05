@@ -161,6 +161,9 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**
    * The identifier of the {@link HtmlAttributeMangler} {@link
    * WebManglerPlugin}.
+   *
+   * @since v0.1.0
+   * @deprecated
    */
   static readonly _ID = "html-attribute-mangler";
 
@@ -169,6 +172,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * illegal HTML attribute names.
    *
    * @since v0.1.7
+   * @deprecated
    */
   static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-|_).*"];
 
@@ -177,6 +181,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * attributes are case insensitive, so only lowercase letters are used.
    *
    * @since v0.1.7
+   * @deprecated
    */
   static readonly CHARACTER_SET: CharSet = [
     ...ALL_LOWERCASE_CHARS,
@@ -188,6 +193,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * The default patterns used by a {@link HtmlAttributeMangler}.
    *
    * @since v0.1.0
+   * @deprecated
    */
   static readonly DEFAULT_PATTERNS: string[] = ["data-[a-z-]+"];
 
@@ -195,6 +201,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * The default prefix used by a {@link HtmlAttributeMangler}.
    *
    * @since v0.1.0
+   * @deprecated
    */
   static readonly DEFAULT_PREFIX = "data-";
 
@@ -202,6 +209,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * The default reserved names used by a {@link HtmlAttributeMangler}.
    *
    * @since v0.1.0
+   * @deprecated
    */
   static readonly DEFAULT_RESERVED: string[] = [];
 
@@ -212,7 +220,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * @since v0.1.0
    */
   constructor(options: HtmlAttributeManglerOptions={}) {
-    super(HtmlAttributeMangler._ID, {
+    super({
       charSet: HtmlAttributeMangler.CHARACTER_SET,
       patterns: HtmlAttributeMangler.getPatterns(options.attrNamePattern),
       reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),

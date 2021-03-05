@@ -1,7 +1,6 @@
 import type { CharSet } from "../../characters";
 import type {
   MangleOptions,
-  MangleEngineOptions,
   MangleExpressionOptions,
   WebManglerPlugin,
 } from "../../types";
@@ -12,7 +11,7 @@ import type {
  * @since v0.1.0
  * @version v0.1.14
  */
-interface SimpleManglerOptions {
+export interface SimpleManglerOptions {
   /**
    * The character set to use when mangling.
    *
@@ -58,14 +57,9 @@ interface SimpleManglerOptions {
  * on your needs - if you're implementing a {@link WebManglerPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.15
  */
 export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
-  /**
-   * The identifier of the {@link WebManglerPlugin}.
-   */
-  private readonly id: string;
-
   /**
    * The character set to use when mangling.
    */
@@ -94,11 +88,18 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
    * Initialize a new {@link WebManglerPlugin}.
    *
-   * @param id The identifier for the {@link WebManglerPlugin}.
-   * @param options The {@link SimpleManglerOptions}.
+   * @param options The {@link SimpleManglerOptions} (previously `id`).
+   * @param oldOptions The old `options` paramter.
+   * @deprecated `oldOptions` will be removed, `options` will only be object.
    */
-  constructor(id: string, options: SimpleManglerOptions) {
-    this.id = id;
+  constructor(
+    options: string | SimpleManglerOptions,
+    oldOptions?: SimpleManglerOptions,
+  ) {
+    if (typeof options === "string") {
+      options = oldOptions as SimpleManglerOptions;
+    }
+
     this.charSet = options.charSet;
     this.expressionOptions = options.expressionOptions;
     this.patterns = options.patterns;
@@ -108,26 +109,10 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
 
   /**
    * @inheritDoc
-   * @since v0.1.11
-   * @deprecated
-   */
-  config(): MangleEngineOptions {
-    return {
-      id: this.id,
-      charSet: this.charSet,
-      manglePrefix: this.prefix,
-      patterns: this.patterns,
-      reservedNames: this.reserved,
-    };
-  }
-
-  /**
-   * @inheritDoc
    * @since v0.1.14
    */
   options(): MangleOptions {
     return {
-      id: this.id,
       charSet: this.charSet,
       expressionOptions: this.expressionOptions,
       manglePrefix: this.prefix,

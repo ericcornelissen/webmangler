@@ -1,45 +1,65 @@
-import { expect } from "chai";
+import type { WebManglerLanguagePlugin } from "../../types";
+import type {
+  AttributeOptions,
+  CssDeclarationPropertyOptions,
+  CssDeclarationValueOptions,
+  MultiValueAttributeOptions,
+  SingleValueAttributeOptions,
+} from "../options";
 
-import CssClassMangler from "../../manglers/css-classes";
-import CssVariableMangler from "../../manglers/css-variables";
-import HtmlAttributeMangler from "../../manglers/html-attributes";
-import HtmlIdMangler from "../../manglers/html-ids";
+import { expect } from "chai";
 
 import HtmlLanguageSupport from "../html";
 
 suite("Built-in HTML Language Support", function() {
-  test(`has support for the ${CssClassMangler._ID} mangler`, function() {
-    const plugin = new HtmlLanguageSupport();
+  let plugin: WebManglerLanguagePlugin;
 
-    const expressions = plugin.getExpressions(CssClassMangler._ID);
-    expect(expressions).to.have.length.above(0);
+  setup(function() {
+    plugin = new HtmlLanguageSupport();
   });
 
-  test(`has support for the ${CssVariableMangler._ID} mangler`, function() {
-    const plugin = new HtmlLanguageSupport();
+  test("has support for mangling 'attributes'", function() {
+    const options: AttributeOptions = null;
 
-    const expressions = plugin.getExpressions(CssVariableMangler._ID);
-    expect(expressions).to.have.length.above(0);
+    const result = plugin.getExpressionsFor("attributes", options);
+    expect(result).to.have.length.above(0);
   });
 
-  test(`has support for the ${HtmlAttributeMangler._ID} mangler`, function() {
-    const plugin = new HtmlLanguageSupport();
+  test("has support for mangling 'css-declaration-properties'", function() {
+    const options: CssDeclarationPropertyOptions = { };
 
-    const expressions = plugin.getExpressions(HtmlAttributeMangler._ID);
-    expect(expressions).to.have.length.above(0);
+    const result = plugin.getExpressionsFor("css-declaration-properties", options);
+    expect(result).to.have.length.above(0);
   });
 
-  test(`has support for the ${HtmlIdMangler._ID} mangler`, function() {
-    const plugin = new HtmlLanguageSupport();
+  test("has support for mangling 'css-declaration-values'", function() {
+    const options: CssDeclarationValueOptions = { };
 
-    const expressions = plugin.getExpressions(HtmlIdMangler._ID);
-    expect(expressions).to.have.length.above(0);
+    const result = plugin.getExpressionsFor("css-declaration-values", options);
+    expect(result).to.have.length.above(0);
+  });
+
+  test("has support for mangling 'multi-value-attributes'", function() {
+    const options: MultiValueAttributeOptions = {
+      attributeNames: ["foo", "bar"],
+    };
+
+    const result = plugin.getExpressionsFor("multi-value-attributes", options);
+    expect(result).to.have.length.above(0);
+  });
+
+  test("has support for mangling 'single-value-attributes'", function() {
+    const options: SingleValueAttributeOptions = {
+      attributeNames: ["foo", "bar"],
+    };
+
+    const result = plugin.getExpressionsFor("single-value-attributes", options);
+    expect(result).to.have.length.above(0);
   });
 
   test("get languages", function() {
-    const plugin = new HtmlLanguageSupport();
-
     const result = plugin.getLanguages();
     expect(result).to.include("html");
+    expect(result).to.include("xhtml");
   });
 });

@@ -18,7 +18,7 @@ export type ExpressionFactory = (options: any) => MangleExpression[]; // eslint-
  * WebManglerLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.15
  */
 export default abstract class SimpleLanguagePlugin
     implements WebManglerLanguagePlugin {
@@ -27,11 +27,6 @@ export default abstract class SimpleLanguagePlugin
    * supports.
    */
   private readonly languages: string[];
-
-  /**
-   * The {@link MangleExpression}s for each supported {@link WebManglerPlugin}.
-   */
-  private readonly expressions: Map<string, MangleExpression[]>;
 
   /**
    * A map from {@link MangleExpression}-set names to a functions that produce
@@ -50,19 +45,15 @@ export default abstract class SimpleLanguagePlugin
    * }
    *
    * @param languages Supported language, including aliases.
-   * @param expressions The expressions for supported {@link WebManglerPlugin}.
    * @param expressionFactories The {@link ExpressionFactory}s to use.
-   * @since v0.1.0
-   * @version v0.1.14
-   * @deprecated
+   * @since v0.1.15
+   * @version v0.1.15
    */
   constructor(
     languages: string[],
-    expressions: Map<string, MangleExpression[]>,
     expressionFactories: Map<string, ExpressionFactory>,
   ) {
     this.languages = languages;
-    this.expressions = expressions;
     this.expressionFactories = expressionFactories;
   }
 
@@ -82,21 +73,6 @@ export default abstract class SimpleLanguagePlugin
 
     const expressions = expressionFactory(options);
     return this.languages.reduce((m, lang) => m.set(lang, expressions), map);
-  }
-
-  /**
-   * @inheritdoc
-   * @deprecated
-   */
-  getExpressions(manglerId: string): Map<string, MangleExpression[]> {
-    const manglerExpressions = this.expressions.get(manglerId) || [];
-
-    const result: Map<string, MangleExpression[]> = new Map();
-    this.languages.forEach((language) => {
-      result.set(language, manglerExpressions);
-    });
-
-    return result;
   }
 
   /**
