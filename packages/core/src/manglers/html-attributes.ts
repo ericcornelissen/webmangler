@@ -3,7 +3,7 @@ import type { AttributeOptions } from "../languages/options";
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
-import SimpleManglerPlugin from "./utils/simple-mangler.class";
+import { SimpleManglerPlugin } from "./utils";
 
 const ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<AttributeOptions> = {

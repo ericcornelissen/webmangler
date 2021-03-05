@@ -4,8 +4,7 @@ import type { CssVariableManglerOptions } from "./css-variables";
 import type { HtmlAttributeManglerOptions } from "./html-attributes";
 import type { HtmlIdManglerOptions } from "./html-ids";
 
-import MultiMangler from "./utils/multi-mangler.class";
-
+import { MultiMangler } from "./utils";
 import CssClassMangler from "./css-classes";
 import CssVariableMangler from "./css-variables";
 import HtmlAttributeMangler from "./html-attributes";

@@ -3,8 +3,7 @@ import type { CssClassManglerOptions } from "./css-classes";
 import type { CssVariableManglerOptions } from "./css-variables";
 import type { HtmlAttributeManglerOptions } from "./html-attributes";
 
-import MultiMangler from "./utils/multi-mangler.class";
-
+import { MultiMangler } from "./utils";
 import CssClassMangler from "./css-classes";
 import CssVariableMangler from "./css-variables";
 import HtmlAttributeMangler from "./html-attributes";

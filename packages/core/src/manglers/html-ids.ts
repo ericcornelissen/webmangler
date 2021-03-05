@@ -6,7 +6,7 @@ import type {
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
-import SimpleManglerPlugin from "./utils/simple-mangler.class";
+import { SimpleManglerPlugin } from "./utils";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     MangleExpressionOptions<QuerySelectorOptions> = {

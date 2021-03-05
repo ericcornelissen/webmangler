@@ -1,5 +1,4 @@
-import MultiLanguagePlugin from "./utils/multi-language-plugin.class";
-
+import { MultiLanguagePlugin } from "./utils";
 import CssLanguageSupport from "./css";
 import HtmlLanguageSupport from "./html";
 import JavaScriptLanguageSupport from "./javascript";

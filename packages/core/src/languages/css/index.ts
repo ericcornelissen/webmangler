@@ -1,6 +1,6 @@
-import type { ExpressionFactory } from "../utils/simple-language-plugin.class";
+import type { ExpressionFactory } from "../utils";
 
-import SimpleLanguagePlugin from "../utils/simple-language-plugin.class";
+import { SimpleLanguagePlugin } from "../utils";
 import attributeExpressionFactory from "./attributes";
 import cssDeclarationPropertyExpressionFactory from "./css-properties";
 import cssDeclarationValueExpressionFactory from "./css-values";
