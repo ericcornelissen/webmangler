@@ -49,7 +49,7 @@ export default function webmangler<File extends WebManglerFile>(
   files: File[],
   options: WebManglerOptions,
 ): File[] {
-  const configs = options.plugins.map((plugin) => plugin.options()).flat();
+  const configs = options.plugins.flatMap((plugin) => plugin.options());
   for (const config of configs) {
     const expressions = getExpressions(
       options.languages,
