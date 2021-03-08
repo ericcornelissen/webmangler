@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@webmangler/testing": "0.1.0",
-    "typescript": "4.2.2"
+    "typescript": "4.2.3"
   },
   "engines": {
     "node": ">=12.16.0"
