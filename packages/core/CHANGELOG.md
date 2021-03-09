@@ -8,7 +8,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Support mangling IDs in user-specified attributes.
+- Support mangling IDs in URIs in user-specified attributes.
 
 ## [0.1.14] - 2021-03-03
 
