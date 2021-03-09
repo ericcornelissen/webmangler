@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix unwanted mangling of IDs in external URIs.
 
 ## [0.1.14] - 2021-03-03
 
