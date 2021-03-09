@@ -602,6 +602,19 @@ suite("HTML ID Mangler", function() {
         ],
       },
       {
+        name: "ids in external URLs",
+        cases: [
+          {
+            input: "<a href=\"http://www.example.com/foo#id-bar\"></a>",
+            expected: "<a href=\"http://www.example.com/foo#id-bar\"></a>",
+          },
+          {
+            input: "<a href=\"https://www.example.com/foo#id-bar\"></a>",
+            expected: "<a href=\"https://www.example.com/foo#id-bar\"></a>",
+          },
+        ],
+      },
+      {
         name: "edge cases",
         cases: [
           {
