@@ -1076,12 +1076,12 @@ suite("HTML ID Mangler", function() {
     });
 
     suite("::idAttributes", function() {
-      const always = ["id", "for"];
+      const alwaysIncluded = ["id", "for"];
 
       const getExpressionOptions = (
-        options: MangleOptions,
+        mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
-        const allExpressionOptions = options.expressionOptions;
+        const allExpressionOptions = mangleOptions.expressionOptions;
         const expressionOptions = allExpressionOptions.find((options) => {
           return options.name === "single-value-attributes";
         });
@@ -1090,51 +1090,51 @@ suite("HTML ID Mangler", function() {
 
       test("default", function() {
         const htmlIdMangler = new HtmlIdMangler();
-        const MangleOptions = htmlIdMangler.options();
-        const options = getExpressionOptions(MangleOptions);
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
         expect(options).not.to.be.undefined;
 
         const result = options.attributeNames;
         expect(result).not.to.be.undefined;
-        expect(result).to.have.length(always.length);
-        expect(result).to.include.members(always);
+        expect(result).to.have.length(alwaysIncluded.length);
+        expect(result).to.include.members(alwaysIncluded);
       });
 
       test("empty array", function() {
         const htmlIdMangler = new HtmlIdMangler({ idAttributes: [] });
-        const MangleOptions = htmlIdMangler.options();
-        const options = getExpressionOptions(MangleOptions);
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
         expect(options).not.to.be.undefined;
 
         const result = options.attributeNames;
         expect(result).not.to.be.undefined;
-        expect(result).to.have.length(always.length);
-        expect(result).to.include.members(always);
+        expect(result).to.have.length(alwaysIncluded.length);
+        expect(result).to.include.members(alwaysIncluded);
       });
 
       test("extra attributes", function() {
         const configured = ["foo", "bar"];
 
         const htmlIdMangler = new HtmlIdMangler({ idAttributes: configured });
-        const MangleOptions = htmlIdMangler.options();
-        const options = getExpressionOptions(MangleOptions);
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
         expect(options).not.to.be.undefined;
 
         const result = options.attributeNames;
         expect(result).not.to.be.undefined;
-        expect(result).to.have.length(always.length + configured.length);
+        expect(result).to.have.length(alwaysIncluded.length + configured.length);
         expect(result).to.include.members([
-          ...always,
+          ...alwaysIncluded,
           ...configured,
         ]);
       });
 
       test("duplicates", function() {
-        const configured = [...always, "foo", "bar"];
+        const configured = [...alwaysIncluded, "foo", "bar"];
 
         const htmlIdMangler = new HtmlIdMangler({ idAttributes: configured });
-        const MangleOptions = htmlIdMangler.options();
-        const options = getExpressionOptions(MangleOptions);
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
         expect(options).not.to.be.undefined;
 
         const result = options.attributeNames;
