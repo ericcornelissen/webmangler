@@ -1075,6 +1075,95 @@ suite("HTML ID Mangler", function() {
       expect(result).to.deep.include({ manglePrefix: prefix });
     });
 
+    suite("::hrefAttributes", function() {
+      const alwaysIncluded = ["href"];
+
+      const getExpressionOptions = (
+        mangleOptions: MangleOptions,
+      ): SingleValueAttributeOptions => {
+        const allExpressionOptions = mangleOptions.expressionOptions;
+        const expressionOptions = allExpressionOptions[1];
+        return expressionOptions?.options as SingleValueAttributeOptions;
+      };
+
+      test("default attributes", function() {
+        const htmlIdMangler = new HtmlIdMangler();
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
+        expect(options).not.to.be.undefined;
+
+        const result = options.attributeNames;
+        expect(result).not.to.be.undefined;
+        expect(result).to.have.length(alwaysIncluded.length);
+        expect(result).to.include.members(alwaysIncluded);
+      });
+
+      test("empty array of attributes", function() {
+        const htmlIdMangler = new HtmlIdMangler({ hrefAttributes: [] });
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
+        expect(options).not.to.be.undefined;
+
+        const result = options.attributeNames;
+        expect(result).not.to.be.undefined;
+        expect(result).to.have.length(alwaysIncluded.length);
+        expect(result).to.include.members(alwaysIncluded);
+      });
+
+      test("extra attributes", function() {
+        const configured = ["foo", "bar"];
+
+        const htmlIdMangler = new HtmlIdMangler({ hrefAttributes: configured });
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
+        expect(options).not.to.be.undefined;
+
+        const result = options.attributeNames;
+        expect(result).not.to.be.undefined;
+        expect(result).to.have.length(alwaysIncluded.length + configured.length);
+        expect(result).to.include.members([
+          ...alwaysIncluded,
+          ...configured,
+        ]);
+      });
+
+      test("duplicate attributes", function() {
+        const configured = [...alwaysIncluded, "foo", "bar"];
+
+        const htmlIdMangler = new HtmlIdMangler({ hrefAttributes: configured });
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
+        expect(options).not.to.be.undefined;
+
+        const result = options.attributeNames;
+        expect(result).not.to.be.undefined;
+        expect(result).to.have.length(configured.length);
+        expect(result).to.include.members(configured);
+      });
+
+      test("value prefix", function() {
+        const htmlIdMangler = new HtmlIdMangler();
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
+        expect(options).not.to.be.undefined;
+
+        const result = options.valuePrefix as string;
+        expect(result).not.to.be.undefined;
+        expect(() => new RegExp(result)).not.to.throw();
+      });
+
+      test("value suffix", function() {
+        const htmlIdMangler = new HtmlIdMangler();
+        const mangleOptions = htmlIdMangler.options();
+        const options = getExpressionOptions(mangleOptions);
+        expect(options).not.to.be.undefined;
+
+        const result = options.valueSuffix as string;
+        expect(result).not.to.be.undefined;
+        expect(() => new RegExp(result)).not.to.throw();
+      });
+    });
+
     suite("::idAttributes", function() {
       const alwaysIncluded = ["id", "for"];
 
@@ -1082,9 +1171,7 @@ suite("HTML ID Mangler", function() {
         mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
         const allExpressionOptions = mangleOptions.expressionOptions;
-        const expressionOptions = allExpressionOptions.find((options) => {
-          return options.name === "single-value-attributes";
-        });
+        const expressionOptions = allExpressionOptions[2];
         return expressionOptions?.options as SingleValueAttributeOptions;
       };
 
