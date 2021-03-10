@@ -25,6 +25,14 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
     testFileContent = readFile("sample.html");
   });
 
+  test("benchmark validity", function() {
+    expect(testFileContent).to.have.length.above(0);
+
+    const cssExpressions = expressionsMap.get("html");
+    expect(cssExpressions).not.to.be.undefined;
+    expect(cssExpressions).to.have.length.above(0);
+  });
+
   test("simple file", function() {
     const budgetInMillis = 0.1;
 

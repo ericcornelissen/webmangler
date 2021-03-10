@@ -25,6 +25,14 @@ suite("CSS - Query Selector Expression Factory", function() {
     testFileContent = readFile("sample.css");
   });
 
+  test("benchmark validity", function() {
+    expect(testFileContent).to.have.length.above(0);
+
+    const cssExpressions = expressionsMap.get("css");
+    expect(cssExpressions).not.to.be.undefined;
+    expect(cssExpressions).to.have.length.above(0);
+  });
+
   test("simple file", function() {
     const budgetInMillis = 0.1;
 
