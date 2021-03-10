@@ -55,7 +55,7 @@ export function getStatsBetween(
 ): ManglerStats {
   const stats = new Map();
   inFiles.forEach((inFile) => {
-    const outFile = outFiles.find((outFile) => outFile.path === inFile.path);
+    const outFile = outFiles.find((file) => file.path === inFile.path);
     if (outFile === undefined) {
       stats.set(inFile.path, {
         changed: false,

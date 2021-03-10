@@ -178,8 +178,7 @@ suite("HTML Attribute Mangler", function() {
                   expected: `div { content: attr(${after},${value}); }`,
                 },
                 ...TYPE_OR_UNITS
-                  .map((typeOrUnit): { value: string, typeOrUnit: string } => ({ value, typeOrUnit }))
-                  .flatMap(({ value, typeOrUnit }): TestCase[] => [
+                  .flatMap((typeOrUnit): TestCase[] => [
                     {
                       input: `div { content: attr(${before} ${typeOrUnit},${value}); }`,
                       expected: `div { content: attr(${after} ${typeOrUnit},${value}); }`,

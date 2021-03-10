@@ -148,8 +148,8 @@ suite("Reading", function() {
 
       fsMock.existsSync.returns(true);
       fsMock.readdirSync.returns(files);
-      fsMock.lstatSync.callsFake((path) => {
-        if (path === directory) {
+      fsMock.lstatSync.callsFake((fileOrDir) => {
+        if (fileOrDir === directory) {
           return { isFile: () => false };
         }
 
@@ -175,8 +175,8 @@ suite("Reading", function() {
 
       fsMock.existsSync.returns(true);
       fsMock.readdirSync.returns(files);
-      fsMock.lstatSync.callsFake((path) => {
-        if (path === directory) {
+      fsMock.lstatSync.callsFake((fileOrDir) => {
+        if (fileOrDir === directory) {
           return { isFile: () => false };
         }
 
@@ -210,15 +210,15 @@ suite("Reading", function() {
       const filesCount = level1Files.length - 1 + level2Files.length;
 
       fsMock.existsSync.returns(true);
-      fsMock.readdirSync.callsFake((path) => {
-        if (path === level0Dir) {
+      fsMock.readdirSync.callsFake((fileOrDir) => {
+        if (fileOrDir === level0Dir) {
           return level1Files;
-        } else if (path === level1Dir) {
+        } else if (fileOrDir === level1Dir) {
           return level2Files;
         }
       });
-      fsMock.lstatSync.callsFake((path) => {
-        if ([level0Dir, level1Dir].includes(path)) {
+      fsMock.lstatSync.callsFake((fileOrDir) => {
+        if ([level0Dir, level1Dir].includes(fileOrDir)) {
           return { isFile: () => false };
         }
 
