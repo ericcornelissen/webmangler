@@ -1,3 +1,5 @@
+import type { SinonStub } from "sinon";
+
 import { expect, use as chaiUse } from "chai";
 import * as fs from "fs";
 import * as sinon from "sinon";
@@ -11,8 +13,10 @@ import { writeFiles } from "../write";
 chaiUse(sinonChai);
 
 suite("Writing", function() {
+  let fsWriteFileSync: SinonStub;
+
   suiteSetup(function() {
-    sinon.stub(fs, "writeFileSync").callsFake(fsMock.writeFileSync);
+    fsWriteFileSync = sinon.stub(fs, "writeFileSync").callsFake(fsMock.writeFileSync);
   });
 
   setup(function() {
@@ -44,5 +48,9 @@ suite("Writing", function() {
         expect(fsMock.writeFileSync).to.have.been.calledWith(file.path, file.content);
       }
     });
+  });
+
+  suiteTeardown(function() {
+    fsWriteFileSync.restore();
   });
 });

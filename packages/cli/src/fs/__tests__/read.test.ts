@@ -1,3 +1,5 @@
+import type { SinonStub } from "sinon";
+
 import { expect, use as chaiUse } from "chai";
 import * as fs from "fs";
 import * as path from "path";
@@ -11,11 +13,16 @@ import { readFilesInAll } from "../read";
 chaiUse(sinonChai);
 
 suite("Reading", function() {
+  let fsExistsSyncStub: SinonStub;
+  let fsLstatSync: SinonStub;
+  let fsReaddirSync: SinonStub;
+  let fsReadFileSync: SinonStub;
+
   suiteSetup(function() {
-    sinon.stub(fs, "existsSync").callsFake(fsMock.existsSync);
-    sinon.stub(fs, "lstatSync").callsFake(fsMock.lstatSync);
-    sinon.stub(fs, "readdirSync").callsFake(fsMock.readdirSync);
-    sinon.stub(fs, "readFileSync").callsFake(fsMock.readFileSync);
+    fsExistsSyncStub = sinon.stub(fs, "existsSync").callsFake(fsMock.existsSync);
+    fsLstatSync = sinon.stub(fs, "lstatSync").callsFake(fsMock.lstatSync);
+    fsReaddirSync = sinon.stub(fs, "readdirSync").callsFake(fsMock.readdirSync);
+    fsReadFileSync = sinon.stub(fs, "readFileSync").callsFake(fsMock.readFileSync);
   });
 
   setup(function() {
@@ -243,5 +250,12 @@ suite("Reading", function() {
       expect(fsMock.readFileSync).not.to.have.been.called;
       expect(fsMock.readdirSync).not.to.have.been.called;
     });
+  });
+
+  suiteTeardown(function() {
+    fsExistsSyncStub.restore();
+    fsLstatSync.restore();
+    fsReaddirSync.restore();
+    fsReadFileSync.restore();
   });
 });

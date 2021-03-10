@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix unwanted mangling of IDs in external URIs.
 - Support mangling IDs in user-specified attributes.
 - Support mangling IDs in URIs in user-specified attributes.
 

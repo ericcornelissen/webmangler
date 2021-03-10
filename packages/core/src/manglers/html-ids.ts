@@ -294,7 +294,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
   private static getHrefAttributeExpressionOptions(
     attributes?: string[],
   ): MangleExpressionOptions<SingleValueAttributeOptions> {
-    const URI_BASE_PATTERN = "[a-zA-Z0-9\\-\\_\\/\\:\\.]*#";
+    const URI_BASE_PATTERN = "[a-zA-Z0-9\\-\\_\\/\\.]*#";
     const URI_QUERY_PATTERN = "(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?";
 
     const always: string[] = ["href"];
