@@ -126,7 +126,8 @@ module.exports = {
     },
     { // Test files
       files: [
-        "packages/**/*.test.ts",
+        "packages/**/__mocks__/**/*",
+        "packages/**/__tests__/**/*",
       ],
       plugins: [
         "mocha",
@@ -147,11 +148,15 @@ module.exports = {
 
         // Disabled because tests are dynamically generated. See: https://github.com/lo1tuma/eslint-plugin-mocha/blob/master/docs/rules/no-setup-in-describe.md
         "mocha/no-setup-in-describe": "off",
+
+        // See: https://github.com/nodesecurity/eslint-plugin-security#rules
+        "security/detect-non-literal-fs-filename": "off",
       },
     },
     { // Configuration files (JS)
       files: [
         ".eslintrc.js",
+        ".mocharc.js",
         "commitlint.config.js",
       ],
       parser: "espree",
@@ -179,7 +184,6 @@ module.exports = {
     { // Configuration files (YAML)
       files: [
         ".github/**/*.yml",
-        ".mocharc.yml",
         ".nycrc.yml",
       ],
       extends: [
