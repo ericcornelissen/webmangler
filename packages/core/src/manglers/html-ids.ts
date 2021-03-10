@@ -6,6 +6,7 @@ import type {
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
+import { duplicates } from "../helpers";
 import { SimpleManglerPlugin } from "./utils";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
@@ -221,6 +222,16 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
   static readonly DEFAULT_RESERVED: string[] = [];
 
   /**
+   * A list of the attributes always treated as `id` by {@link HtmlIdMangler}.
+   */
+  private static readonly STANDARD_ID_ATTRIBUTES: string[] = ["id", "for"];
+
+  /**
+   * A list of the attributes always treated as URI by {@link HtmlIdMangler}.
+   */
+  private static readonly STANDARD_URI_ATTRIBUTES: string[] = ["href"];
+
+  /**
    * Instantiate a new {@link HtmlIdMangler}.
    *
    * @param options The {@link HtmlIdManglerOptions}.
@@ -288,24 +299,19 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * Get the {@link MangleExpressionOptions} for mangling id-like attributes.
    * The `id` and `for` attributes are always included.
    *
-   * NOTE: duplicates are automatically removed.
-   *
    * @param attributes The attributes to treat as `id`s.
    * @returns The {@link SingleValueAttributeOptions}.
    */
   private static getIdAttributeExpressionOptions(
-    attributes?: string[],
+    attributes: string[] = [],
   ): MangleExpressionOptions<SingleValueAttributeOptions> {
-    const always: string[] = ["id", "for"];
-    const configured = attributes?.filter((attr) => !always.includes(attr));
-
     return {
       name: "single-value-attributes",
       options: {
         attributeNames: [
-          ...always,
-          ...(configured || []),
-        ],
+          ...HtmlIdMangler.STANDARD_ID_ATTRIBUTES,
+          ...attributes,
+        ].filter(duplicates),
       },
     };
   }
@@ -314,27 +320,22 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * Get the {@link MangleExpressionOptions} for mangling URI attributes. The
    * `href` attribute is always included.
    *
-   * NOTE: duplicates are automatically removed.
-   *
    * @param attributes The attributes to treat as URIs.
    * @returns The {@link SingleValueAttributeOptions}.
    */
   private static getUriAttributeExpressionOptions(
-    attributes?: string[],
+    attributes: string[] = [],
   ): MangleExpressionOptions<SingleValueAttributeOptions> {
     const URI_BASE_PATTERN = "[a-zA-Z0-9\\-\\_\\/\\.]*#";
     const URI_QUERY_PATTERN = "(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?";
-
-    const always: string[] = ["href"];
-    const configured = attributes?.filter((attr) => !always.includes(attr));
 
     return {
       name: "single-value-attributes",
       options: {
         attributeNames: [
-          ...always,
-          ...(configured || []),
-        ],
+          ...HtmlIdMangler.STANDARD_URI_ATTRIBUTES,
+          ...attributes,
+        ].filter(duplicates),
         valuePrefix: URI_BASE_PATTERN,
         valueSuffix: URI_QUERY_PATTERN,
       },
