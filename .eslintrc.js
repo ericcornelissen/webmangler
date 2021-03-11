@@ -53,6 +53,11 @@ module.exports = {
     }],
     "newline-per-chained-call": ["error"],
     "no-console": ["warn"],
+    "no-shadow": ["error", {
+      "builtinGlobals": false,
+      "hoist": "all",
+      "allow": [],
+    }],
     "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "double", {
       avoidEscape: false,

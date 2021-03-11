@@ -8,7 +8,14 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.15] - 2021-03-11
+
 - Fix unwanted mangling of IDs in external URIs.
+- Fix mangling of IDs in URLs with query parameters.
+- Support mangling IDs in user-specified attributes.
+- Support mangling IDs in URIs in user-specified attributes.
 
 ## [0.1.14] - 2021-03-03
 
