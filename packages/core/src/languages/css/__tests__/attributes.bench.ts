@@ -36,7 +36,7 @@ suite("CSS - Attribute Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
+    const budget = getRuntimeBudget(0.2);
 
     const files: WebManglerFile[] = [
       new WebManglerFileMock("css", testFileContent),

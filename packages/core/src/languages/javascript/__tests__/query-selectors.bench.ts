@@ -52,7 +52,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(30);
 
     const files: WebManglerFile[] = [
       new WebManglerFileMock("js", testFileContent.repeat(100)),
