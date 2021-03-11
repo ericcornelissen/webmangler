@@ -18,6 +18,7 @@ Versioning].
 
 - Fix accidental mangling of CSS variable-like strings in CSS.
 - Fix accidental mangling of HTML attribute-like strings in CSS.
+- Fix mangling of IDs in URLs with query parameters.
 - Support mangling IDs in the HTML `for` attribute.
 
 ## [0.1.12] - 2021-02-19

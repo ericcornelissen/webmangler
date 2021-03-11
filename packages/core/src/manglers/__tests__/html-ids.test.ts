@@ -266,6 +266,7 @@ suite("HTML ID Mangler", function() {
       "for=\"",
       "href=\"#",
       "href=\"/foo/bar#",
+      "href=\"/foo/bar?hello=world#",
     ];
 
     const scenarios: TestScenario<TestCase>[] = [
@@ -294,7 +295,7 @@ suite("HTML ID Mangler", function() {
         .map((attr): TestScenario<TestCase> => ({
           name: `\`${attr}id-xxx"\` on one element`,
           cases: [
-            ...varySpacing("=", {
+            ...varySpacing("=\"", {
               input: `<div ${attr}id-foo"></div>`,
               expected: `<div ${attr}a"></div>`,
             }),
