@@ -131,7 +131,8 @@ module.exports = {
     },
     { // Test files
       files: [
-        "packages/**/*.test.ts",
+        "packages/**/__mocks__/**/*",
+        "packages/**/__tests__/**/*",
       ],
       plugins: [
         "mocha",
@@ -142,10 +143,7 @@ module.exports = {
         "plugin:chai-expect/recommended",
       ],
       rules: {
-        "max-len": ["error", {
-          code: 120,
-        }],
-
+        // See: https://github.com/lo1tuma/eslint-plugin-mocha/tree/master/docs/rules#readme
         "mocha/no-exclusive-tests": ["error"],
         "mocha/valid-suite-description": ["error", "^[A-Z:]"],
         "mocha/valid-test-description": ["error", "^[a-z0-9]"],
