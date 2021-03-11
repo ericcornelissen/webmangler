@@ -1139,8 +1139,8 @@ suite("HTML ID Mangler", function() {
       });
     });
 
-    suite("::uriAttributes", function() {
-      const standardUriAttributes = ["href"];
+    suite("::urlAttributes", function() {
+      const standardUrlAttributes = ["href"];
 
       const getExpressionOptions = (
         mangleOptions: MangleOptions,
@@ -1150,29 +1150,29 @@ suite("HTML ID Mangler", function() {
         return expressionOptions?.options as SingleValueAttributeOptions;
       };
 
-      const cases: { uriAttributes: string[], expected: string[] }[] = [
+      const cases: { urlAttributes: string[], expected: string[] }[] = [
         {
-          uriAttributes: undefined as unknown as string[],
-          expected: [...standardUriAttributes],
+          urlAttributes: undefined as unknown as string[],
+          expected: [...standardUrlAttributes],
         },
         {
-          uriAttributes: [],
-          expected: [...standardUriAttributes],
+          urlAttributes: [],
+          expected: [...standardUrlAttributes],
         },
         {
-          uriAttributes: ["foo", "bar"],
-          expected: [...standardUriAttributes, "foo", "bar"],
+          urlAttributes: ["foo", "bar"],
+          expected: [...standardUrlAttributes, "foo", "bar"],
         },
         {
-          uriAttributes: [...standardUriAttributes, "foo", "bar"],
-          expected: [...standardUriAttributes, "foo", "bar"],
+          urlAttributes: [...standardUrlAttributes, "foo", "bar"],
+          expected: [...standardUrlAttributes, "foo", "bar"],
         },
       ];
 
       test("different configurations", function() {
         for (const testCase of cases) {
-          const { expected, uriAttributes } = testCase;
-          const htmlIdMangler = new HtmlIdMangler({ uriAttributes });
+          const { expected, urlAttributes } = testCase;
+          const htmlIdMangler = new HtmlIdMangler({ urlAttributes });
           const mangleOptions = htmlIdMangler.options();
           const options = getExpressionOptions(mangleOptions);
           expect(options).not.to.be.undefined;

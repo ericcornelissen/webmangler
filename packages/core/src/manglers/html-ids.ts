@@ -54,7 +54,7 @@ export type HtmlIdManglerOptions = {
    * A list of HTML attributes whose value to treat as an `id`.
    *
    * NOTE: the `id` and `for` attributes are always included and do not need to
-   * be specified.
+   * be specified when using this option.
    *
    * @default `[]`
    * @since v0.1.15
@@ -62,17 +62,17 @@ export type HtmlIdManglerOptions = {
   idAttributes?: string[];
 
   /**
-   * A list of HTML attributes whose value to treat as a URI. That is, the ID
-   * fragment of URIs in these attributes will be mangled if it is an internal
-   * URI.
+   * A list of HTML attributes whose value to treat as a URL. That is, the ID
+   * fragment of URLs in these attributes will be mangled if it is an internal
+   * URL.
    *
    * NOTE: the `href` attribute is always included and does not need to be
-   * specified.
+   * specified when using this option.
    *
    * @default `[]`
    * @since v0.1.15
    */
-  uriAttributes?: string[];
+  urlAttributes?: string[];
 }
 
 /**
@@ -227,9 +227,9 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
   private static readonly STANDARD_ID_ATTRIBUTES: string[] = ["id", "for"];
 
   /**
-   * A list of the attributes always treated as URI by {@link HtmlIdMangler}.
+   * A list of the attributes always treated as URL by {@link HtmlIdMangler}.
    */
-  private static readonly STANDARD_URI_ATTRIBUTES: string[] = ["href"];
+  private static readonly STANDARD_URL_ATTRIBUTES: string[] = ["href"];
 
   /**
    * Instantiate a new {@link HtmlIdMangler}.
@@ -246,7 +246,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
       expressionOptions: [
         QUERY_SELECTOR_EXPRESSION_OPTIONS,
         HtmlIdMangler.getIdAttributeExpressionOptions(options.idAttributes),
-        HtmlIdMangler.getUriAttributeExpressionOptions(options.uriAttributes),
+        HtmlIdMangler.getUrlAttributeExpressionOptions(options.urlAttributes),
       ],
     });
   }
@@ -317,27 +317,27 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
   }
 
   /**
-   * Get the {@link MangleExpressionOptions} for mangling URI attributes. The
+   * Get the {@link MangleExpressionOptions} for mangling URL attributes. The
    * `href` attribute is always included.
    *
-   * @param attributes The attributes to treat as URIs.
+   * @param attributes The attributes to treat as URLs.
    * @returns The {@link SingleValueAttributeOptions}.
    */
-  private static getUriAttributeExpressionOptions(
+  private static getUrlAttributeExpressionOptions(
     attributes: string[] = [],
   ): MangleExpressionOptions<SingleValueAttributeOptions> {
-    const URI_BASE_PATTERN = "[a-zA-Z0-9\\-\\_\\/\\.]*#";
-    const URI_QUERY_PATTERN = "(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?";
+    const URL_BASE_PATTERN = "[a-zA-Z0-9\\-\\_\\/\\.]*#";
+    const URL_QUERY_PATTERN = "(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?";
 
     return {
       name: "single-value-attributes",
       options: {
         attributeNames: [
-          ...HtmlIdMangler.STANDARD_URI_ATTRIBUTES,
+          ...HtmlIdMangler.STANDARD_URL_ATTRIBUTES,
           ...attributes,
         ].filter(duplicates),
-        valuePrefix: URI_BASE_PATTERN,
-        valueSuffix: URI_QUERY_PATTERN,
+        valuePrefix: URL_BASE_PATTERN,
+        valueSuffix: URL_QUERY_PATTERN,
       },
     };
   }
