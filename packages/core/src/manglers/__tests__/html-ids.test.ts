@@ -649,15 +649,14 @@ suite("HTML ID Mangler", function() {
             description: "multiple class attributes on one element should all be mangled",
           },
           ...ATTR_SAMPLE
-            .map((attr): TestCase[] => [
+            .flatMap((attr): TestCase[] => [
               ...["data-", "x"]
                 .map((prefix): TestCase => ({
                   input: `<div ${prefix}${attr}id-foo"></div>`,
                   expected: `<div ${prefix}${attr}id-foo"></div>`,
                   description: "Shouldn't mangle in attribute even if it ends in \"id\"",
                 })),
-            ])
-            .flat(),
+            ]),
           {
             input: "<id class=\"foo\"></id>",
             expected: "<id class=\"foo\"></id>",
@@ -1033,60 +1032,65 @@ suite("HTML ID Mangler", function() {
   });
 
   suite("Configuration", function() {
-    test("default patterns", function() {
-      const expected = HtmlIdMangler.DEFAULT_PATTERNS;
+    suite("::idNamePatterns", function() {
+      const DEFAULT_PATTERNS = ["id-[a-zA-Z-_]+"];
 
-      const cssClassMangler = new HtmlIdMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: expected });
+      test("default patterns", function() {
+        const htmlIdMangler = new HtmlIdMangler();
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ patterns: DEFAULT_PATTERNS });
+      });
+
+      test("custom pattern", function() {
+        const pattern = "foo(bar|baz)-[a-z]+";
+
+        const htmlIdMangler = new HtmlIdMangler({ idNamePattern: pattern });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ patterns: pattern });
+      });
+
+      test("custom patterns", function() {
+        const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+
+        const htmlIdMangler = new HtmlIdMangler({ idNamePattern: patterns });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ patterns: patterns });
+      });
     });
 
-    test("custom pattern", function() {
-      const pattern = "foo(bar|baz)-[a-z]+";
+    suite("::reservedIds", function() {
+      test("default reserved", function() {
 
-      const cssClassMangler = new HtmlIdMangler({ idNamePattern: pattern });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: pattern });
+        const htmlIdMangler = new HtmlIdMangler();
+        const result = htmlIdMangler.options();
+        expect(result).to.have.property("reservedNames").that.is.empty;
+      });
+
+      test("custom reserved", function() {
+        const reserved: string[] = ["foo", "bar"];
+
+        const htmlIdMangler = new HtmlIdMangler({ reservedIds: reserved });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ reservedNames: reserved });
+      });
     });
 
-    test("custom patterns", function() {
-      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+    suite("::keepIdPrefix", function() {
+      const DEFAULT_MANGLE_PREFIX = "";
 
-      const cssClassMangler = new HtmlIdMangler({ idNamePattern: patterns });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: patterns });
-    });
+      test("default prefix", function() {
+        const htmlIdMangler = new HtmlIdMangler();
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ manglePrefix: DEFAULT_MANGLE_PREFIX });
+      });
 
-    test("default reserved", function() {
-      const expected = HtmlIdMangler.DEFAULT_RESERVED;
+      test("custom prefix", function() {
+        const prefix = "foobar";
 
-      const cssClassMangler = new HtmlIdMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: expected });
-    });
-
-    test("custom reserved", function() {
-      const reserved: string[] = ["foo", "bar"];
-
-      const cssClassMangler = new HtmlIdMangler({ reservedIds: reserved });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: reserved });
-    });
-
-    test("default prefix", function() {
-      const expected = HtmlIdMangler.DEFAULT_PREFIX;
-
-      const cssClassMangler = new HtmlIdMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: expected });
-    });
-
-    test("custom prefix", function() {
-      const prefix = "foobar";
-
-      const cssClassMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: prefix });
+        const htmlIdMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ manglePrefix: prefix });
+      });
     });
 
     suite("::idAttributes", function() {

@@ -155,33 +155,19 @@ export type CssClassManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.16
  */
 export default class CssClassMangler extends SimpleManglerPlugin {
   /**
-   * The identifier of the {@link CssClassMangler} {@link WebManglerPlugin}.
-   *
-   * @since v0.1.0
-   * @deprecated
-   */
-  static readonly _ID = "css-class-mangler";
-
-  /**
    * The list of reserved strings that are always reserved because they are
    * illegal class names.
-   *
-   * @since v0.1.7
-   * @deprecated
    */
-  static readonly ALWAYS_RESERVED: string[] = ["(-|[0-9]).*"];
+  private static readonly ALWAYS_RESERVED: string[] = ["(-|[0-9]).*"];
 
   /**
    * The character set used by {@link CssClassMangler}.
-   *
-   * @since v0.1.7
-   * @deprecated
    */
-  static readonly CHARACTER_SET: CharSet = [
+  private static readonly CHARACTER_SET: CharSet = [
     ...ALL_LETTER_CHARS,
     ...ALL_NUMBER_CHARS,
     "-", "_",
@@ -189,27 +175,18 @@ export default class CssClassMangler extends SimpleManglerPlugin {
 
   /**
    * The default patterns used by a {@link CssClassMangler}.
-   *
-   * @since v0.1.0
-   * @deprecated
    */
-  static readonly DEFAULT_PATTERNS: string[] = ["cls-[a-zA-Z-_]+"];
+  private static readonly DEFAULT_PATTERNS: string[] = ["cls-[a-zA-Z-_]+"];
 
   /**
    * The default prefix used by a {@link CssClassMangler}.
-   *
-   * @since v0.1.0
-   * @deprecated
    */
-  static readonly DEFAULT_PREFIX = "";
+  private static readonly DEFAULT_PREFIX = "";
 
   /**
    * The default reserved names used by a {@link CssClassMangler}.
-   *
-   * @since v0.1.0
-   * @deprecated
    */
-  static readonly DEFAULT_RESERVED: string[] = [];
+  private static readonly DEFAULT_RESERVED: string[] = [];
 
   /**
    * Instantiate a new {@link CssClassMangler}.

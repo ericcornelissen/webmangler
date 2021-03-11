@@ -155,35 +155,20 @@ export type HtmlAttributeManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.16
  */
 export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**
-   * The identifier of the {@link HtmlAttributeMangler} {@link
-   * WebManglerPlugin}.
-   *
-   * @since v0.1.0
-   * @deprecated
-   */
-  static readonly _ID = "html-attribute-mangler";
-
-  /**
    * The list of reserved strings that are always reserved because they are
    * illegal HTML attribute names.
-   *
-   * @since v0.1.7
-   * @deprecated
    */
-  static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-|_).*"];
+  private static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-|_).*"];
 
   /**
    * The character set used by {@link HtmlAttributeMangler}. Note that HTML
    * attributes are case insensitive, so only lowercase letters are used.
-   *
-   * @since v0.1.7
-   * @deprecated
    */
-  static readonly CHARACTER_SET: CharSet = [
+  private static readonly CHARACTER_SET: CharSet = [
     ...ALL_LOWERCASE_CHARS,
     ...ALL_NUMBER_CHARS,
     "-", "_",
@@ -191,27 +176,18 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
 
   /**
    * The default patterns used by a {@link HtmlAttributeMangler}.
-   *
-   * @since v0.1.0
-   * @deprecated
    */
-  static readonly DEFAULT_PATTERNS: string[] = ["data-[a-z-]+"];
+  private static readonly DEFAULT_PATTERNS: string[] = ["data-[a-z-]+"];
 
   /**
    * The default prefix used by a {@link HtmlAttributeMangler}.
-   *
-   * @since v0.1.0
-   * @deprecated
    */
-  static readonly DEFAULT_PREFIX = "data-";
+  private static readonly DEFAULT_PREFIX = "data-";
 
   /**
    * The default reserved names used by a {@link HtmlAttributeMangler}.
-   *
-   * @since v0.1.0
-   * @deprecated
    */
-  static readonly DEFAULT_RESERVED: string[] = [];
+  private static readonly DEFAULT_RESERVED: string[] = [];
 
   /**
    * Instantiate a new {@link HtmlAttributeMangler}.
