@@ -1,4 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
+import type { SingleValueAttributeOptions } from "../../languages/options";
+import type { MangleOptions } from "../../types";
 import type { TestCase } from "./types";
 
 import { expect } from "chai";
@@ -1085,6 +1087,109 @@ suite("HTML ID Mangler", function() {
       const cssClassMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
       const result = cssClassMangler.options();
       expect(result).to.deep.include({ manglePrefix: prefix });
+    });
+
+    suite("::idAttributes", function() {
+      const standardIdAttributes = ["id", "for"];
+
+      const getExpressionOptions = (
+        mangleOptions: MangleOptions,
+      ): SingleValueAttributeOptions => {
+        const allExpressionOptions = mangleOptions.expressionOptions;
+        const expressionOptions = allExpressionOptions[1];
+        return expressionOptions?.options as SingleValueAttributeOptions;
+      };
+
+      const cases: { idAttributes: string[], expected: string[] }[] = [
+        {
+          idAttributes: undefined as unknown as string[],
+          expected: [...standardIdAttributes],
+        },
+        {
+          idAttributes: [],
+          expected: [...standardIdAttributes],
+        },
+        {
+          idAttributes: ["foo", "bar"],
+          expected: [...standardIdAttributes, "foo", "bar"],
+        },
+        {
+          idAttributes: [...standardIdAttributes, "foo", "bar"],
+          expected: [...standardIdAttributes, "foo", "bar"],
+        },
+      ];
+
+      test("different configurations", function() {
+        for (const testCase of cases) {
+          const { expected, idAttributes } = testCase;
+          const htmlIdMangler = new HtmlIdMangler({ idAttributes });
+          const mangleOptions = htmlIdMangler.options();
+          const options = getExpressionOptions(mangleOptions);
+          expect(options).not.to.be.undefined;
+
+          const attributeNames = options.attributeNames;
+          expect(attributeNames).not.to.be.undefined;
+          expect(attributeNames).to.deep.equal(expected);
+
+          const valuePrefix = options.valuePrefix;
+          expect(valuePrefix).to.be.undefined;
+
+          const valueSuffix = options.valueSuffix;
+          expect(valueSuffix).to.be.undefined;
+        }
+      });
+    });
+
+    suite("::urlAttributes", function() {
+      const standardUrlAttributes = ["href"];
+
+      const getExpressionOptions = (
+        mangleOptions: MangleOptions,
+      ): SingleValueAttributeOptions => {
+        const allExpressionOptions = mangleOptions.expressionOptions;
+        const expressionOptions = allExpressionOptions[2];
+        return expressionOptions?.options as SingleValueAttributeOptions;
+      };
+
+      const cases: { urlAttributes: string[], expected: string[] }[] = [
+        {
+          urlAttributes: undefined as unknown as string[],
+          expected: [...standardUrlAttributes],
+        },
+        {
+          urlAttributes: [],
+          expected: [...standardUrlAttributes],
+        },
+        {
+          urlAttributes: ["foo", "bar"],
+          expected: [...standardUrlAttributes, "foo", "bar"],
+        },
+        {
+          urlAttributes: [...standardUrlAttributes, "foo", "bar"],
+          expected: [...standardUrlAttributes, "foo", "bar"],
+        },
+      ];
+
+      test("different configurations", function() {
+        for (const testCase of cases) {
+          const { expected, urlAttributes } = testCase;
+          const htmlIdMangler = new HtmlIdMangler({ urlAttributes });
+          const mangleOptions = htmlIdMangler.options();
+          const options = getExpressionOptions(mangleOptions);
+          expect(options).not.to.be.undefined;
+
+          const attributeNames = options.attributeNames;
+          expect(attributeNames).not.to.be.undefined;
+          expect(attributeNames).to.deep.equal(expected);
+
+          const valuePrefix = options.valuePrefix as string;
+          expect(valuePrefix).not.to.be.undefined;
+          expect(() => new RegExp(valuePrefix)).not.to.throw();
+
+          const valueSuffix = options.valueSuffix as string;
+          expect(valueSuffix).to.be.undefined;
+        }
+      });
     });
   });
 });
