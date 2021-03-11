@@ -1,7 +1,11 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { SingleValueAttributeOptions } from "../../languages/options";
 import type { MangleOptions } from "../../types";
-import type { TestCase } from "./types";
+import type {
+  SelectorBeforeAndAfter,
+  SelectorPairBeforeAndAfter,
+  TestCase,
+} from "./types";
 
 import { expect } from "chai";
 
@@ -25,7 +29,7 @@ import HtmlIdMangler from "../html-ids";
 const builtInLanguages = [new BuiltInLanguageSupport()];
 
 const DEFAULT_PATTERN = "id-[a-z]+";
-const SELECTORS: { before: string, after: string }[] = [
+const SELECTORS: SelectorBeforeAndAfter[] = [
   { before: ":root", after: ":root" },
   { before: "div", after: "div" },
   { before: "#foobar", after: "#foobar" },
@@ -33,7 +37,7 @@ const SELECTORS: { before: string, after: string }[] = [
   { before: "[data-foobar]", after: "[data-foobar]" },
   { before: "#id-foobar", after: "#a" },
 ];
-const SELECTOR_PAIRS: { beforeA: string, beforeB: string, afterA: string, afterB: string }[] = [
+const SELECTOR_PAIRS: SelectorPairBeforeAndAfter[] = [
   { beforeA: "div", beforeB: "span", afterA: "div", afterB: "span" },
   { beforeA: "#foo", beforeB: "#bar", afterA: "#foo", afterB: "#bar" },
   { beforeA: ".foo", beforeB: ".bar", afterA: ".foo", afterB: ".bar" },
@@ -112,8 +116,14 @@ suite("HTML ID Mangler", function() {
                 }),
               ]),
             {
-              input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
-              expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
+              input: `
+                ${beforeA} { font-size: 12px; }
+                ${beforeB} { font-weight: bold; }
+              `,
+              expected: `
+                ${afterA} { font-size: 12px; }
+                ${afterB} { font-weight: bold; }
+              `,
             },
             {
               input: `:root { } ${beforeA} { } ${beforeB} { }`,
@@ -140,8 +150,20 @@ suite("HTML ID Mangler", function() {
               expected: `${afterA} { } div { } ${afterB} { } span { }`,
             },
             {
-              input: `:root { } ${beforeA} { } div { } ${beforeB} { } span { }`,
-              expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
+              input: `
+                :root { }
+                ${beforeA} { }
+                div { }
+                ${beforeB} { }
+                span { }
+              `,
+              expected: `
+                :root { }
+                ${afterA} { }
+                div { }
+                ${afterB} { }
+                span { }
+              `,
             },
           ]),
       },
@@ -250,7 +272,10 @@ suite("HTML ID Mangler", function() {
             keepIdPrefix: keepIdPrefix,
           });
           const options = htmlIdMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -686,7 +711,10 @@ suite("HTML ID Mangler", function() {
             keepIdPrefix: keepIdPrefix,
           });
           const options = htmlIdMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -1019,7 +1047,10 @@ suite("HTML ID Mangler", function() {
             keepIdPrefix: keepIdPrefix,
           });
           const options = htmlIdMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);

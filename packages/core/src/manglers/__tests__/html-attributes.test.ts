@@ -1,5 +1,9 @@
 import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "./types";
+import type {
+  SelectorBeforeAndAfter,
+  SelectorPairBeforeAndAfter,
+  TestCase,
+} from "./types";
 
 import { expect } from "chai";
 
@@ -29,7 +33,7 @@ import HtmlAttributeMangler from "../html-attributes";
 const builtInLanguages = [new BuiltInLanguageSupport()];
 
 const DEFAULT_PATTERN = "data-[a-z]+";
-const SELECTORS: {before: string, after: string}[] = [
+const SELECTORS: SelectorBeforeAndAfter[] = [
   { before: ":root", after: ":root" },
   { before: "div", after: "div" },
   { before: "#foobar", after: "#foobar" },
@@ -43,7 +47,7 @@ const SELECTORS: {before: string, after: string}[] = [
   { before: ".foo[data-bar]", after: ".foo[data-a]" },
   { before: ".foobar[href]", after: ".foobar[href]" },
 ];
-const SELECTOR_PAIRS: { beforeA: string, beforeB: string, afterA: string, afterB: string }[] = [
+const SELECTOR_PAIRS: SelectorPairBeforeAndAfter[] = [
   { beforeA: "div", beforeB: "span", afterA: "div", afterB: "span" },
   { beforeA: "#foo", beforeB: "#bar", afterA: "#foo", afterB: "#bar" },
   { beforeA: ".foo", beforeB: ".bar", afterA: ".foo", afterB: ".bar" },
@@ -58,7 +62,7 @@ const SELECTOR_PAIRS: { beforeA: string, beforeB: string, afterA: string, afterB
   { beforeA: "[href]", beforeB: "[data-bar]", afterA: "[href]", afterB: "[data-a]" },
   { beforeA: "[data-foo]", beforeB: "[data-foo]", afterA: "[data-a]", afterB: "[data-a]" },
 ];
-const ATTRIBUTES: { before: string, after: string }[] = [
+const ATTRIBUTES: SelectorBeforeAndAfter[] = [
   { before: "href", after: "href" },
   { before: "data-foo", after: "data-a" },
 ];
@@ -123,8 +127,14 @@ suite("HTML Attribute Mangler", function() {
                 }),
               ]),
             {
-              input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
-              expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
+              input: `
+                ${beforeA} { font-size: 12px; }
+                ${beforeB} { font-weight: bold; }
+              `,
+              expected: `
+                ${afterA} { font-size: 12px; }
+                ${afterB} { font-weight: bold; }
+              `,
             },
             {
               input: `:root { } ${beforeA} { } ${beforeB} { }`,
@@ -151,8 +161,20 @@ suite("HTML Attribute Mangler", function() {
               expected: `${afterA} { } div { } ${afterB} { } span { }`,
             },
             {
-              input: `:root { } ${beforeA} { } div { } ${beforeB} { } span { }`,
-              expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
+              input: `
+                :root { }
+                ${beforeA} { }
+                div { }
+                ${beforeB} { }
+                span { }
+              `,
+              expected: `
+                :root { }
+                ${afterA} { }
+                div { }
+                ${afterB} { }
+                span { }
+              `,
             },
           ])
           .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
@@ -181,8 +203,12 @@ suite("HTML Attribute Mangler", function() {
                 ...TYPE_OR_UNITS
                   .flatMap((typeOrUnit): TestCase[] => [
                     {
-                      input: `div { content: attr(${before} ${typeOrUnit},${value}); }`,
-                      expected: `div { content: attr(${after} ${typeOrUnit},${value}); }`,
+                      input: `
+                        div { content: attr(${before} ${typeOrUnit},${value}); }
+                      `,
+                      expected: `
+                        div { content: attr(${after} ${typeOrUnit},${value}); }
+                      `,
                     },
                   ])
                   .flatMap((testCase) => varySpacing(",", testCase)),
@@ -320,7 +346,10 @@ suite("HTML Attribute Mangler", function() {
             keepAttrPrefix: keepAttrPrefix,
           });
           const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -452,7 +481,10 @@ suite("HTML Attribute Mangler", function() {
             keepAttrPrefix: keepAttrPrefix,
           });
           const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -633,7 +665,10 @@ suite("HTML Attribute Mangler", function() {
             keepAttrPrefix: keepAttrPrefix,
           });
           const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -658,7 +693,9 @@ suite("HTML Attribute Mangler", function() {
       test("custom pattern", function() {
         const pattern = "foo(bar|baz)-[a-z]+";
 
-        const htmlAttributeMangler = new HtmlAttributeMangler({ attrNamePattern: pattern });
+        const htmlAttributeMangler = new HtmlAttributeMangler({
+          attrNamePattern: pattern,
+        });
         const result = htmlAttributeMangler.options();
         expect(result).to.deep.include({ patterns: pattern });
       });
@@ -666,7 +703,9 @@ suite("HTML Attribute Mangler", function() {
       test("custom patterns", function() {
         const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
 
-        const htmlAttributeMangler = new HtmlAttributeMangler({ attrNamePattern: patterns });
+        const htmlAttributeMangler = new HtmlAttributeMangler({
+          attrNamePattern: patterns,
+        });
         const result = htmlAttributeMangler.options();
         expect(result).to.deep.include({ patterns: patterns });
       });
@@ -682,7 +721,9 @@ suite("HTML Attribute Mangler", function() {
       test("custom reserved", function() {
         const reserved: string[] = ["foo", "bar"];
 
-        const htmlAttributeMangler = new HtmlAttributeMangler({ reservedAttrNames: reserved });
+        const htmlAttributeMangler = new HtmlAttributeMangler({
+          reservedAttrNames: reserved,
+        });
         const result = htmlAttributeMangler.options();
         expect(result).to.have.property("reservedNames");
         expect(result.reservedNames).to.include.members(reserved);
@@ -701,7 +742,9 @@ suite("HTML Attribute Mangler", function() {
       test("custom prefix", function() {
         const prefix = "foobar";
 
-        const htmlAttributeMangler = new HtmlAttributeMangler({ keepAttrPrefix: prefix });
+        const htmlAttributeMangler = new HtmlAttributeMangler({
+          keepAttrPrefix: prefix,
+        });
         const result = htmlAttributeMangler.options();
         expect(result).to.deep.include({ manglePrefix: prefix });
       });
@@ -732,7 +775,10 @@ suite("HTML Attribute Mangler", function() {
         keepAttrPrefix: "",
       });
       const options = htmlAttributeMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+      const expressions = getExpressions(
+        builtInLanguages,
+        options.expressionOptions,
+      );
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
@@ -752,7 +798,10 @@ suite("HTML Attribute Mangler", function() {
         keepAttrPrefix: "",
       });
       const options = htmlAttributeMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+      const expressions = getExpressions(
+        builtInLanguages,
+        options.expressionOptions,
+      );
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);

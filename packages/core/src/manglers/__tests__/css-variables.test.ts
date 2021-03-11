@@ -277,7 +277,10 @@ suite("CSS Variable Mangler", function() {
             keepCssVarPrefix: keepCssVarPrefix,
           });
           const options = cssVariableMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -532,7 +535,10 @@ suite("CSS Variable Mangler", function() {
             keepCssVarPrefix: keepCssVarPrefix,
           });
           const options = cssVariableMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -585,7 +591,10 @@ suite("CSS Variable Mangler", function() {
             keepCssVarPrefix: keepCssVarPrefix,
           });
           const options = cssVariableMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -610,7 +619,9 @@ suite("CSS Variable Mangler", function() {
       test("custom pattern", function() {
         const pattern = "foo(bar|baz)-[a-z]+";
 
-        const cssVariableMangler = new CssVariableMangler({ cssVarNamePattern: pattern });
+        const cssVariableMangler = new CssVariableMangler({
+          cssVarNamePattern: pattern,
+        });
         const result = cssVariableMangler.options();
         expect(result).to.deep.include({ patterns: pattern });
       });
@@ -618,7 +629,9 @@ suite("CSS Variable Mangler", function() {
       test("custom patterns", function() {
         const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
 
-        const cssVariableMangler = new CssVariableMangler({ cssVarNamePattern: patterns });
+        const cssVariableMangler = new CssVariableMangler({
+          cssVarNamePattern: patterns,
+        });
         const result = cssVariableMangler.options();
         expect(result).to.deep.include({ patterns: patterns });
       });
@@ -634,7 +647,9 @@ suite("CSS Variable Mangler", function() {
       test("custom reserved", function() {
         const reserved: string[] = ["foo", "bar"];
 
-        const cssVariableMangler = new CssVariableMangler({ reservedCssVarNames: reserved });
+        const cssVariableMangler = new CssVariableMangler({
+          reservedCssVarNames: reserved,
+        });
         const result = cssVariableMangler.options();
         expect(result).to.have.property("reservedNames");
         expect(result.reservedNames).to.include.members(reserved);
@@ -653,7 +668,9 @@ suite("CSS Variable Mangler", function() {
       test("custom prefix", function() {
         const prefix = "foobar";
 
-        const cssVariableMangler = new CssVariableMangler({ keepCssVarPrefix: prefix });
+        const cssVariableMangler = new CssVariableMangler({
+          keepCssVarPrefix: prefix,
+        });
         const result = cssVariableMangler.options();
         expect(result).to.deep.include({ manglePrefix: prefix });
       });
@@ -681,7 +698,10 @@ suite("CSS Variable Mangler", function() {
         cssVarNamePattern: "[0-9]+",
       });
       const options = cssVariableMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+      const expressions = getExpressions(
+        builtInLanguages,
+        options.expressionOptions,
+      );
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
@@ -700,7 +720,10 @@ suite("CSS Variable Mangler", function() {
         reservedCssVarNames: ["a"],
       });
       const options = cssVariableMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+      const expressions = getExpressions(
+        builtInLanguages,
+        options.expressionOptions,
+      );
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
