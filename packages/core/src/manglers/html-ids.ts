@@ -326,9 +326,6 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
   private static getUrlAttributeExpressionOptions(
     attributes: string[] = [],
   ): MangleExpressionOptions<SingleValueAttributeOptions> {
-    const URL_BASE_PATTERN = "[a-zA-Z0-9\\-\\_\\/\\.]*#";
-    const URL_QUERY_PATTERN = "(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?";
-
     return {
       name: "single-value-attributes",
       options: {
@@ -336,8 +333,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
           ...HtmlIdMangler.STANDARD_URL_ATTRIBUTES,
           ...attributes,
         ].filter(duplicates),
-        valuePrefix: URL_BASE_PATTERN,
-        valueSuffix: URL_QUERY_PATTERN,
+        valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\.\\?]*(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?#",
       },
     };
   }

@@ -90,23 +90,20 @@ export default class NestedGroupExpression implements MangleExpression {
    * @since v0.1.12
    */
   public replaceAll(
-    s: string,
+    str: string,
     replacements: Map<string, string>,
   ): string {
     if (replacements.size === 0) {
-      return s;
+      return str;
     }
 
     const pattern = Array.from(replacements.keys()).join("|");
     const regExp = this.newRegExp(this.patternTemplate, pattern);
     const regExpSub = this.newRegExp(this.subPatternTemplate, pattern);
-    return s.replace(regExp, (...args: unknown[]): string => {
-      const groups = args[args.length - 1] as RegExpMatchGroups;
-      const subStr = groups[this.groupName];
-
-      return subStr.replace(regExpSub, (...args: unknown[]): string => {
-        const groups = args[args.length - 1] as RegExpMatchGroups;
-        const original = groups[this.groupName];
+    return str.replace(regExp, (...args: unknown[]): string => {
+      const subStr = this.extractGroup(args);
+      return subStr.replace(regExpSub, (...subArgs: unknown[]): string => {
+        const original = this.extractGroup(subArgs);
         const replacement = replacements.get(original);
         return replacement as string;
       });
@@ -124,5 +121,23 @@ export default class NestedGroupExpression implements MangleExpression {
   private newRegExp(template: string, pattern: string): RegExp {
     const rawExpr = printf(template, `(?:${pattern})`);
     return new RegExp(rawExpr, "gm");
+  }
+
+  /**
+   * Get the value of the named group for a `String.prototype.replace` callback.
+   *
+   * @example
+   * str.replace(/foo/g, (...args: unknown[]): string => {
+   *   const subStr = this.extractGroup(args);
+   *   // ...
+   * });
+   *
+   * @param args The `String.prototype.replace` callback arguments.
+   * @returns The value of the configured named group.
+   */
+  private extractGroup(args: unknown[]): string {
+    const groups = args[args.length - 1] as RegExpMatchGroups;
+    const groupValue = groups[this.groupName];
+    return groupValue;
   }
 }

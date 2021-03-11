@@ -21,7 +21,7 @@ class ConcreteSimpleLanguagePlugin extends SimpleLanguagePlugin {
 suite("SimpleLanguagePlugin", function() {
   suite("::getExpressionsFor", function() {
     type TestCase = {
-      testGets: { name: string, options: unknown }[],
+      testGets: { expressionSetName: string, options: unknown }[],
       languages: string[];
       factories: Map<string, ExpressionFactory>;
     };
@@ -32,7 +32,7 @@ suite("SimpleLanguagePlugin", function() {
         cases: [
           {
             testGets: [
-              { name: "foo", options: { getFoo: "bar" } },
+              { expressionSetName: "foo", options: { getFoo: "bar" } },
             ],
             languages: ["js"],
             factories: new Map([
@@ -42,8 +42,8 @@ suite("SimpleLanguagePlugin", function() {
           },
           {
             testGets: [
-              { name: "foo", options: { getFoo: "bar" } },
-              { name: "bar", options: { getBar: "foo" } },
+              { expressionSetName: "foo", options: { getFoo: "bar" } },
+              { expressionSetName: "bar", options: { getBar: "foo" } },
             ],
             languages: ["js", "ts"],
             factories: new Map([
@@ -53,7 +53,7 @@ suite("SimpleLanguagePlugin", function() {
           },
           {
             testGets: [
-              { name: "foo", options: { getFoo: "bar" } },
+              { expressionSetName: "foo", options: { getFoo: "bar" } },
             ],
             languages: ["css"],
             factories: new Map([
@@ -71,15 +71,15 @@ suite("SimpleLanguagePlugin", function() {
           expect(testGets).to.have.length.above(0);
 
           const plugin = new ConcreteSimpleLanguagePlugin(languages, factories);
-          for (const { name, options } of testGets) {
-            const result = plugin.getExpressionsFor(name, options);
-            if (factories.has(name)) {
+          for (const { expressionSetName, options } of testGets) {
+            const result = plugin.getExpressionsFor(expressionSetName, options);
+            if (factories.has(expressionSetName)) {
               expect(result).to.have.lengthOf(languages.length);
               result.forEach((_, language) => {
                 expect(languages).to.include(language);
               });
 
-              const factory = factories.get(name);
+              const factory = factories.get(expressionSetName);
               expect(factory).to.have.been.calledWith(options);
             } else {
               expect(result).to.be.empty;

@@ -268,6 +268,7 @@ suite("HTML ID Mangler", function() {
       "for=\"",
       "href=\"#",
       "href=\"/foo/bar#",
+      "href=\"/foo/bar?hello=world#",
     ];
 
     const scenarios: TestScenario<TestCase>[] = [
@@ -296,7 +297,7 @@ suite("HTML ID Mangler", function() {
         .map((attr): TestScenario<TestCase> => ({
           name: `\`${attr}id-xxx"\` on one element`,
           cases: [
-            ...varySpacing("=", {
+            ...varySpacing("=\"", {
               input: `<div ${attr}id-foo"></div>`,
               expected: `<div ${attr}a"></div>`,
             }),
@@ -1186,8 +1187,7 @@ suite("HTML ID Mangler", function() {
           expect(() => new RegExp(valuePrefix)).not.to.throw();
 
           const valueSuffix = options.valueSuffix as string;
-          expect(valueSuffix).not.to.be.undefined;
-          expect(() => new RegExp(valueSuffix)).not.to.throw();
+          expect(valueSuffix).to.be.undefined;
         }
       });
     });
