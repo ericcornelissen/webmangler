@@ -29,8 +29,7 @@ const HREF_ATTRIBUTE_EXPRESSION_OPTIONS:
   name: "single-value-attributes",
   options: {
     attributeNames: ["href"],
-    valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\.]*#", // URL
-    valueSuffix: "(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?", // query
+    valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\.\\?]*(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?#",
   },
 };
 
