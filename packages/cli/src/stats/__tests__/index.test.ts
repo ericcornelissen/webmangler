@@ -116,7 +116,9 @@ suite("Statistics", function() {
   });
 
   suite("::logStats", function() {
-    const round = (x: number): number => Math.round((x + Number.EPSILON) * 100) / 100;
+    const round = (x: number): number => {
+      return Math.round((x + Number.EPSILON) * 100) / 100;
+    };
 
     const logMock = sinon.fake();
 
@@ -269,12 +271,17 @@ suite("Statistics", function() {
       ];
       const stats: ManglerStats = new Map(entries);
 
-      const sizeBefore = entries.map(([, file]) => file.sizeBefore).reduce((p, c) => c + p, 0);
-      const sizeAfter = entries.map(([, file]) => file.sizeAfter).reduce((p, c) => c + p, 0);
+      const sizesBefore = entries.map(([, file]) => file.sizeBefore);
+      const sizeBefore = sizesBefore.reduce((total, size) => total + size, 0);
+
+      const sizesAfter = entries.map(([, file]) => file.sizeAfter);
+      const sizeAfter = sizesAfter.reduce((total, size) => total + size, 0);
 
       logStats(logMock, stats);
       expect(logMock).to.have.been.calledWith(sinon.match("-60%"));
-      expect(logMock).to.have.been.calledWith(sinon.match(`${sizeBefore} -> ${sizeAfter}`));
+      expect(logMock).to.have.been.calledWith(
+        sinon.match(`${sizeBefore} -> ${sizeAfter}`),
+      );
     });
   });
 });

@@ -1,5 +1,9 @@
 import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "./types";
+import type {
+  SelectorBeforeAndAfter,
+  SelectorPairBeforeAndAfter,
+  TestCase,
+} from "./types";
 
 import { expect } from "chai";
 
@@ -28,7 +32,7 @@ import CssClassMangler from "../css-classes";
 const builtInLanguages = [new BuiltInLanguageSupport()];
 
 const DEFAULT_PATTERN = "cls-[a-z]+";
-const SELECTORS: { before: string, after: string }[] = [
+const SELECTORS: SelectorBeforeAndAfter[] = [
   { before: ":root", after: ":root" },
   { before: "div", after: "div" },
   { before: "#foobar", after: "#foobar" },
@@ -36,7 +40,7 @@ const SELECTORS: { before: string, after: string }[] = [
   { before: "[data-foobar]", after: "[data-foobar]" },
   { before: ".cls-foobar", after: ".a" },
 ];
-const SELECTOR_PAIRS: { beforeA: string, beforeB: string, afterA: string, afterB: string }[] = [
+const SELECTOR_PAIRS: SelectorPairBeforeAndAfter[] = [
   { beforeA: "div", beforeB: "span", afterA: "div", afterB: "span" },
   { beforeA: "#foo", beforeB: "#bar", afterA: "#foo", afterB: "#bar" },
   { beforeA: ".foo", beforeB: ".bar", afterA: ".foo", afterB: ".bar" },
@@ -115,8 +119,14 @@ suite("CSS Class Mangler", function() {
                 }),
               ]),
             {
-              input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
-              expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
+              input: `
+                ${beforeA} { font-size: 12px; }
+                ${beforeB} { font-weight: bold; }
+              `,
+              expected: `
+                ${afterA} { font-size: 12px; }
+                ${afterB} { font-weight: bold; }
+              `,
             },
             {
               input: `:root { } ${beforeA} { } ${beforeB} { }`,
@@ -143,8 +153,20 @@ suite("CSS Class Mangler", function() {
               expected: `${afterA} { } div { } ${afterB} { } span { }`,
             },
             {
-              input: `:root { } ${beforeA} { } div { } ${beforeB} { } span { }`,
-              expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
+              input: `
+                :root { }
+                ${beforeA} { }
+                div { }
+                ${beforeB} { }
+                span { }
+              `,
+              expected: `
+                :root { }
+                ${afterA} { }
+                div { }
+                ${afterB} { }
+                span { }
+              `,
             },
           ]),
       },
@@ -182,8 +204,14 @@ suite("CSS Class Mangler", function() {
             .filter(isValidClassName)
             .flatMap((attributeSelector: string): TestCase[] => [
               {
-                input: `div[${attributeSelector}] { } .${attributeSelector} { }`,
-                expected: `div[${attributeSelector}] { } .a { }`,
+                input: `
+                  div[${attributeSelector}] { }
+                  .${attributeSelector} { }
+                `,
+                expected: `
+                  div[${attributeSelector}] { }
+                  .a { }
+                `,
                 pattern: "[a-zA-Z-]+",
               },
             ]),
@@ -239,7 +267,10 @@ suite("CSS Class Mangler", function() {
             keepClassNamePrefix: keepClassNamePrefix,
           });
           const options = cssClassMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -669,7 +700,10 @@ suite("CSS Class Mangler", function() {
             keepClassNamePrefix: keepClassNamePrefix,
           });
           const options = cssClassMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -720,9 +754,9 @@ suite("CSS Class Mangler", function() {
         cases: [
           ...SELECTORS
             .flatMap(({ before, after }): TestCase[] => [
-              ...ATTRIBUTE_SELECTORS.map((attributeSelector: string): TestCase => ({
-                input: `querySelectorAll("${before}[${attributeSelector}]");`,
-                expected: `querySelectorAll("${after}[${attributeSelector}]");`,
+              ...ATTRIBUTE_SELECTORS.map((attrSelector: string): TestCase => ({
+                input: `querySelectorAll("${before}[${attrSelector}]");`,
+                expected: `querySelectorAll("${after}[${attrSelector}]");`,
               })),
             ]),
         ],
@@ -760,8 +794,8 @@ suite("CSS Class Mangler", function() {
             .flatMap((testCase) => varySpacing(["(", ")"], testCase)),
           ...SELECTOR_PAIRS
             .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
-              input: `document.querySelectorAll("${beforeA}:not(${beforeB})");`,
-              expected: `document.querySelectorAll("${afterA}:not(${afterB})");`,
+              input: `querySelectorAll("${beforeA}:not(${beforeB})");`,
+              expected: `querySelectorAll("${afterA}:not(${afterB})");`,
             }))
             .flatMap((testCase) => varySpacing(["(", ")"], testCase)),
         ],
@@ -886,7 +920,10 @@ suite("CSS Class Mangler", function() {
             keepClassNamePrefix: keepClassNamePrefix,
           });
           const options = cssClassMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -911,7 +948,9 @@ suite("CSS Class Mangler", function() {
       test("one custom pattern", function() {
         const pattern = "foo(bar|baz)-[a-z]+";
 
-        const cssClassMangler = new CssClassMangler({ classNamePattern: pattern });
+        const cssClassMangler = new CssClassMangler({
+          classNamePattern: pattern,
+        });
         const result = cssClassMangler.options();
         expect(result).to.deep.include({ patterns: pattern });
       });
@@ -919,7 +958,9 @@ suite("CSS Class Mangler", function() {
       test("multiple custom patterns", function() {
         const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
 
-        const cssClassMangler = new CssClassMangler({ classNamePattern: patterns });
+        const cssClassMangler = new CssClassMangler({
+          classNamePattern: patterns,
+        });
         const result = cssClassMangler.options();
         expect(result).to.deep.include({ patterns: patterns });
       });
@@ -935,7 +976,9 @@ suite("CSS Class Mangler", function() {
       test("custom reserved", function() {
         const reserved: string[] = ["foo", "bar"];
 
-        const cssClassMangler = new CssClassMangler({ reservedClassNames: reserved });
+        const cssClassMangler = new CssClassMangler({
+          reservedClassNames: reserved,
+        });
         const result = cssClassMangler.options();
         expect(result).to.have.property("reservedNames");
         expect(result.reservedNames).to.include.members(reserved);
@@ -954,7 +997,9 @@ suite("CSS Class Mangler", function() {
       test("custom prefix", function() {
         const prefix = "foobar";
 
-        const cssClassMangler = new CssClassMangler({ keepClassNamePrefix: prefix });
+        const cssClassMangler = new CssClassMangler({
+          keepClassNamePrefix: prefix,
+        });
         const result = cssClassMangler.options();
         expect(result).to.deep.include({ manglePrefix: prefix });
       });
@@ -981,7 +1026,10 @@ suite("CSS Class Mangler", function() {
         classNamePattern: "cls-[0-9]+",
       });
       const options = cssClassMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+      const expressions = getExpressions(
+        builtInLanguages,
+        options.expressionOptions,
+      );
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
@@ -999,7 +1047,10 @@ suite("CSS Class Mangler", function() {
         classNamePattern: "cls-[0-9]+",
       });
       const options = cssClassMangler.options();
-      const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+      const expressions = getExpressions(
+        builtInLanguages,
+        options.expressionOptions,
+      );
 
       const result = mangleEngine(files, expressions, options);
       expect(result).to.have.lengthOf(1);
