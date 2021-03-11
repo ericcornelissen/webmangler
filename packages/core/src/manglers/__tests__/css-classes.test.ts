@@ -19,6 +19,7 @@ import {
 
 import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
+import { ALL_CHARS } from "../../characters";
 import mangleEngine from "../../engine";
 import { getExpressions } from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
@@ -690,10 +691,8 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${before}");`,
               expected: `document.querySelectorAll("${after}");`,
             }))
-            .map((testCase) => varySpacing("\"", testCase))
-            .flat()
-            .map((testCase) => varyQuotes("js", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing("\"", testCase))
+            .flatMap((testCase) => varyQuotes("js", testCase)),
           ...varySpacing("\"", {
             input: `
               document.querySelectorAll(".cls-foo");
@@ -720,13 +719,12 @@ suite("CSS Class Mangler", function() {
         name: "query selector with attribute selector",
         cases: [
           ...SELECTORS
-            .map(({ before, after }): TestCase[] => [
+            .flatMap(({ before, after }): TestCase[] => [
               ...ATTRIBUTE_SELECTORS.map((attributeSelector: string): TestCase => ({
                 input: `querySelectorAll("${before}[${attributeSelector}]");`,
                 expected: `querySelectorAll("${after}[${attributeSelector}]");`,
               })),
-            ])
-            .flat(),
+            ]),
         ],
       },
       {
@@ -737,8 +735,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA},${beforeB}");`,
               expected: `document.querySelectorAll("${afterA},${afterB}");`,
             }))
-            .map((testCase) => varySpacing(",", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing(",", testCase)),
         ],
       },
       {
@@ -760,15 +757,13 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll(":not(${before})");`,
               expected: `document.querySelectorAll(":not(${after})");`,
             }))
-            .map((testCase) => varySpacing(["(", ")"], testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing(["(", ")"], testCase)),
           ...SELECTOR_PAIRS
             .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `document.querySelectorAll("${beforeA}:not(${beforeB})");`,
               expected: `document.querySelectorAll("${afterA}:not(${afterB})");`,
             }))
-            .map((testCase) => varySpacing(["(", ")"], testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing(["(", ")"], testCase)),
         ],
       },
       {
@@ -789,8 +784,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA}>${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}>${afterB}");`,
             }))
-            .map((testCase) => varySpacing(">", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing(">", testCase)),
         ],
       },
       {
@@ -801,8 +795,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA}+${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}+${afterB}");`,
             }))
-            .map((testCase) => varySpacing("+", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing("+", testCase)),
         ],
       },
       {
@@ -813,8 +806,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA}~${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}~${afterB}");`,
             }))
-            .map((testCase) => varySpacing("~", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing("~", testCase)),
         ],
       },
       {
@@ -825,37 +817,29 @@ suite("CSS Class Mangler", function() {
               input: `$el.classList.${method}("cls-foobar");`,
               expected: `$el.classList.${method}("a");`,
             }))
-            .map((testCase) => varySpacing("\"", testCase))
-            .flat()
-            .map((testCase) => varyQuotes("js", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing("\"", testCase))
+            .flatMap((testCase) => varyQuotes("js", testCase)),
           ...["add", "toggle", "remove"]
             .map((method): TestCase => ({
               input: `var c = "cls-foobar"; $el.classList.${method}(c);`,
               expected: `var c = "a"; $el.classList.${method}(c);`,
             }))
-            .map((testCase) => varySpacing("\"", testCase))
-            .flat()
-            .map((testCase) => varyQuotes("js", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing("\"", testCase))
+            .flatMap((testCase) => varyQuotes("js", testCase)),
           ...["add", "remove"]
             .map((method): TestCase => ({
               input: `$el.classList.${method}("cls-foo", "cls-bar");`,
               expected: `$el.classList.${method}("a", "b");`,
             }))
-            .map((testCase) => varySpacing("\"", testCase))
-            .flat()
-            .map((testCase) => varyQuotes("js", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing("\"", testCase))
+            .flatMap((testCase) => varyQuotes("js", testCase)),
           ...["add", "toggle", "remove"]
             .map((method): TestCase => ({
               input: `$el.classList.${method}("foobar");`,
               expected: `$el.classList.${method}("foobar");`,
             }))
-            .map((testCase) => varySpacing("\"", testCase))
-            .flat()
-            .map((testCase) => varyQuotes("js", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing("\"", testCase))
+            .flatMap((testCase) => varyQuotes("js", testCase)),
         ],
       },
       {
@@ -915,61 +899,65 @@ suite("CSS Class Mangler", function() {
   });
 
   suite("Configuration", function() {
-    test("default patterns", function() {
-      const expected = CssClassMangler.DEFAULT_PATTERNS;
+    suite("::classNamePattern", function() {
+      const DEFAULT_PATTERNS = ["cls-[a-zA-Z-_]+"];
 
-      const cssClassMangler = new CssClassMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: expected });
+      test("default patterns", function() {
+        const cssClassMangler = new CssClassMangler();
+        const result = cssClassMangler.options();
+        expect(result).to.deep.include({ patterns: DEFAULT_PATTERNS });
+      });
+
+      test("one custom pattern", function() {
+        const pattern = "foo(bar|baz)-[a-z]+";
+
+        const cssClassMangler = new CssClassMangler({ classNamePattern: pattern });
+        const result = cssClassMangler.options();
+        expect(result).to.deep.include({ patterns: pattern });
+      });
+
+      test("multiple custom patterns", function() {
+        const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+
+        const cssClassMangler = new CssClassMangler({ classNamePattern: patterns });
+        const result = cssClassMangler.options();
+        expect(result).to.deep.include({ patterns: patterns });
+      });
     });
 
-    test("custom pattern", function() {
-      const pattern = "foo(bar|baz)-[a-z]+";
+    suite("::reservedClassNames", function() {
+      test("default reserved", function() {
+        const cssClassMangler = new CssClassMangler();
+        const result = cssClassMangler.options();
+        expect(result).to.have.property("reservedNames").that.is.not.empty;
+      });
 
-      const cssClassMangler = new CssClassMangler({ classNamePattern: pattern });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: pattern });
+      test("custom reserved", function() {
+        const reserved: string[] = ["foo", "bar"];
+
+        const cssClassMangler = new CssClassMangler({ reservedClassNames: reserved });
+        const result = cssClassMangler.options();
+        expect(result).to.have.property("reservedNames");
+        expect(result.reservedNames).to.include.members(reserved);
+      });
     });
 
-    test("custom patterns", function() {
-      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+    suite("::keepClassNamePrefix", function() {
+      const DEFAULT_MANGLE_PREFIX = "";
 
-      const cssClassMangler = new CssClassMangler({ classNamePattern: patterns });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: patterns });
-    });
+      test("default prefix", function() {
+        const cssClassMangler = new CssClassMangler();
+        const result = cssClassMangler.options();
+        expect(result).to.deep.include({ manglePrefix: DEFAULT_MANGLE_PREFIX });
+      });
 
-    test("default reserved", function() {
-      const expected = CssClassMangler.ALWAYS_RESERVED.concat(CssClassMangler.DEFAULT_RESERVED);
+      test("custom prefix", function() {
+        const prefix = "foobar";
 
-      const cssClassMangler = new CssClassMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: expected });
-    });
-
-    test("custom reserved", function() {
-      const reserved: string[] = ["foo", "bar"];
-      const expected = CssClassMangler.ALWAYS_RESERVED.concat(reserved);
-
-      const cssClassMangler = new CssClassMangler({ reservedClassNames: reserved });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: expected });
-    });
-
-    test("default prefix", function() {
-      const expected = CssClassMangler.DEFAULT_PREFIX;
-
-      const cssClassMangler = new CssClassMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: expected });
-    });
-
-    test("custom prefix", function() {
-      const prefix = "foobar";
-
-      const cssClassMangler = new CssClassMangler({ keepClassNamePrefix: prefix });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: prefix });
+        const cssClassMangler = new CssClassMangler({ keepClassNamePrefix: prefix });
+        const result = cssClassMangler.options();
+        expect(result).to.deep.include({ manglePrefix: prefix });
+      });
     });
   });
 
@@ -981,7 +969,7 @@ suite("CSS Class Mangler", function() {
     let content = "";
 
     suiteSetup(function() {
-      const n = CssClassMangler.CHARACTER_SET.length;
+      const n = ALL_CHARS.length;
       const nArray = getArrayOfFormattedStrings(n, ".cls-%s");
       content = `${nArray.join(",")} { }`;
     });

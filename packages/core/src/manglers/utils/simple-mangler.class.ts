@@ -57,7 +57,7 @@ export interface SimpleManglerOptions {
  * on your needs - if you're implementing a {@link WebManglerPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.15
+ * @version v0.1.16
  */
 export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
@@ -89,17 +89,9 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
    * Initialize a new {@link WebManglerPlugin}.
    *
    * @param options The {@link SimpleManglerOptions} (previously `id`).
-   * @param oldOptions The old `options` paramter.
-   * @deprecated `oldOptions` will be removed, `options` will only be object.
+   * @version v0.1.16
    */
-  constructor(
-    options: string | SimpleManglerOptions,
-    oldOptions?: SimpleManglerOptions,
-  ) {
-    if (typeof options === "string") {
-      options = oldOptions as SimpleManglerOptions;
-    }
-
+  constructor(options: SimpleManglerOptions) {
     this.charSet = options.charSet;
     this.expressionOptions = options.expressionOptions;
     this.patterns = options.patterns;

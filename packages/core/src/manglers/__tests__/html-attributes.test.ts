@@ -20,6 +20,7 @@ import {
 
 import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
+import { ALL_CHARS } from "../../characters";
 import mangleEngine from "../../engine";
 import { getExpressions } from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
@@ -645,73 +646,80 @@ suite("HTML Attribute Mangler", function() {
   });
 
   suite("Configuration", function() {
-    test("default patterns", function() {
-      const expected = HtmlAttributeMangler.DEFAULT_PATTERNS;
+    suite("::attrNamePattern", function() {
+      const DEFAULT_PATTERNS = ["data-[a-z-]+"];
 
-      const cssClassMangler = new HtmlAttributeMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: expected });
+      test("default patterns", function() {
+        const htmlAttributeMangler = new HtmlAttributeMangler();
+        const result = htmlAttributeMangler.options();
+        expect(result).to.deep.include({ patterns: DEFAULT_PATTERNS });
+      });
+
+      test("custom pattern", function() {
+        const pattern = "foo(bar|baz)-[a-z]+";
+
+        const htmlAttributeMangler = new HtmlAttributeMangler({ attrNamePattern: pattern });
+        const result = htmlAttributeMangler.options();
+        expect(result).to.deep.include({ patterns: pattern });
+      });
+
+      test("custom patterns", function() {
+        const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+
+        const htmlAttributeMangler = new HtmlAttributeMangler({ attrNamePattern: patterns });
+        const result = htmlAttributeMangler.options();
+        expect(result).to.deep.include({ patterns: patterns });
+      });
     });
 
-    test("custom pattern", function() {
-      const pattern = "foo(bar|baz)-[a-z]+";
+    suite("::reservedAttrNames", function() {
+      test("default reserved", function() {
+        const htmlAttributeMangler = new HtmlAttributeMangler();
+        const result = htmlAttributeMangler.options();
+        expect(result).to.have.property("reservedNames").that.is.not.empty;
+      });
 
-      const cssClassMangler = new HtmlAttributeMangler({ attrNamePattern: pattern });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: pattern });
+      test("custom reserved", function() {
+        const reserved: string[] = ["foo", "bar"];
+
+        const htmlAttributeMangler = new HtmlAttributeMangler({ reservedAttrNames: reserved });
+        const result = htmlAttributeMangler.options();
+        expect(result).to.have.property("reservedNames");
+        expect(result.reservedNames).to.include.members(reserved);
+      });
     });
 
-    test("custom patterns", function() {
-      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+    suite("::keepAttrPrefix", function() {
+      const DEFAULT_MANGLE_PREFIX = "data-";
 
-      const cssClassMangler = new HtmlAttributeMangler({ attrNamePattern: patterns });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: patterns });
-    });
+      test("default prefix", function() {
+        const htmlAttributeMangler = new HtmlAttributeMangler();
+        const result = htmlAttributeMangler.options();
+        expect(result).to.deep.include({ manglePrefix: DEFAULT_MANGLE_PREFIX });
+      });
 
-    test("default reserved", function() {
-      const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(HtmlAttributeMangler.DEFAULT_RESERVED);
+      test("custom prefix", function() {
+        const prefix = "foobar";
 
-      const cssClassMangler = new HtmlAttributeMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: expected });
-    });
-
-    test("custom reserved", function() {
-      const reserved: string[] = ["foo", "bar"];
-      const expected = HtmlAttributeMangler.ALWAYS_RESERVED.concat(reserved);
-
-      const cssClassMangler = new HtmlAttributeMangler({ reservedAttrNames: reserved });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: expected });
-    });
-
-    test("default prefix", function() {
-      const expected = HtmlAttributeMangler.DEFAULT_PREFIX;
-
-      const cssClassMangler = new HtmlAttributeMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: expected });
-    });
-
-    test("custom prefix", function() {
-      const prefix = "foobar";
-
-      const cssClassMangler = new HtmlAttributeMangler({ keepAttrPrefix: prefix });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: prefix });
+        const htmlAttributeMangler = new HtmlAttributeMangler({ keepAttrPrefix: prefix });
+        const result = htmlAttributeMangler.options();
+        expect(result).to.deep.include({ manglePrefix: prefix });
+      });
     });
   });
 
   suite("Illegal names", function() {
     const illegalNames: string[] = [
-      " -", " _", " 1", " 2", " 3", " 4", " 5", " 6", " 7", " 8", " 9",
+      " -", " _", " 1", " 2", " 3", " 4", " 5", " 6", " 7", " 8", " 9", " A",
+      " B", " C", " D", " E", " F", " G", " H", " I", " J", " K", " L", " M",
+      " N", " O", " P", " Q", " R", " S", " T", " U", " V", " W", " X", " Y",
+      " Z",
     ];
 
     let content = "";
 
     suiteSetup(function() {
-      const n = HtmlAttributeMangler.CHARACTER_SET.length;
+      const n = ALL_CHARS.length;
       const nArray = getArrayOfFormattedStrings(n, "<div data-%s=\"foo\">");
       content = nArray.join("");
     });

@@ -16,6 +16,7 @@ import {
 
 import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
+import { ALL_CHARS } from "../../characters";
 import mangleEngine from "../../engine";
 import { getExpressions } from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
@@ -298,10 +299,8 @@ suite("CSS Variable Mangler", function() {
               input: `<div style="--foo:${value};"></div>`,
               expected: `<div style="--a:${value};"></div>`,
             }))
-            .map((testCase) => varySpacing(["\"", ":", ";"], testCase))
-            .flat()
-            .map((testCase) => varyQuotes("html", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing(["\"", ":", ";"], testCase))
+            .flatMap((testCase) => varyQuotes("html", testCase)),
         ],
       },
       {
@@ -374,10 +373,8 @@ suite("CSS Variable Mangler", function() {
               input: `<div style="${property}:var(--foo);"></div>`,
               expected: `<div style="${property}:var(--a);"></div>`,
             }))
-            .map((testCase) => varySpacing([":", "(", ")"], testCase))
-            .flat()
-            .map((testCase) => varyQuotes("html", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing([":", "(", ")"], testCase))
+            .flatMap((testCase) => varyQuotes("html", testCase)),
         ],
       },
       {
@@ -450,10 +447,8 @@ suite("CSS Variable Mangler", function() {
               input: `<div style="color: var(--foo,${value});"></div>`,
               expected: `<div style="color: var(--a,${value});"></div>`,
             }))
-            .map((testCase) => varySpacing(["(", ",", ")"], testCase))
-            .flat()
-            .map((testCase) => varyQuotes("html", testCase))
-            .flat(),
+            .flatMap((testCase) => varySpacing(["(", ",", ")"], testCase))
+            .flatMap((testCase) => varyQuotes("html", testCase)),
         ],
       },
       {
@@ -603,61 +598,65 @@ suite("CSS Variable Mangler", function() {
   });
 
   suite("Configuration", function() {
-    test("default patterns", function() {
-      const expected = CssVariableMangler.DEFAULT_PATTERNS;
+    suite("::cssVarNamePattern", function() {
+      const DEFAULT_PATTERNS = ["[a-zA-Z-]+"];
 
-      const cssClassMangler = new CssVariableMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: expected });
+      test("default patterns", function() {
+        const cssVariableMangler = new CssVariableMangler();
+        const result = cssVariableMangler.options();
+        expect(result).to.deep.include({ patterns: DEFAULT_PATTERNS });
+      });
+
+      test("custom pattern", function() {
+        const pattern = "foo(bar|baz)-[a-z]+";
+
+        const cssVariableMangler = new CssVariableMangler({ cssVarNamePattern: pattern });
+        const result = cssVariableMangler.options();
+        expect(result).to.deep.include({ patterns: pattern });
+      });
+
+      test("custom patterns", function() {
+        const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+
+        const cssVariableMangler = new CssVariableMangler({ cssVarNamePattern: patterns });
+        const result = cssVariableMangler.options();
+        expect(result).to.deep.include({ patterns: patterns });
+      });
     });
 
-    test("custom pattern", function() {
-      const pattern = "foo(bar|baz)-[a-z]+";
+    suite("::reservedCssVarNames", function() {
+      test("default reserved", function() {
+        const cssVariableMangler = new CssVariableMangler();
+        const result = cssVariableMangler.options();
+        expect(result).to.have.property("reservedNames").that.is.not.empty;
+      });
 
-      const cssClassMangler = new CssVariableMangler({ cssVarNamePattern: pattern });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: pattern });
+      test("custom reserved", function() {
+        const reserved: string[] = ["foo", "bar"];
+
+        const cssVariableMangler = new CssVariableMangler({ reservedCssVarNames: reserved });
+        const result = cssVariableMangler.options();
+        expect(result).to.have.property("reservedNames");
+        expect(result.reservedNames).to.include.members(reserved);
+      });
     });
 
-    test("custom patterns", function() {
-      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+    suite("::keepCssVarPrefix", function() {
+      const DEFAULT_MANGLE_PREFIX = "";
 
-      const cssClassMangler = new CssVariableMangler({ cssVarNamePattern: patterns });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: patterns });
-    });
+      test("default prefix", function() {
+        const cssVariableMangler = new CssVariableMangler();
+        const result = cssVariableMangler.options();
+        expect(result).to.deep.include({ manglePrefix: DEFAULT_MANGLE_PREFIX });
+      });
 
-    test("default reserved", function() {
-      const expected = CssVariableMangler.ALWAYS_RESERVED.concat(CssVariableMangler.DEFAULT_RESERVED);
+      test("custom prefix", function() {
+        const prefix = "foobar";
 
-      const cssClassMangler = new CssVariableMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: expected });
-    });
-
-    test("custom reserved", function() {
-      const reserved: string[] = ["foo", "bar"];
-      const expected = CssVariableMangler.ALWAYS_RESERVED.concat(reserved);
-
-      const cssClassMangler = new CssVariableMangler({ reservedCssVarNames: reserved });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: expected });
-    });
-
-    test("default prefix", function() {
-      const expected = CssVariableMangler.DEFAULT_PREFIX;
-
-      const cssClassMangler = new CssVariableMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: expected });
-    });
-
-    test("custom prefix", function() {
-      const prefix = "foobar";
-
-      const cssClassMangler = new CssVariableMangler({ keepCssVarPrefix: prefix });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: prefix });
+        const cssVariableMangler = new CssVariableMangler({ keepCssVarPrefix: prefix });
+        const result = cssVariableMangler.options();
+        expect(result).to.deep.include({ manglePrefix: prefix });
+      });
     });
   });
 
@@ -670,7 +669,7 @@ suite("CSS Variable Mangler", function() {
     let content = "";
 
     suiteSetup(function() {
-      const n = CssVariableMangler.CHARACTER_SET.length;
+      const n = ALL_CHARS.length;
       const nArray = getArrayOfFormattedStrings(n, "--%s:red");
       content = `:root { ${nArray.join(";")} `;
     });

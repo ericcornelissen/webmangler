@@ -6,6 +6,7 @@ import type {
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
+import { duplicates } from "../helpers";
 import { SimpleManglerPlugin } from "./utils";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
@@ -16,27 +17,11 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
   },
 };
 
-const ID_ATTRIBUTE_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<SingleValueAttributeOptions> = {
-  name: "single-value-attributes",
-  options: {
-    attributeNames: ["id", "for"],
-  },
-};
-
-const HREF_ATTRIBUTE_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<SingleValueAttributeOptions> = {
-  name: "single-value-attributes",
-  options: {
-    attributeNames: ["href"],
-    valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\.\\?]*(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?#",
-  },
-};
-
 /**
  * The options for _WebMangler_'s built-in HTML IDs mangler.
  *
  * @since v0.1.0
+ * @version v0.1.15
  */
 export type HtmlIdManglerOptions = {
   /**
@@ -64,6 +49,30 @@ export type HtmlIdManglerOptions = {
    * @since v0.1.0
    */
   keepIdPrefix?: string;
+
+  /**
+   * A list of HTML attributes whose value to treat as an `id`.
+   *
+   * NOTE: the `id` and `for` attributes are always included and do not need to
+   * be specified when using this option.
+   *
+   * @default `[]`
+   * @since v0.1.15
+   */
+  idAttributes?: string[];
+
+  /**
+   * A list of HTML attributes whose value to treat as a URL. That is, the ID
+   * fragment of URLs in these attributes will be mangled if it is an internal
+   * URL.
+   *
+   * NOTE: the `href` attribute is always included and does not need to be
+   * specified when using this option.
+   *
+   * @default `[]`
+   * @since v0.1.15
+   */
+  urlAttributes?: string[];
 }
 
 /**
@@ -165,24 +174,13 @@ export type HtmlIdManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.16
  */
 export default class HtmlIdMangler extends SimpleManglerPlugin {
   /**
-   * The identifier of the {@link HtmlIdMangler} {@link WebManglerPlugin}.
-   *
-   * @since v0.1.0
-   * @deprecated
-   */
-  static readonly _ID = "html-id-mangler";
-
-  /**
    * The character set used by {@link HtmlIdMangler}.
-   *
-   * @since v0.1.7
-   * @deprecated
    */
-  static readonly CHARACTER_SET: CharSet = [
+  private static readonly CHARACTER_SET: CharSet = [
     ...ALL_LETTER_CHARS,
     ...ALL_NUMBER_CHARS,
     "-", "_",
@@ -190,27 +188,28 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
 
   /**
    * The default patterns used by a {@link HtmlIdMangler}.
-   *
-   * @since v0.1.0
-   * @deprecated
    */
-  static readonly DEFAULT_PATTERNS: string[] = ["id-[a-zA-Z-_]+"];
+  private static readonly DEFAULT_PATTERNS: string[] = ["id-[a-zA-Z-_]+"];
 
   /**
    * The default prefix used by a {@link HtmlIdMangler}.
-   *
-   * @since v0.1.0
-   * @deprecated
    */
-  static readonly DEFAULT_PREFIX = "";
+  private static readonly DEFAULT_PREFIX = "";
 
   /**
    * The default reserved names used by a {@link HtmlIdMangler}.
-   *
-   * @since v0.1.0
-   * @deprecated
    */
-  static readonly DEFAULT_RESERVED: string[] = [];
+  private static readonly DEFAULT_RESERVED: string[] = [];
+
+  /**
+   * A list of the attributes always treated as `id` by {@link HtmlIdMangler}.
+   */
+  private static readonly STANDARD_ID_ATTRIBUTES: string[] = ["id", "for"];
+
+  /**
+   * A list of the attributes always treated as URL by {@link HtmlIdMangler}.
+   */
+  private static readonly STANDARD_URL_ATTRIBUTES: string[] = ["href"];
 
   /**
    * Instantiate a new {@link HtmlIdMangler}.
@@ -226,8 +225,8 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
       prefix: HtmlIdMangler.getPrefix(options.keepIdPrefix),
       expressionOptions: [
         QUERY_SELECTOR_EXPRESSION_OPTIONS,
-        ID_ATTRIBUTE_EXPRESSION_OPTIONS,
-        HREF_ATTRIBUTE_EXPRESSION_OPTIONS,
+        HtmlIdMangler.getIdAttributeExpressionOptions(options.idAttributes),
+        HtmlIdMangler.getUrlAttributeExpressionOptions(options.urlAttributes),
       ],
     });
   }
@@ -274,5 +273,48 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
     }
 
     return keepIdPrefix;
+  }
+
+  /**
+   * Get the {@link MangleExpressionOptions} for mangling id-like attributes.
+   * The `id` and `for` attributes are always included.
+   *
+   * @param attributes The attributes to treat as `id`s.
+   * @returns The {@link SingleValueAttributeOptions}.
+   */
+  private static getIdAttributeExpressionOptions(
+    attributes: string[] = [],
+  ): MangleExpressionOptions<SingleValueAttributeOptions> {
+    return {
+      name: "single-value-attributes",
+      options: {
+        attributeNames: [
+          ...HtmlIdMangler.STANDARD_ID_ATTRIBUTES,
+          ...attributes,
+        ].filter(duplicates),
+      },
+    };
+  }
+
+  /**
+   * Get the {@link MangleExpressionOptions} for mangling URL attributes. The
+   * `href` attribute is always included.
+   *
+   * @param attributes The attributes to treat as URLs.
+   * @returns The {@link SingleValueAttributeOptions}.
+   */
+  private static getUrlAttributeExpressionOptions(
+    attributes: string[] = [],
+  ): MangleExpressionOptions<SingleValueAttributeOptions> {
+    return {
+      name: "single-value-attributes",
+      options: {
+        attributeNames: [
+          ...HtmlIdMangler.STANDARD_URL_ATTRIBUTES,
+          ...attributes,
+        ].filter(duplicates),
+        valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\.\\?]*(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?#",
+      },
+    };
   }
 }
