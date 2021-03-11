@@ -21,19 +21,20 @@ suite("Benchmarking Helpers", function() {
       const spy = sinon.spy();
 
       const result = benchmarkFn(spy);
+      expect(spy).to.have.been.called;
       expect(result).not.to.be.undefined;
       expect(result.medianDuration).not.to.be.undefined;
-
-      expect(spy).to.have.been.called;
     });
 
     test("custom iterations", function() {
-      const testCases: number[] = [25, 50, 75];
-      for (const n of testCases) {
+      const testCases: number[] = [1, 25, 50, 75];
+      for (const repetitions of testCases) {
         const spy = sinon.spy();
 
-        benchmarkFn(spy, n);
-        expect(spy).to.have.callCount(n);
+        const result = benchmarkFn(spy, repetitions);
+        expect(spy).to.have.callCount(repetitions);
+        expect(result).not.to.be.undefined;
+        expect(result.medianDuration).not.to.be.undefined;
       }
     });
   });

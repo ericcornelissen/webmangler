@@ -3,6 +3,9 @@ import * as os from "os";
 import * as path from "path";
 import { performance } from "perf_hooks";
 
+/**
+ * The minimum required behaviour of functions to benchmark.
+ */
 type BenchmarkCallback = () => void;
 
 /**
@@ -70,14 +73,10 @@ function getNow(): number {
  * @returns The median number.
  */
 function medianOf(numbers: number[]): number {
+  const n = numbers.length;
   const sortedNumbers = numbers.sort();
-  const n = sortedNumbers.length;
-  if (n % 2 === 0) {
-    return sortedNumbers[n / 2];
-  } else {
-    const _n = Math.ceil(n / 2);
-    return sortedNumbers[_n];
-  }
+  const middle = Math.ceil(n / 2);
+  return sortedNumbers[middle - 1];
 }
 
 /**
@@ -100,6 +99,8 @@ function measureOneRun(fn: BenchmarkCallback): BenchmarkRunStats {
  *
  * The number of repetitions can be tweaked to improve the reliability of the
  * measurements. By default {@link DEFAULT_REPETITIONS} repetitions are used.
+ *
+ * NOTE: The behaviour of this function below 1 repetitions is not defined.
  *
  * @param fn The function to benchmark.
  * @param [repetitions] The number of repetitions.
