@@ -8,7 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.15] - 2021-03-11
+
 - Fix unwanted mangling of IDs in external URIs.
+- Fix mangling of IDs in URLs with query parameters.
 - Support mangling IDs in user-specified attributes.
 - Support mangling IDs in URIs in user-specified attributes.
 
@@ -20,7 +25,6 @@ Versioning].
 
 - Fix accidental mangling of CSS variable-like strings in CSS.
 - Fix accidental mangling of HTML attribute-like strings in CSS.
-- Fix mangling of IDs in URLs with query parameters.
 - Support mangling IDs in the HTML `for` attribute.
 
 ## [0.1.12] - 2021-02-19
