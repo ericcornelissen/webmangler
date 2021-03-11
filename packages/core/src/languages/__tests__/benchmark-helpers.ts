@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 import { performance } from "perf_hooks";
 
@@ -43,6 +44,26 @@ const TEST_DATA_DIR = path.resolve(
 );
 
 /**
+ * Get the speed of the CPU in MHz of the current system.
+ *
+ * @returns The CPU speed in MHz.
+ */
+function getCpuSpeedInMHz(): number {
+  const cpus = os.cpus();
+  const firstCpu = cpus[0];
+  return firstCpu.speed;
+}
+
+/**
+ * Get a timestamp representing now.
+ *
+ * @returns A timestamp.
+ */
+function getNow(): number {
+  return performance.now();
+}
+
+/**
  * Get the median from a list of numbers.
  *
  * @param numbers The numbers of interest.
@@ -57,15 +78,6 @@ function medianOf(numbers: number[]): number {
     const _n = Math.ceil(n / 2);
     return sortedNumbers[_n];
   }
-}
-
-/**
- * Get a timestamp representing now.
- *
- * @returns A timestamp.
- */
-function getNow(): number {
-  return performance.now();
 }
 
 /**
@@ -106,6 +118,23 @@ export function benchmarkFn(
   return {
     medianDuration: medianOf(results.map((result) => result.duration)),
   };
+}
+
+/**
+ * Get the runtime budget for a machine given an expected runtime for a
+ * "default" system.
+ *
+ * A "default" system is defined as:
+ * - having a 2.5 GHz processor.
+ *
+ * @param budgetInMillis The budget in milliseconds on a "default" system.
+ * @returns The budget in milliseconds for the current system.
+ */
+export function getRuntimeBudget(budgetInMillis: number): number {
+  const stdCpuSpeedInMhz = 2500;
+
+  const cpuSpeedInMhz = getCpuSpeedInMHz();
+  return (budgetInMillis * stdCpuSpeedInMhz) / cpuSpeedInMhz;
 }
 
 /**

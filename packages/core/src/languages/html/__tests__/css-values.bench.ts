@@ -3,7 +3,11 @@ import type { WebManglerFile } from "../../../types";
 import { expect } from "chai";
 
 import WebManglerFileMock from "../../../__mocks__/web-mangler-file.mock";
-import { benchmarkFn, readFile } from "../../__tests__/benchmark-helpers";
+import {
+  benchmarkFn,
+  getRuntimeBudget,
+  readFile,
+} from "../../__tests__/benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import cssDeclarationValueExpressionFactory from "../css-values";
@@ -35,7 +39,7 @@ suite("HTML - CSS Value Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budgetInMillis = 0.1;
+    const budget = getRuntimeBudget(0.1);
 
     const files: WebManglerFile[] = [
       new WebManglerFileMock("html", testFileContent),
@@ -45,11 +49,11 @@ suite("HTML - CSS Value Expression Factory", function() {
       manglerEngine(files, expressionsMap, mangleEngineOptions);
     });
 
-    expect(result.medianDuration).to.be.below(budgetInMillis);
+    expect(result.medianDuration).to.be.below(budget);
   });
 
   test("large file", function() {
-    const budgetInMillis = 10;
+    const budget = getRuntimeBudget(10);
 
     const files: WebManglerFile[] = [
       new WebManglerFileMock("html", testFileContent.repeat(100)),
@@ -59,6 +63,6 @@ suite("HTML - CSS Value Expression Factory", function() {
       manglerEngine(files, expressionsMap, mangleEngineOptions);
     });
 
-    expect(result.medianDuration).to.be.below(budgetInMillis);
+    expect(result.medianDuration).to.be.below(budget);
   });
 });
