@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "WebMangler testing utilities",
   "license": "Unlicense",
-  "main": "",
+  "main": "index.js",
   "typings": "index.d.ts",
   "repository": {
     "type": "git",
@@ -17,6 +17,16 @@
     "name": "Eric Cornelissen",
     "email": "ericornelissen@gmail.com",
     "url": "https://ericcornelissen.dev/"
+  },
+  "scripts": {
+    "clean": "rm -rf mocks/ *.js *.d.ts",
+    "precompile": "npm run clean",
+    "compile": "tsc",
+    "prepublishOnly": "npm run compile",
+    "postpublish": "npm run clean"
+  },
+  "devDependencies": {
+    "typescript": "4.2.3"
   },
   "engines": {
     "node": ">=12.16.0"
