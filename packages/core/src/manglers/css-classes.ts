@@ -6,6 +6,7 @@ import type {
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
+import { duplicates } from "../helpers";
 import { SimpleManglerPlugin } from "./utils";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
@@ -16,18 +17,11 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
   },
 };
 
-const CLASS_ATTRIBUTE_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<MultiValueAttributeOptions> = {
-  name: "multi-value-attributes",
-  options: {
-    attributeNames: ["class"],
-  },
-};
-
 /**
  * The options for _WebMangler_'s built-in CSS class mangler.
  *
  * @since v0.1.0
+ * @version v0.1.16
  */
 export type CssClassManglerOptions = {
   /**
@@ -200,6 +194,12 @@ export default class CssClassMangler extends SimpleManglerPlugin {
   private static readonly DEFAULT_RESERVED: string[] = [];
 
   /**
+   * A list of the attributes always treated as `class` by {@link
+   * CssClassMangler}s.
+   */
+  private static readonly STANDARD_CLASS_ATTRIBUTES: string[] = ["class"];
+
+  /**
    * Instantiate a new {@link CssClassMangler}.
    *
    * @param options The {@link CssClassManglerOptions}.
@@ -213,7 +213,9 @@ export default class CssClassMangler extends SimpleManglerPlugin {
       prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
       expressionOptions: [
         QUERY_SELECTOR_EXPRESSION_OPTIONS,
-        CLASS_ATTRIBUTE_EXPRESSION_OPTIONS,
+        CssClassMangler.getClassAttributeExpressionOptions(
+          options.classAttributes,
+        ),
       ],
     });
   }
@@ -261,5 +263,26 @@ export default class CssClassMangler extends SimpleManglerPlugin {
     }
 
     return keepClassNamePrefix;
+  }
+
+  /**
+   * Get the {@link MangleExpressionOptions} for mangling class-like attributes.
+   * The `class` attribute is always included.
+   *
+   * @param attributes The attributes to treat as `class`es.
+   * @returns The {@link MangleExpressionOptions}.
+   */
+  private static getClassAttributeExpressionOptions(
+    attributes: string[] = [],
+  ): MangleExpressionOptions<MultiValueAttributeOptions> {
+    return {
+      name: "multi-value-attributes",
+      options: {
+        attributeNames: [
+          ...CssClassMangler.STANDARD_CLASS_ATTRIBUTES,
+          ...attributes,
+        ].filter(duplicates),
+      },
+    };
   }
 }
