@@ -55,6 +55,17 @@ export type CssClassManglerOptions = {
    * @since v0.1.0
    */
   keepClassNamePrefix?: string;
+
+  /**
+   * A list of HTML attributes whose value to treat as `class`.
+   *
+   * NOTE: the `class` attribute is always included and does not need to be
+   * specified when using this option.
+   *
+   * @default `[]`
+   * @since v0.1.16
+   */
+  classAttributes?: string[];
 }
 
 /**
