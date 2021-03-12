@@ -28,6 +28,9 @@
   "devDependencies": {
     "typescript": "4.2.3"
   },
+  "peerDependencies": {
+    "sinon": "^9.0.0"
+  },
   "engines": {
     "node": ">=12.16.0"
   }
