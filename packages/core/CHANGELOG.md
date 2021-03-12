@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Include `LICENSE` in published package.
+- Support mangling classes in user-specified attributes.
 
 ## [0.1.15] - 2021-03-11
 
