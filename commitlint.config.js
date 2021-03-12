@@ -26,6 +26,7 @@ module.exports = {
       2,
       "always",
       [
+        "benchmark",
         "chore",
         "ci",
         "config",

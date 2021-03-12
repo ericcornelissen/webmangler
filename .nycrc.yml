@@ -26,6 +26,7 @@ exclude:
   - _reports/
   - .temp/
   - node_modules/
+  - packages/**/*.bench.ts
   - packages/**/*.test.ts
   - packages/**/*.mock.ts
 
