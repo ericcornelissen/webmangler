@@ -6,7 +6,6 @@ import WebManglerFileMock from "../../../__mocks__/web-mangler-file.mock";
 import {
   benchmarkFn,
   getRuntimeBudget,
-  readFile,
 } from "../../__tests__/benchmark-helpers";
 
 import manglerEngine from "../../../engine";
@@ -18,18 +17,17 @@ suite("JavaScript - Attribute Expression Factory", function() {
     patterns: "foo[a-zA-Z0-9]+",
   };
 
-  let testFileContent = "";
+  const contentWithAttributes = `
+    const foo = document.querySelectorAll("[data-foo]");
+    const bar = document.querySelector("[data-bar]");
+  `;
 
   suiteSetup(function() {
     const expressions = attributeExpressionFactory();
     expressionsMap.set("js", expressions);
-
-    testFileContent = readFile("sample.js");
   });
 
   test("benchmark validity", function() {
-    expect(testFileContent).to.have.length.above(0);
-
     const cssExpressions = expressionsMap.get("js");
     expect(cssExpressions).not.to.be.undefined;
     expect(cssExpressions).to.have.length.above(0);
@@ -39,7 +37,7 @@ suite("JavaScript - Attribute Expression Factory", function() {
     const budget = getRuntimeBudget(0.1);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("js", testFileContent),
+      new WebManglerFileMock("js", contentWithAttributes),
     ];
 
     const result = benchmarkFn(() => {
@@ -53,7 +51,7 @@ suite("JavaScript - Attribute Expression Factory", function() {
     const budget = getRuntimeBudget(10);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("js", testFileContent.repeat(100)),
+      new WebManglerFileMock("js", contentWithAttributes.repeat(100)),
     ];
 
     const result = benchmarkFn(() => {

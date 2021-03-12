@@ -1,6 +1,4 @@
-import * as fs from "fs";
 import * as os from "os";
-import * as path from "path";
 import { performance } from "perf_hooks";
 
 /**
@@ -32,19 +30,6 @@ type BenchmarkRunStats = {
  * The default number of repetitions when benchmarking a function.
  */
 const DEFAULT_REPETITIONS = 100;
-
-/**
- * The absolute path to the testdata directory.
- */
-const TEST_DATA_DIR = path.resolve(
-  __dirname,
-  "..", // /packages/core/src/languages
-  "..", // /packages/core/src
-  "..", // /packages/core
-  "..", // /packages
-  "..", // /
-  "testdata",
-);
 
 /**
  * Get the speed of the CPU in MHz of the current system.
@@ -136,17 +121,4 @@ export function getRuntimeBudget(budgetInMillis: number): number {
 
   const cpuSpeedInMhz = getCpuSpeedInMHz();
   return (budgetInMillis * stdCpuSpeedInMhz) / cpuSpeedInMhz;
-}
-
-/**
- * Read a file from the `/testdata` directory in the repository.
- *
- * @param fileName The name of the file in `/testdata`.
- * @returns The file contents.
- */
-export function readFile(fileName: string): string {
-  const filePath = path.resolve(TEST_DATA_DIR, fileName);
-  const fileBuffer = fs.readFileSync(filePath);
-  const fileContent = fileBuffer.toString();
-  return fileContent;
 }

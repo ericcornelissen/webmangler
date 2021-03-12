@@ -6,7 +6,6 @@ import WebManglerFileMock from "../../../__mocks__/web-mangler-file.mock";
 import {
   benchmarkFn,
   getRuntimeBudget,
-  readFile,
 } from "../../__tests__/benchmark-helpers";
 
 import manglerEngine from "../../../engine";
@@ -18,7 +17,19 @@ suite("CSS - CSS Value Expression Factory", function() {
     patterns: "foo[a-zA-Z0-9]+",
   };
 
-  let testFileContent = "";
+  const contentWithValues = `
+    #foobar {
+      content: var(--foobar);
+    }
+
+    .foo {
+      content: var(--bar);
+    }
+
+    .bar::after {
+      content: var(--foo);
+    }
+  `;
 
   suiteSetup(function() {
     const expressions = cssDeclarationValueExpressionFactory({
@@ -26,13 +37,9 @@ suite("CSS - CSS Value Expression Factory", function() {
       suffix: "\\)",
     });
     expressionsMap.set("css", expressions);
-
-    testFileContent = readFile("sample.css");
   });
 
   test("benchmark validity", function() {
-    expect(testFileContent).to.have.length.above(0);
-
     const cssExpressions = expressionsMap.get("css");
     expect(cssExpressions).not.to.be.undefined;
     expect(cssExpressions).to.have.length.above(0);
@@ -42,7 +49,7 @@ suite("CSS - CSS Value Expression Factory", function() {
     const budget = getRuntimeBudget(0.1);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("css", testFileContent),
+      new WebManglerFileMock("css", contentWithValues),
     ];
 
     const result = benchmarkFn(() => {
@@ -56,7 +63,7 @@ suite("CSS - CSS Value Expression Factory", function() {
     const budget = getRuntimeBudget(10);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("css", testFileContent.repeat(100)),
+      new WebManglerFileMock("css", contentWithValues.repeat(100)),
     ];
 
     const result = benchmarkFn(() => {

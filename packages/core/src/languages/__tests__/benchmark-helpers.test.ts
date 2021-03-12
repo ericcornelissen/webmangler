@@ -4,13 +4,11 @@ import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import * as fs from "fs";
 import * as os from "os";
 
 import {
   benchmarkFn,
   getRuntimeBudget,
-  readFile,
 } from "./benchmark-helpers";
 
 chaiUse(sinonChai);
@@ -83,32 +81,6 @@ suite("Benchmarking Helpers", function() {
 
     suiteTeardown(function() {
       osCpusStub.restore();
-    });
-  });
-
-  suite("::readFile", function() {
-    let fsReadFileSyncStub: SinonStub;
-
-    suiteSetup(function() {
-      fsReadFileSyncStub = sinon.stub(fs, "readFileSync");
-    });
-
-    test("read existing file", function() {
-      const content = "foobar";
-      fsReadFileSyncStub.returns(content);
-
-      const result = readFile("foo.bar");
-      expect(result).to.equal(content);
-    });
-
-    test("read missing file", function() {
-      fsReadFileSyncStub.throwsException("file no found");
-
-      expect(() => readFile("foo.bar")).to.throw();
-    });
-
-    suiteTeardown(function() {
-      fsReadFileSyncStub.restore();
     });
   });
 });

@@ -6,7 +6,6 @@ import WebManglerFileMock from "../../../__mocks__/web-mangler-file.mock";
 import {
   benchmarkFn,
   getRuntimeBudget,
-  readFile,
 } from "../../__tests__/benchmark-helpers";
 
 import manglerEngine from "../../../engine";
@@ -18,20 +17,20 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     patterns: "foo[a-zA-Z0-9]+",
   };
 
-  let testFileContent = "";
+  const contentWithQuerySelector = `
+    const div = document.querySelectorAll("div");
+    const foo = document.querySelectorAll(".foo");
+    const bar = document.querySelectorAll("#bar");
+  `;
 
   suiteSetup(function() {
     const expressions = querySelectorExpressionFactory({
       prefix: "\\.",
     });
     expressionsMap.set("js", expressions);
-
-    testFileContent = readFile("sample.js");
   });
 
   test("benchmark validity", function() {
-    expect(testFileContent).to.have.length.above(0);
-
     const cssExpressions = expressionsMap.get("js");
     expect(cssExpressions).not.to.be.undefined;
     expect(cssExpressions).to.have.length.above(0);
@@ -41,7 +40,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     const budget = getRuntimeBudget(0.1);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("js", testFileContent),
+      new WebManglerFileMock("js", contentWithQuerySelector),
     ];
 
     const result = benchmarkFn(() => {
@@ -55,7 +54,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     const budget = getRuntimeBudget(30);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("js", testFileContent.repeat(100)),
+      new WebManglerFileMock("js", contentWithQuerySelector.repeat(100)),
     ];
 
     const result = benchmarkFn(() => {

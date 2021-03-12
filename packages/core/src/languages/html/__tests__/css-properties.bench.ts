@@ -6,7 +6,6 @@ import WebManglerFileMock from "../../../__mocks__/web-mangler-file.mock";
 import {
   benchmarkFn,
   getRuntimeBudget,
-  readFile,
 } from "../../__tests__/benchmark-helpers";
 
 import manglerEngine from "../../../engine";
@@ -18,20 +17,22 @@ suite("HTML - CSS Property Expression Factory", function() {
     patterns: "foo[a-zA-Z0-9]+",
   };
 
-  let testFileContent = "";
+  const contentWithProperties = `
+    <body>
+      <div style="color: red">
+        <p style="color: var(--color); font: var(--font)">Hello world!</p>
+      </div>
+    </body>
+  `;
 
   suiteSetup(function() {
     const expressions = cssDeclarationPropertyExpressionFactory({
       prefix: "--",
     });
     expressionsMap.set("html", expressions);
-
-    testFileContent = readFile("sample.html");
   });
 
   test("benchmark validity", function() {
-    expect(testFileContent).to.have.length.above(0);
-
     const cssExpressions = expressionsMap.get("html");
     expect(cssExpressions).not.to.be.undefined;
     expect(cssExpressions).to.have.length.above(0);
@@ -41,7 +42,7 @@ suite("HTML - CSS Property Expression Factory", function() {
     const budget = getRuntimeBudget(0.1);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("html", testFileContent),
+      new WebManglerFileMock("html", contentWithProperties),
     ];
 
     const result = benchmarkFn(() => {
@@ -55,7 +56,7 @@ suite("HTML - CSS Property Expression Factory", function() {
     const budget = getRuntimeBudget(10);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("html", testFileContent.repeat(100)),
+      new WebManglerFileMock("html", contentWithProperties.repeat(100)),
     ];
 
     const result = benchmarkFn(() => {

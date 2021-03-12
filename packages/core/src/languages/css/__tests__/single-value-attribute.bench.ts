@@ -6,7 +6,6 @@ import WebManglerFileMock from "../../../__mocks__/web-mangler-file.mock";
 import {
   benchmarkFn,
   getRuntimeBudget,
-  readFile,
 } from "../../__tests__/benchmark-helpers";
 
 import manglerEngine from "../../../engine";
@@ -18,20 +17,25 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
     patterns: "foo[a-zA-Z0-9]+",
   };
 
-  let testFileContent = "";
+  const contentWithSingleValueAttribute = `
+    [data-foo="bar"] {
+      font-family: sans-serif;
+    }
+
+    .foo[class="bar"]{
+      content: "bar";
+      color: #123;
+    }
+  `;
 
   suiteSetup(function() {
     const expressions = singleValueAttributeExpressionFactory({
       attributeNames: ["id", "for"],
     });
     expressionsMap.set("css", expressions);
-
-    testFileContent = readFile("sample.css");
   });
 
   test("benchmark validity", function() {
-    expect(testFileContent).to.have.length.above(0);
-
     const cssExpressions = expressionsMap.get("css");
     expect(cssExpressions).not.to.be.undefined;
     expect(cssExpressions).to.have.length.above(0);
@@ -41,7 +45,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
     const budget = getRuntimeBudget(0.1);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("css", testFileContent),
+      new WebManglerFileMock("css", contentWithSingleValueAttribute),
     ];
 
     const result = benchmarkFn(() => {
@@ -55,7 +59,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
     const budget = getRuntimeBudget(10);
 
     const files: WebManglerFile[] = [
-      new WebManglerFileMock("css", testFileContent.repeat(100)),
+      new WebManglerFileMock("css", contentWithSingleValueAttribute.repeat(100)),
     ];
 
     const result = benchmarkFn(() => {
