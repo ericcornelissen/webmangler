@@ -14,13 +14,18 @@ import cssDeclarationPropertyExpressionFactory from "../css-properties";
 suite("JavaScript - CSS Property Expression Factory", function() {
   const expressionsMap = new Map();
   const mangleEngineOptions = {
-    patterns: "foo[a-zA-Z0-9]+",
+    patterns: "[a-zA-Z0-9-]+",
   };
 
   const contentWithProperties = `
-    $element.style.getPropertyValue("color");
-    $element.style.getPropertyValue("font-size");
-    $element.style.getPropertyValue("margin-left");
+    $element.style.getPropertyValue("--color");
+    $element.style.getPropertyValue("--font-size");
+    $element.style.getPropertyValue("--margin-left");
+  `;
+  const contentWithoutProperties = `
+    const foo = "bar";
+    const fooEl = document.getElementById(foo);
+    const barEl = document.querySelector(".bar");
   `;
 
   suiteSetup(function() {
@@ -38,29 +43,64 @@ suite("JavaScript - CSS Property Expression Factory", function() {
 
   test("simple file", function() {
     const budget = getRuntimeBudget(0.1);
+    const fileContent = contentWithProperties;
 
-    const files: WebManglerFile[] = [
-      new WebManglerFileMock("js", contentWithProperties),
-    ];
-
+    let files: WebManglerFile[] = [];
+    let mangledFiles: WebManglerFile[] = [];
     const result = benchmarkFn(() => {
-      manglerEngine(files, expressionsMap, mangleEngineOptions);
+      files = [new WebManglerFileMock("js", fileContent)];
+      mangledFiles = manglerEngine(
+        files,
+        expressionsMap,
+        mangleEngineOptions,
+      );
     });
 
     expect(result.medianDuration).to.be.below(budget);
+
+    expect(mangledFiles).to.have.lengthOf(1);
+    expect(mangledFiles[0].content).not.to.equal(fileContent);
   });
 
   test("large file", function() {
     const budget = getRuntimeBudget(10);
+    const fileContent = contentWithProperties.repeat(100);
 
-    const files: WebManglerFile[] = [
-      new WebManglerFileMock("js", contentWithProperties.repeat(100)),
-    ];
-
+    let files: WebManglerFile[] = [];
+    let mangledFiles: WebManglerFile[] = [];
     const result = benchmarkFn(() => {
-      manglerEngine(files, expressionsMap, mangleEngineOptions);
+      files = [new WebManglerFileMock("js", fileContent)];
+      mangledFiles = manglerEngine(
+        files,
+        expressionsMap,
+        mangleEngineOptions,
+      );
     });
 
     expect(result.medianDuration).to.be.below(budget);
+
+    expect(mangledFiles).to.have.lengthOf(1);
+    expect(mangledFiles[0].content).not.to.equal(fileContent);
+  });
+
+  test("large file without properties", function() {
+    const budget = getRuntimeBudget(10);
+    const fileContent = contentWithoutProperties.repeat(100);
+
+    let files: WebManglerFile[] = [];
+    let mangledFiles: WebManglerFile[] = [];
+    const result = benchmarkFn(() => {
+      files = [new WebManglerFileMock("js", fileContent)];
+      mangledFiles = manglerEngine(
+        files,
+        expressionsMap,
+        mangleEngineOptions,
+      );
+    });
+
+    expect(result.medianDuration).to.be.below(budget);
+
+    expect(mangledFiles).to.have.lengthOf(1);
+    expect(mangledFiles[0].content).to.equal(fileContent);
   });
 });

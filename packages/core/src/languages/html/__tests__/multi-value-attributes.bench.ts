@@ -14,7 +14,7 @@ import multiValueAttributeExpressionFactory from "../multi-value-attributes";
 suite("HTML - Multi Value Attribute Expression Factory", function() {
   const expressionsMap = new Map();
   const mangleEngineOptions = {
-    patterns: "foo[a-zA-Z0-9]+",
+    patterns: "[a-zA-Z0-9-]+",
   };
 
   const contentWithMultiValueAttribute = `
@@ -22,6 +22,13 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
       <div id="foobar">
         <p class="left">Hello</p>
         <p class="green small" data-foo="bar">World!</p>
+      </div>
+    </body>
+  `;
+  const contentWithoutMultiValueAttribute = `
+    <body id="foo">
+      <div id="bar">
+        <p>Hello world!</p>
       </div>
     </body>
   `;
@@ -41,29 +48,64 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
 
   test("simple file", function() {
     const budget = getRuntimeBudget(0.1);
+    const fileContent = contentWithMultiValueAttribute;
 
-    const files: WebManglerFile[] = [
-      new WebManglerFileMock("html", contentWithMultiValueAttribute),
-    ];
-
+    let files: WebManglerFile[] = [];
+    let mangledFiles: WebManglerFile[] = [];
     const result = benchmarkFn(() => {
-      manglerEngine(files, expressionsMap, mangleEngineOptions);
+      files = [new WebManglerFileMock("html", fileContent)];
+      mangledFiles = manglerEngine(
+        files,
+        expressionsMap,
+        mangleEngineOptions,
+      );
     });
 
     expect(result.medianDuration).to.be.below(budget);
+
+    expect(mangledFiles).to.have.lengthOf(1);
+    expect(mangledFiles[0].content).not.to.equal(fileContent);
   });
 
   test("large file", function() {
     const budget = getRuntimeBudget(10);
+    const fileContent = contentWithMultiValueAttribute.repeat(100);
 
-    const files: WebManglerFile[] = [
-      new WebManglerFileMock("html", contentWithMultiValueAttribute.repeat(100)),
-    ];
-
+    let files: WebManglerFile[] = [];
+    let mangledFiles: WebManglerFile[] = [];
     const result = benchmarkFn(() => {
-      manglerEngine(files, expressionsMap, mangleEngineOptions);
+      files = [new WebManglerFileMock("html", fileContent)];
+      mangledFiles = manglerEngine(
+        files,
+        expressionsMap,
+        mangleEngineOptions,
+      );
     });
 
     expect(result.medianDuration).to.be.below(budget);
+
+    expect(mangledFiles).to.have.lengthOf(1);
+    expect(mangledFiles[0].content).not.to.equal(fileContent);
+  });
+
+  test("large file without multi-value attributes", function() {
+    const budget = getRuntimeBudget(10);
+    const fileContent = contentWithoutMultiValueAttribute.repeat(100);
+
+    let files: WebManglerFile[] = [];
+    let mangledFiles: WebManglerFile[] = [];
+    const result = benchmarkFn(() => {
+      files = [new WebManglerFileMock("html", fileContent)];
+      mangledFiles = manglerEngine(
+        files,
+        expressionsMap,
+        mangleEngineOptions,
+      );
+    });
+
+    expect(result.medianDuration).to.be.below(budget);
+
+    expect(mangledFiles).to.have.lengthOf(1);
+    expect(mangledFiles[0].content).to.equal(fileContent);
   });
 });
