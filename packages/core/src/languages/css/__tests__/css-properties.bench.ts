@@ -61,7 +61,7 @@ suite("CSS - CSS Property Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
+    const budget = getRuntimeBudget(0.2);
     const fileContent = contentWithVariables;
 
     let files: WebManglerFile[] = [];

@@ -60,7 +60,7 @@ suite("JavaScript - Attribute Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(15);
     const fileContent = contentWithAttributes.repeat(100);
 
     let files: WebManglerFile[] = [];

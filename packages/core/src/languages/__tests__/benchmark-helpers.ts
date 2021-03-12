@@ -29,7 +29,7 @@ type BenchmarkRunStats = {
 /**
  * The default number of repetitions when benchmarking a function.
  */
-const DEFAULT_REPETITIONS = 100;
+const DEFAULT_REPETITIONS = 200;
 
 /**
  * Get the speed of the CPU in MHz of the current system.

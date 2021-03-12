@@ -58,7 +58,7 @@ suite("CSS - Attribute Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.2);
+    const budget = getRuntimeBudget(0.3);
     const fileContent = contentWithAttributes;
 
     let files: WebManglerFile[] = [];
@@ -79,7 +79,7 @@ suite("CSS - Attribute Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(15);
     const fileContent = contentWithAttributes.repeat(100);
 
     let files: WebManglerFile[] = [];
