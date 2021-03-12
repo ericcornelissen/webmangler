@@ -8,7 +8,7 @@ import WebManglerPluginLanguageMock from "../../__mocks__/web-mangler-language-p
 
 import * as CssLanguagePlugin from "../css";
 import * as HtmlLanguagePlugin from "../html";
-import * as JavaScriptLanguagePlugin from "../javascript";
+import * as JsLanguagePlugin from "../javascript";
 
 import BuiltInLanguagesPlugin from "../builtin";
 
@@ -19,11 +19,11 @@ suite("Built-in Language Supports", function() {
 
   let CssLanguagePluginMock: WebManglerLanguagePlugin;
   let HtmlLanguagePluginMock: WebManglerLanguagePlugin;
-  let JavaScriptLanguagePluginMock: WebManglerLanguagePlugin;
+  let JsLanguagePluginMock: WebManglerLanguagePlugin;
 
   let CssLanguagePluginModuleStub: sinon.SinonStub;
   let HtmlLanguagePluginModuleStub: sinon.SinonStub;
-  let JavaScriptLanguagePluginModuleStub: sinon.SinonStub;
+  let JsLanguagePluginModuleStub: sinon.SinonStub;
 
   suiteSetup(function() {
     CssLanguagePluginMock = new WebManglerPluginLanguageMock();
@@ -34,9 +34,9 @@ suite("Built-in Language Supports", function() {
     HtmlLanguagePluginModuleStub = sinon.stub(HtmlLanguagePlugin, "default");
     HtmlLanguagePluginModuleStub.returns(HtmlLanguagePluginMock);
 
-    JavaScriptLanguagePluginMock = new WebManglerPluginLanguageMock();
-    JavaScriptLanguagePluginModuleStub = sinon.stub(JavaScriptLanguagePlugin, "default");
-    JavaScriptLanguagePluginModuleStub.returns(JavaScriptLanguagePluginMock);
+    JsLanguagePluginMock = new WebManglerPluginLanguageMock();
+    JsLanguagePluginModuleStub = sinon.stub(JsLanguagePlugin, "default");
+    JsLanguagePluginModuleStub.returns(JsLanguagePluginMock);
   });
 
   setup(function() {
@@ -52,7 +52,7 @@ suite("Built-in Language Supports", function() {
 
     const cssExpr = CssLanguagePluginMock.getExpressionsFor(name, options);
     const htmlExpr = HtmlLanguagePluginMock.getExpressionsFor(name, options);
-    const jsExpr = JavaScriptLanguagePluginMock.getExpressionsFor(name, options);
+    const jsExpr = JsLanguagePluginMock.getExpressionsFor(name, options);
 
     const hasSameValueAsResult = (v: unknown, k: string): void => {
       expect(result.get(k)).to.equal(v);
@@ -67,14 +67,20 @@ suite("Built-in Language Supports", function() {
     const result = plugin.getLanguages();
     expect(result).to.have.length.above(0);
 
-    expect(result).to.deep.include.members(CssLanguagePluginMock.getLanguages());
-    expect(result).to.deep.include.members(HtmlLanguagePluginMock.getLanguages());
-    expect(result).to.deep.include.members(JavaScriptLanguagePluginMock.getLanguages());
+    expect(result).to.deep.include.members(
+      CssLanguagePluginMock.getLanguages(),
+    );
+    expect(result).to.deep.include.members(
+      HtmlLanguagePluginMock.getLanguages(),
+    );
+    expect(result).to.deep.include.members(
+      JsLanguagePluginMock.getLanguages(),
+    );
   });
 
   suiteTeardown(function() {
     CssLanguagePluginModuleStub.restore();
     HtmlLanguagePluginModuleStub.restore();
-    JavaScriptLanguagePluginModuleStub.restore();
+    JsLanguagePluginModuleStub.restore();
   });
 });

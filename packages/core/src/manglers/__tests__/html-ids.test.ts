@@ -1,7 +1,11 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { SingleValueAttributeOptions } from "../../languages/options";
 import type { MangleOptions } from "../../types";
-import type { TestCase } from "./types";
+import type {
+  SelectorBeforeAndAfter,
+  SelectorPairBeforeAndAfter,
+  TestCase,
+} from "./types";
 
 import { expect } from "chai";
 
@@ -25,7 +29,7 @@ import HtmlIdMangler from "../html-ids";
 const builtInLanguages = [new BuiltInLanguageSupport()];
 
 const DEFAULT_PATTERN = "id-[a-z]+";
-const SELECTORS: { before: string, after: string }[] = [
+const SELECTORS: SelectorBeforeAndAfter[] = [
   { before: ":root", after: ":root" },
   { before: "div", after: "div" },
   { before: "#foobar", after: "#foobar" },
@@ -33,7 +37,7 @@ const SELECTORS: { before: string, after: string }[] = [
   { before: "[data-foobar]", after: "[data-foobar]" },
   { before: "#id-foobar", after: "#a" },
 ];
-const SELECTOR_PAIRS: { beforeA: string, beforeB: string, afterA: string, afterB: string }[] = [
+const SELECTOR_PAIRS: SelectorPairBeforeAndAfter[] = [
   { beforeA: "div", beforeB: "span", afterA: "div", afterB: "span" },
   { beforeA: "#foo", beforeB: "#bar", afterA: "#foo", afterB: "#bar" },
   { beforeA: ".foo", beforeB: ".bar", afterA: ".foo", afterB: ".bar" },
@@ -112,8 +116,14 @@ suite("HTML ID Mangler", function() {
                 }),
               ]),
             {
-              input: `${beforeA} { font-size: 12px; } ${beforeB} { font-weight: bold; }`,
-              expected: `${afterA} { font-size: 12px; } ${afterB} { font-weight: bold; }`,
+              input: `
+                ${beforeA} { font-size: 12px; }
+                ${beforeB} { font-weight: bold; }
+              `,
+              expected: `
+                ${afterA} { font-size: 12px; }
+                ${afterB} { font-weight: bold; }
+              `,
             },
             {
               input: `:root { } ${beforeA} { } ${beforeB} { }`,
@@ -140,8 +150,20 @@ suite("HTML ID Mangler", function() {
               expected: `${afterA} { } div { } ${afterB} { } span { }`,
             },
             {
-              input: `:root { } ${beforeA} { } div { } ${beforeB} { } span { }`,
-              expected: `:root { } ${afterA} { } div { } ${afterB} { } span { }`,
+              input: `
+                :root { }
+                ${beforeA} { }
+                div { }
+                ${beforeB} { }
+                span { }
+              `,
+              expected: `
+                :root { }
+                ${afterA} { }
+                div { }
+                ${afterB} { }
+                span { }
+              `,
             },
           ]),
       },
@@ -250,7 +272,10 @@ suite("HTML ID Mangler", function() {
             keepIdPrefix: keepIdPrefix,
           });
           const options = htmlIdMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -649,15 +674,14 @@ suite("HTML ID Mangler", function() {
             description: "multiple class attributes on one element should all be mangled",
           },
           ...ATTR_SAMPLE
-            .map((attr): TestCase[] => [
+            .flatMap((attr): TestCase[] => [
               ...["data-", "x"]
                 .map((prefix): TestCase => ({
                   input: `<div ${prefix}${attr}id-foo"></div>`,
                   expected: `<div ${prefix}${attr}id-foo"></div>`,
                   description: "Shouldn't mangle in attribute even if it ends in \"id\"",
                 })),
-            ])
-            .flat(),
+            ]),
           {
             input: "<id class=\"foo\"></id>",
             expected: "<id class=\"foo\"></id>",
@@ -687,7 +711,10 @@ suite("HTML ID Mangler", function() {
             keepIdPrefix: keepIdPrefix,
           });
           const options = htmlIdMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -1020,7 +1047,10 @@ suite("HTML ID Mangler", function() {
             keepIdPrefix: keepIdPrefix,
           });
           const options = htmlIdMangler.options();
-          const expressions = getExpressions(builtInLanguages, options.expressionOptions);
+          const expressions = getExpressions(
+            builtInLanguages,
+            options.expressionOptions,
+          );
 
           const result = mangleEngine(files, expressions, options);
           expect(result).to.have.length(1);
@@ -1033,60 +1063,65 @@ suite("HTML ID Mangler", function() {
   });
 
   suite("Configuration", function() {
-    test("default patterns", function() {
-      const expected = HtmlIdMangler.DEFAULT_PATTERNS;
+    suite("::idNamePatterns", function() {
+      const DEFAULT_PATTERNS = ["id-[a-zA-Z-_]+"];
 
-      const cssClassMangler = new HtmlIdMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: expected });
+      test("default patterns", function() {
+        const htmlIdMangler = new HtmlIdMangler();
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ patterns: DEFAULT_PATTERNS });
+      });
+
+      test("custom pattern", function() {
+        const pattern = "foo(bar|baz)-[a-z]+";
+
+        const htmlIdMangler = new HtmlIdMangler({ idNamePattern: pattern });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ patterns: pattern });
+      });
+
+      test("custom patterns", function() {
+        const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+
+        const htmlIdMangler = new HtmlIdMangler({ idNamePattern: patterns });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ patterns: patterns });
+      });
     });
 
-    test("custom pattern", function() {
-      const pattern = "foo(bar|baz)-[a-z]+";
+    suite("::reservedIds", function() {
+      test("default reserved", function() {
 
-      const cssClassMangler = new HtmlIdMangler({ idNamePattern: pattern });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: pattern });
+        const htmlIdMangler = new HtmlIdMangler();
+        const result = htmlIdMangler.options();
+        expect(result).to.have.property("reservedNames").that.is.empty;
+      });
+
+      test("custom reserved", function() {
+        const reserved: string[] = ["foo", "bar"];
+
+        const htmlIdMangler = new HtmlIdMangler({ reservedIds: reserved });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ reservedNames: reserved });
+      });
     });
 
-    test("custom patterns", function() {
-      const patterns: string[] = ["foobar-[a-z]+", "foobaz-[a-z]+"];
+    suite("::keepIdPrefix", function() {
+      const DEFAULT_MANGLE_PREFIX = "";
 
-      const cssClassMangler = new HtmlIdMangler({ idNamePattern: patterns });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ patterns: patterns });
-    });
+      test("default prefix", function() {
+        const htmlIdMangler = new HtmlIdMangler();
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ manglePrefix: DEFAULT_MANGLE_PREFIX });
+      });
 
-    test("default reserved", function() {
-      const expected = HtmlIdMangler.DEFAULT_RESERVED;
+      test("custom prefix", function() {
+        const prefix = "foobar";
 
-      const cssClassMangler = new HtmlIdMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: expected });
-    });
-
-    test("custom reserved", function() {
-      const reserved: string[] = ["foo", "bar"];
-
-      const cssClassMangler = new HtmlIdMangler({ reservedIds: reserved });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ reservedNames: reserved });
-    });
-
-    test("default prefix", function() {
-      const expected = HtmlIdMangler.DEFAULT_PREFIX;
-
-      const cssClassMangler = new HtmlIdMangler();
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: expected });
-    });
-
-    test("custom prefix", function() {
-      const prefix = "foobar";
-
-      const cssClassMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
-      const result = cssClassMangler.options();
-      expect(result).to.deep.include({ manglePrefix: prefix });
+        const htmlIdMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ manglePrefix: prefix });
+      });
     });
 
     suite("::idAttributes", function() {

@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Include `LICENSE` in published package.
 
 ## [0.1.15] - 2021-03-11
 

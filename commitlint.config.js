@@ -19,6 +19,7 @@ module.exports = {
         "core",
         "hook",
         "script",
+        "testing",
       ],
     ],
     "type-enum": [

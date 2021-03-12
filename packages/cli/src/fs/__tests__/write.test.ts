@@ -16,7 +16,8 @@ suite("Writing", function() {
   let fsWriteFileSync: SinonStub;
 
   suiteSetup(function() {
-    fsWriteFileSync = sinon.stub(fs, "writeFileSync").callsFake(fsMock.writeFileSync);
+    fsWriteFileSync = sinon.stub(fs, "writeFileSync");
+    fsWriteFileSync.callsFake(fsMock.writeFileSync);
   });
 
   setup(function() {
@@ -33,7 +34,10 @@ suite("Writing", function() {
       const file = new WebManglerCliFileMock({ path: "foo", content: "bar" });
       writeFiles([file]);
       expect(fsMock.writeFileSync).to.have.callCount(1);
-      expect(fsMock.writeFileSync).to.have.been.calledWith(file.path, file.content);
+      expect(fsMock.writeFileSync).to.have.been.calledWith(
+        file.path,
+        file.content,
+      );
     });
 
     test("multiple input files", function() {
@@ -45,7 +49,10 @@ suite("Writing", function() {
       writeFiles(files);
       expect(fsMock.writeFileSync).to.have.callCount(files.length);
       for (const file of files) {
-        expect(fsMock.writeFileSync).to.have.been.calledWith(file.path, file.content);
+        expect(fsMock.writeFileSync).to.have.been.calledWith(
+          file.path,
+          file.content,
+        );
       }
     });
   });
