@@ -1,8 +1,8 @@
 import type { WebManglerFile } from "../../../types";
 
+import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
-import WebManglerFileMock from "../../../__mocks__/web-mangler-file.mock";
 import {
   benchmarkFn,
   getRuntimeBudget,

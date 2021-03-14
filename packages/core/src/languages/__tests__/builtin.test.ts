@@ -1,10 +1,9 @@
 import type { WebManglerLanguagePlugin } from "../../types";
 
+import { WebManglerPluginLanguageMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
-
-import WebManglerPluginLanguageMock from "../../__mocks__/web-mangler-language-plugin.mock";
 
 import * as CssLanguagePlugin from "../css";
 import * as HtmlLanguagePlugin from "../html";

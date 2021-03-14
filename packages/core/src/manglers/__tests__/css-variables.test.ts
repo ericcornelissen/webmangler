@@ -1,6 +1,7 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
+import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
 import {
@@ -13,8 +14,6 @@ import {
   varyQuotes,
   varySpacing,
 } from "./test-helpers";
-
-import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
 import { ALL_CHARS } from "../../characters";
 import mangleEngine from "../../engine";

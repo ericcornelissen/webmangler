@@ -7,6 +7,7 @@ import type {
   TestCase,
 } from "./types";
 
+import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
 import {
@@ -18,8 +19,6 @@ import {
 } from "./css-constants";
 import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import { isValidIdName, varyQuotes, varySpacing } from "./test-helpers";
-
-import WebManglerFileMock from "../../__mocks__/web-mangler-file.mock";
 
 import mangleEngine from "../../engine";
 import { getExpressions } from "../../index";

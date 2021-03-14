@@ -1,9 +1,9 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { MangleExpression } from "../../types";
 
+import { MangleExpressionMock } from "@webmangler/testing";
 import { expect } from "chai";
-
-import MangleExpressionMock from "../../__mocks__/mangle-expression.mock";
+import * as sinon from "sinon";
 
 import { matchesAsExpected } from "./test-helpers";
 
@@ -41,7 +41,9 @@ suite("::matchesAsExpected", function() {
       cases: [
         {
           expressions: [
-            new MangleExpressionMock("\\s(%s{3})", 1, ""),
+            new MangleExpressionMock(
+              sinon.stub().returns(["the", "sun"]),
+            ),
           ],
           input: "praise the sun",
           pattern: "[a-z]",
@@ -50,7 +52,9 @@ suite("::matchesAsExpected", function() {
         },
         {
           expressions: [
-            new MangleExpressionMock("\\s(%s{3})", 1, ""),
+            new MangleExpressionMock(
+              sinon.stub().returns(["the", "sun"]),
+            ),
           ],
           input: "praise the sun",
           pattern: "[a-z]",
@@ -59,8 +63,12 @@ suite("::matchesAsExpected", function() {
         },
         {
           expressions: [
-            new MangleExpressionMock("\\s(%s{3})", 1, ""),
-            new MangleExpressionMock("(%s{3})\\s", 1, ""),
+            new MangleExpressionMock(
+              sinon.stub().returns(["the", "sun"]),
+            ),
+            new MangleExpressionMock(
+              sinon.stub().returns(["ise", "the"]),
+            ),
           ],
           input: "praise the sun",
           pattern: "[a-z]",

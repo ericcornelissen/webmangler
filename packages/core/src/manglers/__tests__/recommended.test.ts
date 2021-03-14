@@ -1,12 +1,11 @@
 import type { RecommendedManglersOptions } from "../recommended";
 
+import { WebManglerPluginMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
 import { permuteObjects } from "./test-helpers";
-
-import WebManglerPluginMock from "../../__mocks__/web-mangler-plugin.mock";
 
 import * as CssClassMangler from "../css-classes";
 import * as CssVarMangler from "../css-variables";

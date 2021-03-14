@@ -1,9 +1,8 @@
 import type { WebManglerPlugin } from "../../../types";
 
+import { WebManglerPluginMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
 import * as sinonChai from "sinon-chai";
-
-import WebManglerPluginMock from "../../../__mocks__/web-mangler-plugin.mock";
 
 import MultiMangler from "../multi-mangler.class";
 
