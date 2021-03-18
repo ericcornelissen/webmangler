@@ -1,5 +1,11 @@
 import type { MangleExpression } from "../../types";
 
+import {
+  ATTRIBUTE_SELECTOR_PRE,
+  ATTRIBUTE_SELECTOR_POST,
+  ATTRIBUTE_USAGE_PRE,
+  ATTRIBUTE_USAGE_POST,
+} from "../common";
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_MAIN = "main";
@@ -14,9 +20,9 @@ function newAttributeSelectorExpression(): MangleExpression {
   return new SingleGroupMangleExpression(
     `
       (?<!"[^"}]*|'[^'}]*)
-      (?<=\\[\\s*)
+      (?<=${ATTRIBUTE_SELECTOR_PRE})
       (?<${GROUP_MAIN}>%s)
-      (?=\\s*(?:\\]|\\=|\\~=|\\|=|\\^=|\\$=|\\*=))
+      (?=${ATTRIBUTE_SELECTOR_POST})
     `,
     GROUP_MAIN,
   );
@@ -32,12 +38,9 @@ function newAttributeUsageExpression(): MangleExpression {
   return new SingleGroupMangleExpression(
     `
       (?<!"[^";]*|'[^';]*)
-      (?<=attr\\s*\\(\\s*)
+      (?<=${ATTRIBUTE_USAGE_PRE})
       (?<${GROUP_MAIN}>%s)
-      (?=
-        (\\s+([a-zA-Z]+|%))?
-        \\s*(,|\\))
-      )
+      (?=${ATTRIBUTE_USAGE_POST})
     `,
     GROUP_MAIN,
   );
