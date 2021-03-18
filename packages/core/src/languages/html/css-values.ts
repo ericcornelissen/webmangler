@@ -2,6 +2,7 @@ import type { MangleExpression } from "../../types";
 import type { CssDeclarationValueOptions } from "../options";
 
 import { NestedGroupExpression } from "../utils/mangle-expressions";
+import { QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -17,7 +18,7 @@ function newStyleDeclarationValueExpressions(
   valuePrefix: string,
   valueSuffix: string,
 ): MangleExpression[] {
-  return ["\"", "'"].map((quote) => new NestedGroupExpression(
+  return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
     `
       (?<=
         \\sstyle\\s*=\\s*

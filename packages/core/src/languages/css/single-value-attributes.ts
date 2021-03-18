@@ -6,6 +6,7 @@ import {
   ATTRIBUTE_SELECTOR_PRE,
 } from "../common";
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
+import { QUOTES_PATTERN } from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
@@ -32,7 +33,7 @@ function newAttributeSelectorSingleValueExpression(
         ${ATTRIBUTE_SELECTOR_PRE}
         (?:${attributeNamesExpression})\\s*
         (?:${ATTRIBUTE_SELECTOR_COMPARATORS})\\s*
-        (?<${GROUP_QUOTE}>"|')\\s*
+        (?<${GROUP_QUOTE}>${QUOTES_PATTERN})\\s*
         ${valuePrefix}
       )
       (?<${GROUP_MAIN}>%s)

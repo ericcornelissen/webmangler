@@ -2,6 +2,7 @@ import type { MangleExpression } from "../../types";
 import type { CssDeclarationPropertyOptions } from "../options";
 
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
+import { QUOTES_PATTERN } from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "q";
@@ -21,7 +22,7 @@ function newPropertyAsStandaloneStringExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
-        (?<${GROUP_QUOTE}>"|'|\`)
+        (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
         \\s*
         ${propertyPrefix}
       )
