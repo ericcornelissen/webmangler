@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add README with basic documentation.
 
 ## [0.1.1] - 2021-03-14
 
