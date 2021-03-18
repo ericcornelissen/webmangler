@@ -1,6 +1,7 @@
 import type { MangleExpression } from "../../types";
 import type { QuerySelectorOptions } from "../options";
 
+import { QUERY_SELECTOR_COMBINERS } from "../common";
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_MAIN = "main";
@@ -27,7 +28,7 @@ function newQuerySelectorExpressions(
       (?<${GROUP_MAIN}>%s)
       (?=
         ${selectorSuffix}
-        (?:${quote}|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s)
+        (?:${quote}|${QUERY_SELECTOR_COMBINERS})
       )
     `,
     GROUP_MAIN,

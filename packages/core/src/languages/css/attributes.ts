@@ -7,7 +7,7 @@ import {
   ATTRIBUTE_USAGE_POST,
 } from "../common";
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
-import { IN_A_BLOCK_NOT_A_STRING, NOT_IN_A_BLOCK_OR_STRING} from "./common";
+import { IN_A_BLOCK_NOT_A_STRING, NOT_IN_A_BLOCK_OR_STRING } from "./common";
 
 const GROUP_MAIN = "main";
 

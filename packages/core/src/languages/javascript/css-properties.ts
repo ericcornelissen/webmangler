@@ -21,13 +21,15 @@ function newPropertyAsStandaloneStringExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
-        (?<${GROUP_QUOTE}>"|'|\`)\\s*
+        (?<${GROUP_QUOTE}>"|'|\`)
+        \\s*
         ${propertyPrefix}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
         ${propertySuffix}
-        \\s*\\k<${GROUP_QUOTE}>
+        \\s*
+        \\k<${GROUP_QUOTE}>
       )
     `,
     GROUP_MAIN,

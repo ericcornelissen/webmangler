@@ -1,6 +1,10 @@
 import type { MangleExpression } from "../../types";
 import type { SingleValueAttributeOptions } from "../options";
 
+import {
+  ATTRIBUTE_SELECTOR_COMPARATORS,
+  ATTRIBUTE_SELECTOR_PRE,
+} from "../common";
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
 
 const GROUP_MAIN = "main";
@@ -25,8 +29,9 @@ function newAttributeSelectorSingleValueExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
-        \\[\\s*(?:${attributeNamesExpression})\\s*
-        (?:\\=|\\~=|\\|=|\\^=|\\$=|\\*=)\\s*
+        ${ATTRIBUTE_SELECTOR_PRE}
+        (?:${attributeNamesExpression})\\s*
+        (?:${ATTRIBUTE_SELECTOR_COMPARATORS})\\s*
         (?<${GROUP_QUOTE}>"|')\\s*
         ${valuePrefix}
       )
