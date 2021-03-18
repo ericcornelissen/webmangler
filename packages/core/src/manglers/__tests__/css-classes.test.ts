@@ -1,4 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
+import type { MultiValueAttributeOptions } from "../../languages/options";
+import type { MangleOptions } from "../../types";
 import type {
   SelectorBeforeAndAfter,
   SelectorPairBeforeAndAfter,
@@ -1001,6 +1003,51 @@ suite("CSS Class Mangler", function() {
         });
         const result = cssClassMangler.options();
         expect(result).to.deep.include({ manglePrefix: prefix });
+      });
+    });
+
+    suite("::classAttributes", function() {
+      const standardClassAttributes = ["class"];
+
+      const getExpressionOptions = (
+        mangleOptions: MangleOptions,
+      ): MultiValueAttributeOptions => {
+        const allExpressionOptions = mangleOptions.expressionOptions;
+        const expressionOptions = allExpressionOptions[1];
+        return expressionOptions?.options as MultiValueAttributeOptions;
+      };
+
+      const cases: { classAttributes: string[], expected: string[] }[] = [
+        {
+          classAttributes: undefined as unknown as string[],
+          expected: [...standardClassAttributes],
+        },
+        {
+          classAttributes: [],
+          expected: [...standardClassAttributes],
+        },
+        {
+          classAttributes: ["foo", "bar"],
+          expected: [...standardClassAttributes, "foo", "bar"],
+        },
+        {
+          classAttributes: [...standardClassAttributes, "foo", "bar"],
+          expected: [...standardClassAttributes, "foo", "bar"],
+        },
+      ];
+
+      test("different configurations", function() {
+        for (const testCase of cases) {
+          const { expected, classAttributes } = testCase;
+          const cssClassMangler = new CssClassMangler({ classAttributes });
+          const mangleOptions = cssClassMangler.options();
+          const options = getExpressionOptions(mangleOptions);
+          expect(options).not.to.be.undefined;
+
+          const attributeNames = options.attributeNames;
+          expect(attributeNames).not.to.be.undefined;
+          expect(attributeNames).to.deep.equal(expected);
+        }
       });
     });
   });
