@@ -7,16 +7,16 @@ const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
 
 /**
- * Get a {@link MangleExpression} to match element attribute values in HTML,
- * e.g. `bar` in `<div data-foo="bar"></div>` or `sun` in
+ * Get a {@link MangleExpression} to match quoted element attribute values in
+ * HTML, e.g. `bar` in `<div data-foo="bar"></div>` or `sun` in
  * `<div data-praise="thesun"></div>` if the value prefix is "the".
  *
  * @param attributeNames A list of attribute names.
  * @param valuePrefix An expression of the required prefix for values.
  * @param valueSuffix An expression of the required suffix for values.
- * @returns The {@link MangleExpression} to match attribute values in HTML.
+ * @returns The {@link MangleExpression} to match quoted attribute values.
  */
-function newElementAttributeSingleValueExpression(
+function newQuotedValueExpression(
   attributeNames: string[],
   valuePrefix: string,
   valueSuffix: string,
@@ -40,9 +40,42 @@ function newElementAttributeSingleValueExpression(
 }
 
 /**
+ * Get a {@link MangleExpression} to match unquoted element attribute values in
+ * HTML, e.g. `bar` in `<div data-foo=bar></div>` or `sun` in
+ * `<div data-praise=thesun></div>` if the value prefix is "the".
+ *
+ * @param attributeNames A list of attribute names.
+ * @param valuePrefix An expression of the required prefix for values.
+ * @param valueSuffix An expression of the required suffix for values.
+ * @returns The {@link MangleExpression} to match unquoted attribute values.
+ */
+function newUnquotedValueExpression(
+  attributeNames: string[],
+  valuePrefix: string,
+  valueSuffix: string,
+): MangleExpression {
+  const attributeNamesExpression = attributeNames.join("|");
+  return new SingleGroupMangleExpression(
+    `
+      (?<=
+        \\s(?:${attributeNamesExpression})\\s*=
+        ${valuePrefix}
+      )
+      (?<${GROUP_MAIN}>%s)
+      (?=
+        ${valueSuffix}
+        (?:\\s|\\/|\\>)
+      )
+    `,
+    GROUP_MAIN,
+  );
+}
+
+/**
  * Get the set of {@link MangleExpression}s to match single-value attribute
  * values in HTML. This will match:
- * - Attribute values (e.g. `bar` in `<div data-foo="bar"></div>`).
+ * - Quoted attribute values (e.g. `bar` in `<div data-foo="bar"></div>`).
+ * - Unquoted attribute values (e.g. `bar` in `<div data-foo=bar></div>`).
  *
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
@@ -55,7 +88,12 @@ export default function singleValueAttributeExpressionFactory(
   const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
 
   return [
-    newElementAttributeSingleValueExpression(
+    newQuotedValueExpression(
+      options.attributeNames,
+      valuePrefix,
+      valueSuffix,
+    ),
+    newUnquotedValueExpression(
       options.attributeNames,
       valuePrefix,
       valueSuffix,
