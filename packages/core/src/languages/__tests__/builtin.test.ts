@@ -46,12 +46,12 @@ suite("Built-in Language Supports", function() {
     const name = "foo";
     const options = "bar";
 
-    const result = plugin.getExpressionsFor(name, options);
+    const result = plugin.getExpressions(name, options);
     expect(result).to.have.length.above(0);
 
-    const cssExpr = CssLanguagePluginMock.getExpressionsFor(name, options);
-    const htmlExpr = HtmlLanguagePluginMock.getExpressionsFor(name, options);
-    const jsExpr = JsLanguagePluginMock.getExpressionsFor(name, options);
+    const cssExpr = CssLanguagePluginMock.getExpressions(name, options);
+    const htmlExpr = HtmlLanguagePluginMock.getExpressions(name, options);
+    const jsExpr = JsLanguagePluginMock.getExpressions(name, options);
 
     const hasSameValueAsResult = (v: unknown, k: string): void => {
       expect(result.get(k)).to.equal(v);
