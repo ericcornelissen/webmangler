@@ -149,7 +149,7 @@ const file = new MangleExpressionMock(filetype, content);
 #### `WebManglerPluginLanguageMock`
 
 A mocked implementation of the `WebManglerPluginLanguage` type. Can be
-instantiated with custom `getExpressionsFor()` and `getLanguages()` behaviour if
+instantiated with custom `getExpressions()` and `getLanguages()` behaviour if
 needed.
 
 ##### Example
@@ -163,18 +163,18 @@ let plugin;
 // With default implementations of all methods.
 plugin = new WebManglerPluginLanguageMock();
 
-// With custom implementation of the `getExpressionsFor` method.
+// With custom implementation of the `getExpressions` method.
 const expressions = new Map();
-const getExpressionsForStub = sinon.stub().returns(expressions);
-plugin = new WebManglerPluginLanguageMock(getExpressionsForStub);
+const getExpressionsStub = sinon.stub().returns(expressions);
+plugin = new WebManglerPluginLanguageMock(getExpressionsStub);
 ```
 
 ##### Arguments
 
-| Input               | Type   | Description                              |
-| ------------------- | ------ | ---------------------------------------- |
-| `getExpressionsFor` | [Stub] | Implementation of `getExpressionsFor()`. |
-| `getLanguages`      | [Stub] | Implementation of `getLanguages()`.      |
+| Input            | Type   | Description                           |
+| ---------------- | ------ | ------------------------------------- |
+| `getExpressions` | [Stub] | Implementation of `getExpressions()`. |
+| `getLanguages`   | [Stub] | Implementation of `getLanguages()`.   |
 
 #### `WebManglerPluginMock`
 

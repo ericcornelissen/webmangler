@@ -9,6 +9,22 @@ import WebManglerPluginLanguageMock from "../web-mangler-language-plugin";
 chaiUse(sinonChai);
 
 suite("WebManglerPluginLanguageMock", function() {
+  suite("::getExpressions", function() {
+    test("default stub", function() {
+      const pluginMock = new WebManglerPluginLanguageMock();
+      expect(pluginMock.getExpressions).not.to.throw();
+      expect(pluginMock.getExpressions()).not.to.be.undefined;
+    });
+
+    test("custom stub", function() {
+      const getExpressionsStub: SinonStub = sinon.stub();
+
+      const pluginMock = new WebManglerPluginLanguageMock(getExpressionsStub);
+      expect(pluginMock.getExpressions).not.to.throw();
+      expect(getExpressionsStub).to.have.callCount(1);
+    });
+  });
+
   suite("::getExpressionsFor", function() {
     test("default stub", function() {
       const pluginMock = new WebManglerPluginLanguageMock();

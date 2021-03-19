@@ -1,6 +1,6 @@
 {
   "name": "@webmangler/testing",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "WebMangler testing utilities",
   "license": "Unlicense",
   "main": "index.js",

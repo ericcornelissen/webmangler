@@ -19,6 +19,7 @@ const FILES_AND_FOLDERS_TO_DELETE = [
 const PACKAGES_TO_CLEAN = [
   "packages/cli",
   "packages/core",
+  "packages/testing",
 ].map(fromRoot);
 
 execFileSync("git", ["checkout", "HEAD", "--", "./testdata"]);

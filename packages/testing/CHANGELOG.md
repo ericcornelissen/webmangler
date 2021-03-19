@@ -8,7 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.2] - 2021-03-19
+
 - Add README with basic documentation.
+- Add `.getExpressions` method to `WebManglerLanguagePlugin`.
 
 ## [0.1.1] - 2021-03-14
 
