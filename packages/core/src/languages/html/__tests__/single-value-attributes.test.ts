@@ -47,6 +47,30 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
             valueSuffix: "bar",
           },
         },
+        {
+          input: "<div id=foobar></div>",
+          pattern: "[a-z]+",
+          expected: ["foobar"],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: "<div id=foo class=\"bar\"></div>",
+          pattern: "[a-z]+",
+          expected: ["foo"],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: "<img id=foobar/>",
+          pattern: "[a-z]+",
+          expected: ["foobar"],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
       ],
     },
   ];

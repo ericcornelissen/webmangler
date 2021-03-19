@@ -616,6 +616,26 @@ suite("HTML ID Mangler", function() {
           ],
         })),
       {
+        name: "unquoted ids",
+        cases: [
+          {
+            input: "<div id=foobar></div>",
+            expected: "<div id=a></div>",
+            pattern: "[a-z]+",
+          },
+          {
+            input: "<div id=foo class=\"bar\"></div>",
+            expected: "<div id=a class=\"bar\"></div>",
+            pattern: "[a-z]+",
+          },
+          ...varySpacing("/", {
+            input: "<img id=foobar/>",
+            expected: "<img id=a/>",
+            pattern: "[a-z]+",
+          }),
+        ],
+      },
+      {
         name: "non-id attributes that match the pattern",
         cases: [
           {

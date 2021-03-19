@@ -11,6 +11,7 @@ Versioning].
 - Add README with basic documentation.
 - Include `LICENSE` in published package.
 - Support mangling classes in user-specified attributes.
+- Support mangling IDs in unquoted attribute.
 
 ## [0.1.15] - 2021-03-11
 

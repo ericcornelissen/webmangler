@@ -2,7 +2,7 @@ import type { MangleExpression } from "../../types";
 import type { CssDeclarationValueOptions } from "../options";
 
 import { NestedGroupExpression } from "../utils/mangle-expressions";
-import { ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
+import { QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -20,7 +20,7 @@ function newStyleDeclarationValueExpressions(
 ): MangleExpression[] {
   return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
     `
-      (?<=${ATTRIBUTE_PATTERN("style", quote)})
+      (?<=${QUOTED_ATTRIBUTE_PATTERN("style", quote)})
       (?<${GROUP_MAIN}>
         [^${quote}]+
         :\\s*
