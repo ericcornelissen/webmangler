@@ -8,7 +8,7 @@ import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
  * BuiltInLanguagesPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.15
+ * @version v0.1.17
  */
 export default abstract class MultiLanguagePlugin
     implements WebManglerLanguagePlugin {
@@ -42,17 +42,6 @@ export default abstract class MultiLanguagePlugin
     });
 
     return result;
-  }
-
-  /**
-   * @inheritDoc
-   * @deprecated
-   */
-  getExpressionsFor(
-    name: string,
-    options: unknown,
-  ): Map<string, MangleExpression[]> {
-    return this.getExpressions(name, options);
   }
 
   /**
