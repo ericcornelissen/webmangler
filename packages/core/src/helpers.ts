@@ -1,3 +1,5 @@
+import * as path from "path";
+
 /**
  * Filter duplicates from an array.
  *
@@ -18,6 +20,18 @@ export function duplicates(
 ): boolean {
   const firstAppearanceIndex = array.indexOf(value);
   return index === firstAppearanceIndex;
+}
+
+/**
+ * Get the type from a file path based on its extension. If the file path does
+ * not have an extension an empty string will be returned.
+ *
+ * @param filePath The file path of interest.
+ * @returns The file type.
+ * @since v0.1.16
+ */
+export function getTypeFromFilePath(filePath: string): string {
+  return path.extname(filePath).substring(1);
 }
 
 /**
