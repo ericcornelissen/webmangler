@@ -2,7 +2,7 @@ import type { MangleExpression } from "../../types";
 import type { SingleValueAttributeOptions } from "../options";
 
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
-import { QUOTES_PATTERN } from "./common";
+import { ATTRIBUTE_PATTERN, QUOTES_PATTERN } from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
@@ -22,12 +22,14 @@ function newElementAttributeSingleValueExpression(
   valuePrefix: string,
   valueSuffix: string,
 ): MangleExpression {
-  const attributeNamesExpression = attributeNames.join("|");
+  const attributesPattern = attributeNames.join("|");
   return new SingleGroupMangleExpression(
     `
       (?<=
-        \\s(?:${attributeNamesExpression})\\s*=\\s*
-        (?<${GROUP_QUOTE}>${QUOTES_PATTERN})\\s*
+        ${ATTRIBUTE_PATTERN(
+          attributesPattern,
+          `(?<${GROUP_QUOTE}>${QUOTES_PATTERN})`,
+        )}
         ${valuePrefix}
       )
       (?<${GROUP_MAIN}>%s)
