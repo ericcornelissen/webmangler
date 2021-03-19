@@ -1,7 +1,9 @@
 import type { MangleExpression } from "../../types";
 import type { QuerySelectorOptions } from "../options";
 
+import { QUERY_SELECTOR_COMBINERS } from "../common";
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
+import { QUOTES_ARRAY, QUOTES_PATTERN } from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
@@ -18,7 +20,7 @@ function newQuerySelectorExpressions(
   selectorPrefix: string,
   selectorSuffix: string,
 ): MangleExpression[] {
-  return ["\"", "'", "`"].map((quote) => new SingleGroupMangleExpression(
+  return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
     `
       (?<=
         ${quote}[^${quote}]*
@@ -27,7 +29,7 @@ function newQuerySelectorExpressions(
       (?<${GROUP_MAIN}>%s)
       (?=
         ${selectorSuffix}
-        (?:${quote}|\\,|\\.|\\#|\\[|\\:|\\)|\\>|\\+|\\~|\\s)
+        (?:${quote}|${QUERY_SELECTOR_COMBINERS})
       )
     `,
     GROUP_MAIN,
@@ -44,7 +46,7 @@ function newSelectorAsStandaloneStringExpression(): MangleExpression {
   return new SingleGroupMangleExpression(
     `
       (?<=
-        (?<${GROUP_QUOTE}>"|'|\`)
+        (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
         \\s*
       )
       (?<${GROUP_MAIN}>%s)

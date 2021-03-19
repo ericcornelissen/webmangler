@@ -2,6 +2,7 @@ import type { MangleExpression } from "../../types";
 import type { CssDeclarationPropertyOptions } from "../options";
 
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
+import { IN_A_BLOCK_NOT_A_STRING } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -19,7 +20,7 @@ function newCssDeclarationPropertyExpression(
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      (?<!"[^";]*|'[^';]*)
+      ${IN_A_BLOCK_NOT_A_STRING}
       (?<=
         (?:\\;|\\{)\\s*
         ${propertyPrefix}

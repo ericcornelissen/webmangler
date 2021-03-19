@@ -2,6 +2,7 @@ import type { MangleExpression } from "../../types";
 import type { MultiValueAttributeOptions } from "../options";
 
 import { NestedGroupExpression } from "../utils/mangle-expressions";
+import { QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -15,13 +16,10 @@ const GROUP_MAIN = "main";
 function newElementAttributeMultiValueExpressions(
   attributeNames: string[],
 ): MangleExpression[] {
-  const attributeNamesExpression = attributeNames.join("|");
-  return ["\"", "'"].map((quote) => new NestedGroupExpression(
+  const attributesPattern = attributeNames.join("|");
+  return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
     `
-      (?<=
-        \\s(?:${attributeNamesExpression})\\s*=\\s*
-        ${quote}\\s*
-      )
+      (?<=${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)})
       (?<${GROUP_MAIN}>
         (?:[^${quote}]+\\s)?
         %s
