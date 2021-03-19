@@ -1,6 +1,8 @@
 import type { MangleExpression } from "../../types";
 
+import { ATTRIBUTE_SELECTOR_PRE, ATTRIBUTE_SELECTOR_POST } from "../common";
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
+import { QUOTES_ARRAY, QUOTES_PATTERN } from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
@@ -12,14 +14,14 @@ const GROUP_QUOTE = "quote";
  * @returns The {@link MangleExpression}s to match attribute selectors in JS.
  */
 function newAttributeSelectorExpressions(): MangleExpression[] {
-  return ["\"", "'", "`"].map((quote) => new SingleGroupMangleExpression(
+  return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
     `
       (?<=
         ${quote}[^${quote}]*
-        \\[\\s*
+        ${ATTRIBUTE_SELECTOR_PRE}
       )
       (?<${GROUP_MAIN}>%s)
-      (?=\\s*(?:\\]|\\=|\\|=|\\~=|\\^=|\\$=|\\*=))
+      (?=${ATTRIBUTE_SELECTOR_POST})
     `,
     GROUP_MAIN,
   ));
@@ -35,7 +37,7 @@ function newSelectorAsStandaloneStringExpression(): MangleExpression {
   return new SingleGroupMangleExpression(
     `
       (?<=
-        (?<${GROUP_QUOTE}>"|'|\`)
+        (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
         \\s*
       )
       (?<${GROUP_MAIN}>%s)
