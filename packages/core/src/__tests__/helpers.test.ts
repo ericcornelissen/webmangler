@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 import {
   duplicates,
+  getTypeFromFilePath,
   toArrayIfNeeded,
 } from "../helpers";
 
@@ -65,6 +66,35 @@ suite("Helpers (core/src)", function() {
       for (const { array, expected } of testCases) {
         const result = array.filter(duplicates);
         expect(result).to.deep.equal(expected);
+      }
+    });
+  });
+
+  suite("::getTypeFromFilePath", function() {
+    test("file path with extension", function() {
+      const testCases: { input: string; expected: string }[] = [
+        { input: "/foo/bar.js", expected: "js" },
+        { input: "/hello/world.html", expected: "html" },
+        { input: "/praise/the/sun.css", expected: "css" },
+      ];
+
+      for (const testCase of testCases) {
+        const { input, expected } = testCase;
+        const result = getTypeFromFilePath(input);
+        expect(result).to.equal(expected);
+      }
+    });
+
+    test("file path without extension", function() {
+      const testCases: string[] = [
+        "/foobar",
+        "/hello/world",
+        "/praise/the/sun",
+      ];
+
+      for (const testCase of testCases) {
+        const result = getTypeFromFilePath(testCase);
+        expect(result).to.deep.equal("");
       }
     });
   });
