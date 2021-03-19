@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Add README with basic documentation.
+- Add helper to get file type from a file path.
 - Include `LICENSE` in published package.
 - Support mangling classes in user-specified attributes.
 - Support mangling IDs in unquoted attribute.
