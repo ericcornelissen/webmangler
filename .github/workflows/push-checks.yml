@@ -37,6 +37,7 @@ jobs:
         working-directory:
           - packages/cli
           - packages/core
+          - packages/testing
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
