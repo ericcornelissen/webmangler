@@ -8,7 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.5] - 2021-03-19
+
 - Include `LICENSE` in published package.
+- Improve wording in documentation.
 - Read and write files in parallel.
 
 ## [0.1.4] - 2021-02-25

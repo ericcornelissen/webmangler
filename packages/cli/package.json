@@ -1,6 +1,6 @@
 {
   "name": "webmangler-cli",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "The WebMangler Command Line Interface (CLI)",
   "license": "MIT",
   "main": "lib/index.js",
@@ -36,10 +36,10 @@
     "@types/yargs": "16.0.0",
     "@webmangler/testing": "0.1.2",
     "typescript": "4.2.3",
-    "webmangler": "0.1.13"
+    "webmangler": "0.1.16"
   },
   "peerDependencies": {
-    "webmangler": "^0.1.13"
+    "webmangler": "^0.1.16"
   },
   "engines": {
     "node": ">=12.16.0"
