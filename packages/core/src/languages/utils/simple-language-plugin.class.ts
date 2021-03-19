@@ -60,7 +60,7 @@ export default abstract class SimpleLanguagePlugin
   /**
    * @inheritDoc
    */
-  getExpressionsFor(
+  getExpressions(
     name: string,
     options: unknown,
   ): Map<string, MangleExpression[]> {
@@ -73,6 +73,17 @@ export default abstract class SimpleLanguagePlugin
 
     const expressions = expressionFactory(options);
     return this.languages.reduce((m, lang) => m.set(lang, expressions), map);
+  }
+
+  /**
+   * @inheritDoc
+   * @deprecated
+   */
+  getExpressionsFor(
+    name: string,
+    options: unknown,
+  ): Map<string, MangleExpression[]> {
+    return this.getExpressions(name, options);
   }
 
   /**
