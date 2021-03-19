@@ -1,11 +1,10 @@
 import type { SinonStub } from "sinon";
 
 import { expect, use as chaiUse } from "chai";
-import * as fs from "fs";
+import { promises as fs } from "fs";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import * as fsMock from "../__mocks__/fs.mock";
 import WebManglerCliFileMock from "../__mocks__/file.mock";
 
 import { writeFiles } from "../write";
@@ -13,43 +12,43 @@ import { writeFiles } from "../write";
 chaiUse(sinonChai);
 
 suite("Writing", function() {
-  let fsWriteFileSync: SinonStub;
+  let fsWriteFileStub: SinonStub;
 
   suiteSetup(function() {
-    fsWriteFileSync = sinon.stub(fs, "writeFileSync");
-    fsWriteFileSync.callsFake(fsMock.writeFileSync);
+    fsWriteFileStub = sinon.stub(fs, "writeFile");
   });
 
   setup(function() {
-    fsMock.writeFileSync.resetHistory();
+    fsWriteFileStub.resetHistory();
   });
 
   suite("::writeFiles", function() {
-    test("no input files", function() {
-      writeFiles([]);
-      expect(fsMock.writeFileSync).not.to.have.been.called;
+    test("no input files", async function() {
+      await writeFiles([]);
+      expect(fsWriteFileStub).not.to.have.been.called;
     });
 
-    test("one input file", function() {
+    test("one input file", async function() {
       const file = new WebManglerCliFileMock({ path: "foo", content: "bar" });
-      writeFiles([file]);
-      expect(fsMock.writeFileSync).to.have.callCount(1);
-      expect(fsMock.writeFileSync).to.have.been.calledWith(
+
+      await writeFiles([file]);
+      expect(fsWriteFileStub).to.have.callCount(1);
+      expect(fsWriteFileStub).to.have.been.calledWith(
         file.path,
         file.content,
       );
     });
 
-    test("multiple input files", function() {
+    test("multiple input files", async function() {
       const files = [
         new WebManglerCliFileMock({ path: "foo.txt", content: "bar" }),
         new WebManglerCliFileMock({ path: "hello.md", content: "world" }),
       ];
 
-      writeFiles(files);
-      expect(fsMock.writeFileSync).to.have.callCount(files.length);
+      await writeFiles(files);
+      expect(fsWriteFileStub).to.have.callCount(files.length);
       for (const file of files) {
-        expect(fsMock.writeFileSync).to.have.been.calledWith(
+        expect(fsWriteFileStub).to.have.been.calledWith(
           file.path,
           file.content,
         );
@@ -58,6 +57,6 @@ suite("Writing", function() {
   });
 
   suiteTeardown(function() {
-    fsWriteFileSync.restore();
+    fsWriteFileStub.restore();
   });
 });

@@ -16,12 +16,12 @@ Add your configuration in `.webmanglerrc.js` or `webmangler.config.js`, e.g.:
 // .webmanglerrc.js
 
 const { BuiltInLanguagesSupport } = require("webmangler/languages");
-const { BuiltInManglers } = require("webmangler/manglers");
+const { RecommendedManglers } = require("webmangler/manglers");
 
 module.exports = {
   plugins: [
     // Mangle CSS classes, CSS variables, and data attributes
-    new BuiltInManglers(),
+    new RecommendedManglers(),
   ],
   languages: [
     // Mangle in CSS, HTML, and JavaScript

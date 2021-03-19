@@ -3,7 +3,7 @@ import type { TestScenario } from "@webmangler/testing";
 import { expect } from "chai";
 import * as path from "path";
 
-import WebManglerCliFile from "../file.class";
+import DefaultWebManglerCliFile from "../file.class";
 
 type TestCase = {
   content: string;
@@ -12,7 +12,7 @@ type TestCase = {
   filePath: string;
 };
 
-suite("WebManglerCliFile", function() {
+suite("DefaultWebManglerCliFile", function() {
   const replacementContentString = "not the original string";
   const replacementContentSize = 23;
 
@@ -52,7 +52,7 @@ suite("WebManglerCliFile", function() {
           expectedType,
         } = testCase;
 
-        const file = new WebManglerCliFile({ content, filePath });
+        const file = new DefaultWebManglerCliFile({ content, filePath });
         expect(file.content).to.equal(content);
         expect(file.path).to.equal(filePath);
         expect(file.type).to.equal(expectedType);

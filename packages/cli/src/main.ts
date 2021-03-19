@@ -14,7 +14,7 @@ import { getStatsBetween, logStats } from "./stats";
  *
  * @param args The CLI arguments.
  */
-export default function run(args: WebManglerCliArgs): void {
+export default async function run(args: WebManglerCliArgs): Promise<void> {
   const logger = new Logger(args.verbose, console.log);
 
   logger.debug("reading configuration...");
@@ -22,10 +22,8 @@ export default function run(args: WebManglerCliArgs): void {
   logger.debug("configuration read");
 
   logger.debug("reading files provided on the CLI...");
-  const inFiles = fs.readFilesInAll(
-    args._,
-    config.languages.map((plugin) => plugin.getLanguages()).flat(),
-  );
+  const extensions = config.languages.flatMap((p) => p.getLanguages());
+  const inFiles = await fs.readFilesFiltered(args._, { extensions });
   logger.debug(`found ${inFiles.length} files`);
 
   logger.debug(`mangling ${inFiles.length} files...`);
@@ -43,7 +41,7 @@ export default function run(args: WebManglerCliArgs): void {
 
   if (args.write) {
     logger.debug(`writing ${outFiles.length} mangled files...`);
-    fs.writeFiles(outFiles);
+    await fs.writeFiles(outFiles);
     logger.debug("mangled files written");
   } else {
     logger.debug("writing disabled, not writing mangled files");

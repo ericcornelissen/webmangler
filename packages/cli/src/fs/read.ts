@@ -1,93 +1,41 @@
-import type { WebManglerCliFile } from "./types";
+import type { Filters, WebManglerCliFile } from "./types";
 
 import * as fs from "fs";
-import * as path from "path";
 
-import _WebManglerCliFile from "./file.class";
+import File from "./file.class";
+import { listFilesFiltered } from "./list";
 
 /**
- * Get the files at or under a certain path. The path can be both a file or a
- * directory.
+ * Read a file from disk.
  *
- * @param basePath The path to find files at or under.
- * @yields The file(s) at or under basePath.
+ * @param filePath The path of the file to read.
+ * @returns A {@link WebManglerCliFile} for the file at `filePath`.
  */
-function* getFilesIn(basePath: string): Iterable<string> {
-  if (!fs.existsSync(basePath)) {
-    return;
-  }
-
-  const lstat = fs.lstatSync(basePath);
-  if (lstat.isFile()) {
-    yield basePath;
-  } else {
-    for (const dirEntry of fs.readdirSync(basePath)) {
-      const dirEntryPath = path.resolve(basePath, dirEntry);
-      yield* getFilesIn(dirEntryPath);
-    }
-  }
-}
-/**
- * Get the files at or under a certain path, but filter out any files based on
- * the provided extension.
- *
- * The path can be both a file or a directory.
- *
- * @param basePath The path to find files at or under.
- * @param extensions The extensions of files to yield.
- * @yields The file(s) at or under basePath.
- */
-function* getFilesInFiltered(
-  basePath: string,
-  extensions: string[],
-): Iterable<string> {
-  for (const filePath of getFilesIn(basePath)) {
-    if (extensions.some((ext) => filePath.endsWith(`.${ext}`))) {
-      yield filePath;
-    }
-  }
+export async function readFile(filePath: string): Promise<WebManglerCliFile> {
+  const fileBuffer = await fs.promises.readFile(filePath);
+  return new File({
+    content: fileBuffer.toString(),
+    filePath: filePath,
+  });
 }
 
 /**
- * Read all the files at or under a certain path.
+ * Read files from disk, folders are read recursively.
  *
- * @param basePath The path to find files at or under.
- * @param extensions The extensions to consider.
+ * @param basePaths The path(s) to find files at or under.
+ * @param filters The extensions to consider.
  * @returns A {@link WebManglerCliFile} for all files under `basePath`.
  */
-function readFilesIn(
-  basePath: string,
-  extensions: string[],
-): WebManglerCliFile[] {
-  const files: WebManglerCliFile[] = [];
-  for (const filePath of getFilesInFiltered(basePath, extensions)) {
-    const file = new _WebManglerCliFile({
-      content: fs.readFileSync(filePath).toString(),
-      filePath: filePath,
-    });
-
-    files.push(file);
-  }
-
-  return files;
-}
-
-/**
- * Read a list of directories or files from disk. Directories are recursively
- * read.
- *
- * @param basePaths The paths of the files to read.
- * @param extensions The extensions to read.
- * @returns The files read and converted into {@link ManglerFile}.
- */
-export function readFilesInAll(
+export async function readFilesFiltered(
   basePaths: string[],
-  extensions: string[],
-): WebManglerCliFile[] {
-  const files: WebManglerCliFile[] = [];
-  for (const basePath of basePaths) {
-    files.push(...readFilesIn(basePath, extensions));
+  filters: Filters,
+  ): Promise<WebManglerCliFile[]> {
+  const filePromises: Promise<WebManglerCliFile>[] = [];
+  for (const filePath of listFilesFiltered(basePaths, filters)) {
+    const filePromise = readFile(filePath);
+    filePromises.push(filePromise);
   }
 
+  const files = await Promise.all(filePromises);
   return files;
 }

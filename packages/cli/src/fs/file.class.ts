@@ -26,7 +26,7 @@ type WebManglerCliFileParams = {
  *
  * @since v0.1.0
  */
-export default class _WebManglerCliFile implements WebManglerCliFile {
+export default class DefaultWebManglerCliFile implements WebManglerCliFile {
   /**
    * @inheritDoc
    */

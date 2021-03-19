@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Include `LICENSE` in published package.
+- Read and write files in parallel.
 
 ## [0.1.4] - 2021-02-25
 

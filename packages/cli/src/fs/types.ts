@@ -1,6 +1,22 @@
 import type { WebManglerFile } from "webmangler";
 
 /**
+ * A set of filters for listing and reading multiple files.
+ *
+ * @since v0.1.5
+ */
+interface Filters {
+  /**
+   * The file extensions of files to include. If omitted, files are not filtered
+   * based on their extension.
+   *
+   * @example `["js", "ts"]`
+   * @since v0.1.5
+   */
+  readonly extensions?: string[];
+}
+
+/**
  * The _WebMangler_ CLI representation of a File. It extends the {@link
  * ManglerFile} type with a additional fields used by the CLI.
  *
@@ -34,4 +50,7 @@ interface WebManglerCliFile extends WebManglerFile {
   readonly size: number;
 }
 
-export type { WebManglerCliFile };
+export type {
+  Filters,
+  WebManglerCliFile,
+};
