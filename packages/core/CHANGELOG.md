@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.16] - 2021-03-19
+
 - Add README with basic documentation.
 - Add helper to get file type from a file path.
 - Include `LICENSE` in published package.
