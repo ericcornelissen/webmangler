@@ -7,6 +7,7 @@ import type {
 
 import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
+import { format as printf } from "util";
 
 import {
   ATTRIBUTE_SELECTOR_OPERATORS,
@@ -72,112 +73,123 @@ suite("HTML Attribute Mangler", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "individual selectors",
-        cases: SELECTORS
-          .flatMap(({ before, after }): TestCase[] => [
-            {
-              input: `${before} { }`,
-              expected: `${after} { }`,
-            },
-            {
-              input: `:not(${before}) { }`,
-              expected: `:not(${after}) { }`,
-            },
-            {
-              input: `${before} { color: red; }`,
-              expected: `${after} { color: red; }`,
-            },
-            ...PSEUDO_SELECTORS
-              .flatMap((pseudoSelector: string): TestCase[] => [
-                {
-                  input: `${before}:${pseudoSelector} { }`,
-                  expected: `${after}:${pseudoSelector} { }`,
-                },
-              ]),
-            ...PSEUDO_ELEMENT_SELECTORS
-              .flatMap((pseudoElement: string): TestCase[] => [
-                {
-                  input: `${before}:${pseudoElement} { }`,
-                  expected: `${after}:${pseudoElement} { }`,
-                },
-              ]),
-            ...ATTRIBUTE_SELECTOR_OPERATORS
-              .flatMap((operator: string): TestCase[] => [
-                ...varySpacing(operator, {
-                  input: `[${before}${operator}"bar"]{ }`,
-                  expected: `[${after}${operator}"bar"]{ }`,
-                }),
-              ])
-              .flatMap((testCase) => varyQuotes("css", testCase)),
-          ])
-          .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
+        cases: [
+          ...SELECTORS
+            .flatMap(({ before, after }): TestCase[] => [
+              {
+                input: `${before} { }`,
+                expected: `${after} { }`,
+              },
+              {
+                input: `:not(${before}) { }`,
+                expected: `:not(${after}) { }`,
+              },
+              {
+                input: `${before} { color: red; }`,
+                expected: `${after} { color: red; }`,
+              },
+              ...PSEUDO_SELECTORS
+                .flatMap((pseudoSelector: string): TestCase[] => [
+                  {
+                    input: `${before}:${pseudoSelector} { }`,
+                    expected: `${after}:${pseudoSelector} { }`,
+                  },
+                ]),
+              ...PSEUDO_ELEMENT_SELECTORS
+                .flatMap((pseudoElement: string): TestCase[] => [
+                  {
+                    input: `${before}:${pseudoElement} { }`,
+                    expected: `${after}:${pseudoElement} { }`,
+                  },
+                ]),
+            ])
+            .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
+          ...ATTRIBUTE_SELECTOR_OPERATORS
+            .flatMap((operator: string): TestCase[] => [
+              ...varySpacing(operator, {
+                input: `[data-foo${operator}"bar"]{ }`,
+                expected: `[data-a${operator}"bar"]{ }`,
+              }),
+            ])
+            .flatMap((testCase) => varyQuotes("css", testCase)),
+        ],
       },
       {
         name: "multiple selectors",
-        cases: SELECTOR_PAIRS
-          .flatMap(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
-            {
-              input: `${beforeA} { } ${beforeB} { }`,
-              expected: `${afterA} { } ${afterB} { }`,
-            },
-            ...SELECTOR_COMBINATORS
-              .flatMap((connector: string): TestCase[] => [
-                ...varySpacing(connector, {
-                  input: `[${beforeA}]${connector}[${beforeB}] { }`,
-                  expected: `[${afterA}]${connector}[${afterB}] { }`,
-                }),
-              ]),
-            {
-              input: `
-                ${beforeA} { font-size: 12px; }
-                ${beforeB} { font-weight: bold; }
-              `,
-              expected: `
-                ${afterA} { font-size: 12px; }
-                ${afterB} { font-weight: bold; }
-              `,
-            },
-            {
-              input: `:root { } ${beforeA} { } ${beforeB} { }`,
-              expected: `:root { } ${afterA} { } ${afterB} { }`,
-            },
-            {
-              input: `${beforeA} { } div { } ${beforeB} { }`,
-              expected: `${afterA} { } div { } ${afterB} { }`,
-            },
-            {
-              input: `${beforeA} { } ${beforeB} { } span { }`,
-              expected: `${afterA} { } ${afterB} { } span { }`,
-            },
-            {
-              input: `:root { } ${beforeA} { } div { } ${beforeB} { }`,
-              expected: `:root { } ${afterA} { } div { } ${afterB} { }`,
-            },
-            {
-              input: `:root { } ${beforeA} { } ${beforeB} { } span { }`,
-              expected: `:root { } ${afterA} { } ${afterB} { } span { }`,
-            },
-            {
-              input: `${beforeA} { } div { } ${beforeB} { } span { }`,
-              expected: `${afterA} { } div { } ${afterB} { } span { }`,
-            },
-            {
-              input: `
-                :root { }
-                ${beforeA} { }
-                div { }
-                ${beforeB} { }
-                span { }
-              `,
-              expected: `
-                :root { }
-                ${afterA} { }
-                div { }
-                ${afterB} { }
-                span { }
-              `,
-            },
-          ])
-          .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
+        cases: [
+          ...SELECTOR_PAIRS
+            .flatMap(({ beforeA, beforeB, afterA, afterB }): TestCase[] => [
+              {
+                input: `${beforeA} { } ${beforeB} { }`,
+                expected: `${afterA} { } ${afterB} { }`,
+              },
+              ...SELECTOR_COMBINATORS
+                .flatMap((connector: string): TestCase[] => [
+                  ...varySpacing(connector, {
+                    input: `${beforeA}${connector}${beforeB} { }`,
+                    expected: `${afterA}${connector}${afterB} { }`,
+                  }),
+                ]),
+              {
+                input: `
+                  ${beforeA} { font-size: 12px; }
+                  ${beforeB} { font-weight: bold; }
+                `,
+                expected: `
+                  ${afterA} { font-size: 12px; }
+                  ${afterB} { font-weight: bold; }
+                `,
+              },
+              {
+                input: `:root { } ${beforeA} { } ${beforeB} { }`,
+                expected: `:root { } ${afterA} { } ${afterB} { }`,
+              },
+              {
+                input: `${beforeA} { } div { } ${beforeB} { }`,
+                expected: `${afterA} { } div { } ${afterB} { }`,
+              },
+              {
+                input: `${beforeA} { } ${beforeB} { } span { }`,
+                expected: `${afterA} { } ${afterB} { } span { }`,
+              },
+              {
+                input: `:root { } ${beforeA} { } div { } ${beforeB} { }`,
+                expected: `:root { } ${afterA} { } div { } ${afterB} { }`,
+              },
+              {
+                input: `:root { } ${beforeA} { } ${beforeB} { } span { }`,
+                expected: `:root { } ${afterA} { } ${afterB} { } span { }`,
+              },
+              {
+                input: `${beforeA} { } div { } ${beforeB} { } span { }`,
+                expected: `${afterA} { } div { } ${afterB} { } span { }`,
+              },
+              {
+                input: `
+                  :root { }
+                  ${beforeA} { }
+                  div { }
+                  ${beforeB} { }
+                  span { }
+                `,
+                expected: `
+                  :root { }
+                  ${afterA} { }
+                  div { }
+                  ${afterB} { }
+                  span { }
+                `,
+              },
+            ])
+            .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
+          ...SELECTOR_COMBINATORS
+            .flatMap((connector) => [
+              {
+                input: `[data-foo]${connector}div[data-bar] { }`,
+                expected: `[data-a]${connector}div[data-b] { }`,
+              },
+            ]),
+        ],
       },
       {
         name: "value usage",
@@ -520,8 +532,8 @@ suite("HTML Attribute Mangler", function() {
         cases: [
           ...SELECTOR_COMBINATORS.map((connector) => {
             return {
-              input: `"[data-foo]${connector}data[data-bar]"`,
-              expected: `"[data-a]${connector}data[data-b]"`,
+              input: `"[data-foo]${connector}div[data-bar]"`,
+              expected: `"[data-a]${connector}div[data-b]"`,
             };
           }),
           ...varyQuotes("js", {
@@ -549,35 +561,41 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "attribute value selector",
         cases: [
-          ...varyQuotes("js", {
-            input: "var s = \"[data-foo=\\\"bar\\\"]\";",
-            expected: "var s = \"[data-a=\\\"bar\\\"]\";",
-          }),
-          ...varyQuotes("js", {
-            input: "var s = \"[data-foo|=\\\"bar\\\"]\";",
-            expected: "var s = \"[data-a|=\\\"bar\\\"]\";",
-          }),
-          ...varyQuotes("js", {
-            input: "var s = \"[data-foo~=\\\"bar\\\"]\";",
-            expected: "var s = \"[data-a~=\\\"bar\\\"]\";",
-          }),
-          ...varyQuotes("js", {
-            input: "var s = \"[data-foo^=\\\"bar\\\"]\";",
-            expected: "var s = \"[data-a^=\\\"bar\\\"]\";",
-          }),
-          ...varyQuotes("js", {
-            input: "var s = \"[data-foo$=\\\"bar\\\"]\";",
-            expected: "var s = \"[data-a$=\\\"bar\\\"]\";",
-          }),
-          ...varyQuotes("js", {
-            input: "var s = \"[data-foo*=\\\"bar\\\"]\";",
-            expected: "var s = \"[data-a*=\\\"bar\\\"]\";",
-          }),
-          ...varyQuotes("js", {
-            input: "var s = \"[data-foo=\\\"bar\\\"][data-bar=\\\"foo\\\"]\";",
-            expected: "var s = \"[data-a=\\\"bar\\\"][data-b=\\\"foo\\\"]\";",
-          }),
-        ],
+          {
+            input: "[data-foo=\\\"bar\\\"]",
+            expected: "[data-a=\\\"bar\\\"]",
+          },
+          {
+            input: "[data-foo|=\\\"bar\\\"]",
+            expected: "[data-a|=\\\"bar\\\"]",
+          },
+          {
+            input: "[data-foo~=\\\"bar\\\"]",
+            expected: "[data-a~=\\\"bar\\\"]",
+          },
+          {
+            input: "[data-foo^=\\\"bar\\\"]",
+            expected: "[data-a^=\\\"bar\\\"]",
+          },
+          {
+            input: "[data-foo$=\\\"bar\\\"]",
+            expected: "[data-a$=\\\"bar\\\"]",
+          },
+          {
+            input: "[data-foo*=\\\"bar\\\"]",
+            expected: "[data-a*=\\\"bar\\\"]",
+          },
+        ]
+        .flatMap((testCase) => varySpacing("css", testCase))
+        .flatMap((testCase) => [
+          ...varySpacing("js", {
+            input: "var s = \"%s\";",
+            expected: "var s = \"%s\";",
+          }).map((template) => ({
+            input: printf(template.input, testCase.input),
+            expected: printf(template.expected, testCase.expected),
+          })),
+        ]),
       },
       {
         name: "attribute selectors with pseudo selectors",
