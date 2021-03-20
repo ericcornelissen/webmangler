@@ -2,6 +2,7 @@ import type { CharSet } from "../characters";
 import type {
   AttributeOptions,
   CssDeclarationValueOptions,
+  QuerySelectorOptions,
 } from "../languages/options";
 import type { MangleExpressionOptions } from "../types";
 
@@ -216,6 +217,8 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
       expressionOptions: [
         ATTRIBUTE_EXPRESSION_OPTIONS,
         ATTRIBUTE_USAGE_EXPRESSION_OPTIONS,
+        HtmlAttributeMangler.getAttributeSelectorExpressionOptions("\""),
+        HtmlAttributeMangler.getAttributeSelectorExpressionOptions("'"),
       ],
     });
   }
@@ -263,5 +266,33 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
     }
 
     return keepAttrPrefix;
+  }
+
+  /**
+   * Get the {@link MangleExpressionOptions} for mangling attributes query
+   * selectors with specific quotation marks.
+   *
+   * @param quote The quotation mark for the expression.
+   * @returns The {@link QuerySelectorOptions}.
+   */
+  private static getAttributeSelectorExpressionOptions(
+    quote: "\"" | "'",
+  ): MangleExpressionOptions<QuerySelectorOptions> {
+    return {
+      name: "query-selectors",
+      options: {
+        prefix: "\\[\\s*",
+        suffix: `
+          \\s*
+          (?:
+            (?:=|~=|\\|=|\\^=|\\$=|\\*=)
+            \\s*
+            \\\\?${quote}[^${quote}]+\\\\?${quote}
+            \\s*
+          )?
+          \\]
+        `,
+      },
+    };
   }
 }
