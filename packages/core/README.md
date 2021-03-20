@@ -24,9 +24,9 @@ import { RecommendedManglers } from "webmangler/manglers";
 
 // Read in the files you want to mangle ...
 const files = [
-  { name: "index.css", content: "...", },
-  { name: "index.html", content: "...", },
-  { name: "index.js", content: "...", },
+  { name: "index.css", content: "..." },
+  { name: "index.html", content: "..." },
+  { name: "index.js", content: "..." },
 ];
 
 // and run WebMangler.
@@ -46,5 +46,5 @@ HTML, and JavaScript.
 
 - as a CLI - [WebMangler CLI](https://www.npmjs.com/package/webmangler-cli)
 
-[npm-url]: https://www.npmjs.com/package/webmangler
+[npm-url]: https://www.npmjs.com/package/webmangler "NPM package"
 [npm-image]: https://img.shields.io/npm/v/webmangler.svg
