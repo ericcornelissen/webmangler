@@ -1,6 +1,7 @@
 import type { CharSet } from "../characters";
 import type {
   AttributeOptions,
+  CssDeclarationValueOptions,
   QuerySelectorOptions,
 } from "../languages/options";
 import type { MangleExpressionOptions } from "../types";
@@ -33,6 +34,15 @@ const ATTRIBUTE_SELECTOR_OPTIONS_SINGLE_QUOTE:
   options: {
     prefix: ATTRIBUTE_SELECTOR_PREFIX,
     suffix: ATTRIBUTE_SELECTOR_SUFFIX("'"),
+  },
+};
+
+const ATTRIBUTE_USAGE_EXPRESSION_OPTIONS:
+    MangleExpressionOptions<CssDeclarationValueOptions> = {
+  name: "css-declaration-values",
+  options: {
+    prefix: "attr\\s*\\(\\s*",
+    suffix: "(\\s+([a-zA-Z]+|%))?\\s*(,[^)]+)?\\)",
   },
 };
 
@@ -180,7 +190,7 @@ export type HtmlAttributeManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.16
+ * @version v0.1.17
  */
 export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**
@@ -230,6 +240,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
         ATTRIBUTE_EXPRESSION_OPTIONS,
         ATTRIBUTE_SELECTOR_OPTIONS_DOUBLE_QUOTE,
         ATTRIBUTE_SELECTOR_OPTIONS_SINGLE_QUOTE,
+        ATTRIBUTE_USAGE_EXPRESSION_OPTIONS,
       ],
     });
   }

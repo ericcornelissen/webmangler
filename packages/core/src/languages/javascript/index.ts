@@ -12,7 +12,6 @@ map.set("query-selectors", querySelectorExpressionFactory);
  * This {@link WebManglerLanguagePlugin} provides support for mangling the
  * following in JavaScript:
  *
- * - Attributes
  * - CSS declaration properties
  * - Query selectors
  *
