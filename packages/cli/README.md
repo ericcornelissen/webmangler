@@ -50,7 +50,6 @@ Mangle all the files matching the configured languages in that folder:
 $ npm run mangle
 ```
 
-[WebMangler]: https://github.com/ericcornelissen/webmangler
-
-[npm-url]: https://www.npmjs.com/package/webmangler-cli
+[npm-url]: https://www.npmjs.com/package/webmangler-cli "NPM package"
 [npm-image]: https://img.shields.io/npm/v/webmangler-cli.svg
+[webmangler]: https://github.com/ericcornelissen/webmangler
