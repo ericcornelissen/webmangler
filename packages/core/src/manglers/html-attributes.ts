@@ -1,5 +1,8 @@
 import type { CharSet } from "../characters";
-import type { AttributeOptions } from "../languages/options";
+import type {
+  AttributeOptions,
+  QuerySelectorOptions,
+} from "../languages/options";
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
@@ -9,6 +12,24 @@ const ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<AttributeOptions> = {
   name: "attributes",
   options: null,
+};
+
+const ATTRIBUTE_SELECTOR_OPTIONS_DOUBLE_QUOTE:
+    MangleExpressionOptions<QuerySelectorOptions> = {
+  name: "query-selectors",
+  options: {
+    prefix: "\\[\\s*",
+    suffix: "\\s*((=|~=|\\|=|\\^=|\\$=|\\*=)\\s*\\\\?\"[^\"]+\\\\?\"\\s*)?\\]",
+  },
+};
+
+const ATTRIBUTE_SELECTOR_OPTIONS_SINGLE_QUOTE:
+    MangleExpressionOptions<QuerySelectorOptions> = {
+  name: "query-selectors",
+  options: {
+    prefix: "\\[\\s*",
+    suffix: "\\s*((=|~=|\\|=|\\^=|\\$=|\\*=)\\s*\\\\?'[^']+\\\\?'\\s*)?\\]",
+  },
 };
 
 /**
@@ -203,6 +224,8 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
       expressionOptions: [
         ATTRIBUTE_EXPRESSION_OPTIONS,
+        ATTRIBUTE_SELECTOR_OPTIONS_DOUBLE_QUOTE,
+        ATTRIBUTE_SELECTOR_OPTIONS_SINGLE_QUOTE,
       ],
     });
   }
