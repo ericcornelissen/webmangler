@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Support mangling attributes in `attr()` in HTML style attribute values.
 
 ## [0.1.16] - 2021-03-19
 
