@@ -1,9 +1,12 @@
+const INDENT_SIZE = 2;
 const JS_GLOBALS = {
   __dirname: "readonly",
+  console: "readonly",
   module: "readonly",
   process: "readonly",
   require: "readonly",
 };
+const MAX_LINE_LENGTH = 80;
 
 module.exports = {
   root: true,
@@ -41,9 +44,9 @@ module.exports = {
     }],
     "function-paren-newline": ["error", "multiline-arguments"],
     "max-len": ["error", {
-      code: 80,
-      comments: 80,
-      tabWidth: 2,
+      code: MAX_LINE_LENGTH,
+      comments: MAX_LINE_LENGTH,
+      tabWidth: INDENT_SIZE,
       ignoreComments: false,
       ignoreUrls: true,
       ignoreRegExpLiterals: true,
@@ -191,6 +194,79 @@ module.exports = {
       extends: [
         "plugin:yml/standard",
       ],
+    },
+    { // Documentation (Markdown)
+      files: [
+        "**/*.md",
+      ],
+      parser: "markdown-eslint-parser",
+      extends: [
+        "plugin:md/recommended",
+      ],
+      rules: {
+        // https://github.com/remarkjs/remark-lint/tree/main/packages/remark-preset-lint-markdown-style-guide#rules
+        "md/remark": ["error",{
+          plugins: [
+            ["lint-blockquote-indentation", INDENT_SIZE],
+            ["lint-code-block-style", "fenced"],
+            ["lint-definition-case"],
+            ["lint-definition-spacing"],
+            ["lint-emphasis-marker", "_"],
+            ["lint-fenced-code-flag", { allowEmpty: false }],
+            ["lint-fenced-code-marker", "`"],
+            ["lint-final-definition"],
+            ["lint-hard-break-spaces"],
+            ["lint-heading-style", "atx"],
+            ["lint-heading-increment"],
+            ["lint-link-title-style", "\""],
+            ["lint-list-item-indent", "space"],
+            ["lint-no-auto-link-without-protocol"],
+            ["lint-no-blockquote-without-marker"],
+            ["lint-no-consecutive-blank-lines"],
+            ["lint-no-emphasis-as-heading"],
+            ["lint-no-file-name-mixed-case"],
+            ["lint-no-file-name-articles"],
+            ["lint-no-file-name-irregular-characters"],
+            ["lint-no-file-name-consecutive-dashes"],
+            ["lint-no-file-name-outer-dashes"],
+            ["lint-no-heading-punctuation", ".;!?"],
+            ["lint-no-inline-padding"],
+            ["lint-no-literal-urls"],
+            ["lint-no-multiple-toplevel-headings"],
+            ["lint-no-table-indentation"],
+            ["lint-maximum-heading-length", MAX_LINE_LENGTH],
+            ["lint-maximum-line-length", MAX_LINE_LENGTH],
+            ["lint-ordered-list-marker-style", "."],
+            ["lint-ordered-list-marker-value", "ordered"],
+            ["lint-rule-style", "---"],
+            ["lint-strong-marker", "*"],
+            ["lint-table-cell-padding"],
+            ["lint-table-pipe-alignment"],
+            ["lint-table-pipes"],
+            ["lint-unordered-list-marker-style", "-"],
+          ],
+        }],
+      },
+    },
+    { // Documentation Snippets (MarkDown.*)
+      files: [
+        "**/*.md.ts",
+        "**/*.md.js",
+      ],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        // Remove the project as snippets are not part of any project
+        project: null,
+      },
+      globals: JS_GLOBALS,
+      rules: {
+        // See: https://eslint.org/docs/rules/
+        "no-console": "off",
+
+        // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-var-requires": "off",
+      },
     },
   ],
 

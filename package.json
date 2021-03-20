@@ -17,7 +17,7 @@
     "benchmark": "TEST_ENV=benchmark mocha",
     "clean": "node scripts/clean.js",
     "format": "npm run lint -- --fix",
-    "lint": "eslint . --ext .js,.json,.ts,.yml",
+    "lint": "eslint . --ext .js,.json,.md,.ts,.yml",
     "postinstall": "husky install scripts/hooks",
     "test": "mocha",
     "test:coverage": "nyc mocha",
