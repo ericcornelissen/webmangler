@@ -11,22 +11,22 @@ const GROUP_MAIN = "main";
  * Get a {@link MangleExpression} to match query selectors in CSS, e.g. `foobar`
  * in `.foobar { }`.
  *
- * @param selectorPrefix The query selector prefix.
- * @param selectorSuffix The query selector suffix.
+ * @param [selectorPrefix] The query selector prefix.
+ * @param [selectorSuffix] The query selector suffix.
  * @returns The {@link MangleExpression} to match query selectors in CSS.
  */
 function newCssSelectorExpression(
-  selectorPrefix: string,
-  selectorSuffix: string,
+  selectorPrefix?: string,
+  selectorSuffix?: string,
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
       ${NOT_IN_A_BLOCK_OR_STRING}
-      (?<=${selectorPrefix})
+      (?<=${selectorPrefix ? selectorPrefix : ""})
       (?<${GROUP_MAIN}>%s)
       (?=
-        ${selectorSuffix}
-        (?:${QUERY_SELECTOR_COMBINERS}|\\{|$)
+        ${selectorSuffix ? selectorSuffix :
+          `(?:${QUERY_SELECTOR_COMBINERS}|\\{|$)`}
       )
     `,
     GROUP_MAIN,
@@ -41,14 +41,12 @@ function newCssSelectorExpression(
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
+ * @version v0.1.17
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): MangleExpression[] {
-  const selectorPrefix = options.prefix ? options.prefix : "";
-  const selectorSuffix = options.suffix ? options.suffix : "";
-
   return [
-    newCssSelectorExpression(selectorPrefix, selectorSuffix),
+    newCssSelectorExpression(options.prefix, options.suffix),
   ];
 }

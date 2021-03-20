@@ -1,14 +1,12 @@
 import type { ExpressionFactory } from "../utils";
 
 import { SimpleLanguagePlugin } from "../utils";
-import attributeExpressionFactory from "./attributes";
 import cssDeclarationPropertyExpressionFactory from "./css-properties";
 import cssDeclarationValueExpressionFactory from "./css-values";
 import querySelectorExpressionFactory from "./query-selectors";
 import singleValueAttributeExpressionFactory from "./single-value-attributes";
 
 const map: Map<string, ExpressionFactory> = new Map();
-map.set("attributes", attributeExpressionFactory);
 map.set("css-declaration-properties", cssDeclarationPropertyExpressionFactory);
 map.set("css-declaration-values", cssDeclarationValueExpressionFactory);
 map.set("query-selectors", querySelectorExpressionFactory);
@@ -38,7 +36,6 @@ export type CssLanguagePluginOptions = {
  * This {@link WebManglerLanguagePlugin} provides support for mangling the
  * following in CSS:
  *
- * - Attributes
  * - CSS declaration properties
  * - CSS declaration values
  * - Query selectors

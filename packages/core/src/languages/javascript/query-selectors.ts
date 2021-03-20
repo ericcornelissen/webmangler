@@ -12,24 +12,24 @@ const GROUP_QUOTE = "quote";
  * Get {@link MangleExpression}s to match query selectors in JavaScript, e.g.
  * `foobar` in `document.querySelectorAll(".foobar");`.
  *
- * @param selectorPrefix The query selector prefix.
- * @param selectorSuffix The query selector suffix.
+ * @param [selectorPrefix] The query selector prefix, if any.
+ * @param [selectorSuffix] The query selector suffix, if any.
  * @returns The {@link MangleExpression}s to match query selectors in JS.
  */
 function newQuerySelectorExpressions(
-  selectorPrefix: string,
-  selectorSuffix: string,
+  selectorPrefix?: string,
+  selectorSuffix?: string,
 ): MangleExpression[] {
   return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
     `
       (?<=
         ${quote}[^${quote}]*
-        ${selectorPrefix}
+        ${selectorPrefix ? selectorPrefix : ""}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
-        ${selectorSuffix}
-        (?:${quote}|${QUERY_SELECTOR_COMBINERS})
+        ${selectorSuffix ? selectorSuffix :
+          `(?:${quote}|${QUERY_SELECTOR_COMBINERS})`}
       )
     `,
     GROUP_MAIN,
@@ -72,11 +72,8 @@ function newSelectorAsStandaloneStringExpression(): MangleExpression {
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): MangleExpression[] {
-  const selectorPrefix = options.prefix ? options.prefix : "";
-  const selectorSuffix = options.suffix ? options.suffix : "";
-
   return [
-    ...newQuerySelectorExpressions(selectorPrefix, selectorSuffix),
+    ...newQuerySelectorExpressions(options.prefix, options.suffix),
     newSelectorAsStandaloneStringExpression(),
   ];
 }
