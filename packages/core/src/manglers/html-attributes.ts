@@ -9,32 +9,10 @@ import type { MangleExpressionOptions } from "../types";
 import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import { SimpleManglerPlugin } from "./utils";
 
-const ATTRIBUTE_SELECTOR_PREFIX = "\\[\\s*";
-const ATTRIBUTE_SELECTOR_SUFFIX = (q: "\"" | "'"): string =>
-  `\\s*((=|~=|\\|=|\\^=|\\$=|\\*=)\\s*\\\\?${q}[^${q}]+\\\\?${q}\\s*)?\\]`;
-
 const ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<AttributeOptions> = {
   name: "attributes",
   options: null,
-};
-
-const ATTRIBUTE_SELECTOR_OPTIONS_DOUBLE_QUOTE:
-    MangleExpressionOptions<QuerySelectorOptions> = {
-  name: "query-selectors",
-  options: {
-    prefix: ATTRIBUTE_SELECTOR_PREFIX,
-    suffix: ATTRIBUTE_SELECTOR_SUFFIX("\""),
-  },
-};
-
-const ATTRIBUTE_SELECTOR_OPTIONS_SINGLE_QUOTE:
-    MangleExpressionOptions<QuerySelectorOptions> = {
-  name: "query-selectors",
-  options: {
-    prefix: ATTRIBUTE_SELECTOR_PREFIX,
-    suffix: ATTRIBUTE_SELECTOR_SUFFIX("'"),
-  },
 };
 
 const ATTRIBUTE_USAGE_EXPRESSION_OPTIONS:
@@ -238,9 +216,9 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
       expressionOptions: [
         ATTRIBUTE_EXPRESSION_OPTIONS,
-        ATTRIBUTE_SELECTOR_OPTIONS_DOUBLE_QUOTE,
-        ATTRIBUTE_SELECTOR_OPTIONS_SINGLE_QUOTE,
         ATTRIBUTE_USAGE_EXPRESSION_OPTIONS,
+        HtmlAttributeMangler.getAttributeSelectorExpressionOptions("\""),
+        HtmlAttributeMangler.getAttributeSelectorExpressionOptions("'"),
       ],
     });
   }
@@ -288,5 +266,33 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
     }
 
     return keepAttrPrefix;
+  }
+
+  /**
+   * Get the {@link MangleExpressionOptions} for mangling attributes query
+   * selectors with specific quotation marks.
+   *
+   * @param quote The quotation mark for the expression.
+   * @returns The {@link QuerySelectorOptions}.
+   */
+  private static getAttributeSelectorExpressionOptions(
+    quote: "\"" | "'",
+  ): MangleExpressionOptions<QuerySelectorOptions> {
+    return {
+      name: "query-selectors",
+      options: {
+        prefix: "\\[\\s*",
+        suffix: `
+          \\s*
+          (?:
+            (?:=|~=|\\|=|\\^=|\\$=|\\*=)
+            \\s*
+            \\\\?${quote}[^${quote}]+\\\\?${quote}
+            \\s*
+          )?
+          \\]
+        `,
+      },
+    };
   }
 }
