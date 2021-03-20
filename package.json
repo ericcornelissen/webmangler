@@ -39,6 +39,7 @@
     "eslint-plugin-chai-expect": "2.2.0",
     "eslint-plugin-jsdoc": "32.2.0",
     "eslint-plugin-json": "2.1.2",
+    "eslint-plugin-md": "1.0.19",
     "eslint-plugin-mocha": "8.1.0",
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-yml": "0.8.1",
