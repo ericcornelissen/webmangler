@@ -442,6 +442,55 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
+        name: "value usage",
+        cases: ATTRIBUTES
+          .flatMap(({ before, after }): TestCase[] => [
+            {
+              input: `<div style="content: attr(${before});"></div>`,
+              expected: `<div style="content: attr(${after});"></div>`,
+            },
+            ...TYPE_OR_UNITS
+              .flatMap((typeOrUnit): TestCase[] => [
+                {
+                  input: `
+                    <div style="content: attr(${before} ${typeOrUnit});"></div>
+                  `,
+                  expected: `
+                    <div style="content: attr(${after} ${typeOrUnit});"></div>
+                  `,
+                },
+              ]),
+            ...CSS_VALUES
+              .flatMap((value): TestCase[] => [
+                {
+                  input: `
+                    <div style="content: attr(${before},${value});"></div>
+                  `,
+                  expected: `
+                    <div style="content: attr(${after},${value});"></div>
+                  `,
+                },
+                ...TYPE_OR_UNITS
+                  .flatMap((typeOrUnit): TestCase[] => [
+                    {
+                      input: `
+                        <div style=
+                          "content: attr(${before} ${typeOrUnit},${value});">
+                        </div>
+                      `,
+                      expected: `
+                        <div style=
+                          "content: attr(${after} ${typeOrUnit},${value});">
+                        </div>
+                      `,
+                    },
+                  ])
+                  .flatMap((testCase) => varySpacing(",", testCase)),
+              ]),
+          ])
+          .flatMap((testCase) => varyQuotes("html", testCase)),
+      },
+      {
         name: "edge cases",
         cases: [
           {

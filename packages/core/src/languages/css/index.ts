@@ -35,7 +35,7 @@ map.set("single-value-attributes", singleValueAttributeExpressionFactory);
  * });
  *
  * @since v0.1.0
- * @version v0.1.15
+ * @version v0.1.17
  */
 export default class CssLanguagePlugin extends SimpleLanguagePlugin {
   /**

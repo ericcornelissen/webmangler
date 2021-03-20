@@ -33,29 +33,6 @@ suite("CSS - Attribute Expression Factory", function() {
         },
       ],
     },
-    {
-      name: "attribute usage",
-      cases: [
-        {
-          input: "div { content: attr(data-foo); }",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
-        },
-        {
-          input: "div { content: attr(data-foo, \"bar\"); }",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
-        },
-        {
-          input: "div { content: attr(data-foo px); }",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
-        },
-      ],
-    },
   ];
 
   for (const { name, cases } of scenarios) {
