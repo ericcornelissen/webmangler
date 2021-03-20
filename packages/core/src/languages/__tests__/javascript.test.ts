@@ -1,6 +1,5 @@
 import type { WebManglerLanguagePlugin } from "../../types";
 import type {
-  AttributeOptions,
   CssDeclarationPropertyOptions,
   QuerySelectorOptions,
 } from "../options";
@@ -14,13 +13,6 @@ suite("Built-in JavaScript Language Support", function() {
 
   setup(function() {
     plugin = new JavaScriptLanguageSupport();
-  });
-
-  test("has support for mangling 'attributes'", function() {
-    const options: AttributeOptions = null;
-
-    const result = plugin.getExpressions("attributes", options);
-    expect(result).to.have.length.above(0);
   });
 
   test("has support for mangling 'css-declaration-properties'", function() {

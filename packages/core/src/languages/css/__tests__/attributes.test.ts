@@ -11,29 +11,6 @@ import attributeExpressionFactory from "../attributes";
 suite("CSS - Attribute Expression Factory", function() {
   const scenarios: TestScenario<TestCase<AttributeOptions>>[] = [
     {
-      name: "attribute selector",
-      cases: [
-        {
-          input: "[data-foo] { }",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
-        },
-        {
-          input: "div[data-foo] { }",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
-        },
-        {
-          input: "[data-foo][data-bar] { }",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-bar"],
-          options: null,
-        },
-      ],
-    },
-    {
       name: "attribute usage",
       cases: [
         {
