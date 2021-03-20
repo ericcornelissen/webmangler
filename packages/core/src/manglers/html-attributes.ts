@@ -8,6 +8,10 @@ import type { MangleExpressionOptions } from "../types";
 import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
 import { SimpleManglerPlugin } from "./utils";
 
+const ATTRIBUTE_SELECTOR_PREFIX = "\\[\\s*";
+const ATTRIBUTE_SELECTOR_SUFFIX = (q: "\"" | "'"): string =>
+  `\\s*((=|~=|\\|=|\\^=|\\$=|\\*=)\\s*\\\\?${q}[^${q}]+\\\\?${q}\\s*)?\\]`;
+
 const ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<AttributeOptions> = {
   name: "attributes",
@@ -18,8 +22,8 @@ const ATTRIBUTE_SELECTOR_OPTIONS_DOUBLE_QUOTE:
     MangleExpressionOptions<QuerySelectorOptions> = {
   name: "query-selectors",
   options: {
-    prefix: "\\[\\s*",
-    suffix: "\\s*((=|~=|\\|=|\\^=|\\$=|\\*=)\\s*\\\\?\"[^\"]+\\\\?\"\\s*)?\\]",
+    prefix: ATTRIBUTE_SELECTOR_PREFIX,
+    suffix: ATTRIBUTE_SELECTOR_SUFFIX("\""),
   },
 };
 
@@ -27,8 +31,8 @@ const ATTRIBUTE_SELECTOR_OPTIONS_SINGLE_QUOTE:
     MangleExpressionOptions<QuerySelectorOptions> = {
   name: "query-selectors",
   options: {
-    prefix: "\\[\\s*",
-    suffix: "\\s*((=|~=|\\|=|\\^=|\\$=|\\*=)\\s*\\\\?'[^']+\\\\?'\\s*)?\\]",
+    prefix: ATTRIBUTE_SELECTOR_PREFIX,
+    suffix: ATTRIBUTE_SELECTOR_SUFFIX("'"),
   },
 };
 
