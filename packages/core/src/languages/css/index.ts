@@ -51,6 +51,18 @@ export type CssLanguagePluginOptions = {
  *   ],
  * });
  *
+ * @example
+ * webmangler({
+ *   plugins: [
+ *     // any compatible plugins, e.g. the built-in plugins
+ *   ],
+ *   languages: [
+ *     new CssLanguagePlugin({
+ *       languages: ["style"], // e.g. "main.style"
+ *     }),
+ *   ],
+ * });
+ *
  * @since v0.1.0
  * @version v0.1.17
  */
@@ -70,7 +82,7 @@ export default class CssLanguagePlugin extends SimpleLanguagePlugin {
   /**
    * Instantiate a new {@link CssLanguagePlugin} plugin.
    *
-   * @param options The {@link CssLanguagePluginOptions}.
+   * @param [options] The {@link CssLanguagePluginOptions}.
    * @since v0.1.0
    * @version v0.1.17
    */

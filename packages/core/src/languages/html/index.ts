@@ -54,6 +54,18 @@ export type HtmlLanguagePluginOptions = {
  *   ],
  * });
  *
+ * @example
+ * webmangler({
+ *   plugins: [
+ *     // any compatible plugins, e.g. the built-in plugins
+ *   ],
+ *   languages: [
+ *     new HtmlLanguagePlugin({
+ *       languages: ["html5"], // e.g. "index.html5"
+ *     }),
+ *   ],
+ * });
+ *
  * @since v0.1.0
  * @version v0.1.17
  */
@@ -74,7 +86,7 @@ export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
   /**
    * Instantiate a new {@link HtmlLanguagePlugin} plugin.
    *
-   * @param options The {@link HtmlLanguagePluginOptions}.
+   * @param [options] The {@link HtmlLanguagePluginOptions}.
    * @since v0.1.0
    * @version v0.1.17
    */

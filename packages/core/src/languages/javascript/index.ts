@@ -45,6 +45,18 @@ export type JavaScriptLanguagePluginOptions = {
  *   ],
  * });
  *
+ * @example
+ * webmangler({
+ *   plugins: [
+ *     // any compatible plugins, e.g. the built-in plugins
+ *   ],
+ *   languages: [
+ *     new JavaScriptLanguagePlugin({
+ *       languages: ["javascript"], // e.g. "script.javascript"
+ *     }),
+ *   ],
+ * });
+ *
  * @since v0.1.0
  * @version v0.1.17
  */
@@ -67,7 +79,7 @@ export default class JavaScriptLanguagePlugin extends SimpleLanguagePlugin {
   /**
    * Instantiate a new {@link JavaScriptLanguagePlugin} plugin.
    *
-   * @param options The {@link CssLanguagePluginOptions}.
+   * @param [options] The {@link CssLanguagePluginOptions}.
    * @since v0.1.0
    * @version v0.1.17
    */
