@@ -1,19 +1,30 @@
 # WebMangler Plugins
 
+There exist two types of WebMangler plugins: one called `WebManglerPlugin` that
+determines what to mangle, and one called `WebManglerLanguagePlugin` that
+determines how to mangle in a specific language. This document outlines how they work and how you can create one.
+
+- [Plugins](#plugins)
+  - [What is a Plugin](#what-is-a-plugin)
+  - [Create a Plugin](#create-a-plugin)
+- [Language Plugins](#language-plugins)
+  - [What is a Language Plugin](#what-is-a-language-plugin)
+  - [Create a Language Plugin](#create-a-language-plugin)
+
+## Plugins
+
 A `WebManglerPlugin` is used by to tell the [WebMangler core] that something has
 to be mangled and how to mangle it. For example, the core comes with 4 built-in
 manglers to mangle CSS classes, CSS variables, HTML attributes, and HTML ids.
 
-This document outlines how they work and how you can create one.
-
-## What Actually is a Plugin
+### What is a Plugin
 
 Perhaps surprisingly, a `WebManglerPlugin` is just a container for configuring
 the mangle engine and the language plugins selected by the user. In practice
 this means that a `WebManglerPlugin` combines pre-defined values with user
 configurations to mangle certain parts of their code.
 
-## Creating a Plugin
+### Create a Plugin
 
 To create a `WebManglerPlugin` you need to create a [JavaScript class] (or
 equivalent) that implements the [WebManglerPlugin interface]. This section goes
@@ -34,7 +45,7 @@ export class MyWebManglerPlugin implements WebManglerPlugin {
 }
 ```
 
-### Preparing the `options` Method
+#### Preparing the `options` Method
 
 The `options` method of the plugin should return an object implementing the
 [MangleOptions interface]. This object contains instructions for the mangle
@@ -84,7 +95,7 @@ is used to configure the language plugins and we will come back to that later.
   }
 ```
 
-### Adding User Configuration
+#### Adding User Configuration
 
 Next, we add the plugin user's ability to configure the plugin by implementing
 the constructor. The implementation accepts a value for both `patterns` and
@@ -119,7 +130,7 @@ specify anything.
   }
 ```
 
-### Selecting a Character Set
+#### Selecting a Character Set
 
 Next up, we choose a character set for the plugin. For brevity, this plugin will
 use a character set of only lowercase letters (as HTML attributes are case
@@ -155,7 +166,7 @@ insensitive). Additionally, we now use the proper type for the `CHAR_SET` field.
   }
 ```
 
-### Configuring the Language Plugin
+#### Configuring the Language Plugin
 
 Finally, the plugin has to tell the language plugins how to find and replace
 HTML attributes. This can be done through the `expressionOptions` by specifying
@@ -194,7 +205,7 @@ need just one [MangleExpressionOptions] without further configuration.
   }
 ```
 
-### Putting it all Together
+#### Putting it all Together
 
 If you followed along (or skipped ahead) then the snippet below shows the `WebManglerPlugin` that we build. You can use this to mangle HTML attributes,
 or alter it mangle any web concept you want!
@@ -230,10 +241,242 @@ export class MyWebManglerPlugin implements WebManglerPlugin {
 }
 ```
 
+## Language Plugins
+
+A `WebManglerLanguagePlugin` is used by the [WebMangler core] to find string to
+mangle, and to replace such original strings by a mangled value. For example,
+the core comes with 3 built-in language plugins, namely CSS, HTML, and
+JavaScript.
+
+### What is a Language Plugin
+
+A `WebManglerLanguagePlugin` is essentially one or more sets of expressions that
+the [WebMangler core] uses to find and replace strings. A plugin provides a list
+of sets of expressions it wants to use, and the language plugin defines these
+expressions. These expressions are used by WebMangler to find strings to mangle
+and replace them as well.
+
+### Create a Language Plugin
+
+To create a `WebManglerLanguagePlugin` you need to create a [JavaScript class]
+(or equivalent) that implements the [WebManglerPlugin interface]. This section
+goes through the process of creating a CSS `WebManglerLanguagePlugin` in
+[TypeScript] that only supports mangling CSS classes. To get started you can use
+template below.
+
+```ts
+import type { MangleExpression, WebManglerLanguagePlugin } from "webmangler";
+
+export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
+  constructor(options?: any) {
+    // TODO
+  }
+
+  getExpressions(
+    name: string,
+    options: unknown,
+  ): Map<string, MangleExpression[]> {
+    // TODO
+  }
+
+  getLanguages(): string[] {
+    // TODO
+  }
+}
+```
+
+#### Specifying the Languages
+
+First, we add the languages that we want to support. We do this by defining an
+array of the languages we want to support. This list should contain all file
+extensions (without leading dot) that might be used for files of the language.
+In this implementation we will just support CSS.
+
+Additionally, it is recommended to let users specify more "languages" that
+should be supported. This is for two reasons, first it allows them to use your
+plugin with non-standard extensions for the language, and second it allows the
+plugin to be used for a similar language even if the you don't explicitly
+support it.
+
+```diff
+  import type { MangleExpression, WebManglerLanguagePlugin } from "webmangler";
+
+  export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
++   private static DEFAULT_LANGUAGES = ["css"];
+
++   private languages: string[];
+
+-   constructor(options: any) {
+-     // TODO
++   constructor(options?: { languages?: string[] }) {
++     this.languages = MyWebManglerLanguagePlugin.DEFAULT_LANGUAGES.concat(
++       (options?.languages || []),
++     );
+    }
+
+    getExpressions(
+      name: string,
+      options: unknown,
+    ): Map<string, MangleExpression[]> {
+      // TODO
+    }
+
+    getLanguages(): string[] {
+-     // TODO
++     return this.languages;
+    }
+  }
+```
+
+#### Preparing the `getExpressions` Method
+
+The `getExpressions` method should return a map from languages to the
+expressions that belong to the category specified by the `name` parameter. In
+this implementation, the expression will always be the same for every supported
+language, and the only category of expression supported is `"css-classes"`. In
+the next step we will actually add the expressions.
+
+```diff
+  import type { MangleExpression, WebManglerLanguagePlugin } from "webmangler";
+
+  export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
+    private static DEFAULT_LANGUAGES = ["css"];
+
+    private languages: string[];
+
+    constructor(options?: { languages?: string[] }) {
+      this.languages = MyWebManglerLanguagePlugin.DEFAULT_LANGUAGES.concat(
+        (options?.languages || []),
+      );
+    }
+
+    getExpressions(
+      name: string,
+      options: unknown,
+    ): Map<string, MangleExpression[]> {
+-     // TODO
++     const map = new Map();
++     if (name === "css-classes") {
++       this.languages.forEach((language) =>
++         map.set(language, []),
++       );
++     }
++     return map;
+    }
+
+    getLanguages(): string[] {
+      return this.languages;
+    }
+  }
+```
+
+#### Defining `MangleExpression`s
+
+Lastly, we will define the `MangleExpression`s that instruct the _WebMangler_
+how to find and replace strings to mangle. For brevity, this implementation will
+use one naïve expressions using the [SingleGroupMangleExpression] utility.
+
+When you're creating your own `WebManglerLanguagePlugin`, make sure to [read
+about `MangleExpression`s][ManglExpressions]
+
+```diff
+  import type { MangleExpression, WebManglerLanguagePlugin } from "webmangler";
+
++ import { SingleGroupMangleExpression } from "webmangler/languages/utils";
+
+  export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
+    private static DEFAULT_LANGUAGES = ["css"];
+
+    private languages: string[];
+
+    constructor(options?: { languages?: string[] }) {
+      this.languages = MyWebManglerLanguagePlugin.DEFAULT_LANGUAGES.concat(
+        (options?.languages || []),
+      );
+    }
+
+    getExpressions(
+      name: string,
+      options: unknown,
+    ): Map<string, MangleExpression[]> {
+      const map = new Map();
+      if (name == "css-classes") {
++       options = options as { selector: string };
+        this.languages.forEach((language) =>
+          map.set(language, [
++           new SingleGroupMangleExpression(
++             `(?<=${options.selector})(?<main>%s)(?=\\s)`,
++             "main",
++           ),
+          ]),
+        );
+      }
+      return map;
+    }
+
+    getLanguages(): string[] {
+      return this.languages;
+    }
+  }
+```
+
+#### Putting it all Together
+
+If you followed along (or skipped ahead) then the snippet below shows the `WebManglerLanguagePlugin` that we build. This language plugin is not really
+useful in practice, but it should serve as a starting point when you create your
+own language plugin.
+
+```ts
+import type { MangleExpression, WebManglerLanguagePlugin } from "webmangler";
+
+import { SingleGroupMangleExpression } from "webmangler/languages/utils";
+
+export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
+  private static DEFAULT_LANGUAGES = ["css"];
+
+  private expressions: MangleExpression[];
+  private languages: string[];
+
+  constructor(options?: { languages?: string[] }) {
+    this.expressions = [
+    ];
+    this.languages = MyWebManglerLanguagePlugin.DEFAULT_LANGUAGES.concat(
+      (options?.languages || []),
+    );
+  }
+
+  getExpressions(
+    name: string,
+    options: unknown,
+  ): Map<string, MangleExpression[]> {
+    const map = new Map();
+    if (name == "css-classes") {
+      options = options as { selector: string };
+      this.languages.forEach((language) =>
+        map.set(language, [
+          new SingleGroupMangleExpression(
+            `(?<=${options.selector})(?<main>%s)(?=\\s)`,
+            "main",
+          ),
+        ]),
+      );
+    }
+    return map;
+  }
+
+  getLanguages(): string[] {
+    return this.languages;
+  }
+}
+```
+
 [JavaScript class]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
+[ManglExpressions]: ./mangle-expressions.md
 [MangleOptions interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L3-L20
 [TypeScript]: https://www.typescriptlang.org/
 [WebMangler core]: https://www.npmjs.com/package/webmangler
+[WebManglerLanugagePlugin interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L187-L216
 [WebManglerPlugin interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L171-L185
+[SingleGroupMangleExpression]: https://github.com/ericcornelissen/webmangler/blob/main/packages/core/src/languages/utils/mangle-expressions/single-group.class.ts
 
 [MangleExpressionOptions]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L94-L123
