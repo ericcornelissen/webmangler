@@ -86,7 +86,7 @@ function newUnquotedValueExpression(
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
 ): MangleExpression[] {
-  const attributesPattern = options.attributeNames.join("|");
+  const attributesPattern = Array.from(options.attributeNames).join("|");
   const valuePrefix = options.valuePrefix ? options.valuePrefix : "";
   const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
 

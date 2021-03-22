@@ -48,7 +48,9 @@ function newElementAttributeMultiValueExpressions(
 export default function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,
 ): MangleExpression[] {
+  const attributeNames = Array.from(options.attributeNames);
+
   return [
-    ...newElementAttributeMultiValueExpressions(options.attributeNames),
+    ...newElementAttributeMultiValueExpressions(attributeNames),
   ];
 }

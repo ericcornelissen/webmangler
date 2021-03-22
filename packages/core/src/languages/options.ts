@@ -71,7 +71,7 @@ type MultiValueAttributeOptions = {
    *
    * @since v0.1.14
    */
-  attributeNames: string[];
+  attributeNames: Iterable<string>;
 };
 
 /**
@@ -115,7 +115,7 @@ type SingleValueAttributeOptions = {
    *
    * @since v0.1.14
    */
-  attributeNames: string[];
+  attributeNames: Iterable<string>;
 
   /**
    * An optional expression of the prefix required on values that should be

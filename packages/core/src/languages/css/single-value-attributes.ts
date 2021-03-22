@@ -55,12 +55,13 @@ function newAttributeSelectorSingleValueExpression(
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
 ): MangleExpression[] {
+  const attributeNames = Array.from(options.attributeNames);
   const valuePrefix = options.valuePrefix ? options.valuePrefix : "";
   const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
 
   return [
     newAttributeSelectorSingleValueExpression(
-      options.attributeNames,
+      attributeNames,
       valuePrefix,
       valueSuffix,
     ),
