@@ -12,6 +12,7 @@ import * as path from "path";
  * @param index The (current) index of the value in `array`.
  * @param array An array of values.
  * @returns `true` if this is first appearance of `value`, `false` otherwise.
+ * @deprecated
  */
 export function duplicates(
   value: unknown,
