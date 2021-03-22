@@ -6,7 +6,6 @@ import type {
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
-import { duplicates } from "../helpers";
 import { SimpleManglerPlugin } from "./utils";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
@@ -288,10 +287,10 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
     return {
       name: "single-value-attributes",
       options: {
-        attributeNames: [
+        attributeNames: new Set([
           ...HtmlIdMangler.STANDARD_ID_ATTRIBUTES,
           ...attributes,
-        ].filter(duplicates),
+        ]),
       },
     };
   }
@@ -309,10 +308,10 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
     return {
       name: "single-value-attributes",
       options: {
-        attributeNames: [
+        attributeNames: new Set([
           ...HtmlIdMangler.STANDARD_URL_ATTRIBUTES,
           ...attributes,
-        ].filter(duplicates),
+        ]),
         valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\.\\?]*(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?#",
       },
     };

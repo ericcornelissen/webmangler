@@ -6,7 +6,6 @@ import type {
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
-import { duplicates } from "../helpers";
 import { SimpleManglerPlugin } from "./utils";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
@@ -278,10 +277,10 @@ export default class CssClassMangler extends SimpleManglerPlugin {
     return {
       name: "multi-value-attributes",
       options: {
-        attributeNames: [
+        attributeNames: new Set([
           ...CssClassMangler.STANDARD_CLASS_ATTRIBUTES,
           ...attributes,
-        ].filter(duplicates),
+        ]),
       },
     };
   }

@@ -1183,7 +1183,7 @@ suite("HTML ID Mangler", function() {
 
           const attributeNames = options.attributeNames;
           expect(attributeNames).not.to.be.undefined;
-          expect(attributeNames).to.deep.equal(expected);
+          expect(attributeNames).to.include.keys(expected);
 
           const valuePrefix = options.valuePrefix;
           expect(valuePrefix).to.be.undefined;
@@ -1234,7 +1234,7 @@ suite("HTML ID Mangler", function() {
 
           const attributeNames = options.attributeNames;
           expect(attributeNames).not.to.be.undefined;
-          expect(attributeNames).to.deep.equal(expected);
+          expect(attributeNames).to.include.keys(expected);
 
           const valuePrefix = options.valuePrefix as string;
           expect(valuePrefix).not.to.be.undefined;

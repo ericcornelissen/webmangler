@@ -1046,7 +1046,7 @@ suite("CSS Class Mangler", function() {
 
           const attributeNames = options.attributeNames;
           expect(attributeNames).not.to.be.undefined;
-          expect(attributeNames).to.deep.equal(expected);
+          expect(attributeNames).to.include.keys(expected);
         }
       });
     });
