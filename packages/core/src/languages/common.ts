@@ -2,6 +2,7 @@
  * Regular Expression pattern as a string of attribute selector comparators.
  *
  * @since v0.1.16
+ * @deprecated
  */
 export const ATTRIBUTE_SELECTOR_COMPARATORS = "\\=|\\~=|\\|=|\\^=|\\$=|\\*=";
 
@@ -10,6 +11,7 @@ export const ATTRIBUTE_SELECTOR_COMPARATORS = "\\=|\\~=|\\|=|\\^=|\\$=|\\*=";
  * selector.
  *
  * @since v0.1.16
+ * @deprecated
  */
 export const ATTRIBUTE_SELECTOR_PRE = "\\[\\s*";
 
@@ -18,6 +20,7 @@ export const ATTRIBUTE_SELECTOR_PRE = "\\[\\s*";
  * selector.
  *
  * @since v0.1.16
+ * @deprecated
  */
 export const ATTRIBUTE_SELECTOR_POST =
   `\\s*(?:${ATTRIBUTE_SELECTOR_COMPARATORS}|\\])`;
@@ -27,6 +30,7 @@ export const ATTRIBUTE_SELECTOR_POST =
  * in CSS.
  *
  * @since v0.1.16
+ * @deprecated
  */
 export const ATTRIBUTE_USAGE_PRE = "attr\\s*\\(\\s*";
 
@@ -35,6 +39,7 @@ export const ATTRIBUTE_USAGE_PRE = "attr\\s*\\(\\s*";
  * in CSS.
  *
  * @since v0.1.16
+ * @deprecated
  */
 export const ATTRIBUTE_USAGE_POST = "(\\s+([a-zA-Z]+|%))?\\s*(,|\\))";
 

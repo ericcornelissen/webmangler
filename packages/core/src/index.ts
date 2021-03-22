@@ -24,7 +24,7 @@ export function getExpressions(
   const pluginExpressions: Map<string, MangleExpression[]> = new Map();
   for (const languagePlugin of languagePlugins) {
     for (const { name, options } of expressionOptions) {
-      const expressionsMap = languagePlugin.getExpressionsFor(name, options);
+      const expressionsMap = languagePlugin.getExpressions(name, options);
       expressionsMap.forEach((newExpressions, language) => {
         const expressions = pluginExpressions.get(language) || [];
         pluginExpressions.set(language, expressions.concat(newExpressions));

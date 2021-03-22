@@ -2,7 +2,8 @@
 
 There exist two types of WebMangler plugins: one called `WebManglerPlugin` that
 determines what to mangle, and one called `WebManglerLanguagePlugin` that
-determines how to mangle in a specific language. This document outlines how they work and how you can create one.
+determines how to mangle in a specific language. This document outlines how they
+work and how you can create one.
 
 - [Plugins](#plugins)
   - [What is a Plugin](#what-is-a-plugin)
@@ -35,7 +36,7 @@ used to mangles HTML attributes. To get started you can use template below.
 import type { MangleOptions, WebManglerPlugin } from "webmangler";
 
 export class MyWebManglerPlugin implements WebManglerPlugin {
-  constructor(options: any) {
+  constructor(options?: unknown) {
     // TODO
   }
 
@@ -78,7 +79,7 @@ is used to configure the language plugins and we will come back to that later.
 +   private patterns: string[];
 +   private reservedNames: string[];
 
-    constructor(options: any) {
+    constructor(options?: unknown) {
       // TODO
     }
 
@@ -111,11 +112,11 @@ specify anything.
     private patterns: string[];
     private reservedNames: string[];
 
--   constructor(options: any) {
+-   constructor(options?: unknown) {
 -     \\ TODO
-+   constructor(options: { patterns?: string[]; reservedNames?: string[] }) {
-+     this.patterns = options.patterns || ["data-[a-z]+"];
-+     this.reservedNames = options.reservedNames || [];
++   constructor(options?: { patterns?: string[]; reservedNames?: string[] }) {
++     this.patterns = options?.patterns || ["data-[a-z]+"];
++     this.reservedNames = options?.reservedNames || [];
     }
 
     options(): MangleOptions {
@@ -149,9 +150,9 @@ insensitive). Additionally, we now use the proper type for the `CHAR_SET` field.
     private patterns: string[];
     private reservedNames: string[];
 
-    constructor(options: { patterns?: string[]; reservedNames?: string[] }) {
-      this.patterns = options.patterns || ["data-[a-z]+"];
-      this.reservedNames = options.reservedNames || [];
+    constructor(options?: { patterns?: string[]; reservedNames?: string[] }) {
+      this.patterns = options?.patterns || ["data-[a-z]+"];
+      this.reservedNames = options?.reservedNames || [];
     }
 
     options(): MangleOptions {
@@ -186,9 +187,9 @@ need just one [MangleExpressionOptions] without further configuration.
     private patterns: string[];
     private reservedNames: string[];
 
-    constructor(options: { patterns?: string[]; reservedNames?: string[] }) {
-      this.patterns = options.patterns || ["data-[a-z]+"];
-      this.reservedNames = options.reservedNames || [];
+    constructor(options?: { patterns?: string[]; reservedNames?: string[] }) {
+      this.patterns = options?.patterns || ["data-[a-z]+"];
+      this.reservedNames = options?.reservedNames || [];
     }
 
     options(): MangleOptions {
@@ -207,8 +208,9 @@ need just one [MangleExpressionOptions] without further configuration.
 
 #### Putting it all Together
 
-If you followed along (or skipped ahead) then the snippet below shows the `WebManglerPlugin` that we build. You can use this to mangle HTML attributes,
-or alter it mangle any web concept you want!
+If you followed along (or skipped ahead) then the snippet below shows the
+`WebManglerPlugin` that we build. You can use this to mangle HTML attributes, or
+alter it mangle any web concept you want!
 
 ```ts
 import type { MangleOptions, WebManglerPlugin } from "webmangler";
@@ -222,9 +224,9 @@ export class MyWebManglerPlugin implements WebManglerPlugin {
   private patterns: string[];
   private reservedNames: string[];
 
-  constructor(options: { patterns?: string[]; reservedNames?: string[] }) {
-    this.patterns = options.patterns;
-    this.reservedNames = options.reservedNames;
+  constructor(options?: { patterns?: string[]; reservedNames?: string[] }) {
+    this.patterns = options?.patterns || ["data-[a-z]+"];
+    this.reservedNames = options?.reservedNames || [];
   }
 
   options(): MangleOptions {
@@ -268,7 +270,7 @@ template below.
 import type { MangleExpression, WebManglerLanguagePlugin } from "webmangler";
 
 export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
-  constructor(options?: any) {
+  constructor(options?: unknown) {
     // TODO
   }
 
@@ -306,7 +308,7 @@ support it.
 
 +   private languages: string[];
 
--   constructor(options: any) {
+-   constructor(options?: unknown) {
 -     // TODO
 +   constructor(options?: { languages?: string[] }) {
 +     this.languages = MyWebManglerLanguagePlugin.DEFAULT_LANGUAGES.concat(
@@ -358,8 +360,7 @@ the next step we will actually add the expressions.
 +     const map = new Map();
 +     if (name === "css-classes") {
 +       this.languages.forEach((language) =>
-+         map.set(language, []),
-+       );
++         map.set(language, []));
 +     }
 +     return map;
     }
@@ -377,7 +378,7 @@ how to find and replace strings to mangle. For brevity, this implementation will
 use one naïve expressions using the [SingleGroupMangleExpression] utility.
 
 When you're creating your own `WebManglerLanguagePlugin`, make sure to [read
-about `MangleExpression`s][ManglExpressions]
+about `MangleExpression`s][MangleExpressions]
 
 ```diff
   import type { MangleExpression, WebManglerLanguagePlugin } from "webmangler";
@@ -408,8 +409,7 @@ about `MangleExpression`s][ManglExpressions]
 +             `(?<=${options.selector})(?<main>%s)(?=\\s)`,
 +             "main",
 +           ),
-          ]),
-        );
+          ]));
       }
       return map;
     }
@@ -422,7 +422,8 @@ about `MangleExpression`s][ManglExpressions]
 
 #### Putting it all Together
 
-If you followed along (or skipped ahead) then the snippet below shows the `WebManglerLanguagePlugin` that we build. This language plugin is not really
+If you followed along (or skipped ahead) then the snippet below shows the
+`WebManglerLanguagePlugin` that we build. This language plugin is not really
 useful in practice, but it should serve as a starting point when you create your
 own language plugin.
 
@@ -438,8 +439,6 @@ export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
   private languages: string[];
 
   constructor(options?: { languages?: string[] }) {
-    this.expressions = [
-    ];
     this.languages = MyWebManglerLanguagePlugin.DEFAULT_LANGUAGES.concat(
       (options?.languages || []),
     );
@@ -458,8 +457,7 @@ export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
             `(?<=${options.selector})(?<main>%s)(?=\\s)`,
             "main",
           ),
-        ]),
-      );
+        ]));
     }
     return map;
   }
@@ -470,13 +468,12 @@ export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
 }
 ```
 
-[JavaScript class]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
-[ManglExpressions]: ./mangle-expressions.md
-[MangleOptions interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L3-L20
-[TypeScript]: https://www.typescriptlang.org/
-[WebMangler core]: https://www.npmjs.com/package/webmangler
-[WebManglerLanugagePlugin interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L187-L216
-[WebManglerPlugin interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L171-L185
-[SingleGroupMangleExpression]: https://github.com/ericcornelissen/webmangler/blob/main/packages/core/src/languages/utils/mangle-expressions/single-group.class.ts
-
-[MangleExpressionOptions]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L94-L123
+[javascript class]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes "JavaScript Class"
+[mangleexpressionoptions]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L94-L123 "MangleExpressionOptions"
+[mangleexpressions]: ./mangle-expressions.md "MangleExpressions"
+[mangleoptions interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L3-L20 "MangleOptions interface"
+[typescript]: https://www.typescriptlang.org/ "TypeScript"
+[webmangler core]: https://www.npmjs.com/package/webmangler "WebMangler core"
+[webmanglerlanguageplugin interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L187-L216 "WebManglerLanguagePlugin interface"
+[webmanglerplugin interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L171-L185 "WebManglerPlugin interface"
+[singlegroupmangleexpression]: https://github.com/ericcornelissen/webmangler/blob/main/packages/core/src/languages/utils/mangle-expressions/single-group.class.ts "SingleGroupMangleExpression"

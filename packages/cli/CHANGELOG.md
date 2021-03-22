@@ -8,7 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.5] - 2021-03-19
+
 - Include `LICENSE` in published package.
+- Improve wording in documentation.
 - Read and write files in parallel.
 
 ## [0.1.4] - 2021-02-25
@@ -44,5 +49,5 @@ Versioning].
 - Configure the configuration file with the `--config`/`-c` option.
 - Enable writing to files with the `--write`/`-w` option.
 
-[keep a changelog]: https://keepachangelog.com/en/1.0.0/
-[semantic versioning]: https://semver.org/spec/v2.0.0.html
+[keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
+[semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

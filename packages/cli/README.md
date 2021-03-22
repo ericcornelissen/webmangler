@@ -1,5 +1,7 @@
 # WebMangler CLI
 
+[![NPM Package][npm-image]][npm-url]
+
 The CLI for [WebMangler].
 
 ## Usage
@@ -10,7 +12,7 @@ Install both `webmangler-cli` and `webmangler`, e.g.:
 $ npm install webmangler webmangler-cli --save-dev
 ```
 
-Add your configuration in `.webmanglerrc.js` or `webmangler.config.js`, e.g.:
+Add a configuration file for _WebMangler_ to your project, e.g.:
 
 ```js
 // .webmanglerrc.js
@@ -42,10 +44,12 @@ Add a script to your project manifest to mangle a folder, e.g.:
 }
 ```
 
-Mangle all the files in the folder that match the configured languages:
+Mangle all the files matching the configured languages in that folder:
 
 ```shell
 $ npm run mangle
 ```
 
-[WebMangler]: https://github.com/ericcornelissen/webmangler
+[npm-url]: https://www.npmjs.com/package/webmangler-cli "NPM package"
+[npm-image]: https://img.shields.io/npm/v/webmangler-cli.svg
+[webmangler]: https://github.com/ericcornelissen/webmangler

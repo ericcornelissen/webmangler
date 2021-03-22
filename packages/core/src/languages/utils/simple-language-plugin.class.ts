@@ -18,7 +18,7 @@ export type ExpressionFactory = (options: any) => MangleExpression[]; // eslint-
  * WebManglerLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.15
+ * @version v0.1.17
  */
 export default abstract class SimpleLanguagePlugin
     implements WebManglerLanguagePlugin {
@@ -60,7 +60,7 @@ export default abstract class SimpleLanguagePlugin
   /**
    * @inheritDoc
    */
-  getExpressionsFor(
+  getExpressions(
     name: string,
     options: unknown,
   ): Map<string, MangleExpression[]> {

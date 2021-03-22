@@ -8,7 +8,7 @@ import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
  * BuiltInLanguagesPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.15
+ * @version v0.1.17
  */
 export default abstract class MultiLanguagePlugin
     implements WebManglerLanguagePlugin {
@@ -31,13 +31,13 @@ export default abstract class MultiLanguagePlugin
   /**
    * @inheritDoc
    */
-  getExpressionsFor(
+  getExpressions(
     name: string,
     options: unknown,
   ): Map<string, MangleExpression[]> {
     const result: Map<string, MangleExpression[]> = new Map();
     this.plugins.forEach((plugin) => {
-      const pluginExpressions = plugin.getExpressionsFor(name, options);
+      const pluginExpressions = plugin.getExpressions(name, options);
       pluginExpressions.forEach((expr, lang) => result.set(lang, expr));
     });
 

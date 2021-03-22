@@ -11,7 +11,7 @@ let uniqueId = 0;
  * A simple mock for _WebMangler_'s {@link WebManglerPluginLanguage} interface.
  *
  * @since v0.1.1
- * @version v0.1.2
+ * @version v0.1.3
  */
 export default class WebManglerPluginLanguageMock {
   /**
@@ -20,14 +20,6 @@ export default class WebManglerPluginLanguageMock {
    * @since v0.1.2
    */
   public readonly getExpressions: SinonStub;
-
-  /**
-   * The `getExpressionsFor` method of the mock.
-   *
-   * @since v0.1.1
-   * @deprecated
-   */
-  public readonly getExpressionsFor: SinonStub;
 
   /**
    * The `getLanguages` method of the mock.
@@ -52,8 +44,6 @@ export default class WebManglerPluginLanguageMock {
       WebManglerPluginLanguageMock.getGetExpressionsStub(getExpressionsStub);
     this.getLanguages =
       WebManglerPluginLanguageMock.getGetLanguagesStub(getLanguagesStub);
-
-    this.getExpressionsFor = this.getExpressions;
   }
 
   /**

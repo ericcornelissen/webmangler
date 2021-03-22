@@ -1,5 +1,7 @@
 # WebMangler Core
 
+[![NPM Package][npm-image]][npm-url]
+
 The _WebMangler Core_ is the central package of the _WebMangler_ ecosystem. It
 can be used by itself programmatically or through [other packages and
 plugins](#other-ways-to-use-webmangler).
@@ -22,9 +24,9 @@ import { RecommendedManglers } from "webmangler/manglers";
 
 // Read in the files you want to mangle ...
 const files = [
-  { name: "index.css", content: "...", },
-  { name: "index.html", content: "...", },
-  { name: "index.js", content: "...", },
+  { name: "index.css", content: "..." },
+  { name: "index.html", content: "..." },
+  { name: "index.js", content: "..." },
 ];
 
 // and run WebMangler.
@@ -43,3 +45,6 @@ HTML, and JavaScript.
 ## Other ways to use WebMangler
 
 - as a CLI - [WebMangler CLI](https://www.npmjs.com/package/webmangler-cli)
+
+[npm-url]: https://www.npmjs.com/package/webmangler "NPM package"
+[npm-image]: https://img.shields.io/npm/v/webmangler.svg

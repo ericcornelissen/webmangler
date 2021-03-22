@@ -188,7 +188,7 @@ interface WebManglerPlugin {
  * The interface that every language plugin for _WebMangler_ must implement.
  *
  * @since v0.1.0
- * @version v0.1.15
+ * @version v0.1.17
  */
 interface WebManglerLanguagePlugin {
   /**
@@ -198,9 +198,9 @@ interface WebManglerLanguagePlugin {
    * @param name The name of the set of {@link MangleExpression}s.
    * @param options The options for the set of {@link MangleExpression}s.
    * @returns The {@link MangleExpression}s for every supported language.
-   * @since v0.1.14
+   * @since v0.1.16
    */
-  getExpressionsFor(
+  getExpressions(
     name: string,
     options: unknown,
   ): Map<string, MangleExpression[]>;

@@ -24,5 +24,5 @@ Versioning].
 
 - Add interface for structuring generated tests.
 
-[keep a changelog]: https://keepachangelog.com/en/1.0.0/
-[semantic versioning]: https://semver.org/spec/v2.0.0.html
+[keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
+[semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

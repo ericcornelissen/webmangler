@@ -135,7 +135,7 @@ with a type and some content.
 import { WebManglerFileMock } from "@webmangler/testing";
 
 const filetype = "css";
-const content = ".foo { }\n.bar { }"
+const content = ".foo { }\n.bar { }";
 const file = new MangleExpressionMock(filetype, content);
 ```
 
@@ -204,7 +204,7 @@ plugin = new WebManglerPluginMock(optionsStub);
 | --------- | ------ | ------------------------------ |
 | `options` | [Stub] | Implementation of `options()`. |
 
-[Mocha]: https://mochajs.org/
-[Sinon.JS]: https://sinonjs.org/
-[Stub]: https://sinonjs.org/releases/v9.2.4/stubs/
-[TypeScript]: https://www.typescriptlang.org/
+[mocha]: https://mochajs.org/ "Mocha"
+[sinon.js]: https://sinonjs.org/ "Sinon.JS"
+[stub]: https://sinonjs.org/releases/v9.2.4/stubs/ "Sinon Stub"
+[typescript]: https://www.typescriptlang.org/ "TypeScript"

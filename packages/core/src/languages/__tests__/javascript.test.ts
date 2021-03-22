@@ -1,6 +1,5 @@
 import type { WebManglerLanguagePlugin } from "../../types";
 import type {
-  AttributeOptions,
   CssDeclarationPropertyOptions,
   QuerySelectorOptions,
 } from "../options";
@@ -16,24 +15,17 @@ suite("Built-in JavaScript Language Support", function() {
     plugin = new JavaScriptLanguageSupport();
   });
 
-  test("has support for mangling 'attributes'", function() {
-    const options: AttributeOptions = null;
-
-    const result = plugin.getExpressionsFor("attributes", options);
-    expect(result).to.have.length.above(0);
-  });
-
   test("has support for mangling 'css-declaration-properties'", function() {
     const options: CssDeclarationPropertyOptions = { };
 
-    const result = plugin.getExpressionsFor("css-declaration-properties", options);
+    const result = plugin.getExpressions("css-declaration-properties", options);
     expect(result).to.have.length.above(0);
   });
 
   test("has support for mangling 'query-selectors'", function() {
     const options: QuerySelectorOptions = { };
 
-    const result = plugin.getExpressionsFor("query-selectors", options);
+    const result = plugin.getExpressions("query-selectors", options);
     expect(result).to.have.length.above(0);
   });
 

@@ -19,7 +19,7 @@ class ConcreteSimpleLanguagePlugin extends SimpleLanguagePlugin {
 }
 
 suite("SimpleLanguagePlugin", function() {
-  suite("::getExpressionsFor", function() {
+  suite("::getExpressions", function() {
     type TestCase = {
       testGets: { expressionSetName: string, options: unknown }[],
       languages: string[];
@@ -72,7 +72,7 @@ suite("SimpleLanguagePlugin", function() {
 
           const plugin = new ConcreteSimpleLanguagePlugin(languages, factories);
           for (const { expressionSetName, options } of testGets) {
-            const result = plugin.getExpressionsFor(expressionSetName, options);
+            const result = plugin.getExpressions(expressionSetName, options);
             if (factories.has(expressionSetName)) {
               expect(result).to.have.lengthOf(languages.length);
               result.forEach((_, language) => {

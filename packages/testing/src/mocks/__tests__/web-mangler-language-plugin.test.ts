@@ -25,24 +25,6 @@ suite("WebManglerPluginLanguageMock", function() {
     });
   });
 
-  suite("::getExpressionsFor", function() {
-    test("default stub", function() {
-      const pluginMock = new WebManglerPluginLanguageMock();
-      expect(pluginMock.getExpressionsFor).not.to.throw();
-      expect(pluginMock.getExpressionsFor()).not.to.be.undefined;
-    });
-
-    test("custom stub", function() {
-      const getExpressionsForStub: SinonStub = sinon.stub();
-
-      const pluginMock = new WebManglerPluginLanguageMock(
-        getExpressionsForStub,
-      );
-      expect(pluginMock.getExpressionsFor).not.to.throw();
-      expect(getExpressionsForStub).to.have.callCount(1);
-    });
-  });
-
   suite("::getLanguages", function() {
     test("default stub", function() {
       const pluginMock = new WebManglerPluginLanguageMock();
