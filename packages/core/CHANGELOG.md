@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Support configuring languages in built-in language plugins.
 - Support mangling attributes in `attr()` in HTML style attribute values.
 
 ## [0.1.16] - 2021-03-19

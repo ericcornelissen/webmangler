@@ -15,6 +15,26 @@ map.set("multi-value-attributes", multiValueAttributeExpressionFactory);
 map.set("single-value-attributes", singleValueAttributeExpressionFactory);
 
 /**
+ * The options for _WebMangler_'s built-in {@link HtmlLanguagePlugin}.
+ *
+ * @since v0.1.17
+ */
+export type HtmlLanguagePluginOptions = {
+  /**
+   * One or more languages that this language plugin should be used for. Can be
+   * used when HTML files have a non-standard extension or to use this plugin
+   * for HTML-like languages.
+   *
+   * NOTE: the default languages are always included and do not need to be
+   * specified when using this option.
+   *
+   * @default `[]`
+   * @since v0.1.17
+   */
+  languages?: string[];
+}
+
+/**
  * This {@link WebManglerLanguagePlugin} provides support for mangling the
  * following in HTML:
  *
@@ -34,14 +54,26 @@ map.set("single-value-attributes", singleValueAttributeExpressionFactory);
  *   ],
  * });
  *
+ * @example
+ * webmangler({
+ *   plugins: [
+ *     // any compatible plugins, e.g. the built-in plugins
+ *   ],
+ *   languages: [
+ *     new HtmlLanguagePlugin({
+ *       languages: ["html5"], // e.g. "index.html5"
+ *     }),
+ *   ],
+ * });
+ *
  * @since v0.1.0
- * @version v0.1.15
+ * @version v0.1.17
  */
 export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
   /**
    * The language aliases supported by the {@link HtmlLanguagePlugin}.
    */
-  private static languages: string[] = [
+  private static LANGUAGES: string[] = [
     "html",
     "xhtml",
   ];
@@ -49,15 +81,29 @@ export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
   /**
    * The {@link ExpressionFactory}s provided by the {@link HtmlLanguagePlugin}.
    */
-  private static expressionFactories: Map<string, ExpressionFactory> = map;
+  private static EXPRESSION_FACTORIES: Map<string, ExpressionFactory> = map;
 
   /**
    * Instantiate a new {@link HtmlLanguagePlugin} plugin.
+   *
+   * @param [options] The {@link HtmlLanguagePluginOptions}.
+   * @since v0.1.0
+   * @version v0.1.17
    */
-  constructor() {
+  constructor(options: HtmlLanguagePluginOptions={}) {
     super(
-      HtmlLanguagePlugin.languages,
-      HtmlLanguagePlugin.expressionFactories,
+      HtmlLanguagePlugin.getLanguages(options.languages),
+      HtmlLanguagePlugin.EXPRESSION_FACTORIES,
     );
+  }
+
+  /**
+   * Get all the languages for a new {@link HtmlLanguagePlugin} instance.
+   *
+   * @param configuredLanguages The configured languages, if any.
+   * @returns The languages for the instances.
+   */
+  private static getLanguages(configuredLanguages: string[] = []): string[] {
+    return HtmlLanguagePlugin.LANGUAGES.concat(...configuredLanguages);
   }
 }
