@@ -9,6 +9,26 @@ map.set("css-declaration-properties", cssDeclarationPropertyExpressionFactory);
 map.set("query-selectors", querySelectorExpressionFactory);
 
 /**
+ * The options for _WebMangler_'s built-in {@link JavaScriptLanguagePlugin}.
+ *
+ * @since v0.1.17
+ */
+export type JavaScriptLanguagePluginOptions = {
+  /**
+   * One or more languages that this language plugin should be used for. Can be
+   * used when JavaScript files have a non-standard extension or to use this
+   * plugin for JavaScript-like languages.
+   *
+   * NOTE: the default languages are always included and do not need to be
+   * specified when using this option.
+   *
+   * @default `[]`
+   * @since v0.1.17
+   */
+  languages?: string[];
+}
+
+/**
  * This {@link WebManglerLanguagePlugin} provides support for mangling the
  * following in JavaScript:
  *
@@ -32,7 +52,7 @@ export default class JavaScriptLanguagePlugin extends SimpleLanguagePlugin {
   /**
    * The language aliases supported by the {@link JavaScriptLanguagePlugin}.
    */
-  private static languages: string[] = [
+  private static LANGUAGES: string[] = [
     "js",
     "cjs",
     "mjs",
@@ -42,15 +62,29 @@ export default class JavaScriptLanguagePlugin extends SimpleLanguagePlugin {
    * The {@link ExpressionFactory}s provided by the {@link
    * JavaScriptLanguagePlugin}.
    */
-  private static expressionFactories: Map<string, ExpressionFactory> = map;
+  private static EXPRESSION_FACTORIES: Map<string, ExpressionFactory> = map;
 
   /**
    * Instantiate a new {@link JavaScriptLanguagePlugin} plugin.
+   *
+   * @param options The {@link CssLanguagePluginOptions}.
+   * @since v0.1.0
+   * @version v0.1.17
    */
-  constructor() {
+  constructor(options: JavaScriptLanguagePluginOptions={}) {
     super(
-      JavaScriptLanguagePlugin.languages,
-      JavaScriptLanguagePlugin.expressionFactories,
+      JavaScriptLanguagePlugin.getLanguages(options.languages),
+      JavaScriptLanguagePlugin.EXPRESSION_FACTORIES,
     );
+  }
+
+  /**
+   * Get all the languages for a new {@link JavaScriptLanguagePlugin} instance.
+   *
+   * @param configuredLanguages The configured languages, if any.
+   * @returns The languages for the instances.
+   */
+  private static getLanguages(configuredLanguages: string[] = []): string[] {
+    return JavaScriptLanguagePlugin.LANGUAGES.concat(...configuredLanguages);
   }
 }
