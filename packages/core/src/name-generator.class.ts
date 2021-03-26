@@ -7,7 +7,7 @@ import { ALL_LOWERCASE_CHARS } from "./characters";
  * and unique strings.
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.17
  */
 export default class NameGenerator {
   /**
@@ -56,17 +56,19 @@ export default class NameGenerator {
    * @param charSet A {@link CharSet}.
    * @throws If `charSet` is empty.
    * @since v0.1.0
-   * @version v0.1.14
+   * @version v0.1.17
    */
   constructor(
-    reserved: string[] = [],
+    reserved: Iterable<string> = [],
     charSet: CharSet = NameGenerator.DEFAULT_CHARSET,
   ) {
     if (charSet.length === 0) {
       throw new TypeError("character set cannot be empty");
     }
 
-    this.reserved = reserved.map((rawExpr) => new RegExp(`^${rawExpr}$`));
+    this.reserved = Array
+      .from(reserved)
+      .map((rawExpr) => new RegExp(`^${rawExpr}$`));
     this.charSet = charSet;
   }
 

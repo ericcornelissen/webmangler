@@ -20,7 +20,7 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
  * The options for _WebMangler_'s built-in CSS class mangler.
  *
  * @since v0.1.0
- * @version v0.1.16
+ * @version v0.1.17
  */
 export type CssClassManglerOptions = {
   /**
@@ -28,8 +28,9 @@ export type CssClassManglerOptions = {
    *
    * @default `"cls-[a-zA-Z-_]+"`
    * @since v0.1.0
+   * @version v0.1.17
    */
-  classNamePattern?: string | string[];
+  classNamePattern?: string | Iterable<string>;
 
   /**
    * A list of strings and patterns of CSS class names that should not be used.
@@ -38,8 +39,9 @@ export type CssClassManglerOptions = {
    *
    * @default `[]`
    * @since v0.1.0
+   * @version v0.1.17
    */
-  reservedClassNames?: string[];
+  reservedClassNames?: Iterable<string>;
 
   /**
    * A prefix to use for mangled CSS classes.
@@ -57,8 +59,9 @@ export type CssClassManglerOptions = {
    *
    * @default `[]`
    * @since v0.1.16
+   * @version v0.1.17
    */
-  classAttributes?: string[];
+  classAttributes?: Iterable<string>;
 }
 
 /**
@@ -159,7 +162,7 @@ export type CssClassManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.16
+ * @version v0.1.17
  */
 export default class CssClassMangler extends SimpleManglerPlugin {
   /**
@@ -203,6 +206,7 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    *
    * @param options The {@link CssClassManglerOptions}.
    * @since v0.1.0
+   * @version v0.1.17
    */
   constructor(options: CssClassManglerOptions={}) {
     super({
@@ -210,7 +214,7 @@ export default class CssClassMangler extends SimpleManglerPlugin {
       patterns: CssClassMangler.getPatterns(options.classNamePattern),
       reserved: CssClassMangler.getReserved(options.reservedClassNames),
       prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
-      expressionOptions: [
+      languageOptions: [
         QUERY_SELECTOR_EXPRESSION_OPTIONS,
         CssClassMangler.getClassAttributeExpressionOptions(
           options.classAttributes,
@@ -226,8 +230,8 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    * @returns The patterns to be used.
    */
   private static getPatterns(
-    classNamePattern?: string | string[],
-  ): string | string[] {
+    classNamePattern?: string | Iterable<string>,
+  ): string | Iterable<string> {
     if (classNamePattern === undefined) {
       return CssClassMangler.DEFAULT_PATTERNS;
     }
@@ -241,13 +245,18 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    * @param reservedClassNames The configured reserved names.
    * @returns The reserved names to be used.
    */
-  private static getReserved(reservedClassNames?: string[]): string[] {
+  private static getReserved(
+    reservedClassNames?: Iterable<string>,
+  ): Iterable<string> {
     let configured = reservedClassNames;
     if (configured === undefined) {
       configured = CssClassMangler.DEFAULT_RESERVED;
     }
 
-    return CssClassMangler.ALWAYS_RESERVED.concat(configured);
+    return [
+      ...CssClassMangler.ALWAYS_RESERVED,
+      ...configured,
+    ];
   }
 
   /**
@@ -272,7 +281,7 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    * @returns The {@link MangleExpressionOptions}.
    */
   private static getClassAttributeExpressionOptions(
-    attributes: string[] = [],
+    attributes: Iterable<string> = [],
   ): MangleExpressionOptions<MultiValueAttributeOptions> {
     return {
       name: "multi-value-attributes",

@@ -360,7 +360,7 @@ suite("HTML Attribute Mangler", function() {
           const options = htmlAttributeMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -544,7 +544,7 @@ suite("HTML Attribute Mangler", function() {
           const options = htmlAttributeMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -734,7 +734,7 @@ suite("HTML Attribute Mangler", function() {
           const options = htmlAttributeMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -844,7 +844,7 @@ suite("HTML Attribute Mangler", function() {
       const options = htmlAttributeMangler.options();
       const expressions = getExpressions(
         builtInLanguages,
-        options.expressionOptions,
+        options.languageOptions,
       );
 
       const result = mangleEngine(files, expressions, options);
@@ -867,7 +867,7 @@ suite("HTML Attribute Mangler", function() {
       const options = htmlAttributeMangler.options();
       const expressions = getExpressions(
         builtInLanguages,
-        options.expressionOptions,
+        options.languageOptions,
       );
 
       const result = mangleEngine(files, expressions, options);

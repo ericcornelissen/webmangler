@@ -37,19 +37,19 @@ function mapToOrderedList(map: Map<string, number>): string[] {
 function countInstances(
   files: WebManglerFile[],
   expressions: Map<string, MangleExpression[]>,
-  patterns: string[],
+  patterns: Iterable<string>,
 ): Map<string, number> {
   const countMap: Map<string, number> = new Map();
   files.forEach((file: WebManglerFile): void => {
     const fileExpressions = expressions.get(file.type) as MangleExpression[];
-    patterns.forEach((pattern: string): void => {
+    for (const pattern of patterns) {
       fileExpressions.forEach((expression: MangleExpression): void => {
         for (const name of expression.exec(file.content, pattern)) {
           const count = countMap.get(name) || 0;
           countMap.set(name, count + 1);
         }
       });
-    });
+    }
   });
 
   return countMap;
@@ -72,7 +72,7 @@ function countInstances(
 function getMangleMap(
   instances: Map<string, number>,
   manglePrefix: string,
-  reservedNames: string[],
+  reservedNames: Iterable<string>,
   charSet: CharSet,
 ): Map<string, string> {
   const orderedInstances = mapToOrderedList(instances);
@@ -178,10 +178,10 @@ function getSupportedFilesOnly<File extends WebManglerFile>(
  * @returns All {@link MangleEngineOptions} values.
  */
 function parseOptions(options: MangleEngineOptions): {
-  patterns: string[],
+  patterns: Iterable<string>,
   charSet: CharSet,
   manglePrefix: string,
-  reservedNames: string[],
+  reservedNames: Iterable<string>,
 } {
   return {
     patterns: toArrayIfNeeded(options.patterns),
@@ -209,7 +209,7 @@ function parseOptions(options: MangleEngineOptions): {
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.17
  */
 export default function mangle<File extends WebManglerFile>(
   files: File[],

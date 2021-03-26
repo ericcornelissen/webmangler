@@ -1,6 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { MultiValueAttributeOptions } from "../../languages/options";
-import type { MangleOptions } from "../../types";
+import type { MangleExpressionOptions, MangleOptions } from "../../types";
 import type {
   SelectorBeforeAndAfter,
   SelectorPairBeforeAndAfter,
@@ -270,7 +270,7 @@ suite("CSS Class Mangler", function() {
           const options = cssClassMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -703,7 +703,7 @@ suite("CSS Class Mangler", function() {
           const options = cssClassMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -923,7 +923,7 @@ suite("CSS Class Mangler", function() {
           const options = cssClassMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -1012,7 +1012,8 @@ suite("CSS Class Mangler", function() {
       const getExpressionOptions = (
         mangleOptions: MangleOptions,
       ): MultiValueAttributeOptions => {
-        const allExpressionOptions = mangleOptions.expressionOptions;
+        const allExpressionOptions =
+          mangleOptions.languageOptions as MangleExpressionOptions<unknown>[];
         const expressionOptions = allExpressionOptions[1];
         return expressionOptions?.options as MultiValueAttributeOptions;
       };
@@ -1074,7 +1075,7 @@ suite("CSS Class Mangler", function() {
       const options = cssClassMangler.options();
       const expressions = getExpressions(
         builtInLanguages,
-        options.expressionOptions,
+        options.languageOptions,
       );
 
       const result = mangleEngine(files, expressions, options);
@@ -1095,7 +1096,7 @@ suite("CSS Class Mangler", function() {
       const options = cssClassMangler.options();
       const expressions = getExpressions(
         builtInLanguages,
-        options.expressionOptions,
+        options.languageOptions,
       );
 
       const result = mangleEngine(files, expressions, options);

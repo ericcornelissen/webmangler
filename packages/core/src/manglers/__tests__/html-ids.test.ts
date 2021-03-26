@@ -1,6 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { SingleValueAttributeOptions } from "../../languages/options";
-import type { MangleOptions } from "../../types";
+import type { MangleExpressionOptions, MangleOptions } from "../../types";
 import type {
   SelectorBeforeAndAfter,
   SelectorPairBeforeAndAfter,
@@ -273,7 +273,7 @@ suite("HTML ID Mangler", function() {
           const options = htmlIdMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -732,7 +732,7 @@ suite("HTML ID Mangler", function() {
           const options = htmlIdMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -1068,7 +1068,7 @@ suite("HTML ID Mangler", function() {
           const options = htmlIdMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -1149,7 +1149,8 @@ suite("HTML ID Mangler", function() {
       const getExpressionOptions = (
         mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
-        const allExpressionOptions = mangleOptions.expressionOptions;
+        const allExpressionOptions =
+          mangleOptions.languageOptions as MangleExpressionOptions<unknown>[];
         const expressionOptions = allExpressionOptions[1];
         return expressionOptions?.options as SingleValueAttributeOptions;
       };
@@ -1200,7 +1201,8 @@ suite("HTML ID Mangler", function() {
       const getExpressionOptions = (
         mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
-        const allExpressionOptions = mangleOptions.expressionOptions;
+        const allExpressionOptions =
+          mangleOptions.languageOptions as MangleExpressionOptions<unknown>[];
         const expressionOptions = allExpressionOptions[2];
         return expressionOptions?.options as SingleValueAttributeOptions;
       };

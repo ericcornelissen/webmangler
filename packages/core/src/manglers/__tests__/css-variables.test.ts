@@ -278,7 +278,7 @@ suite("CSS Variable Mangler", function() {
           const options = cssVariableMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -536,7 +536,7 @@ suite("CSS Variable Mangler", function() {
           const options = cssVariableMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -592,7 +592,7 @@ suite("CSS Variable Mangler", function() {
           const options = cssVariableMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -699,7 +699,7 @@ suite("CSS Variable Mangler", function() {
       const options = cssVariableMangler.options();
       const expressions = getExpressions(
         builtInLanguages,
-        options.expressionOptions,
+        options.languageOptions,
       );
 
       const result = mangleEngine(files, expressions, options);
@@ -721,7 +721,7 @@ suite("CSS Variable Mangler", function() {
       const options = cssVariableMangler.options();
       const expressions = getExpressions(
         builtInLanguages,
-        options.expressionOptions,
+        options.languageOptions,
       );
 
       const result = mangleEngine(files, expressions, options);
