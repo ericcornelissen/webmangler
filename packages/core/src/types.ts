@@ -221,7 +221,7 @@ interface WebManglerLanguagePlugin {
   getExpressions(
     name: string,
     options: unknown,
-  ): Map<string, MangleExpression[]>;
+  ): Map<string, Iterable<MangleExpression>>;
 
   /**
    * Get a list of the languages supported by the {@link
@@ -230,7 +230,7 @@ interface WebManglerLanguagePlugin {
    * @returns A list of languages.
    * @since v0.1.9
    */
-  getLanguages(): string[];
+  getLanguages(): Iterable<string>;
 }
 
 export type {

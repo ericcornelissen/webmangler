@@ -36,7 +36,8 @@ function extractOptions(
  * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
  * @param expressionOptions The {@link MangleExpressionOptions}.
  * @returns The {@link MangleExpression}s.
- * @version v0.1.14
+ * @since v0.1.14
+ * @version v0.1.17
  */
 export function getExpressions(
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
@@ -48,7 +49,7 @@ export function getExpressions(
       const expressionsMap = languagePlugin.getExpressions(name, options);
       expressionsMap.forEach((newExpressions, language) => {
         const expressions = pluginExpressions.get(language) || [];
-        pluginExpressions.set(language, expressions.concat(newExpressions));
+        pluginExpressions.set(language, [...expressions, ...newExpressions]);
       });
     }
   }

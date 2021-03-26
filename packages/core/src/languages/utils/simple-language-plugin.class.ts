@@ -47,23 +47,24 @@ export default abstract class SimpleLanguagePlugin
    * @param languages Supported language, including aliases.
    * @param expressionFactories The {@link ExpressionFactory}s to use.
    * @since v0.1.15
-   * @version v0.1.15
+   * @version v0.1.17
    */
   constructor(
-    languages: string[],
+    languages: Iterable<string>,
     expressionFactories: Map<string, ExpressionFactory>,
   ) {
-    this.languages = languages;
+    this.languages = Array.from(languages);
     this.expressionFactories = expressionFactories;
   }
 
   /**
    * @inheritDoc
+   * @version v0.1.17
    */
   getExpressions(
     name: string,
     options: unknown,
-  ): Map<string, MangleExpression[]> {
+  ): Map<string, Iterable<MangleExpression>> {
     const map: Map<string, MangleExpression[]> = new Map();
 
     const expressionFactory = this.expressionFactories.get(name);
@@ -80,8 +81,9 @@ export default abstract class SimpleLanguagePlugin
    * SimpleLanguagePlugin} was initialized.
    *
    * @inheritDoc
+   * @version v0.1.17
    */
-  getLanguages(): string[] {
+  getLanguages(): Iterable<string> {
     return this.languages;
   }
 }

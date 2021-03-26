@@ -23,19 +23,21 @@ export default abstract class MultiLanguagePlugin
    *
    * @param plugins The plugins to include in the {@link MultiLanguagePlugin}.
    * @since v0.1.0
+   * @version v0.1.17
    */
-  constructor(plugins: WebManglerLanguagePlugin[]) {
-    this.plugins = plugins;
+  constructor(plugins: Iterable<WebManglerLanguagePlugin>) {
+    this.plugins = Array.from(plugins);
   }
 
   /**
    * @inheritDoc
+   * @version v0.1.17
    */
   getExpressions(
     name: string,
     options: unknown,
-  ): Map<string, MangleExpression[]> {
-    const result: Map<string, MangleExpression[]> = new Map();
+  ): Map<string, Iterable<MangleExpression>> {
+    const result: Map<string, Iterable<MangleExpression>> = new Map();
     this.plugins.forEach((plugin) => {
       const pluginExpressions = plugin.getExpressions(name, options);
       pluginExpressions.forEach((expr, lang) => result.set(lang, expr));
@@ -49,8 +51,9 @@ export default abstract class MultiLanguagePlugin
    * MultiLanguagePlugin}.
    *
    * @inheritDoc
+   * @version v0.1.17
    */
-  getLanguages(): string[] {
+  getLanguages(): Iterable<string> {
     const result: string[] = [];
     this.plugins.forEach((plugin) => {
       result.push(...plugin.getLanguages());
