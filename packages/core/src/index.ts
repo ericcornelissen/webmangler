@@ -67,10 +67,10 @@ export function getExpressions(
  * @since v0.1.0
  * @version v0.1.17
  */
-export default function webmangler<File extends WebManglerFile>(
-  files: File[],
+export default function webmangler<Files extends Iterable<WebManglerFile>>(
+  files: Files,
   options: WebManglerOptions,
-): File[] {
+): Files {
   const configs = extractOptions(options.plugins);
   for (const config of configs) {
     const expressions = getExpressions(
