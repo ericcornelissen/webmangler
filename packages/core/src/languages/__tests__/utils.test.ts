@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import * as utils from "../utils";
 
-suite("Language Plugin Utilities", function() {
+suite("Exports of webmangler/languages/utils", function() {
   suite("MangleExpressions", function() {
     test("has NestedGroupExpression", function() {
       expect(utils).to.haveOwnProperty("NestedGroupExpression");
