@@ -14,6 +14,7 @@ export default class NameGenerator {
    * The default set of characters used by {@link @NameGenerator}s.
    *
    * @since v0.1.0
+   * @deprecated Will be removed in a future version.
    */
   static readonly DEFAULT_CHARSET: CharSet = ALL_LOWERCASE_CHARS;
 

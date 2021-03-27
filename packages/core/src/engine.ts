@@ -5,6 +5,7 @@ import type {
   WebManglerFile,
 } from "./types";
 
+import { ALL_LOWERCASE_CHARS } from "./characters";
 import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
 
@@ -170,7 +171,7 @@ function parseOptions(options: MangleEngineOptions): {
 } {
   return {
     patterns: toArrayIfNeeded(options.patterns),
-    charSet: options.charSet || NameGenerator.DEFAULT_CHARSET,
+    charSet: options.charSet || ALL_LOWERCASE_CHARS,
     manglePrefix: options.manglePrefix || DEFAULT_MANGLE_PREFIX,
     reservedNames: options.reservedNames || DEFAULT_RESERVED_NAMES,
   };

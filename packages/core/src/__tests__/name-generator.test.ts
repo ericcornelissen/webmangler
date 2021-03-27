@@ -20,7 +20,7 @@ interface TestCase {
 }
 
 suite("NameGenerator", function() {
-  const defaultCharsetArray = Array.from(NameGenerator.DEFAULT_CHARSET);
+  const defaultCharsetArray = Array.from(ALL_LOWERCASE_CHARS);
 
   const allLowercaseCharsArray = Array.from(ALL_LOWERCASE_CHARS);
   const allNumberCharsArray = Array.from(ALL_NUMBER_CHARS);
