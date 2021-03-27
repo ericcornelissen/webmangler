@@ -10,6 +10,20 @@ comment:
   require_base: no
   require_head: yes
 
+flags:
+  package-cli:
+    paths:
+      - packages/cli/**/*.ts
+    carryforward: false
+  package-core:
+    paths:
+      - packages/core/**/*.ts
+    carryforward: true
+  package-testing:
+    paths:
+      - packages/testing/**/*.ts
+    carryforward: true
+
 ignore:
   - scripts/
   - testdata/
