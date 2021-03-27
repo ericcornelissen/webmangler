@@ -1,5 +1,5 @@
 /**
- * A character is an one of a selection of strings of length one.
+ * A character is one of a selection of strings of length one.
  *
  * @since v0.1.7
  */
@@ -58,7 +58,7 @@ const ALL_LETTER_CHARS: CharSet = [
 ];
 
 /**
- * A character set ({@link CharSet}) of all allowed letters.
+ * A character set ({@link CharSet}) of all allowed characters.
  *
  * @since v0.1.16
  */

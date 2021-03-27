@@ -44,16 +44,16 @@ export default class NameGenerator {
    * Expression that must match exactly. E.g. the reserved string "fa" will be
    * transformed in the Regular Expression `/^fa$/` and hence only prevent the
    * exact string "fa" from being generated. On the other hand, the reserved
-   * pattern "a.*", transformed into `/^a.*$/`, will prevent any string starting
-   * with an "a" (including just "a") from being generated.
+   * pattern "fa.*", transformed into `/^fa.*$/`, will prevent any string
+   * starting with "fa" (including just "fa") from being generated.
    *
    * If you need to reserve a character that has a special meaning in Regular
    * Expressions you need to escape it. E.g. the reserved string "a\\." will be
-   * transformed into `/^a\.$/` and will prevent the string "a." from being
-   * generated.
+   * transformed into `/^a\.$/` and will prevent the exact string "a." from
+   * being generated.
    *
-   * @param reserved A list of reserved names or expressions.
-   * @param charSet A {@link CharSet}.
+   * @param [reserved] One or more reserved names and/or expressions.
+   * @param [charSet] A {@link CharSet}.
    * @throws If `charSet` is empty.
    * @since v0.1.0
    * @version v0.1.17

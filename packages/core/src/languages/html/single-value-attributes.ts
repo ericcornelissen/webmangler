@@ -81,7 +81,7 @@ function newUnquotedValueExpression(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.16
+ * @version v0.1.17
  */
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,

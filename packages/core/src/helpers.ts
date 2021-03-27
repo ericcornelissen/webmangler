@@ -12,7 +12,7 @@ import * as path from "path";
  * @param index The (current) index of the value in `array`.
  * @param array An array of values.
  * @returns `true` if this is first appearance of `value`, `false` otherwise.
- * @deprecated
+ * @deprecated Use a `new Set()` instead of filtering duplicates from an array.
  */
 export function duplicates(
   value: unknown,
@@ -40,8 +40,12 @@ export function getTypeFromFilePath(filePath: string): string {
  * `input` is a value, it will return a one-value iterable, if the `input` is an
  * iterable it will return the input.
  *
+ * NOTE: Strings are not considered to be an iterable by this function, instead
+ * if provided with a string this function will return a one-value iterable of
+ * that string.
+ *
  * @param input The value to convert into an iterable if needed.
- * @returns Always an iterable based on the input.
+ * @returns An iterable based on the input.
  * @since v0.1.0
  * @version v0.1.17
  */

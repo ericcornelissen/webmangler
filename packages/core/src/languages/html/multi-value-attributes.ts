@@ -44,6 +44,7 @@ function newElementAttributeMultiValueExpressions(
  * @param options The {@link MultiValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
+ * @version v0.1.17
  */
 export default function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,
