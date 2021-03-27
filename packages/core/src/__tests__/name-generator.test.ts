@@ -227,6 +227,32 @@ suite("NameGenerator", function() {
         },
       ],
     },
+    {
+      name: "duplicate characters",
+      cases: [
+        {
+          charSet: ["a", "b", "c", "a"],
+          samples: [
+            { inc: 0, expected: "a" },
+            { inc: 2, expected: "aa" },
+          ],
+        },
+        {
+          charSet: ["a", "b", "c", "b"],
+          samples: [
+            { inc: 0, expected: "a" },
+            { inc: 2, expected: "aa" },
+          ],
+        },
+        {
+          charSet: ["a", "b", "c", "c"],
+          samples: [
+            { inc: 0, expected: "a" },
+            { inc: 2, expected: "aa" },
+          ],
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of reservedScenarios) {

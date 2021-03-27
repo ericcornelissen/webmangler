@@ -9,6 +9,7 @@ import { ALL_LOWERCASE_CHARS } from "./characters";
 import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
 
+const DEFAULT_CHAR_SET = ALL_LOWERCASE_CHARS;
 const DEFAULT_MANGLE_PREFIX = "";
 const DEFAULT_RESERVED_NAMES: string[] = [];
 
@@ -171,7 +172,7 @@ function parseOptions(options: MangleEngineOptions): {
 } {
   return {
     patterns: toArrayIfNeeded(options.patterns),
-    charSet: options.charSet || ALL_LOWERCASE_CHARS,
+    charSet: options.charSet || DEFAULT_CHAR_SET,
     manglePrefix: options.manglePrefix || DEFAULT_MANGLE_PREFIX,
     reservedNames: options.reservedNames || DEFAULT_RESERVED_NAMES,
   };

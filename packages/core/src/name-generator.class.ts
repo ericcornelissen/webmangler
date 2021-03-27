@@ -53,6 +53,9 @@ export default class NameGenerator {
    * transformed into `/^a\.$/` and will prevent the exact string "a." from
    * being generated.
    *
+   * If `charSet` contains duplicates they will be removed so that no duplicate
+   * names are generated.
+   *
    * @param [reserved] One or more reserved names and/or expressions.
    * @param [charSet] A {@link CharSet}.
    * @throws If `charSet` is empty.
@@ -63,15 +66,15 @@ export default class NameGenerator {
     reserved: Iterable<string> = [],
     charSet: CharSet = NameGenerator.DEFAULT_CHARSET,
   ) {
-    const charSetAsArray = Array.from(charSet);
-    if (charSetAsArray.length === 0) {
+    const charSetNoDuplicates = new Set(charSet);
+    if (charSetNoDuplicates.size === 0) {
       throw new TypeError("character set cannot be empty");
     }
 
     this.reserved = Array
       .from(reserved)
       .map((rawExpr) => new RegExp(`^${rawExpr}$`));
-    this.charSet = charSetAsArray;
+    this.charSet = Array.from(charSetNoDuplicates);
   }
 
   /**
