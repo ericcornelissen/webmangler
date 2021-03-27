@@ -45,10 +45,11 @@ function newPropertyAsStandaloneStringExpression(
  * @param options The {@link CssDeclarationPropertyOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
+ * @version v0.1.17
  */
 export default function cssDeclarationPropertyExpressionFactory(
   options: CssDeclarationPropertyOptions,
-): MangleExpression[] {
+): Iterable<MangleExpression> {
   const propertyPrefix = options.prefix ? options.prefix : "";
   const propertySuffix = options.suffix ? options.suffix : "";
 

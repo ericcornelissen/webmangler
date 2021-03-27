@@ -45,8 +45,10 @@ function newElementAttributeExpressions(): MangleExpression[] {
  *
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
+ * @version v0.1.17
  */
-export default function attributeExpressionFactory(): MangleExpression[] {
+export default function attributeExpressionFactory():
+    Iterable<MangleExpression> {
   return [
     ...newElementAttributeExpressions(),
   ];

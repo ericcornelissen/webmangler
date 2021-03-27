@@ -81,12 +81,12 @@ function newUnquotedValueExpression(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.16
+ * @version v0.1.17
  */
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
-): MangleExpression[] {
-  const attributesPattern = options.attributeNames.join("|");
+): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(options.attributeNames).join("|");
   const valuePrefix = options.valuePrefix ? options.valuePrefix : "";
   const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
 

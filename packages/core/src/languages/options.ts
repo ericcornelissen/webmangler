@@ -64,14 +64,16 @@ type CssDeclarationValueOptions = {
  * attributes as a space-separate list of values.
  *
  * @since v0.1.14
+ * @version v0.1.17
  */
 type MultiValueAttributeOptions = {
   /**
    * The names of attributes to match.
    *
    * @since v0.1.14
+   * @version v0.1.17
    */
-  attributeNames: string[];
+  attributeNames: Iterable<string>;
 };
 
 /**
@@ -108,14 +110,16 @@ type QuerySelectorOptions = {
  * attributes as a single value.
  *
  * @since v0.1.14
+ * @version v0.1.17
  */
 type SingleValueAttributeOptions = {
   /**
    * The names of attributes to match.
    *
    * @since v0.1.14
+   * @version v0.1.17
    */
-  attributeNames: string[];
+  attributeNames: Iterable<string>;
 
   /**
    * An optional expression of the prefix required on values that should be
