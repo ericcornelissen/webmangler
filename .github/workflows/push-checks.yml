@@ -15,42 +15,64 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Check for file changes
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            changed:
+              - 'packages/${{ matrix.package }}/**'
       - name: Use Node.js 12.x
+        if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
       - name: Install monorepo dependencies
+        if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Install packages/${{ matrix.package }} dependencies
         working-directory: ./packages/${{ matrix.package }}
+        if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Run benchmarks for packages/${{ matrix.package }}
+        if: steps.changes.outputs.changed == 'true'
         run: npm run benchmark:${{ matrix.package }}
   build:
     name: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        working-directory:
-          - packages/cli
-          - packages/core
-          - packages/testing
+        package:
+          - cli
+          - core
+          - testing
     defaults:
       run:
-        working-directory: ${{ matrix.working-directory }}
+        working-directory: packages/${{ matrix.package }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Check for file changes
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            changed:
+              - 'packages/${{ matrix.package }}/**'
       - name: Use Node.js 12.x
+        if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
       - name: Install monorepo dependencies
         working-directory: ./
+        if: steps.changes.outputs.changed == 'true'
         run: npm ci
-      - name: Install ${{ matrix.working-directory }} dependencies
+      - name: Install packages/${{ matrix.package }} dependencies
+        if: steps.changes.outputs.changed == 'true'
         run: npm ci
-      - name: Compile ${{ matrix.working-directory }}
+      - name: Compile packages/${{ matrix.package }}
+        if: steps.changes.outputs.changed == 'true'
         run: npm run compile
   lint:
     name: Lint
@@ -79,18 +101,30 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Check for file changes
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            changed:
+              - 'packages/${{ matrix.package }}/**'
       - name: Use Node.js 12.x
+        if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
       - name: Install monorepo dependencies
+        if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Install packages/${{ matrix.package }} dependencies
         working-directory: ./packages/${{ matrix.package }}
+        if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Run test suite for packages/${{ matrix.package }}
+        if: steps.changes.outputs.changed == 'true'
         run: npm run coverage:${{ matrix.package }}
       - name: Upload coverage to Codecov
+        if: steps.changes.outputs.changed == 'true'
         uses: codecov/codecov-action@v1
         with:
           file: ./_reports/lcov.info
