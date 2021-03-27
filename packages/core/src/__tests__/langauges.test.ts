@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import * as languages from "../languages";
 
-suite("Import webmangler/manglers", function() {
+suite("Exports of webmangler/languages", function() {
   test("has BuiltInLanguagesSupport", function() {
     expect(languages).to.haveOwnProperty("BuiltInLanguagesSupport");
   });

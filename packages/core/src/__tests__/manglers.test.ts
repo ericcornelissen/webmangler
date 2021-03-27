@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import * as manglers from "../manglers";
 
-suite("Import webmangler/manglers", function() {
+suite("Exports of webmangler/manglers", function() {
   test("has BuiltInManglers", function() {
     expect(manglers).to.haveOwnProperty("BuiltInManglers");
   });
