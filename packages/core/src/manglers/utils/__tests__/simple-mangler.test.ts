@@ -15,7 +15,7 @@ class ConcreteSimpleManglerPlugin extends SimpleManglerPlugin {
 suite("SimpleManglerPlugin", function() {
   const defaultOptions: SimpleManglerOptions = {
     charSet: ["f", "o", "o", "b", "a", "r"],
-    expressionOptions: [],
+    languageOptions: [],
     patterns: "[foo][bar]",
     reserved: ["foo", "bar"],
     prefix: "foo_",

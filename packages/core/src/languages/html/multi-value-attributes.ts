@@ -10,13 +10,12 @@ const GROUP_MAIN = "main";
  * Get {@link MangleExpression}s to match element attribute values in HTML, e.g.
  * `the` and `sun` in `<img data-praise="the sun">`.
  *
- * @param attributeNames A list of attribute names.
+ * @param attributesPattern The pattern of attribute names.
  * @returns The {@link MangleExpression} to match attribute values in HTML.
  */
 function newElementAttributeMultiValueExpressions(
-  attributeNames: string[],
+  attributesPattern: string,
 ): MangleExpression[] {
-  const attributesPattern = attributeNames.join("|");
   return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
     `
       (?<=${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)})
@@ -44,11 +43,14 @@ function newElementAttributeMultiValueExpressions(
  * @param options The {@link MultiValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
+ * @version v0.1.17
  */
 export default function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,
-): MangleExpression[] {
+): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(options.attributeNames).join("|");
+
   return [
-    ...newElementAttributeMultiValueExpressions(options.attributeNames),
+    ...newElementAttributeMultiValueExpressions(attributesPattern),
   ];
 }

@@ -4,7 +4,7 @@ coverage:
   range: 80...100
 
 comment:
-  layout: diff, files
+  layout: diff, flags, files
   behavior: default  # update, if exists. Otherwise post new.
   require_changes: true  # only post the comment if coverage changes
   require_base: no

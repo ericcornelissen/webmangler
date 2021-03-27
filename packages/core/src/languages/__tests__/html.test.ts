@@ -73,7 +73,7 @@ suite("Built-in HTML Language Plugin", function() {
     test("get languages", function() {
       const plugin = new HtmlLanguagePlugin();
       const result = plugin.getLanguages();
-      expect(result).to.include.members(DEFAULT_LANGUAGES);
+      expect(result).to.include.keys(DEFAULT_LANGUAGES);
     });
 
     test("get configured languages", function() {
@@ -81,8 +81,8 @@ suite("Built-in HTML Language Plugin", function() {
 
       const plugin = new HtmlLanguagePlugin({ languages });
       const result = plugin.getLanguages();
-      expect(result).to.include.members(DEFAULT_LANGUAGES);
-      expect(result).to.include.members(languages);
+      expect(result).to.include.keys(DEFAULT_LANGUAGES);
+      expect(result).to.include.keys(languages);
     });
   });
 });

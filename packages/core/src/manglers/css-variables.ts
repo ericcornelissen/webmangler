@@ -29,6 +29,7 @@ const CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS:
  * The options for _WebMangler_'s built-in CSS variables mangler.
  *
  * @since v0.1.0
+ * @version v0.1.17
  */
 export type CssVariableManglerOptions = {
   /**
@@ -36,8 +37,9 @@ export type CssVariableManglerOptions = {
    *
    * @default `"[a-zA-Z-]+"`
    * @since v0.1.0
+   * @version v0.1.17
    */
-  cssVarNamePattern?: string | string[];
+  cssVarNamePattern?: string | Iterable<string>;
 
   /**
    * A list of strings and patterns of CSS variable names that should not be
@@ -47,8 +49,9 @@ export type CssVariableManglerOptions = {
    *
    * @default `[]`
    * @since v0.1.0
+   * @version v0.1.17
    */
-  reservedCssVarNames?: string[];
+  reservedCssVarNames?: Iterable<string>;
 
   /**
    * A prefix to use for mangled CSS variables.
@@ -154,7 +157,7 @@ export type CssVariableManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.16
+ * @version v0.1.17
  */
 export default class CssVariableMangler extends SimpleManglerPlugin {
   /**
@@ -192,6 +195,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    *
    * @param options The {@link CssVariableManglerOptions}.
    * @since v0.1.0
+   * @version v0.1.17
    */
   constructor(options: CssVariableManglerOptions={}) {
     super({
@@ -199,7 +203,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
       patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
       reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
       prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),
-      expressionOptions: [
+      languageOptions: [
         CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS,
         CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS,
       ],
@@ -213,8 +217,8 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * @returns The patterns to be used.
    */
   private static getPatterns(
-    cssVarNamePattern?: string | string[],
-  ): string | string[] {
+    cssVarNamePattern?: string | Iterable<string>,
+  ): string | Iterable<string> {
     if (cssVarNamePattern === undefined) {
       return CssVariableMangler.DEFAULT_PATTERNS;
     }
@@ -228,13 +232,18 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    * @param reservedCssVarNames The configured reserved names.
    * @returns The reserved names to be used.
    */
-  private static getReserved(reservedCssVarNames?: string[]): string[] {
+  private static getReserved(
+    reservedCssVarNames?: Iterable<string>,
+  ): Iterable<string> {
     let configured = reservedCssVarNames;
     if (configured === undefined) {
       configured = CssVariableMangler.DEFAULT_RESERVED;
     }
 
-    return CssVariableMangler.ALWAYS_RESERVED.concat(configured);
+    return [
+      ...CssVariableMangler.ALWAYS_RESERVED,
+      ...configured,
+    ];
   }
 
   /**

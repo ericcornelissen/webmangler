@@ -45,7 +45,7 @@ function newCssSelectorExpression(
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
-): MangleExpression[] {
+): Iterable<MangleExpression> {
   return [
     newCssSelectorExpression(options.prefix, options.suffix),
   ];

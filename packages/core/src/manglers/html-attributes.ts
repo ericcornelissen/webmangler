@@ -28,6 +28,7 @@ const ATTRIBUTE_USAGE_EXPRESSION_OPTIONS:
  * The options for _WebMangler_'s built-in HTML Attributes mangler.
  *
  * @since v0.1.0
+ * @version v0.1.17
  */
 export type HtmlAttributeManglerOptions = {
   /**
@@ -38,8 +39,9 @@ export type HtmlAttributeManglerOptions = {
    *
    * @default `"data-[a-z-]+"`
    * @since v0.1.0
+   * @version v0.1.17
    */
-  attrNamePattern?: string | string[];
+  attrNamePattern?: string | Iterable<string>;
 
   /**
    * A list of strings and patterns of HTML attributes names that should not be
@@ -49,8 +51,9 @@ export type HtmlAttributeManglerOptions = {
    *
    * @default `[]`
    * @since v0.1.0
+   * @version v0.1.17
    */
-  reservedAttrNames?: string[];
+  reservedAttrNames?: Iterable<string>;
 
   /**
    * A prefix to use for mangled HTML attributes. Set to `''` if no prefix
@@ -207,6 +210,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    *
    * @param options The {@link HtmlAttributeManglerOptions}.
    * @since v0.1.0
+   * @version v0.1.17
    */
   constructor(options: HtmlAttributeManglerOptions={}) {
     super({
@@ -214,7 +218,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
       patterns: HtmlAttributeMangler.getPatterns(options.attrNamePattern),
       reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
-      expressionOptions: [
+      languageOptions: [
         ATTRIBUTE_EXPRESSION_OPTIONS,
         ATTRIBUTE_USAGE_EXPRESSION_OPTIONS,
         HtmlAttributeMangler.getAttributeSelectorExpressionOptions("\""),
@@ -230,8 +234,8 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * @returns The patterns to be used.
    */
   private static getPatterns(
-    attrNamePattern?: string | string[],
-  ): string | string[] {
+    attrNamePattern?: string | Iterable<string>,
+  ): string | Iterable<string> {
     if (attrNamePattern === undefined) {
       return HtmlAttributeMangler.DEFAULT_PATTERNS;
     }
@@ -245,13 +249,18 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * @param reservedAttrNames The configured reserved names.
    * @returns The reserved names to be used.
    */
-  private static getReserved(reservedAttrNames?: string[]): string[] {
+  private static getReserved(
+    reservedAttrNames?: Iterable<string>,
+  ): Iterable<string> {
     let configured = reservedAttrNames;
     if (configured === undefined) {
       configured = HtmlAttributeMangler.DEFAULT_RESERVED;
     }
 
-    return HtmlAttributeMangler.ALWAYS_RESERVED.concat(configured);
+    return [
+      ...HtmlAttributeMangler.ALWAYS_RESERVED,
+      ...configured,
+    ];
   }
 
   /**
