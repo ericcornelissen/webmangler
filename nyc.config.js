@@ -1,8 +1,8 @@
 "use strict";
 
-let specPackage = ".";
+let specPackage = "";
 if (process.env.TEST_PKG !== undefined) {
-  specPackage = process.env.TEST_PKG;
+  specPackage = `${process.env.TEST_PKG}/`;
 }
 
 module.exports = {
@@ -16,10 +16,10 @@ module.exports = {
   ],
 
   checkCoverage: true,
-  statements: specPackage === "cli" ? 75 : 90,
-  lines: specPackage === "cli" ? 75 : 90,
-  branches: specPackage === "cli" ? 80 : 90,
-  functions: specPackage === "cli" ? 80 : 90,
+  statements: process.env.TEST_PKG === "cli" ? 75 : 90,
+  lines: process.env.TEST_PKG === "cli" ? 75 : 90,
+  branches: process.env.TEST_PKG === "cli" ? 80 : 90,
+  functions: process.env.TEST_PKG === "cli" ? 80 : 90,
   watermarks: {
     statements: [85, 95],
     lines: [85, 95],
@@ -31,7 +31,7 @@ module.exports = {
     ".ts",
   ],
   include: [
-    `packages/${specPackage}/**/*.ts`,
+    `packages/${specPackage}**/*.ts`,
   ],
   exclude: [
     "_reports/",
