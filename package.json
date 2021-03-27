@@ -20,6 +20,9 @@
     "lint": "eslint . --ext .js,.json,.md,.ts,.yml",
     "postinstall": "husky install scripts/hooks",
     "test": "mocha",
+    "test:cli": "TEST_PKG=cli mocha",
+    "test:core": "TEST_PKG=core mocha",
+    "test:testing": "TEST_PKG=testing mocha",
     "test:coverage": "nyc mocha",
     "test:watch": "mocha --watch --reporter min"
   },
