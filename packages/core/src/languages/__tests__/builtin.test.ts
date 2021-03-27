@@ -67,13 +67,13 @@ suite("Built-in Language Supports", function() {
     expect(result).to.have.length.above(0);
 
     expect(result).to.deep.include.members(
-      CssLanguagePluginMock.getLanguages(),
+      Array.from(CssLanguagePluginMock.getLanguages()),
     );
     expect(result).to.deep.include.members(
-      HtmlLanguagePluginMock.getLanguages(),
+      Array.from(HtmlLanguagePluginMock.getLanguages()),
     );
     expect(result).to.deep.include.members(
-      JsLanguagePluginMock.getLanguages(),
+      Array.from(JsLanguagePluginMock.getLanguages()),
     );
   });
 

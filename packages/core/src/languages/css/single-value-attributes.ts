@@ -12,22 +12,21 @@ const GROUP_QUOTE = "quote";
  * e.g. `bar` in `[data-foo="bar"] { }` or `sun` in `[data-praise="thesun"] { }`
  * if the value prefix is "the".
  *
- * @param attributeNames A list of attribute names.
+ * @param attributesPattern The pattern of attribute names.
  * @param valuePrefix An expression of the required prefix for values.
  * @param valueSuffix An expression of the required suffix for values.
  * @returns The {@link MangleExpression} to match attribute values in CSS.
  */
 function newAttributeSelectorSingleValueExpression(
-  attributeNames: string[],
+  attributesPattern: string,
   valuePrefix: string,
   valueSuffix: string,
 ): MangleExpression {
-  const attributeNamesExpression = attributeNames.join("|");
   return new SingleGroupMangleExpression(
     `
       (?<=
         \\[\\s*
-        (?:${attributeNamesExpression})\\s*
+        (?:${attributesPattern})\\s*
         (?:\\=|\\~=|\\|=|\\^=|\\$=|\\*=)\\s*
         (?<${GROUP_QUOTE}>${QUOTES_PATTERN})\\s*
         ${valuePrefix}
@@ -51,16 +50,18 @@ function newAttributeSelectorSingleValueExpression(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
+ * @version v0.1.17
  */
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
-): MangleExpression[] {
+): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(options.attributeNames).join("|");
   const valuePrefix = options.valuePrefix ? options.valuePrefix : "";
   const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
 
   return [
     newAttributeSelectorSingleValueExpression(
-      options.attributeNames,
+      attributesPattern,
       valuePrefix,
       valueSuffix,
     ),

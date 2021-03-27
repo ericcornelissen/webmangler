@@ -11,12 +11,12 @@ import type { MangleExpression } from "../../types";
  * @returns `true` if any of the expressions matches as expected.
  */
 export function matchesAsExpected(
-  expressions: MangleExpression[],
+  expressions: Iterable<MangleExpression>,
   input: string,
   pattern: string,
   expected: string[],
 ): boolean {
-  return expressions.some((expression) => {
+  return Array.from(expressions).some((expression) => {
     let i = 0;
     for (const match of expression.exec(input, pattern)) {
       if (match !== expected[i++]) {

@@ -12,6 +12,7 @@ import * as path from "path";
  * @param index The (current) index of the value in `array`.
  * @param array An array of values.
  * @returns `true` if this is first appearance of `value`, `false` otherwise.
+ * @deprecated Use a `new Set()` instead of filtering duplicates from an array.
  */
 export function duplicates(
   value: unknown,
@@ -35,18 +36,29 @@ export function getTypeFromFilePath(filePath: string): string {
 }
 
 /**
- * Convert a value or array of values into an array of values. I.e. if the
- * `input` is a value, it will return a one-value array, if the `input` is an
- * array it will return the array.
+ * Convert a value or iterable of values into an iterable of values. I.e. if the
+ * `input` is a value, it will return a one-value iterable, if the `input` is an
+ * iterable it will return the input.
  *
- * @param input The value to convert into an array if needed.
- * @returns Always an array based on the input.
+ * NOTE: Strings are not considered to be an iterable by this function, instead
+ * if provided with a string this function will return a one-value iterable of
+ * that string.
+ *
+ * @param input The value to convert into an iterable if needed.
+ * @returns An iterable based on the input.
  * @since v0.1.0
+ * @version v0.1.17
  */
-export function toArrayIfNeeded<T>(input: T | T[]): T[] {
-  if (Array.isArray(input)) {
-    return input;
+export function toArrayIfNeeded<T>(input: T | Iterable<T>): Iterable<T> {
+  if (typeof input === "string") {
+    return [input];
   }
 
-  return [input];
+  const inputAsIterable = input as Iterable<T>;
+  if (typeof inputAsIterable[Symbol.iterator] === "function") {
+    return inputAsIterable;
+  }
+
+  const inputAsValue = input as T;
+  return [inputAsValue];
 }

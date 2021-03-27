@@ -45,7 +45,7 @@ suite("Built-in JavaScript Language Plugin", function() {
     test("get languages", function() {
       const plugin = new JavaScriptLanguagePlugin();
       const result = plugin.getLanguages();
-      expect(result).to.include.members(DEFAULT_LANGUAGES);
+      expect(result).to.include.keys(DEFAULT_LANGUAGES);
     });
 
     test("get configured languages", function() {
@@ -53,8 +53,8 @@ suite("Built-in JavaScript Language Plugin", function() {
 
       const plugin = new JavaScriptLanguagePlugin({ languages });
       const result = plugin.getLanguages();
-      expect(result).to.include.members(DEFAULT_LANGUAGES);
-      expect(result).to.include.members(languages);
+      expect(result).to.include.keys(DEFAULT_LANGUAGES);
+      expect(result).to.include.keys(languages);
     });
   });
 });

@@ -1,12 +1,33 @@
 import type {
   MangleExpression,
   MangleExpressionOptions,
+  MangleOptions,
   WebManglerFile,
   WebManglerOptions,
+  WebManglerPlugin,
   WebManglerLanguagePlugin,
 } from "./types";
 
 import manglerEngine from "./engine";
+import { toArrayIfNeeded } from "./helpers";
+
+/**
+ * Extract the {@link MangleOptions} from a collection of plugins.
+ *
+ * @param plugins The {@link WebManglerPlugin}s.
+ * @returns The {@link MangleOptions}.
+ */
+function extractOptions(
+  plugins: Iterable<WebManglerPlugin>,
+): Iterable<MangleOptions> {
+  const result: MangleOptions[] = [];
+  for (const plugin of plugins) {
+    const pluginOptions = plugin.options();
+    result.push(...toArrayIfNeeded(pluginOptions));
+  }
+
+  return result;
+}
 
 /**
  * Retrieve the {@link MangleExpression}s for a given plugin, given its {@link
@@ -15,19 +36,20 @@ import manglerEngine from "./engine";
  * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
  * @param expressionOptions The {@link MangleExpressionOptions}.
  * @returns The {@link MangleExpression}s.
- * @version v0.1.14
+ * @since v0.1.14
+ * @version v0.1.17
  */
 export function getExpressions(
-  languagePlugins: WebManglerLanguagePlugin[],
-  expressionOptions: MangleExpressionOptions<unknown>[],
-): Map<string, MangleExpression[]> {
-  const pluginExpressions: Map<string, MangleExpression[]> = new Map();
+  languagePlugins: Iterable<WebManglerLanguagePlugin>,
+  expressionOptions: Iterable<MangleExpressionOptions<unknown>>,
+): Map<string, Iterable<MangleExpression>> {
+  const pluginExpressions: Map<string, Iterable<MangleExpression>> = new Map();
   for (const languagePlugin of languagePlugins) {
     for (const { name, options } of expressionOptions) {
       const expressionsMap = languagePlugin.getExpressions(name, options);
       expressionsMap.forEach((newExpressions, language) => {
         const expressions = pluginExpressions.get(language) || [];
-        pluginExpressions.set(language, expressions.concat(newExpressions));
+        pluginExpressions.set(language, [...expressions, ...newExpressions]);
       });
     }
   }
@@ -43,17 +65,17 @@ export function getExpressions(
  * @param options The options for the mangler.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.17
  */
-export default function webmangler<File extends WebManglerFile>(
-  files: File[],
+export default function webmangler<Files extends Iterable<WebManglerFile>>(
+  files: Files,
   options: WebManglerOptions,
-): File[] {
-  const configs = options.plugins.flatMap((plugin) => plugin.options());
+): Files {
+  const configs = extractOptions(options.plugins);
   for (const config of configs) {
     const expressions = getExpressions(
       options.languages,
-      config.expressionOptions,
+      config.languageOptions || config.expressionOptions,
     );
 
     files = manglerEngine(files, expressions, config);
@@ -62,5 +84,9 @@ export default function webmangler<File extends WebManglerFile>(
   return files;
 }
 
-export type { WebManglerFile, WebManglerOptions };
-export type { WebManglerPlugin, WebManglerLanguagePlugin } from "./types";
+export type {
+  WebManglerFile,
+  WebManglerOptions,
+  WebManglerPlugin,
+  WebManglerLanguagePlugin,
+};

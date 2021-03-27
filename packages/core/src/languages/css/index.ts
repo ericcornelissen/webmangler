@@ -29,7 +29,7 @@ export type CssLanguagePluginOptions = {
    * @default `[]`
    * @since v0.1.17
    */
-  languages?: string[];
+  languages?: Iterable<string>;
 }
 
 /**
@@ -70,7 +70,7 @@ export default class CssLanguagePlugin extends SimpleLanguagePlugin {
   /**
    * The language aliases supported by the {@link CssLanguagePlugin}.
    */
-  private static LANGUAGES: string[] = [
+  private static DEFAULT_LANGUAGES: string[] = [
     "css",
   ];
 
@@ -99,7 +99,12 @@ export default class CssLanguagePlugin extends SimpleLanguagePlugin {
    * @param configuredLanguages The configured languages, if any.
    * @returns The languages for the instances.
    */
-  private static getLanguages(configuredLanguages: string[]=[]): string[] {
-    return CssLanguagePlugin.LANGUAGES.concat(...configuredLanguages);
+  private static getLanguages(
+    configuredLanguages: Iterable<string> = [],
+  ): Iterable<string> {
+    return new Set([
+      ...CssLanguagePlugin.DEFAULT_LANGUAGES,
+      ...configuredLanguages,
+    ]);
   }
 }
