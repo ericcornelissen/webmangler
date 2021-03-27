@@ -16,6 +16,10 @@
   "scripts": {
     "benchmark": "TEST_ENV=benchmark mocha",
     "clean": "node scripts/clean.js",
+    "coverage": "nyc mocha",
+    "coverage:cli": "TEST_PKG=cli nyc mocha",
+    "coverage:core": "TEST_PKG=core nyc mocha",
+    "coverage:testing": "TEST_PKG=testing nyc mocha",
     "format": "npm run lint -- --fix",
     "lint": "eslint . --ext .js,.json,.md,.ts,.yml",
     "postinstall": "husky install scripts/hooks",
@@ -23,7 +27,6 @@
     "test:cli": "TEST_PKG=cli mocha",
     "test:core": "TEST_PKG=core mocha",
     "test:testing": "TEST_PKG=testing mocha",
-    "test:coverage": "nyc mocha",
     "test:watch": "mocha --watch --reporter min"
   },
   "devDependencies": {

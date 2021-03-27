@@ -163,6 +163,7 @@ module.exports = {
         ".eslintrc.js",
         ".mocharc.js",
         "commitlint.config.js",
+        "nyc.config.js",
       ],
       parser: "espree",
       parserOptions: {
@@ -189,7 +190,6 @@ module.exports = {
     { // Configuration files (YAML)
       files: [
         ".github/**/*.yml",
-        ".nycrc.yml",
       ],
       extends: [
         "plugin:yml/standard",
