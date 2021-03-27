@@ -11,11 +11,12 @@ type Char =
   "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "-" | "_";
 
 /**
- * A character set is an ordered list of {@link Char}acters.
+ * A character set is a collection of {@link Char}acters.
  *
  * @since v0.1.7
+ * @version v0.1.17
  */
-type CharSet = Char[];
+type CharSet = Iterable<Char>;
 
 /**
  * A character set ({@link CharSet}) of all lowercase letters.

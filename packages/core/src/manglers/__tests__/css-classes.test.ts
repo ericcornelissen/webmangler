@@ -1061,7 +1061,7 @@ suite("CSS Class Mangler", function() {
     let content = "";
 
     suiteSetup(function() {
-      const n = ALL_CHARS.length;
+      const n = Array.from(ALL_CHARS).length;
       const nArray = getArrayOfFormattedStrings(n, ".cls-%s");
       content = `${nArray.join(",")} { }`;
     });

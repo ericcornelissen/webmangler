@@ -25,7 +25,7 @@ export default class NameGenerator {
   /**
    * The set of characters available to generate names with.
    */
-  private readonly charSet: CharSet;
+  private readonly charSet: Char[];
 
   /**
    * The last returned name.
@@ -62,14 +62,15 @@ export default class NameGenerator {
     reserved: Iterable<string> = [],
     charSet: CharSet = NameGenerator.DEFAULT_CHARSET,
   ) {
-    if (charSet.length === 0) {
+    const charSetAsArray = Array.from(charSet);
+    if (charSetAsArray.length === 0) {
       throw new TypeError("character set cannot be empty");
     }
 
     this.reserved = Array
       .from(reserved)
       .map((rawExpr) => new RegExp(`^${rawExpr}$`));
-    this.charSet = charSet;
+    this.charSet = charSetAsArray;
   }
 
   /**
