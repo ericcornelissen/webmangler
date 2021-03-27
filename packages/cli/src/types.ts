@@ -1,5 +1,7 @@
 import type { LogLevel } from "./logger";
 
+// Throw-away comment to test continuous integration
+
 /**
  * The _WebMangler_ CLI arguments represented as an object.
  *
