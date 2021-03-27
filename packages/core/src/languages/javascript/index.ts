@@ -25,7 +25,7 @@ export type JavaScriptLanguagePluginOptions = {
    * @default `[]`
    * @since v0.1.17
    */
-  languages?: string[];
+  languages?: Iterable<string>;
 }
 
 /**
@@ -64,7 +64,7 @@ export default class JavaScriptLanguagePlugin extends SimpleLanguagePlugin {
   /**
    * The language aliases supported by the {@link JavaScriptLanguagePlugin}.
    */
-  private static LANGUAGES: string[] = [
+  private static DEFAULT_LANGUAGES: string[] = [
     "js",
     "cjs",
     "mjs",
@@ -96,7 +96,12 @@ export default class JavaScriptLanguagePlugin extends SimpleLanguagePlugin {
    * @param configuredLanguages The configured languages, if any.
    * @returns The languages for the instances.
    */
-  private static getLanguages(configuredLanguages: string[] = []): string[] {
-    return JavaScriptLanguagePlugin.LANGUAGES.concat(...configuredLanguages);
+  private static getLanguages(
+    configuredLanguages: Iterable<string> = [],
+  ): Iterable<string> {
+    return [
+      ...JavaScriptLanguagePlugin.DEFAULT_LANGUAGES,
+      ...configuredLanguages,
+    ];
   }
 }

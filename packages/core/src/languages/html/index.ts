@@ -31,7 +31,7 @@ export type HtmlLanguagePluginOptions = {
    * @default `[]`
    * @since v0.1.17
    */
-  languages?: string[];
+  languages?: Iterable<string>;
 }
 
 /**
@@ -73,7 +73,7 @@ export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
   /**
    * The language aliases supported by the {@link HtmlLanguagePlugin}.
    */
-  private static LANGUAGES: string[] = [
+  private static DEFAULT_LANGUAGES: string[] = [
     "html",
     "xhtml",
   ];
@@ -103,7 +103,12 @@ export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
    * @param configuredLanguages The configured languages, if any.
    * @returns The languages for the instances.
    */
-  private static getLanguages(configuredLanguages: string[] = []): string[] {
-    return HtmlLanguagePlugin.LANGUAGES.concat(...configuredLanguages);
+  private static getLanguages(
+    configuredLanguages: Iterable<string> = [],
+  ): Iterable<string> {
+    return [
+      ...HtmlLanguagePlugin.DEFAULT_LANGUAGES,
+      ...configuredLanguages,
+    ];
   }
 }
