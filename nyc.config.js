@@ -16,10 +16,10 @@ module.exports = {
   ],
 
   checkCoverage: true,
-  statements: 90,
-  lines: 90,
-  branches: 90,
-  functions: 90,
+  statements: specPackage === "cli" ? 75 : 90,
+  lines: specPackage === "cli" ? 75 : 90,
+  branches: specPackage === "cli" ? 80 : 90,
+  functions: specPackage === "cli" ? 80 : 90,
   watermarks: {
     statements: [85, 95],
     lines: [85, 95],
