@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Generalize interfaces to allow for other iterable types than arrays.
+- Support configuring languages in built-in language plugins.
 - Support mangling attributes in `attr()` in HTML style attribute values.
 - All inputted files will now always be returned, even if not mangled.
 
