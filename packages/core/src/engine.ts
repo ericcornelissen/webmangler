@@ -36,19 +36,19 @@ function mapToOrderedList(map: Map<string, number>): string[] {
  */
 function countInstances(
   files: Iterable<WebManglerFile>,
-  expressions: Map<string, MangleExpression[]>,
+  expressions: Map<string, Iterable<MangleExpression>>,
   patterns: Iterable<string>,
 ): Map<string, number> {
   const countMap: Map<string, number> = new Map();
   for (const file of files) {
     const fileExpressions = expressions.get(file.type) || [];
     for (const pattern of patterns) {
-      fileExpressions.forEach((expression: MangleExpression): void => {
+      for (const expression of fileExpressions) {
         for (const name of expression.exec(file.content, pattern)) {
           const count = countMap.get(name) || 0;
           countMap.set(name, count + 1);
         }
-      });
+      }
     }
   }
 
@@ -140,16 +140,16 @@ function getSafeTwoStepMangleMapping(
  */
 function doMangle<Files extends Iterable<WebManglerFile>>(
   files: Files,
-  expressions: Map<string, MangleExpression[]>,
+  expressions: Map<string, Iterable<MangleExpression>>,
   mangleMap: Map<string, string>,
 ): Files {
   const [map1, map2] = getSafeTwoStepMangleMapping(mangleMap);
   for (const file of files) {
     const fileExpressions = expressions.get(file.type) || [];
-    fileExpressions.forEach((expression) => {
+    for (const expression of fileExpressions) {
       file.content = expression.replaceAll(file.content, map1);
       file.content = expression.replaceAll(file.content, map2);
-    });
+    }
   }
 
   return files;
@@ -195,7 +195,7 @@ function parseOptions(options: MangleEngineOptions): {
  */
 export default function mangle<Files extends Iterable<WebManglerFile>>(
   files: Files,
-  expressions: Map<string, MangleExpression[]>,
+  expressions: Map<string, Iterable<MangleExpression>>,
   options: MangleEngineOptions,
 ): Files {
   const {

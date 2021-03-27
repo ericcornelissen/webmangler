@@ -42,8 +42,8 @@ function extractOptions(
 export function getExpressions(
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
   expressionOptions: Iterable<MangleExpressionOptions<unknown>>,
-): Map<string, MangleExpression[]> {
-  const pluginExpressions: Map<string, MangleExpression[]> = new Map();
+): Map<string, Iterable<MangleExpression>> {
+  const pluginExpressions: Map<string, Iterable<MangleExpression>> = new Map();
   for (const languagePlugin of languagePlugins) {
     for (const { name, options } of expressionOptions) {
       const expressionsMap = languagePlugin.getExpressions(name, options);

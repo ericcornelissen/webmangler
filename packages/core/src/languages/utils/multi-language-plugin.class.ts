@@ -15,7 +15,7 @@ export default abstract class MultiLanguagePlugin
   /**
    * The {@link WebManglerLanguagePlugin}s in the {@link MultiLanguagePlugin}.
    */
-  private readonly plugins: WebManglerLanguagePlugin[];
+  private readonly plugins: Iterable<WebManglerLanguagePlugin>;
 
   /**
    * Initialize a {@link WebManglerLanguagePlugin} with a fixed set of language
@@ -26,7 +26,7 @@ export default abstract class MultiLanguagePlugin
    * @version v0.1.17
    */
   constructor(plugins: Iterable<WebManglerLanguagePlugin>) {
-    this.plugins = Array.from(plugins);
+    this.plugins = plugins;
   }
 
   /**
@@ -38,10 +38,10 @@ export default abstract class MultiLanguagePlugin
     options: unknown,
   ): Map<string, Iterable<MangleExpression>> {
     const result: Map<string, Iterable<MangleExpression>> = new Map();
-    this.plugins.forEach((plugin) => {
+    for (const plugin of this.plugins) {
       const pluginExpressions = plugin.getExpressions(name, options);
       pluginExpressions.forEach((expr, lang) => result.set(lang, expr));
-    });
+    }
 
     return result;
   }
@@ -55,9 +55,9 @@ export default abstract class MultiLanguagePlugin
    */
   getLanguages(): Iterable<string> {
     const result: string[] = [];
-    this.plugins.forEach((plugin) => {
+    for (const plugin of this.plugins) {
       result.push(...plugin.getLanguages());
-    });
+    }
 
     return result;
   }

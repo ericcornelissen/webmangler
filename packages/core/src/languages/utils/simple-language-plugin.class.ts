@@ -5,8 +5,9 @@ import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
  * options.
  *
  * @since v0.1.14
+ * @version v0.1.17
  */
-export type ExpressionFactory = (options: any) => MangleExpression[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+export type ExpressionFactory = (options: any) => Iterable<MangleExpression>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of
@@ -26,7 +27,7 @@ export default abstract class SimpleLanguagePlugin
    * The languages, including aliases, that this {@link SimpleLanguagePlugin}
    * supports.
    */
-  private readonly languages: string[];
+  private readonly languages: Iterable<string>;
 
   /**
    * A map from {@link MangleExpression}-set names to a functions that produce
@@ -53,7 +54,7 @@ export default abstract class SimpleLanguagePlugin
     languages: Iterable<string>,
     expressionFactories: Map<string, ExpressionFactory>,
   ) {
-    this.languages = Array.from(languages);
+    this.languages = languages;
     this.expressionFactories = expressionFactories;
   }
 
@@ -65,7 +66,7 @@ export default abstract class SimpleLanguagePlugin
     name: string,
     options: unknown,
   ): Map<string, Iterable<MangleExpression>> {
-    const map: Map<string, MangleExpression[]> = new Map();
+    const map: Map<string, Iterable<MangleExpression>> = new Map();
 
     const expressionFactory = this.expressionFactories.get(name);
     if (expressionFactory === undefined) {
@@ -73,7 +74,11 @@ export default abstract class SimpleLanguagePlugin
     }
 
     const expressions = expressionFactory(options);
-    return this.languages.reduce((m, lang) => m.set(lang, expressions), map);
+    for (const language of this.languages) {
+      map.set(language, expressions);
+    }
+
+    return map;
   }
 
   /**
