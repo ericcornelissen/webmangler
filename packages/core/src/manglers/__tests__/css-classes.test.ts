@@ -1,6 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { MultiValueAttributeOptions } from "../../languages/options";
-import type { MangleExpressionOptions, MangleOptions } from "../../types";
+import type { MangleOptions } from "../../types";
 import type {
   SelectorBeforeAndAfter,
   SelectorPairBeforeAndAfter,
@@ -1012,8 +1012,7 @@ suite("CSS Class Mangler", function() {
       const getExpressionOptions = (
         mangleOptions: MangleOptions,
       ): MultiValueAttributeOptions => {
-        const allExpressionOptions =
-          mangleOptions.languageOptions as MangleExpressionOptions<unknown>[];
+        const allExpressionOptions = Array.from(mangleOptions.languageOptions);
         const expressionOptions = allExpressionOptions[1];
         return expressionOptions?.options as MultiValueAttributeOptions;
       };

@@ -1,6 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { SingleValueAttributeOptions } from "../../languages/options";
-import type { MangleExpressionOptions, MangleOptions } from "../../types";
+import type { MangleOptions } from "../../types";
 import type {
   SelectorBeforeAndAfter,
   SelectorPairBeforeAndAfter,
@@ -1149,8 +1149,7 @@ suite("HTML ID Mangler", function() {
       const getExpressionOptions = (
         mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
-        const allExpressionOptions =
-          mangleOptions.languageOptions as MangleExpressionOptions<unknown>[];
+        const allExpressionOptions = Array.from(mangleOptions.languageOptions);
         const expressionOptions = allExpressionOptions[1];
         return expressionOptions?.options as SingleValueAttributeOptions;
       };
@@ -1201,8 +1200,7 @@ suite("HTML ID Mangler", function() {
       const getExpressionOptions = (
         mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
-        const allExpressionOptions =
-          mangleOptions.languageOptions as MangleExpressionOptions<unknown>[];
+        const allExpressionOptions = Array.from(mangleOptions.languageOptions);
         const expressionOptions = allExpressionOptions[2];
         return expressionOptions?.options as SingleValueAttributeOptions;
       };
