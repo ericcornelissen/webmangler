@@ -20,7 +20,7 @@ interface TestCase {
 }
 
 suite("NameGenerator", function() {
-  const defaultCharsetArray = Array.from(NameGenerator.DEFAULT_CHARSET);
+  const defaultCharsetArray = Array.from(ALL_LOWERCASE_CHARS);
 
   const allLowercaseCharsArray = Array.from(ALL_LOWERCASE_CHARS);
   const allNumberCharsArray = Array.from(ALL_NUMBER_CHARS);
@@ -223,6 +223,32 @@ suite("NameGenerator", function() {
             { inc: 1, expected: "F" },
             { inc: allUppercaseCharsArray.length - 5, expected: "AC" },
             { inc: allUppercaseCharsArray.length - 3, expected: "CA" },
+          ],
+        },
+      ],
+    },
+    {
+      name: "duplicate characters",
+      cases: [
+        {
+          charSet: ["a", "b", "c", "a"],
+          samples: [
+            { inc: 0, expected: "a" },
+            { inc: 2, expected: "aa" },
+          ],
+        },
+        {
+          charSet: ["a", "b", "c", "b"],
+          samples: [
+            { inc: 0, expected: "a" },
+            { inc: 2, expected: "aa" },
+          ],
+        },
+        {
+          charSet: ["a", "b", "c", "c"],
+          samples: [
+            { inc: 0, expected: "a" },
+            { inc: 2, expected: "aa" },
           ],
         },
       ],

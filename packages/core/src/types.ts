@@ -51,7 +51,7 @@ interface MangleEngineOptions {
   /**
    * The character set for mangled strings.
    *
-   * @default {@link NameGenerator.DEFAULT_CHARSET}
+   * @default {@link ALL_LOWERCASE_CHARS}
    * @since v0.1.7
    */
   readonly charSet?: CharSet;
