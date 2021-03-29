@@ -3,7 +3,7 @@ import type { CssClassManglerOptions } from "./css-classes";
 import type { CssVariableManglerOptions } from "./css-variables";
 import type { HtmlAttributeManglerOptions } from "./html-attributes";
 
-import { MultiMangler } from "./utils";
+import { MultiManglerPlugin } from "./utils";
 import CssClassMangler from "./css-classes";
 import CssVariableMangler from "./css-variables";
 import HtmlAttributeMangler from "./html-attributes";
@@ -59,7 +59,7 @@ interface RecommendedManglersOptions extends
  *
  * @since v0.1.0
  */
-export default class RecommendedManglers extends MultiMangler {
+export default class RecommendedManglers extends MultiManglerPlugin {
   /**
    * Instantiate a new {@link RecommendedManglers}.
    *
