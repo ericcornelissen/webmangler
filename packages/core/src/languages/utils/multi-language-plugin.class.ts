@@ -13,6 +13,11 @@ import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
 export default abstract class MultiLanguagePlugin
     implements WebManglerLanguagePlugin {
   /**
+   * the languages supported by the {@link MultiLanguagePlugin}.
+   */
+  private readonly languages: string[];
+
+  /**
    * The {@link WebManglerLanguagePlugin}s in the {@link MultiLanguagePlugin}.
    */
   private readonly plugins: Iterable<WebManglerLanguagePlugin>;
@@ -26,7 +31,12 @@ export default abstract class MultiLanguagePlugin
    * @version v0.1.17
    */
   constructor(plugins: Iterable<WebManglerLanguagePlugin>) {
+    this.languages = [];
     this.plugins = plugins;
+
+    for (const plugin of plugins) {
+      this.languages.push(...plugin.getLanguages());
+    }
   }
 
   /**
@@ -54,11 +64,6 @@ export default abstract class MultiLanguagePlugin
    * @version v0.1.17
    */
   getLanguages(): Iterable<string> {
-    const result: string[] = [];
-    for (const plugin of this.plugins) {
-      result.push(...plugin.getLanguages());
-    }
-
-    return result;
+    return this.languages;
   }
 }

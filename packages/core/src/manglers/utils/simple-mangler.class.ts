@@ -64,8 +64,8 @@ export interface SimpleManglerOptions {
  * a {@link WebManglerPlugin} that deals with implementing the API if it is
  * provided with the appropriate data.
  *
- * It is recommended to extend this class - or {@link MultiMangler}, depending
- * on your needs - if you're implementing a {@link WebManglerPlugin}.
+ * It is recommended to extend this class - or {@link MultiManglerPlugin},
+ * depending on your needs - if you're implementing a {@link WebManglerPlugin}.
  *
  * @since v0.1.0
  * @version v0.1.17

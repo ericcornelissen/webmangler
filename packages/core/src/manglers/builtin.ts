@@ -4,7 +4,7 @@ import type { CssVariableManglerOptions } from "./css-variables";
 import type { HtmlAttributeManglerOptions } from "./html-attributes";
 import type { HtmlIdManglerOptions } from "./html-ids";
 
-import { MultiMangler } from "./utils";
+import { MultiManglerPlugin } from "./utils";
 import CssClassMangler from "./css-classes";
 import CssVariableMangler from "./css-variables";
 import HtmlAttributeMangler from "./html-attributes";
@@ -67,7 +67,7 @@ interface BuiltInManglersOptions extends
  *
  * @since v0.1.0
  */
-export default class BuiltInManglers extends MultiMangler {
+export default class BuiltInManglers extends MultiManglerPlugin {
   /**
    * Instantiate a new {@link BuiltInManglers}.
    *
