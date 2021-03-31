@@ -71,17 +71,13 @@ Lastly, the `expressionOptions` are currently set to an empty array. This value
 is used to configure the language plugins and we will come back to that later.
 
 ```diff
-  import type { MangleOptions, WebManglerPlugin } from "webmangler";
-
   export class MyWebManglerPlugin implements WebManglerPlugin {
 +   private static CHAR_SET: string[] = [];
 
 +   private patterns: string[];
 +   private reservedNames: string[];
 
-    constructor(options?: unknown) {
-      // TODO
-    }
+    ...
 
     options(): MangleOptions {
 -     // TODO
@@ -104,13 +100,8 @@ the constructor. The implementation accepts a value for both `patterns` and
 specify anything.
 
 ```diff
-  import type { MangleOptions, WebManglerPlugin } from "webmangler";
-
   export class MyWebManglerPlugin implements WebManglerPlugin {
-    private static CHAR_SET: string[] = [];
-
-    private patterns: string[];
-    private reservedNames: string[];
+    ...
 
 -   constructor(options?: unknown) {
 -     \\ TODO
@@ -119,15 +110,7 @@ specify anything.
 +     this.reservedNames = options?.reservedNames || [];
     }
 
-    options(): MangleOptions {
-      return {
-        patterns: this.patterns,
-        charSet: MyWebManglerPlugin.CHAR_SET,
-        manglePrefix: "data-",
-        reservedNames: this.reservedNames,
-        expressionOptions: [],
-      };
-    }
+    ...
   }
 ```
 
@@ -147,23 +130,7 @@ insensitive). Additionally, we now use the proper type for the `CHAR_SET` field.
 -   private static CHAR_SET: string[] = [];
 +   private static CHAR_SET: CharSet = ALL_LOWERCASE_CHARS;
 
-    private patterns: string[];
-    private reservedNames: string[];
-
-    constructor(options?: { patterns?: string[]; reservedNames?: string[] }) {
-      this.patterns = options?.patterns || ["data-[a-z]+"];
-      this.reservedNames = options?.reservedNames || [];
-    }
-
-    options(): MangleOptions {
-      return {
-        patterns: this.patterns,
-        charSet: MyWebManglerPlugin.CHAR_SET,
-        manglePrefix: "data-",
-        reservedNames: this.reservedNames,
-        expressionOptions: [],
-      };
-    }
+    ...
   }
 ```
 
@@ -176,28 +143,12 @@ plugins what kinds of things to find and replace. To mangle HTML attributes we
 need just one [MangleExpressionOptions] without further configuration.
 
 ```diff
-  import type { MangleOptions, WebManglerPlugin } from "webmangler";
-  import type { CharSet } from "webmangler/characters";
-
-  import { ALL_LOWERCASE_CHARS } from "webmangler/characters";
-
   export class MyWebManglerPlugin implements WebManglerPlugin {
-    private static CHAR_SET: CharSet = ALL_LOWERCASE_CHARS;
-
-    private patterns: string[];
-    private reservedNames: string[];
-
-    constructor(options?: { patterns?: string[]; reservedNames?: string[] }) {
-      this.patterns = options?.patterns || ["data-[a-z]+"];
-      this.reservedNames = options?.reservedNames || [];
-    }
+    ...
 
     options(): MangleOptions {
       return {
-        patterns: this.patterns,
-        charSet: MyWebManglerPlugin.CHAR_SET,
-        manglePrefix: "data-",
-        reservedNames: this.reservedNames,
+        ...
         expressionOptions: [
 +         { name: "attributes", options: null },
         ],
@@ -301,8 +252,6 @@ plugin to be used for a similar language even if the you don't explicitly
 support it.
 
 ```diff
-  import type { MangleExpression, WebManglerLanguagePlugin } from "webmangler";
-
   export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
 +   private static DEFAULT_LANGUAGES = ["css"];
 
@@ -316,12 +265,7 @@ support it.
 +     );
     }
 
-    getExpressions(
-      name: string,
-      options: unknown,
-    ): Map<string, MangleExpression[]> {
-      // TODO
-    }
+    ...
 
     getLanguages(): string[] {
 -     // TODO
@@ -339,18 +283,8 @@ language, and the only category of expression supported is `"css-classes"`. In
 the next step we will actually add the expressions.
 
 ```diff
-  import type { MangleExpression, WebManglerLanguagePlugin } from "webmangler";
-
   export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
-    private static DEFAULT_LANGUAGES = ["css"];
-
-    private languages: string[];
-
-    constructor(options?: { languages?: string[] }) {
-      this.languages = MyWebManglerLanguagePlugin.DEFAULT_LANGUAGES.concat(
-        (options?.languages || []),
-      );
-    }
+    ...
 
     getExpressions(
       name: string,
@@ -365,9 +299,7 @@ the next step we will actually add the expressions.
 +     return map;
     }
 
-    getLanguages(): string[] {
-      return this.languages;
-    }
+    ...
   }
 ```
 
@@ -386,15 +318,7 @@ about `MangleExpression`s][MangleExpressions]
 + import { SingleGroupMangleExpression } from "webmangler/languages/utils";
 
   export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
-    private static DEFAULT_LANGUAGES = ["css"];
-
-    private languages: string[];
-
-    constructor(options?: { languages?: string[] }) {
-      this.languages = MyWebManglerLanguagePlugin.DEFAULT_LANGUAGES.concat(
-        (options?.languages || []),
-      );
-    }
+    ...
 
     getExpressions(
       name: string,
@@ -414,9 +338,7 @@ about `MangleExpression`s][MangleExpressions]
       return map;
     }
 
-    getLanguages(): string[] {
-      return this.languages;
-    }
+    ...
   }
 ```
 

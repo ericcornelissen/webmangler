@@ -95,9 +95,7 @@ inserted into. For brevity the pattern template here is a bit simplistic, but we
 do allow the users of this `MangleExpression` to choose which selector should be
 matched.
 
-```diff
-  import { MangleExpression } from "webmangler";
-
+```diffs
   export class MyMangleExpression implements MangleExpression {
 +   private readonly patternTemplate: string;
 
@@ -107,14 +105,7 @@ matched.
 +     this.patternTemplate = `(?<=${selector})($<main>%s)(?=\\s|\\{)`;
     }
 
-    public * exec(s: string, pattern: string): IterableIterator<string> {
-      // TODO
-    }
-
-    public replaceAll(s: string, replacements: Map<string, string>): string {
-      // TODO
-      return s;
-    }
+    ...
   }
 ```
 
@@ -130,20 +121,7 @@ expression for a given pattern. The reason for this is that both `exec` and
 + import { format } from "util";
 
   export class MyMangleExpression implements MangleExpression {
-    private readonly patternTemplate: string;
-
-    constructor(selector: "\\." | "\\#") {
-      this.patternTemplate = `(?<=${selector})($<main>%s)(?=\\s|\\{)`;
-    }
-
-    public * exec(s: string, pattern: string): IterableIterator<string> {
-      // TODO
-    }
-
-    public replaceAll(s: string, replacements: Map<string, string>): string {
-      // TODO
-      return s;
-    }
+    ...
 
 +   private newRegExp(pattern: string): RegExp {
 +     const rawExpr = format(this.patternTemplate, pattern);
@@ -159,16 +137,8 @@ helper to find matches. To this end we use the same-name function of regular
 expressions.
 
 ```diff
-  import { MangleExpression } from "webmangler";
-
-  import { format } from "util";
-
   export class MyMangleExpression implements MangleExpression {
-    private readonly patternTemplate: string;
-
-    constructor(selector: "\\." | "\\#") {
-      this.patternTemplate = `(?<=${selector})($<main>%s)(?=\\s|\\{)`;
-    }
+    ...
 
     public * exec(s: string, pattern: string): IterableIterator<string> {
 -     // TODO
@@ -180,15 +150,7 @@ expressions.
 +     }
     }
 
-    public replaceAll(s: string, replacements: Map<string, string>): string {
-      // TODO
-      return s;
-    }
-
-    private newRegExp(pattern: string): RegExp {
-      const rawExpr = format(this.patternTemplate, pattern);
-      return new RegExp(rawExpr, "gm");
-    }
+    ...
   }
 ```
 
@@ -200,25 +162,8 @@ strings with a custom replacement function which gets the correct replacement
 from the provided mapping.
 
 ```diff
-  import { MangleExpression } from "webmangler";
-
-  import { format } from "util";
-
   export class MyMangleExpression implements MangleExpression {
-    private readonly patternTemplate: string;
-
-    constructor(selector: "\\." | "\\#") {
-      this.patternTemplate = `(?<=${selector})($<main>%s)(?=\\s|\\{)`;
-    }
-
-    public * exec(s: string, pattern: string): IterableIterator<string> {
-      const regExp = this.newRegExp(pattern);
-      let match: RegExpExecArray | null = null;
-      while ((match = regExp.exec(s)) !== null) {
-        const groups = match.groups;
-        yield groups.main;
-      }
-    }
+    ...
 
     public replaceAll(s: string, replacements: Map<string, string>): string {
 -     // TODO
@@ -233,10 +178,7 @@ from the provided mapping.
 +     });
     }
 
-    private newRegExp(pattern: string): RegExp {
-      const rawExpr = format(this.patternTemplate, pattern);
-      return new RegExp(rawExpr, "gm");
-    }
+    ...
   }
 ```
 
