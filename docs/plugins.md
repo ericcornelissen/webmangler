@@ -470,7 +470,7 @@ export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
 
 [javascript class]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes "JavaScript Class"
 [mangleexpressionoptions]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L94-L123 "MangleExpressionOptions"
-[mangleexpressions]: ./mangle-expressions.md "MangleExpressions"
+[mangleexpressions]: ./expressions.md "MangleExpressions"
 [mangleoptions interface]: https://github.com/ericcornelissen/webmangler/blob/8217c3c72c9ea03f23fccdddb68a60971f37d51f/packages/core/src/types.ts#L3-L20 "MangleOptions interface"
 [typescript]: https://www.typescriptlang.org/ "TypeScript"
 [webmangler core]: https://www.npmjs.com/package/webmangler "WebMangler core"
