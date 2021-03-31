@@ -270,7 +270,7 @@ suite("CSS Class Mangler", function() {
           const options = cssClassMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -703,7 +703,7 @@ suite("CSS Class Mangler", function() {
           const options = cssClassMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -923,7 +923,7 @@ suite("CSS Class Mangler", function() {
           const options = cssClassMangler.options();
           const expressions = getExpressions(
             builtInLanguages,
-            options.expressionOptions,
+            options.languageOptions,
           );
 
           const result = mangleEngine(files, expressions, options);
@@ -1012,7 +1012,7 @@ suite("CSS Class Mangler", function() {
       const getExpressionOptions = (
         mangleOptions: MangleOptions,
       ): MultiValueAttributeOptions => {
-        const allExpressionOptions = mangleOptions.expressionOptions;
+        const allExpressionOptions = Array.from(mangleOptions.languageOptions);
         const expressionOptions = allExpressionOptions[1];
         return expressionOptions?.options as MultiValueAttributeOptions;
       };
@@ -1046,7 +1046,7 @@ suite("CSS Class Mangler", function() {
 
           const attributeNames = options.attributeNames;
           expect(attributeNames).not.to.be.undefined;
-          expect(attributeNames).to.deep.equal(expected);
+          expect(attributeNames).to.include.keys(expected);
         }
       });
     });
@@ -1060,7 +1060,7 @@ suite("CSS Class Mangler", function() {
     let content = "";
 
     suiteSetup(function() {
-      const n = ALL_CHARS.length;
+      const n = Array.from(ALL_CHARS).length;
       const nArray = getArrayOfFormattedStrings(n, ".cls-%s");
       content = `${nArray.join(",")} { }`;
     });
@@ -1074,7 +1074,7 @@ suite("CSS Class Mangler", function() {
       const options = cssClassMangler.options();
       const expressions = getExpressions(
         builtInLanguages,
-        options.expressionOptions,
+        options.languageOptions,
       );
 
       const result = mangleEngine(files, expressions, options);
@@ -1095,7 +1095,7 @@ suite("CSS Class Mangler", function() {
       const options = cssClassMangler.options();
       const expressions = getExpressions(
         builtInLanguages,
-        options.expressionOptions,
+        options.languageOptions,
       );
 
       const result = mangleEngine(files, expressions, options);

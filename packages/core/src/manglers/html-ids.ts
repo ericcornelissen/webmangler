@@ -6,7 +6,6 @@ import type {
 import type { MangleExpressionOptions } from "../types";
 
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
-import { duplicates } from "../helpers";
 import { SimpleManglerPlugin } from "./utils";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
@@ -21,7 +20,7 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
  * The options for _WebMangler_'s built-in HTML IDs mangler.
  *
  * @since v0.1.0
- * @version v0.1.15
+ * @version v0.1.17
  */
 export type HtmlIdManglerOptions = {
   /**
@@ -29,8 +28,9 @@ export type HtmlIdManglerOptions = {
    *
    * @default `"id-[a-zA-Z-_]+"`
    * @since v0.1.0
+   * @version v0.1.17
    */
-  idNamePattern?: string | string[];
+  idNamePattern?: string | Iterable<string>;
 
   /**
    * A list of strings and patterns of IDs that should not be used.
@@ -39,8 +39,9 @@ export type HtmlIdManglerOptions = {
    *
    * @default `[]`
    * @since v0.1.0
+   * @version v0.1.17
    */
-  reservedIds?: string[];
+  reservedIds?: Iterable<string>;
 
   /**
    * A prefix to use for mangled IDs.
@@ -58,8 +59,9 @@ export type HtmlIdManglerOptions = {
    *
    * @default `[]`
    * @since v0.1.15
+   * @version v0.1.17
    */
-  idAttributes?: string[];
+  idAttributes?: Iterable<string>;
 
   /**
    * A list of HTML attributes whose value to treat as a URL. That is, the ID
@@ -71,8 +73,9 @@ export type HtmlIdManglerOptions = {
    *
    * @default `[]`
    * @since v0.1.15
+   * @version v0.1.17
    */
-  urlAttributes?: string[];
+  urlAttributes?: Iterable<string>;
 }
 
 /**
@@ -174,7 +177,7 @@ export type HtmlIdManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.16
+ * @version v0.1.17
  */
 export default class HtmlIdMangler extends SimpleManglerPlugin {
   /**
@@ -216,6 +219,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    *
    * @param options The {@link HtmlIdManglerOptions}.
    * @since v0.1.0
+   * @version v0.1.17
    */
   constructor(options: HtmlIdManglerOptions={}) {
     super({
@@ -223,7 +227,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
       patterns: HtmlIdMangler.getPatterns(options.idNamePattern),
       reserved: HtmlIdMangler.getReserved(options.reservedIds),
       prefix: HtmlIdMangler.getPrefix(options.keepIdPrefix),
-      expressionOptions: [
+      languageOptions: [
         QUERY_SELECTOR_EXPRESSION_OPTIONS,
         HtmlIdMangler.getIdAttributeExpressionOptions(options.idAttributes),
         HtmlIdMangler.getUrlAttributeExpressionOptions(options.urlAttributes),
@@ -238,8 +242,8 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @returns The patterns to be used.
    */
   private static getPatterns(
-    idNamePattern?: string | string[],
-  ): string | string[] {
+    idNamePattern?: string | Iterable<string>,
+  ): string | Iterable<string> {
     if (idNamePattern === undefined) {
       return HtmlIdMangler.DEFAULT_PATTERNS;
     }
@@ -253,7 +257,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @param reservedIds The configured reserved names.
    * @returns The reserved names to be used.
    */
-  private static getReserved(reservedIds?: string[]): string[] {
+  private static getReserved(reservedIds?: Iterable<string>): Iterable<string> {
     if (reservedIds === undefined) {
       return HtmlIdMangler.DEFAULT_RESERVED;
     }
@@ -283,15 +287,15 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @returns The {@link SingleValueAttributeOptions}.
    */
   private static getIdAttributeExpressionOptions(
-    attributes: string[] = [],
+    attributes: Iterable<string> = [],
   ): MangleExpressionOptions<SingleValueAttributeOptions> {
     return {
       name: "single-value-attributes",
       options: {
-        attributeNames: [
+        attributeNames: new Set([
           ...HtmlIdMangler.STANDARD_ID_ATTRIBUTES,
           ...attributes,
-        ].filter(duplicates),
+        ]),
       },
     };
   }
@@ -304,15 +308,15 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    * @returns The {@link SingleValueAttributeOptions}.
    */
   private static getUrlAttributeExpressionOptions(
-    attributes: string[] = [],
+    attributes: Iterable<string> = [],
   ): MangleExpressionOptions<SingleValueAttributeOptions> {
     return {
       name: "single-value-attributes",
       options: {
-        attributeNames: [
+        attributeNames: new Set([
           ...HtmlIdMangler.STANDARD_URL_ATTRIBUTES,
           ...attributes,
-        ].filter(duplicates),
+        ]),
         valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\.\\?]*(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?#",
       },
     };

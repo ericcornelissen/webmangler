@@ -41,7 +41,7 @@ pattern, for example those with the prefix "cls-":
 Should return zero or more substrings in a string matching a given pattern.
 
 ```ts
-exec(s: string, pattern: string): Iterable<string>;
+type exec = (s: string, pattern: string) => Iterable<string>;
 ```
 
 Where `s` is the string to match against, and `pattern` is a regular
@@ -52,7 +52,7 @@ expression to match with.
 Should replace substrings in a string for a given pattern and mapping.
 
 ```ts
-replaceAll(s: string, replacements: Map<string, string>): string;
+type replaceAll = (s: string, replacements: Map<string, string>) => string;
 ```
 
 Where `s` is the string to match against, and `replacements` is a mapping from
@@ -69,7 +69,7 @@ through the process of creating a `MangleExpression` in [TypeScript] that can be
 used to selectors in CSS. To get started you can use template below.
 
 ```ts
-import { MangleExpression } from "webmangler";
+import type { MangleExpression } from "webmangler";
 
 export class MyMangleExpression implements MangleExpression {
   constructor() {
@@ -210,7 +210,7 @@ from the provided mapping.
     constructor(selector: "\\." | "\\#") {
       this.patternTemplate = `(?<=${selector})($<main>%s)(?=\\s|\\{)`;
     }
-n
+
     public * exec(s: string, pattern: string): IterableIterator<string> {
       const regExp = this.newRegExp(pattern);
       let match: RegExpExecArray | null = null;
@@ -247,7 +247,7 @@ If you followed along (or skipped ahead) then the snippet below shows the
 stand-alone CSS selectors for classes and IDs.
 
 ```ts
-import { MangleExpression } from "webmangler";
+import type { MangleExpression } from "webmangler";
 
 import { format } from "util";
 

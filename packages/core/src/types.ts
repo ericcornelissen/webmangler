@@ -5,6 +5,7 @@ import type { CharSet } from "./characters";
  * configure the _WebMangler_ core.
  *
  * @since v0.1.14
+ * @version v0.1.17
  */
 interface MangleOptions extends MangleEngineOptions {
   /**
@@ -15,28 +16,42 @@ interface MangleOptions extends MangleEngineOptions {
    * the _WebMangler_ core will use a set with each configuration when mangling.
    *
    * @since v0.1.14
+   * @version v0.1.17
+   * @deprecated Use `languageOptions` instead.
    */
-  readonly expressionOptions: MangleExpressionOptions<unknown>[];
+  readonly expressionOptions?: Iterable<MangleExpressionOptions<unknown>>;
+
+  /**
+   * The {@link MangleExpressionOptions} for every set of {@link
+   * MangleExpression}s that should be used when mangling.
+   *
+   * By providing multiple options for the same set of {@link MangleExpression}s
+   * the _WebMangler_ core will use a set with each configuration when mangling.
+   *
+   * @since v0.1.17
+   */
+  readonly languageOptions: Iterable<MangleExpressionOptions<unknown>>;
 }
 
 /**
  * A set of generic options used by the {@link MangleEngine} for mangling.
  *
  * @since v0.1.0
- * @version v0.1.15
+ * @version v0.1.17
  */
 interface MangleEngineOptions {
   /**
    * The pattern(s) to be mangled.
    *
    * @since v0.1.11
+   * @version v0.1.17
    */
-  readonly patterns: string | string[];
+  readonly patterns: string | Iterable<string>;
 
   /**
    * The character set for mangled strings.
    *
-   * @default {@link NameGenerator.DEFAULT_CHARSET}
+   * @default {@link ALL_LOWERCASE_CHARS}
    * @since v0.1.7
    */
   readonly charSet?: CharSet;
@@ -57,9 +72,9 @@ interface MangleEngineOptions {
    *
    * @default `[]`
    * @since v0.1.0
-   * @version v0.1.14
+   * @version v0.1.17
    */
-  readonly reservedNames?: string[];
+  readonly reservedNames?: Iterable<string>;
 }
 
 /**
@@ -151,21 +166,24 @@ interface WebManglerFile {
  * Type defining the available options for _WebMangler_.
  *
  * @since v0.1.0
+ * @version v0.1.17
  */
 interface WebManglerOptions {
   /**
    * The plugins to be used by the _WebMangler_.
    *
    * @since v0.1.0
+   * @version v0.1.17
    */
-  plugins: WebManglerPlugin[];
+  plugins: Iterable<WebManglerPlugin>;
 
   /**
    * The plugins of language to support.
    *
    * @since v0.1.0
+   * @version v0.1.17
    */
-  languages: WebManglerLanguagePlugin[];
+  languages: Iterable<WebManglerLanguagePlugin>;
 }
 
 /**
@@ -181,7 +199,7 @@ interface WebManglerPlugin {
    * @returns The {@link MangleOptions}.
    * @since v0.1.14
    */
-  options(): MangleOptions | MangleOptions[];
+  options(): MangleOptions | Iterable<MangleOptions>;
 }
 
 /**
@@ -203,7 +221,7 @@ interface WebManglerLanguagePlugin {
   getExpressions(
     name: string,
     options: unknown,
-  ): Map<string, MangleExpression[]>;
+  ): Map<string, Iterable<MangleExpression>>;
 
   /**
    * Get a list of the languages supported by the {@link
@@ -212,7 +230,7 @@ interface WebManglerLanguagePlugin {
    * @returns A list of languages.
    * @since v0.1.9
    */
-  getLanguages(): string[];
+  getLanguages(): Iterable<string>;
 }
 
 export type {

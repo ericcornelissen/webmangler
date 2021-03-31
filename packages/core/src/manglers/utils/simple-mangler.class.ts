@@ -9,7 +9,7 @@ import type {
  * Interface defining the configuration of a {@link SimpleLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.17
  */
 export interface SimpleManglerOptions {
   /**
@@ -23,22 +23,33 @@ export interface SimpleManglerOptions {
    * The {@link MangleExpressionOptions} to use when mangling.
    *
    * @since v0.1.14
+   * @version v0.1.17
+   * @deprecated Use `languageOptions` instead.
    */
-  expressionOptions: MangleExpressionOptions<unknown>[];
+  expressionOptions?: Iterable<MangleExpressionOptions<unknown>>;
+
+  /**
+   * The configuration for the {@link WebManglerLanguagePlugin}s.
+   *
+   * @since v0.1.17
+   */
+  languageOptions: Iterable<MangleExpressionOptions<unknown>>;
 
   /**
    * One or more patterns that should be mangled.
    *
    * @since v0.1.0
+   * @version v0.1.17
    */
-  patterns: string | string[];
+  patterns: string | Iterable<string>;
 
   /**
    * A list of names that should not be outputted by the mangler.
    *
    * @since v0.1.0
+   * @version v0.1.17
    */
-  reserved: string[];
+  reserved: Iterable<string>;
 
   /**
    * The prefix to use whe mangling.
@@ -53,11 +64,11 @@ export interface SimpleManglerOptions {
  * a {@link WebManglerPlugin} that deals with implementing the API if it is
  * provided with the appropriate data.
  *
- * It is recommended to extend this class - or {@link MultiMangler}, depending
- * on your needs - if you're implementing a {@link WebManglerPlugin}.
+ * It is recommended to extend this class - or {@link MultiManglerPlugin},
+ * depending on your needs - if you're implementing a {@link WebManglerPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.16
+ * @version v0.1.17
  */
 export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
@@ -66,14 +77,14 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   private readonly charSet: CharSet;
 
   /**
-   * The {@link MangleExpressionOptions} for mangling.
+   * The configuration for the {@link WebManglerLanguagePlugin}s.
    */
-  private readonly expressionOptions: MangleExpressionOptions<unknown>[];
+  private readonly languageOptions: Iterable<MangleExpressionOptions<unknown>>;
 
   /**
    * The pattern(s) to be mangled.
    */
-  private readonly patterns: string | string[];
+  private readonly patterns: string | Iterable<string>;
 
   /**
    * The prefix to be used by this mangler.
@@ -83,17 +94,18 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
    * The reserved names not to be used by this mangler.
    */
-  private readonly reserved: string[];
+  private readonly reserved: Iterable<string>;
 
   /**
    * Initialize a new {@link WebManglerPlugin}.
    *
    * @param options The {@link SimpleManglerOptions} (previously `id`).
-   * @version v0.1.16
+   * @since v0.1.0
+   * @version v0.1.17
    */
   constructor(options: SimpleManglerOptions) {
     this.charSet = options.charSet;
-    this.expressionOptions = options.expressionOptions;
+    this.languageOptions = options.languageOptions || options.expressionOptions;
     this.patterns = options.patterns;
     this.prefix = options.prefix;
     this.reserved = options.reserved;
@@ -102,11 +114,12 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
    * @inheritDoc
    * @since v0.1.14
+   * @version v0.1.17
    */
   options(): MangleOptions {
     return {
       charSet: this.charSet,
-      expressionOptions: this.expressionOptions,
+      languageOptions: this.languageOptions,
       manglePrefix: this.prefix,
       patterns: this.patterns,
       reservedNames: this.reserved,

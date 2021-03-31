@@ -14,8 +14,6 @@ import BuiltInLanguagesPlugin from "../builtin";
 chaiUse(sinonChai);
 
 suite("Built-in Language Supports", function() {
-  let plugin: WebManglerLanguagePlugin;
-
   let CssLanguagePluginMock: WebManglerLanguagePlugin;
   let HtmlLanguagePluginMock: WebManglerLanguagePlugin;
   let JsLanguagePluginMock: WebManglerLanguagePlugin;
@@ -38,43 +36,63 @@ suite("Built-in Language Supports", function() {
     JsLanguagePluginModuleStub.returns(JsLanguagePluginMock);
   });
 
-  setup(function() {
-    plugin = new BuiltInLanguagesPlugin();
+  suite("Options", function() {
+    test("initialize language plugins", function() {
+      const options = { htmlExtensions: ["html5"] };
+      new BuiltInLanguagesPlugin(options);
+
+      expect(CssLanguagePluginModuleStub).to.have.callCount(1);
+      expect(CssLanguagePluginModuleStub).to.have.been.calledWith(options);
+
+      expect(HtmlLanguagePluginModuleStub).to.have.callCount(1);
+      expect(HtmlLanguagePluginModuleStub).to.have.been.calledWith(options);
+
+      expect(JsLanguagePluginModuleStub).to.have.callCount(1);
+      expect(JsLanguagePluginModuleStub).to.have.been.calledWith(options);
+    });
   });
 
-  test("get expressions", function() {
-    const name = "foo";
-    const options = "bar";
+  suite("Methods", function() {
+    let plugin: WebManglerLanguagePlugin;
 
-    const result = plugin.getExpressions(name, options);
-    expect(result).to.have.length.above(0);
+    setup(function() {
+      plugin = new BuiltInLanguagesPlugin();
+    });
 
-    const cssExpr = CssLanguagePluginMock.getExpressions(name, options);
-    const htmlExpr = HtmlLanguagePluginMock.getExpressions(name, options);
-    const jsExpr = JsLanguagePluginMock.getExpressions(name, options);
+    test("get expressions", function() {
+      const name = "foo";
+      const options = "bar";
 
-    const hasSameValueAsResult = (v: unknown, k: string): void => {
-      expect(result.get(k)).to.equal(v);
-    };
+      const result = plugin.getExpressions(name, options);
+      expect(result).to.have.length.above(0);
 
-    cssExpr.forEach(hasSameValueAsResult);
-    htmlExpr.forEach(hasSameValueAsResult);
-    jsExpr.forEach(hasSameValueAsResult);
-  });
+      const cssExpr = CssLanguagePluginMock.getExpressions(name, options);
+      const htmlExpr = HtmlLanguagePluginMock.getExpressions(name, options);
+      const jsExpr = JsLanguagePluginMock.getExpressions(name, options);
 
-  test("get languages", function() {
-    const result = plugin.getLanguages();
-    expect(result).to.have.length.above(0);
+      const hasSameValueAsResult = (v: unknown, k: string): void => {
+        expect(result.get(k)).to.equal(v);
+      };
 
-    expect(result).to.deep.include.members(
-      CssLanguagePluginMock.getLanguages(),
-    );
-    expect(result).to.deep.include.members(
-      HtmlLanguagePluginMock.getLanguages(),
-    );
-    expect(result).to.deep.include.members(
-      JsLanguagePluginMock.getLanguages(),
-    );
+      cssExpr.forEach(hasSameValueAsResult);
+      htmlExpr.forEach(hasSameValueAsResult);
+      jsExpr.forEach(hasSameValueAsResult);
+    });
+
+    test("get languages", function() {
+      const result = plugin.getLanguages();
+      expect(result).to.have.length.above(0);
+
+      expect(result).to.deep.include.members(
+        Array.from(CssLanguagePluginMock.getLanguages()),
+      );
+      expect(result).to.deep.include.members(
+        Array.from(HtmlLanguagePluginMock.getLanguages()),
+      );
+      expect(result).to.deep.include.members(
+        Array.from(JsLanguagePluginMock.getLanguages()),
+      );
+    });
   });
 
   suiteTeardown(function() {

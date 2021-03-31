@@ -9,57 +9,80 @@ import type {
 
 import { expect } from "chai";
 
-import HtmlLanguageSupport from "../html";
+import HtmlLanguagePlugin from "../html";
 
-suite("Built-in HTML Language Support", function() {
-  let plugin: WebManglerLanguagePlugin;
-
-  setup(function() {
-    plugin = new HtmlLanguageSupport();
+suite("Built-in HTML Language Plugin", function() {
+  test("no argument", function() {
+    expect(() => new HtmlLanguagePlugin()).not.to.throw();
   });
 
-  test("has support for mangling 'attributes'", function() {
-    const options: AttributeOptions = null;
-
-    const result = plugin.getExpressions("attributes", options);
-    expect(result).to.have.length.above(0);
+  test("empty options object", function() {
+    expect(() => new HtmlLanguagePlugin({})).not.to.throw();
   });
 
-  test("has support for mangling 'css-declaration-properties'", function() {
-    const options: CssDeclarationPropertyOptions = { };
+  suite("::getExpressions", function() {
+    let plugin: WebManglerLanguagePlugin;
 
-    const result = plugin.getExpressions("css-declaration-properties", options);
-    expect(result).to.have.length.above(0);
+    setup(function() {
+      plugin = new HtmlLanguagePlugin();
+    });
+
+    test("has support for mangling 'attributes'", function() {
+      const options: AttributeOptions = null;
+
+      const result = plugin.getExpressions("attributes", options);
+      expect(result).to.have.length.above(0);
+    });
+
+    test("has support for mangling 'css-declaration-properties'", function() {
+      const options: CssDeclarationPropertyOptions = { };
+
+      const result = plugin.getExpressions("css-declaration-properties", options);
+      expect(result).to.have.length.above(0);
+    });
+
+    test("has support for mangling 'css-declaration-values'", function() {
+      const options: CssDeclarationValueOptions = { };
+
+      const result = plugin.getExpressions("css-declaration-values", options);
+      expect(result).to.have.length.above(0);
+    });
+
+    test("has support for mangling 'multi-value-attributes'", function() {
+      const options: MultiValueAttributeOptions = {
+        attributeNames: ["foo", "bar"],
+      };
+
+      const result = plugin.getExpressions("multi-value-attributes", options);
+      expect(result).to.have.length.above(0);
+    });
+
+    test("has support for mangling 'single-value-attributes'", function() {
+      const options: SingleValueAttributeOptions = {
+        attributeNames: ["foo", "bar"],
+      };
+
+      const result = plugin.getExpressions("single-value-attributes", options);
+      expect(result).to.have.length.above(0);
+    });
   });
 
-  test("has support for mangling 'css-declaration-values'", function() {
-    const options: CssDeclarationValueOptions = { };
+  suite("::getLanguages", function() {
+    const DEFAULT_EXTENSIONS = ["html", "xhtml"];
 
-    const result = plugin.getExpressions("css-declaration-values", options);
-    expect(result).to.have.length.above(0);
-  });
+    test("get languages", function() {
+      const plugin = new HtmlLanguagePlugin();
+      const result = plugin.getLanguages();
+      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
+    });
 
-  test("has support for mangling 'multi-value-attributes'", function() {
-    const options: MultiValueAttributeOptions = {
-      attributeNames: ["foo", "bar"],
-    };
+    test("get configured languages", function() {
+      const htmlExtensions = ["html5", "pug"];
 
-    const result = plugin.getExpressions("multi-value-attributes", options);
-    expect(result).to.have.length.above(0);
-  });
-
-  test("has support for mangling 'single-value-attributes'", function() {
-    const options: SingleValueAttributeOptions = {
-      attributeNames: ["foo", "bar"],
-    };
-
-    const result = plugin.getExpressions("single-value-attributes", options);
-    expect(result).to.have.length.above(0);
-  });
-
-  test("get languages", function() {
-    const result = plugin.getLanguages();
-    expect(result).to.include("html");
-    expect(result).to.include("xhtml");
+      const plugin = new HtmlLanguagePlugin({ htmlExtensions });
+      const result = plugin.getLanguages();
+      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
+      expect(result).to.include.keys(htmlExtensions);
+    });
   });
 });

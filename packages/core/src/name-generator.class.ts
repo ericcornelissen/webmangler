@@ -7,13 +7,14 @@ import { ALL_LOWERCASE_CHARS } from "./characters";
  * and unique strings.
  *
  * @since v0.1.0
- * @version v0.1.14
+ * @version v0.1.17
  */
 export default class NameGenerator {
   /**
    * The default set of characters used by {@link @NameGenerator}s.
    *
    * @since v0.1.0
+   * @deprecated Will be removed in a future version.
    */
   static readonly DEFAULT_CHARSET: CharSet = ALL_LOWERCASE_CHARS;
 
@@ -23,9 +24,9 @@ export default class NameGenerator {
   private readonly reserved: RegExp[];
 
   /**
-   * The set of characters available to generate names with.
+   * The list of characters available to generate names with.
    */
-  private readonly charSet: CharSet;
+  private readonly charList: Char[];
 
   /**
    * The last returned name.
@@ -44,30 +45,36 @@ export default class NameGenerator {
    * Expression that must match exactly. E.g. the reserved string "fa" will be
    * transformed in the Regular Expression `/^fa$/` and hence only prevent the
    * exact string "fa" from being generated. On the other hand, the reserved
-   * pattern "a.*", transformed into `/^a.*$/`, will prevent any string starting
-   * with an "a" (including just "a") from being generated.
+   * pattern "fa.*", transformed into `/^fa.*$/`, will prevent any string
+   * starting with "fa" (including just "fa") from being generated.
    *
    * If you need to reserve a character that has a special meaning in Regular
    * Expressions you need to escape it. E.g. the reserved string "a\\." will be
-   * transformed into `/^a\.$/` and will prevent the string "a." from being
-   * generated.
+   * transformed into `/^a\.$/` and will prevent the exact string "a." from
+   * being generated.
    *
-   * @param reserved A list of reserved names or expressions.
-   * @param charSet A {@link CharSet}.
+   * If `charSet` contains duplicates those will be removed so that no duplicate
+   * names are generated.
+   *
+   * @param [reserved] One or more reserved names and/or expressions.
+   * @param [charSet] A {@link CharSet}.
    * @throws If `charSet` is empty.
    * @since v0.1.0
-   * @version v0.1.14
+   * @version v0.1.17
    */
   constructor(
-    reserved: string[] = [],
+    reserved: Iterable<string> = [],
     charSet: CharSet = NameGenerator.DEFAULT_CHARSET,
   ) {
-    if (charSet.length === 0) {
+    const charSetNoDuplicates = new Set(charSet);
+    if (charSetNoDuplicates.size === 0) {
       throw new TypeError("character set cannot be empty");
     }
 
-    this.reserved = reserved.map((rawExpr) => new RegExp(`^${rawExpr}$`));
-    this.charSet = charSet;
+    this.reserved = Array
+      .from(reserved)
+      .map((rawExpr) => new RegExp(`^${rawExpr}$`));
+    this.charList = Array.from(charSetNoDuplicates);
   }
 
   /**
@@ -105,14 +112,14 @@ export default class NameGenerator {
    */
   private tick(s: string): string {
     if (s === "") {
-      return this.charSet[0];
+      return this.charList[0];
     }
 
-    let nextChar = this.charSet[0];
+    let nextChar = this.charList[0];
     let tailStr = s.substring(0, s.length - 1);
 
     const headChar: Char = s.charAt(s.length - 1) as Char;
-    if (this.isLastCharInCharset(headChar)) {
+    if (this.isLastChar(headChar)) {
       tailStr = this.tick(tailStr);
     } else {
       nextChar = this.getNextChar(headChar);
@@ -122,27 +129,27 @@ export default class NameGenerator {
   }
 
   /**
-   * Check if a given character is the last character in the character set used
+   * Check if a given character is the last character in the character list used
    * by this {@link NameGenerator}.
    *
    * @param c The character of interest.
    * @returns `true` if `c` is the last character, `false` otherwise.
    */
-  private isLastCharInCharset(c: Char): boolean {
-    const lastIndex = this.charSet.length - 1;
-    return this.charSet[lastIndex] === c;
+  private isLastChar(c: Char): boolean {
+    const lastIndex = this.charList.length - 1;
+    return this.charList[lastIndex] === c;
   }
 
   /**
-   * Get the next character in the character set used by this {@link
+   * Get the next character in the character list used by this {@link
    * NameGenerator}.
    *
    * @param c The character of interest.
-   * @returns The character coming after `c` in the character set.
+   * @returns The character coming after `c` in the character list.
    */
   private getNextChar(c: Char): Char {
-    const currentCharIndex = this.charSet.indexOf(c);
+    const currentCharIndex = this.charList.indexOf(c);
     const nextCharIndex = currentCharIndex + 1;
-    return this.charSet[nextCharIndex];
+    return this.charList[nextCharIndex];
   }
 }

@@ -8,7 +8,15 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.17] - 2021-03-31
+
+- Generalize interfaces to allow for other iterable types than arrays.
+- Prevent duplicate mangled names when mangling.
+- Support configuring languages in built-in language plugins.
 - Support mangling attributes in `attr()` in HTML style attribute values.
+- All inputted files will now always be returned, even if not mangled.
 
 ## [0.1.16] - 2021-03-19
 

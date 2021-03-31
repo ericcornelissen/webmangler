@@ -350,7 +350,7 @@ suite("ManglerEngine", function() {
       cases: [
         {
           files: [new WebManglerFileMock("css", ".foo { }")],
-          expected: [],
+          expected: [new WebManglerFileMock("css", ".foo { }")],
           expressions: new Map(),
           patterns: "",
         },
@@ -360,12 +360,22 @@ suite("ManglerEngine", function() {
             new WebManglerFileMock("html", "<p>Hello world!</p>"),
           ],
           expected: [
-            new WebManglerFileMock("css", ".foo { }"),
+            new WebManglerFileMock("css", ".a { }"),
+            new WebManglerFileMock("html", "<p>Hello world!</p>"),
           ],
           expressions: new Map([
-            ["css", []],
+            ["css", [new MangleExpressionMock(
+              sinon.stub()
+                .withArgs(".foo { }", "[a-z]+")
+                .returns(["foo"]),
+              sinon.stub()
+                .withArgs(".foo { }", new Map([
+                  ["foo", "a"],
+                ]))
+                .returns(".a { }"),
+            )]],
           ]),
-          patterns: "",
+          patterns: "[a-z]+",
         },
         {
           files: [
@@ -373,6 +383,7 @@ suite("ManglerEngine", function() {
             new WebManglerFileMock("html", "<p>Hello world!</p>"),
           ],
           expected: [
+            new WebManglerFileMock("css", ".foo { }"),
             new WebManglerFileMock("html", "<p>Hello world!</p>"),
           ],
           expressions: new Map([

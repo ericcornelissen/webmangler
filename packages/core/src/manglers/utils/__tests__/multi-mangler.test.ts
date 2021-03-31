@@ -4,21 +4,21 @@ import { WebManglerPluginMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
 import * as sinonChai from "sinon-chai";
 
-import MultiMangler from "../multi-mangler.class";
+import MultiManglerPlugin from "../multi-mangler.class";
 
 chaiUse(sinonChai);
 
-class ConcreteMultiMangler extends MultiMangler {
+class ConcreteMultiManglerPlugin extends MultiManglerPlugin {
   constructor(plugins: WebManglerPlugin[]) {
     super(plugins);
   }
 }
 
-suite("MultiMangler", function() {
+suite("MultiManglerPlugin", function() {
   test("one plugin", function() {
     const subPlugin = new WebManglerPluginMock();
 
-    const plugin = new ConcreteMultiMangler([subPlugin]);
+    const plugin = new ConcreteMultiManglerPlugin([subPlugin]);
     plugin.options();
 
     expect(subPlugin.options).to.have.callCount(1);
@@ -29,7 +29,7 @@ suite("MultiMangler", function() {
     const subPluginB = new WebManglerPluginMock();
     const plugins = [subPluginA, subPluginB];
 
-    const plugin = new ConcreteMultiMangler(plugins);
+    const plugin = new ConcreteMultiManglerPlugin(plugins);
     plugin.options();
 
     for (const subPlugin of plugins) {
