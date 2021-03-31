@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.17] - 2021-03-31
+
 - Generalize interfaces to allow for other iterable types than arrays.
 - Prevent duplicate mangled names when mangling.
 - Support configuring languages in built-in language plugins.
