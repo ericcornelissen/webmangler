@@ -11,7 +11,6 @@ import { toArrayIfNeeded } from "../../helpers";
  *
  * @since v0.1.0
  * @version v0.1.17
- * @deprecated Make sure you're importing MultiManglerPlugin, not MultiMangler.
  */
 export default abstract class MultiManglerPlugin implements WebManglerPlugin {
   /**

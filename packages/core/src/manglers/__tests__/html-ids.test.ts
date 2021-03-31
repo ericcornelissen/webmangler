@@ -1146,12 +1146,12 @@ suite("HTML ID Mangler", function() {
     suite("::idAttributes", function() {
       const standardIdAttributes = ["id", "for"];
 
-      const getExpressionOptions = (
+      const getLanguageOptions = (
         mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
-        const allExpressionOptions = Array.from(mangleOptions.languageOptions);
-        const expressionOptions = allExpressionOptions[1];
-        return expressionOptions?.options as SingleValueAttributeOptions;
+        const allLanguageOptions = Array.from(mangleOptions.languageOptions);
+        const languageOptions = allLanguageOptions[1];
+        return languageOptions?.options as SingleValueAttributeOptions;
       };
 
       const cases: { idAttributes: string[], expected: string[] }[] = [
@@ -1178,7 +1178,7 @@ suite("HTML ID Mangler", function() {
           const { expected, idAttributes } = testCase;
           const htmlIdMangler = new HtmlIdMangler({ idAttributes });
           const mangleOptions = htmlIdMangler.options();
-          const options = getExpressionOptions(mangleOptions);
+          const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
           const attributeNames = options.attributeNames;
@@ -1197,12 +1197,12 @@ suite("HTML ID Mangler", function() {
     suite("::urlAttributes", function() {
       const standardUrlAttributes = ["href"];
 
-      const getExpressionOptions = (
+      const getLanguageOptions = (
         mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
-        const allExpressionOptions = Array.from(mangleOptions.languageOptions);
-        const expressionOptions = allExpressionOptions[2];
-        return expressionOptions?.options as SingleValueAttributeOptions;
+        const allLanguageOptions = Array.from(mangleOptions.languageOptions);
+        const languageOptions = allLanguageOptions[2];
+        return languageOptions?.options as SingleValueAttributeOptions;
       };
 
       const cases: { urlAttributes: string[], expected: string[] }[] = [
@@ -1229,7 +1229,7 @@ suite("HTML ID Mangler", function() {
           const { expected, urlAttributes } = testCase;
           const htmlIdMangler = new HtmlIdMangler({ urlAttributes });
           const mangleOptions = htmlIdMangler.options();
-          const options = getExpressionOptions(mangleOptions);
+          const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
           const attributeNames = options.attributeNames;

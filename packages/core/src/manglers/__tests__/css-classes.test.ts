@@ -1009,12 +1009,12 @@ suite("CSS Class Mangler", function() {
     suite("::classAttributes", function() {
       const standardClassAttributes = ["class"];
 
-      const getExpressionOptions = (
+      const getLanguageOptions = (
         mangleOptions: MangleOptions,
       ): MultiValueAttributeOptions => {
-        const allExpressionOptions = Array.from(mangleOptions.languageOptions);
-        const expressionOptions = allExpressionOptions[1];
-        return expressionOptions?.options as MultiValueAttributeOptions;
+        const allLanguageOptions = Array.from(mangleOptions.languageOptions);
+        const languageOptions = allLanguageOptions[1];
+        return languageOptions?.options as MultiValueAttributeOptions;
       };
 
       const cases: { classAttributes: string[], expected: string[] }[] = [
@@ -1041,7 +1041,7 @@ suite("CSS Class Mangler", function() {
           const { expected, classAttributes } = testCase;
           const cssClassMangler = new CssClassMangler({ classAttributes });
           const mangleOptions = cssClassMangler.options();
-          const options = getExpressionOptions(mangleOptions);
+          const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
           const attributeNames = options.attributeNames;

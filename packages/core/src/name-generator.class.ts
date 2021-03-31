@@ -7,16 +7,13 @@ import { ALL_LOWERCASE_CHARS } from "./characters";
  * and unique strings.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.18
  */
 export default class NameGenerator {
   /**
    * The default set of characters used by {@link @NameGenerator}s.
-   *
-   * @since v0.1.0
-   * @deprecated Will be removed in a future version.
    */
-  static readonly DEFAULT_CHARSET: CharSet = ALL_LOWERCASE_CHARS;
+  private static readonly DEFAULT_CHARSET: CharSet = ALL_LOWERCASE_CHARS;
 
   /**
    * The list of reserved names and patterns.

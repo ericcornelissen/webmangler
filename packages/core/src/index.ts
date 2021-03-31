@@ -34,18 +34,18 @@ function extractOptions(
  * MangleExpressionOptions}, from the {@link WebManglerLanguagePlugin}s.
  *
  * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
- * @param expressionOptions The {@link MangleExpressionOptions}.
+ * @param languageOptions The {@link MangleExpressionOptions}.
  * @returns The {@link MangleExpression}s.
  * @since v0.1.14
  * @version v0.1.17
  */
 export function getExpressions(
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
-  expressionOptions: Iterable<MangleExpressionOptions<unknown>>,
+  languageOptions: Iterable<MangleExpressionOptions<unknown>>,
 ): Map<string, Iterable<MangleExpression>> {
   const pluginExpressions: Map<string, Iterable<MangleExpression>> = new Map();
   for (const languagePlugin of languagePlugins) {
-    for (const { name, options } of expressionOptions) {
+    for (const { name, options } of languageOptions) {
       const expressionsMap = languagePlugin.getExpressions(name, options);
       expressionsMap.forEach((newExpressions, language) => {
         const expressions = pluginExpressions.get(language) || [];
@@ -65,7 +65,7 @@ export function getExpressions(
  * @param options The options for the mangler.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.18
  */
 export default function webmangler<Files extends Iterable<WebManglerFile>>(
   files: Files,
@@ -75,7 +75,7 @@ export default function webmangler<Files extends Iterable<WebManglerFile>>(
   for (const config of configs) {
     const expressions = getExpressions(
       options.languages,
-      config.languageOptions || config.expressionOptions,
+      config.languageOptions,
     );
 
     files = manglerEngine(files, expressions, config);
