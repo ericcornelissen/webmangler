@@ -40,21 +40,21 @@ suite("Built-in JavaScript Language Plugin", function() {
   });
 
   suite("::getLanguages", function() {
-    const DEFAULT_LANGUAGES = ["js", "cjs", "mjs"];
+    const DEFAULT_EXTENSIONS = ["js", "cjs", "mjs"];
 
     test("get languages", function() {
       const plugin = new JavaScriptLanguagePlugin();
       const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_LANGUAGES);
+      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
     });
 
     test("get configured languages", function() {
-      const languages = ["jsx", "ts"];
+      const jsExtensions = ["jsx", "ts"];
 
-      const plugin = new JavaScriptLanguagePlugin({ languages });
+      const plugin = new JavaScriptLanguagePlugin({ jsExtensions });
       const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_LANGUAGES);
-      expect(result).to.include.keys(languages);
+      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
+      expect(result).to.include.keys(jsExtensions);
     });
   });
 });

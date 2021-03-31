@@ -19,17 +19,17 @@ map.set("single-value-attributes", singleValueAttributeExpressionFactory);
  */
 export type CssLanguagePluginOptions = {
   /**
-   * One or more languages that this language plugin should be used for. Can be
-   * used when CSS files have a non-standard extension or to use this plugin for
-   * CSS-like languages.
+   * One or more extensions that the {@link CssLanguagePlugin} should be used
+   * for. This can be used when CSS files have a non-standard extension or to
+   * use this plugin for CSS-like languages.
    *
-   * NOTE: the default languages are always included and do not need to be
+   * NOTE: the default extensions are always included and do not need to be
    * specified when using this option.
    *
    * @default `[]`
    * @since v0.1.17
    */
-  languages?: Iterable<string>;
+  cssExtensions?: Iterable<string>;
 }
 
 /**
@@ -58,7 +58,7 @@ export type CssLanguagePluginOptions = {
  *   ],
  *   languages: [
  *     new CssLanguagePlugin({
- *       languages: ["style"], // e.g. "main.style"
+ *       cssExtensions: ["style"], // e.g. "main.style"
  *     }),
  *   ],
  * });
@@ -88,7 +88,7 @@ export default class CssLanguagePlugin extends SimpleLanguagePlugin {
    */
   constructor(options: CssLanguagePluginOptions={}) {
     super(
-      CssLanguagePlugin.getLanguages(options.languages),
+      CssLanguagePlugin.getLanguages(options.cssExtensions),
       CssLanguagePlugin.EXPRESSION_FACTORIES,
     );
   }

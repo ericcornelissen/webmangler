@@ -58,21 +58,21 @@ suite("Built-in CSS Language Plugin", function() {
   });
 
   suite("::getLanguages", function() {
-    const DEFAULT_LANGUAGES = ["css"];
+    const DEFAULT_EXTENSIONS = ["css"];
 
     test("get default languages", function() {
       const plugin = new CssLanguagePlugin();
       const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_LANGUAGES);
+      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
     });
 
     test("get configured languages", function() {
-      const languages = ["less", "sass"];
+      const cssExtensions = ["less", "sass"];
 
-      const plugin = new CssLanguagePlugin({ languages });
+      const plugin = new CssLanguagePlugin({ cssExtensions });
       const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_LANGUAGES);
-      expect(result).to.include.keys(languages);
+      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
+      expect(result).to.include.keys(cssExtensions);
     });
   });
 });

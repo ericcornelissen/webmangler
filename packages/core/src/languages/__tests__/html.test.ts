@@ -68,21 +68,21 @@ suite("Built-in HTML Language Plugin", function() {
   });
 
   suite("::getLanguages", function() {
-    const DEFAULT_LANGUAGES = ["html", "xhtml"];
+    const DEFAULT_EXTENSIONS = ["html", "xhtml"];
 
     test("get languages", function() {
       const plugin = new HtmlLanguagePlugin();
       const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_LANGUAGES);
+      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
     });
 
     test("get configured languages", function() {
-      const languages = ["html5", "pug"];
+      const htmlExtensions = ["html5", "pug"];
 
-      const plugin = new HtmlLanguagePlugin({ languages });
+      const plugin = new HtmlLanguagePlugin({ htmlExtensions });
       const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_LANGUAGES);
-      expect(result).to.include.keys(languages);
+      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
+      expect(result).to.include.keys(htmlExtensions);
     });
   });
 });

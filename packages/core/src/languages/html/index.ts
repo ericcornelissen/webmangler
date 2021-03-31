@@ -21,17 +21,17 @@ map.set("single-value-attributes", singleValueAttributeExpressionFactory);
  */
 export type HtmlLanguagePluginOptions = {
   /**
-   * One or more languages that this language plugin should be used for. Can be
-   * used when HTML files have a non-standard extension or to use this plugin
-   * for HTML-like languages.
+   * One or more extensions that the {@link HtmlLanguagePlugin} should be used
+   * for. This can be used when HTML files have a non-standard extension or to
+   * use this plugin for HTML-like languages.
    *
-   * NOTE: the default languages are always included and do not need to be
+   * NOTE: the default extensions are always included and do not need to be
    * specified when using this option.
    *
    * @default `[]`
    * @since v0.1.17
    */
-  languages?: Iterable<string>;
+  htmlExtensions?: Iterable<string>;
 }
 
 /**
@@ -61,7 +61,7 @@ export type HtmlLanguagePluginOptions = {
  *   ],
  *   languages: [
  *     new HtmlLanguagePlugin({
- *       languages: ["html5"], // e.g. "index.html5"
+ *       htmlExtensions: ["html5"], // e.g. "index.html5"
  *     }),
  *   ],
  * });
@@ -92,7 +92,7 @@ export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
    */
   constructor(options: HtmlLanguagePluginOptions={}) {
     super(
-      HtmlLanguagePlugin.getLanguages(options.languages),
+      HtmlLanguagePlugin.getLanguages(options.htmlExtensions),
       HtmlLanguagePlugin.EXPRESSION_FACTORIES,
     );
   }

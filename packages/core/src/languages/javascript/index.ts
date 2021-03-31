@@ -15,17 +15,17 @@ map.set("query-selectors", querySelectorExpressionFactory);
  */
 export type JavaScriptLanguagePluginOptions = {
   /**
-   * One or more languages that this language plugin should be used for. Can be
-   * used when JavaScript files have a non-standard extension or to use this
-   * plugin for JavaScript-like languages.
+   * One or more extensions that the {@link JavaScriptLanguagePlugin} should be
+   * used for. This can be used when JavaScript files have a non-standard
+   * extension or to use this plugin for JavaScript-like languages.
    *
-   * NOTE: the default languages are always included and do not need to be
+   * NOTE: the default extensions are always included and do not need to be
    * specified when using this option.
    *
    * @default `[]`
    * @since v0.1.17
    */
-  languages?: Iterable<string>;
+  jsExtensions?: Iterable<string>;
 }
 
 /**
@@ -52,7 +52,7 @@ export type JavaScriptLanguagePluginOptions = {
  *   ],
  *   languages: [
  *     new JavaScriptLanguagePlugin({
- *       languages: ["javascript"], // e.g. "script.javascript"
+ *       jsExtensions: ["javascript"], // e.g. "script.javascript"
  *     }),
  *   ],
  * });
@@ -85,7 +85,7 @@ export default class JavaScriptLanguagePlugin extends SimpleLanguagePlugin {
    */
   constructor(options: JavaScriptLanguagePluginOptions={}) {
     super(
-      JavaScriptLanguagePlugin.getLanguages(options.languages),
+      JavaScriptLanguagePlugin.getLanguages(options.jsExtensions),
       JavaScriptLanguagePlugin.EXPRESSION_FACTORIES,
     );
   }
