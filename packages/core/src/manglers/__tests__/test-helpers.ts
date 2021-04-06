@@ -35,7 +35,7 @@ function cloneObject<T>(o: T, r?: unknown): T {
  * @param arr The full array being filtered.
  * @returns `true` if this is the first instance of `value`, `false` otherwise.
  */
-function duplicates<T>(value: T, index: number, arr: T[]): boolean {
+function duplicates(value: unknown, index: number, arr: unknown[]): boolean {
   const firstIndexOfValue = arr.findIndex((x) => {
     try {
       deepStrictEqual(x, value);
