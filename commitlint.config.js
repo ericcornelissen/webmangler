@@ -17,6 +17,7 @@ module.exports = {
       [
         "cli",
         "core",
+        "deps",
         "hook",
         "script",
         "testing",
