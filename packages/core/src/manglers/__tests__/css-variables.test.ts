@@ -26,7 +26,12 @@ const builtInLanguages = [new BuiltInLanguageSupport()];
 const DEFAULT_PATTERN = "[a-z]+";
 
 suite("CSS Variable Mangler", function() {
+  const varyVariableUsageSpacing = varySpacing([":", "(", ",", ")"]);
+
   suite("CSS", function() {
+    const varyDeclarationSpacing = varySpacing(["{", ":", ";", "}"]);
+    const varyCssQuotes = varyQuotes("css");
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "no declarations or usage",
@@ -63,7 +68,7 @@ suite("CSS Variable Mangler", function() {
                 expected: `:root{--a:${value};}`,
               },
             ])
-            .flatMap((testCase) => varySpacing(["{", ":", ";", "}"], testCase)),
+            .flatMap(varyDeclarationSpacing),
           {
             input: ":root { background: purple; --foo: black; }",
             expected: ":root { background: purple; --a: black; }",
@@ -125,7 +130,7 @@ suite("CSS Variable Mangler", function() {
                 expected: `div { color: var(--a,${value}); }`,
               },
             ])
-            .flatMap((testCase) => varySpacing(["(", ",", ")"], testCase)),
+            .flatMap(varyVariableUsageSpacing),
           {
             input: "div { background: black; color: var(--foo, yellow); }",
             expected: "div { background: black; color: var(--a, yellow); }",
@@ -236,7 +241,7 @@ suite("CSS Variable Mangler", function() {
                 description: "unexpected string values should not prevent mangling",
               },
             ])
-            .flatMap((testCase) => varyQuotes("css", testCase)),
+            .flatMap(varyCssQuotes),
         ],
       },
       {
@@ -292,6 +297,9 @@ suite("CSS Variable Mangler", function() {
   });
 
   suite("HTML", function() {
+    const varyDeclarationSpacing = varySpacing(["\"", ":", ";"]);
+    const varyHtmlQuotes = varyQuotes("html");
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "variable declarations in style attribute",
@@ -301,8 +309,8 @@ suite("CSS Variable Mangler", function() {
               input: `<div style="--foo:${value};"></div>`,
               expected: `<div style="--a:${value};"></div>`,
             }))
-            .flatMap((testCase) => varySpacing(["\"", ":", ";"], testCase))
-            .flatMap((testCase) => varyQuotes("html", testCase)),
+            .flatMap(varyDeclarationSpacing)
+            .flatMap(varyHtmlQuotes),
         ],
       },
       {
@@ -375,8 +383,8 @@ suite("CSS Variable Mangler", function() {
               input: `<div style="${property}:var(--foo);"></div>`,
               expected: `<div style="${property}:var(--a);"></div>`,
             }))
-            .flatMap((testCase) => varySpacing([":", "(", ")"], testCase))
-            .flatMap((testCase) => varyQuotes("html", testCase)),
+            .flatMap(varyVariableUsageSpacing)
+            .flatMap(varyHtmlQuotes),
         ],
       },
       {
@@ -449,8 +457,8 @@ suite("CSS Variable Mangler", function() {
               input: `<div style="color: var(--foo,${value});"></div>`,
               expected: `<div style="color: var(--a,${value});"></div>`,
             }))
-            .flatMap((testCase) => varySpacing(["(", ",", ")"], testCase))
-            .flatMap((testCase) => varyQuotes("html", testCase)),
+            .flatMap(varyVariableUsageSpacing)
+            .flatMap(varyHtmlQuotes),
         ],
       },
       {

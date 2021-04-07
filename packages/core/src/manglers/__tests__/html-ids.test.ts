@@ -58,6 +58,10 @@ const SELECTOR_PAIRS: SelectorPairBeforeAndAfter[] = [
 
 suite("HTML ID Mangler", function() {
   suite("CSS", function() {
+    const varyCssQuotes = varyQuotes("css");
+
+    const varyQuoteSpacing = varySpacing("\"");
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "individual selectors",
@@ -176,8 +180,8 @@ suite("HTML ID Mangler", function() {
                 expected: `[href${operator}"#a"] { }`,
               }),
             ])
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("css", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyCssQuotes),
         ],
       },
       {

@@ -717,6 +717,12 @@ suite("CSS Class Mangler", function() {
   });
 
   suite("JavaScript", function() {
+    const varyQuoteSpacing = varySpacing("\"");
+    const varyCommaSpacing = varySpacing(",");
+    const varyParenthesisSpacing = varySpacing(["(", ")"]);
+    const varyCombinatorSpacing = varySpacing([">", "~", "+"]);
+    const varyJsQuotes = varySpacing("js");
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "query selectors with one selector",
@@ -726,8 +732,8 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${before}");`,
               expected: `document.querySelectorAll("${after}");`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
           ...varySpacing("\"", {
             input: `
               document.querySelectorAll(".cls-foo");
@@ -770,7 +776,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA},${beforeB}");`,
               expected: `document.querySelectorAll("${afterA},${afterB}");`,
             }))
-            .flatMap((testCase) => varySpacing(",", testCase)),
+            .flatMap(varyCommaSpacing),
         ],
       },
       {
@@ -792,13 +798,13 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll(":not(${before})");`,
               expected: `document.querySelectorAll(":not(${after})");`,
             }))
-            .flatMap((testCase) => varySpacing(["(", ")"], testCase)),
+            .flatMap(varyParenthesisSpacing),
           ...SELECTOR_PAIRS
             .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `querySelectorAll("${beforeA}:not(${beforeB})");`,
               expected: `querySelectorAll("${afterA}:not(${afterB})");`,
             }))
-            .flatMap((testCase) => varySpacing(["(", ")"], testCase)),
+            .flatMap(varyParenthesisSpacing),
         ],
       },
       {
@@ -819,7 +825,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA}>${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}>${afterB}");`,
             }))
-            .flatMap((testCase) => varySpacing(">", testCase)),
+            .flatMap(varyCombinatorSpacing),
         ],
       },
       {
@@ -830,7 +836,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA}+${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}+${afterB}");`,
             }))
-            .flatMap((testCase) => varySpacing("+", testCase)),
+            .flatMap(varyCombinatorSpacing),
         ],
       },
       {
@@ -841,7 +847,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA}~${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}~${afterB}");`,
             }))
-            .flatMap((testCase) => varySpacing("~", testCase)),
+            .flatMap(varyCombinatorSpacing),
         ],
       },
       {
@@ -852,29 +858,29 @@ suite("CSS Class Mangler", function() {
               input: `$el.classList.${method}("cls-foobar");`,
               expected: `$el.classList.${method}("a");`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
           ...["add", "toggle", "remove"]
             .map((method): TestCase => ({
               input: `var c = "cls-foobar"; $el.classList.${method}(c);`,
               expected: `var c = "a"; $el.classList.${method}(c);`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
           ...["add", "remove"]
             .map((method): TestCase => ({
               input: `$el.classList.${method}("cls-foo", "cls-bar");`,
               expected: `$el.classList.${method}("a", "b");`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
           ...["add", "toggle", "remove"]
             .map((method): TestCase => ({
               input: `$el.classList.${method}("foobar");`,
               expected: `$el.classList.${method}("foobar");`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
         ],
       },
       {

@@ -1,6 +1,7 @@
 import type { TestCase } from "./types";
 
 import { deepStrictEqual } from "assert";
+import { curry } from "ramda";
 import { format as printf } from "util";
 
 /**
@@ -169,14 +170,16 @@ export type QuoteLanguages =
  * Vary the quotes used in the snippets of code of `testCase` for a certain
  * `language`.
  *
+ * Note: this function is curried by default.
+ *
  * @param language The language `testCase` is written in.
  * @param testCase The {@link TestCase} to vary.
  * @returns A variation of `testCase` for every quote allowed by `language`.
  */
-export function varyQuotes(
+export const varyQuotes = curry((
   language: QuoteLanguages,
   testCase: TestCase,
-): TestCase[] {
+): TestCase[] => {
   const doubleQuotesAllowed = ["css", "html", "js", "double-backticks"];
   const singleQuotesAllowed = ["css", "html", "js", "single-backticks"];
   const backticksAllowed = ["js", "double-backticks", "single-backticks"];
@@ -212,7 +215,7 @@ export function varyQuotes(
   }
 
   return result;
-}
+});
 
 /**
  * Expand a single {@link TestCase} to multiple similar {@link TestCase}s that
@@ -221,14 +224,16 @@ export function varyQuotes(
  * If multiple strings are provided, every combination of spacing is created.
  * Hence, this function outputs exponentially many {@link TestCase}s.
  *
+ * Note: this function is curried by default.
+ *
  * @param strings The string(s) to vary the spacing around.
  * @param testCase The {@link TestCase} to vary the spacing in.
  * @returns One or more {@link TestCase}s based on `testCase`.
  */
-export function varySpacing(
+export const varySpacing = curry((
   strings: string | string[],
   testCase: TestCase,
-): TestCase[] {
+): TestCase[] => {
   if (strings.length === 0) {
     return [testCase];
   }
@@ -259,4 +264,4 @@ export function varySpacing(
   });
 
   return result;
-}
+});

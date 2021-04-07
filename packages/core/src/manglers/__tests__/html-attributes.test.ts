@@ -69,7 +69,12 @@ const ATTRIBUTES: SelectorBeforeAndAfter[] = [
 ];
 
 suite("HTML Attribute Mangler", function() {
+  const varyCommaSpacing = varySpacing(",");
+
   suite("CSS", function() {
+    const varyAttributeSelectorSpacing = varySpacing(["[", "]"]);
+    const varyCssQuotes = varyQuotes("css");
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "individual selectors",
@@ -103,7 +108,7 @@ suite("HTML Attribute Mangler", function() {
                   },
                 ]),
             ])
-            .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
+            .flatMap(varyAttributeSelectorSpacing),
           ...ATTRIBUTE_SELECTOR_OPERATORS
             .flatMap((operator: string): TestCase[] => [
               ...varySpacing(operator, {
@@ -111,7 +116,7 @@ suite("HTML Attribute Mangler", function() {
                 expected: `[data-a${operator}"bar"]{ }`,
               }),
             ])
-            .flatMap((testCase) => varyQuotes("css", testCase)),
+            .flatMap(varyCssQuotes),
         ],
       },
       {
@@ -181,7 +186,7 @@ suite("HTML Attribute Mangler", function() {
                 `,
               },
             ])
-            .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
+            .flatMap(varyAttributeSelectorSpacing),
           ...SELECTOR_COMBINATORS
             .flatMap((connector) => [
               {
@@ -223,10 +228,10 @@ suite("HTML Attribute Mangler", function() {
                       `,
                     },
                   ])
-                  .flatMap((testCase) => varySpacing(",", testCase)),
+                  .flatMap(varyCommaSpacing),
               ]),
           ])
-          .flatMap((testCase) => varyQuotes("css", testCase)),
+          .flatMap(varyCssQuotes),
       },
       {
         name: "other selectors that match the pattern(s)",
@@ -286,7 +291,7 @@ suite("HTML Attribute Mangler", function() {
                 expected: `div[data-a${operator}"attr(data-foo)"] { }`,
               },
             ])
-            .flatMap((testCase) => varyQuotes("css", testCase)),
+            .flatMap(varyCssQuotes),
           ...varyQuotes("css", {
             input: "div { content: \"[data-foo]\"; font: attr(data-foo); }",
             expected: "div { content: \"[data-foo]\"; font: attr(data-a); }",
@@ -318,7 +323,7 @@ suite("HTML Attribute Mangler", function() {
                 description: "unexpected attribute values should not prevent mangling",
               },
             ])
-            .flatMap((testCase) => varyQuotes("css", testCase)),
+            .flatMap(varyCssQuotes),
         ],
       },
       {
@@ -374,6 +379,8 @@ suite("HTML Attribute Mangler", function() {
   });
 
   suite("HTML", function() {
+    const varyHtmlQuotes = varyQuotes("html");
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "single attribute",
@@ -485,10 +492,10 @@ suite("HTML Attribute Mangler", function() {
                       `,
                     },
                   ])
-                  .flatMap((testCase) => varySpacing(",", testCase)),
+                  .flatMap(varyCommaSpacing),
               ]),
           ])
-          .flatMap((testCase) => varyQuotes("html", testCase)),
+          .flatMap(varyHtmlQuotes),
       },
       {
         name: "edge cases",
@@ -558,6 +565,8 @@ suite("HTML Attribute Mangler", function() {
   });
 
   suite("JavaScript", function() {
+    const varyCssQuotes = varyQuotes("css");
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "single attribute selectors",
@@ -635,7 +644,7 @@ suite("HTML Attribute Mangler", function() {
             expected: "[data-a*=\\\"bar\\\"]",
           },
         ]
-        .flatMap((testCase) => varyQuotes("css", testCase))
+        .flatMap(varyCssQuotes)
         .flatMap((testCase) => [
           ...varyQuotes("js", {
             input: "var s = \"%s\";",
