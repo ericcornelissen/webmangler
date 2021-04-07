@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix various cases where attributes in HTML would not be mangled.
 
 ## [0.1.17] - 2021-03-31
 
