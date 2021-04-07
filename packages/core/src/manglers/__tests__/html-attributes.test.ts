@@ -17,6 +17,7 @@ import {
   SELECTOR_COMBINATORS,
   TYPE_OR_UNITS,
 } from "./css-constants";
+import { embedAttributesInTags, withOtherAttributes } from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
   isValidAttributeName,
@@ -374,135 +375,133 @@ suite("HTML Attribute Mangler", function() {
   });
 
   suite("HTML", function() {
-    const scenarios: TestScenario<TestCase>[] = [
+    const SAMPLE_ATTRIBUTES: TestCase[] = [
       {
-        name: "single attribute",
-        cases: [
-          ...varySpacing("=", {
-            input: "<div data-foo=\"bar\"></div>",
-            expected: "<div data-a=\"bar\"></div>",
-          }),
-          ...varyQuotes("html", {
-            input: "<div data-foo=\"bar\"></div>",
-            expected: "<div data-a=\"bar\"></div>",
-          }),
-          ...varySpacing(">", {
-            input: "<div data-foo></div>",
-            expected: "<div data-a></div>",
-          }),
-        ],
+        input: "data-foo=\"bar\" data-hello=\"world\"",
+        expected: "data-a=\"bar\" data-b=\"world\"",
       },
       {
-        name: "multiple attributes",
-        cases: [
-          ...varyQuotes("html", {
-            input: "<div id=\"foo\" data-foo=\"bar\"></div>",
-            expected: "<div id=\"foo\" data-a=\"bar\"></div>",
-          }),
-          ...varyQuotes("html", {
-            input: "<div data-foo=\"foo\" class=\"bar\"></div>",
-            expected: "<div data-a=\"foo\" class=\"bar\"></div>",
-          }),
-          ...varyQuotes("html", {
-            input: "<div id=\"praise\" data-foo=\"the\" class=\"sun\"></div>",
-            expected: "<div id=\"praise\" data-a=\"the\" class=\"sun\"></div>",
-          }),
-          ...varyQuotes("html", {
-            input: "<div id=\"foo\"><div data-foo=\"bar\"></div></div>",
-            expected: "<div id=\"foo\"><div data-a=\"bar\"></div></div>",
-          }),
-          ...varyQuotes("html", {
-            input: "<div data-foo=\"bar\"><div id=\"foo\"></div></div>",
-            expected: "<div data-a=\"bar\"><div id=\"foo\"></div></div>",
-          }),
-          ...varyQuotes("html", {
-            input: "<div data-foo=\"bar\"><div data-bar=\"foo\"></div></div>",
-            expected: "<div data-a=\"bar\"><div data-b=\"foo\"></div></div>",
-          }),
-          ...varySpacing("=", {
-            input: "<div data-foo=\"bar\"><div data-bar=\"foo\"></div></div>",
-            expected: "<div data-a=\"bar\"><div data-b=\"foo\"></div></div>",
-          }),
-          ...varyQuotes("html", {
-            input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
-            expected: "<div data-a=\"bar\" data-b=\"foo\"></div>",
-          }),
-          ...varySpacing("=", {
-            input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
-            expected: "<div data-a=\"bar\" data-b=\"foo\"></div>",
-          }),
-          {
-            input: "<a href=\"https://www.example.com/\" data-foo></a>",
-            expected: "<a href=\"https://www.example.com/\" data-a></a>",
-          },
-          {
-            input: "<a data-foo href=\"https://www.example.com/\"></a>",
-            expected: "<a data-a href=\"https://www.example.com/\"></a>",
-          },
-        ],
+        input: "data-foobar",
+        expected: "data-a",
       },
+    ];
+    const SAMPLE_ATTRIBUTE_PAIRS: [TestCase, TestCase][] = [
+      [
+        {
+          input: "data-foo=\"bar\"",
+          expected: "data-a=\"bar\"",
+        },
+        {
+          input: "data-hello=\"world\"",
+          expected: "data-b=\"world\"",
+        },
+      ],
+      [
+        {
+          input: "data-foo",
+          expected: "data-a",
+        },
+        {
+          input: "data-bar",
+          expected: "data-b",
+        },
+      ],
+      [
+        {
+          input: "data-praise=\"the\"",
+          expected: "data-a=\"the\"",
+        },
+        {
+          input: "data-sun",
+          expected: "data-b",
+        },
+      ],
+      [
+        {
+          input: "data-praise",
+          expected: "data-a",
+        },
+        {
+          input: "data-the=\"sun\"",
+          expected: "data-b=\"sun\"",
+        },
+      ],
+      [
+        {
+          input: "data-foo=\"bar\"",
+          expected: "data-a=\"bar\"",
+        },
+        {
+          input: "data-foo=\"baz\"",
+          expected: "data-a=\"baz\"",
+        },
+      ],
+      [
+        {
+          input: "data-foobar",
+          expected: "data-a",
+        },
+        {
+          input: "data-foobar",
+          expected: "data-a",
+        },
+      ],
+      [
+        {
+          input: "data-foo=\"bar\"",
+          expected: "data-a=\"bar\"",
+        },
+        {
+          input: "data-foo",
+          expected: "data-a",
+        },
+      ],
+    ];
+
+    const attrScenarios: TestScenario<TestCase>[] = [
       {
-        name: "value usage",
-        cases: ATTRIBUTES
-          .flatMap(({ before, after }): TestCase[] => [
-            {
-              input: `<div style="content: attr(${before});"></div>`,
-              expected: `<div style="content: attr(${after});"></div>`,
-            },
-            ...TYPE_OR_UNITS
-              .flatMap((typeOrUnit): TestCase[] => [
-                {
-                  input: `
-                    <div style="content: attr(${before} ${typeOrUnit});"></div>
-                  `,
-                  expected: `
-                    <div style="content: attr(${after} ${typeOrUnit});"></div>
-                  `,
-                },
-              ]),
-            ...CSS_VALUES
-              .flatMap((value): TestCase[] => [
-                {
-                  input: `
-                    <div style="content: attr(${before},${value});"></div>
-                  `,
-                  expected: `
-                    <div style="content: attr(${after},${value});"></div>
-                  `,
-                },
-                ...TYPE_OR_UNITS
-                  .flatMap((typeOrUnit): TestCase[] => [
-                    {
-                      input: `
-                        <div style=
-                          "content: attr(${before} ${typeOrUnit},${value});">
-                        </div>
-                      `,
-                      expected: `
-                        <div style=
-                          "content: attr(${after} ${typeOrUnit},${value});">
-                        </div>
-                      `,
-                    },
-                  ])
-                  .flatMap((testCase) => varySpacing(",", testCase)),
-              ]),
-          ])
-          .flatMap((testCase) => varyQuotes("html", testCase)),
-      },
-      {
-        name: "edge cases",
+        name: "no (matching) attributes",
         cases: [
           {
-            input: "<div data-foo=\">\" data-bar=\"foo\"></div>",
-            expected: "<div data-a=\">\" data-b=\"foo\"></div>",
-            description: "closing `>` inside attribute values should be ignored",
+            input: "",
+            expected: "",
+            description: "no attributes",
           },
           {
-            input: "<div data-foo=\"bar\" data-foo=\"baz\"></div>",
-            expected: "<div data-a=\"bar\" data-a=\"baz\"></div>",
-            description: "Repeated attributes should all be mangled consistently",
+            input: "id=\"foobar\"",
+            expected: "id=\"foobar\"",
           },
+          {
+            input: "height=\"36\" width=\"42\"",
+            expected: "height=\"36\" width=\"42\"",
+          },
+        ].flatMap(embedAttributesInTags),
+      },
+      {
+        name: "varying spacing in attributes",
+        cases: [
+          ...SAMPLE_ATTRIBUTES,
+          ...SAMPLE_ATTRIBUTE_PAIRS
+            .map(([testCaseA, testCaseB]): TestCase => ({
+              input: `${testCaseA.input} ${testCaseB.input}`,
+              expected: `${testCaseA.expected} ${testCaseB.expected}`,
+            })),
+        ]
+        .flatMap(embedAttributesInTags)
+        .flatMap((testCase) => varySpacing(["=", "\""], testCase)),
+      },
+      {
+        name: "with other attributes",
+        cases: [
+          ...SAMPLE_ATTRIBUTES,
+          ...SAMPLE_ATTRIBUTE_PAIRS,
+        ]
+        .flatMap(withOtherAttributes)
+        .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "attribute-like strings in non-attribute places",
+        cases: [
           {
             input: "<div class=\"data-foo\"></div>",
             expected: "<div class=\"data-foo\"></div>",
@@ -513,6 +512,16 @@ suite("HTML Attribute Mangler", function() {
             expected: "<div>data-foo is an attribute name</div>",
             description: "matches outside an element tag should be ignored",
           },
+        ],
+      },
+      {
+        name: "edge cases",
+        cases: [
+          {
+            input: "<div data-foo=\">\" data-bar=\"foo\"></div>",
+            expected: "<div data-a=\">\" data-b=\"foo\"></div>",
+            description: "closing `>` inside attribute values should be ignored",
+          },
           {
             input: "< div data-foo=\"bar\"></div>",
             expected: "< div data-a=\"bar\"></div>",
@@ -522,7 +531,90 @@ suite("HTML Attribute Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
+    const styleScenarios: TestScenario<TestCase>[] = [
+      {
+        name: "attribute value usage declaration",
+        cases: ATTRIBUTES
+          .map(({ before, after }): TestCase => ({
+            input: `<div style="content:attr(${before});"></div>`,
+            expected: `<div style="content:attr(${after});"></div>`,
+          }))
+          .flatMap((testCase) => varySpacing([":", "(", ")", ";"], testCase))
+          .flatMap((testCase) => varyQuotes("html", testCase)),
+      },
+      {
+        name: "attribute value usage with type/unit",
+        cases: ATTRIBUTES
+          .flatMap(({ before, after }): TestCase[] => [
+            ...TYPE_OR_UNITS
+              .flatMap((typeOrUnit: string): TestCase => ({
+                input: `
+                  <div style="content: attr(${before} ${typeOrUnit});"></div>
+                `,
+                expected: `
+                  <div style="content: attr(${after} ${typeOrUnit});"></div>
+                `,
+              })),
+          ]),
+      },
+      {
+        name: "attribute value usage with default",
+        cases: ATTRIBUTES
+          .flatMap(({ before, after }): TestCase[] => [
+            ...varySpacing(["(", ",", ")"], {
+              input: `<div style="content: attr(${before},42);"></div>`,
+              expected: `<div style="content: attr(${after},42);"></div>`,
+            }),
+            ...CSS_VALUES
+              .map((value: string): TestCase => ({
+                input: `
+                  <div style="content: attr(${before}, ${value});"></div>
+                `,
+                expected: `
+                  <div style="content: attr(${after}, ${value});"></div>
+                `,
+              })),
+          ]),
+      },
+      {
+        name: "attribute value usage with type/unit and default",
+        cases: ATTRIBUTES
+          .flatMap(({ before, after }): TestCase[] => [
+            ...varySpacing(["(", ",", ")"], {
+              input: `<div style="content: attr(${before} px,42);"></div>`,
+              expected: `<div style="content: attr(${after} px,42);"></div>`,
+            }),
+            ...CSS_VALUES
+              .flatMap((value: string): TestCase[] => [
+                ...TYPE_OR_UNITS
+                  .flatMap((typeOrUnit: string): TestCase => ({
+                    input: `
+                      <div style=
+                        "content: attr(${before} ${typeOrUnit},${value});">
+                      </div>
+                    `,
+                    expected: `
+                      <div style=
+                        "content: attr(${after} ${typeOrUnit},${value});">
+                      </div>
+                    `,
+                  })),
+              ]),
+          ]),
+      },
+      {
+        name: "edge cases",
+        cases: [
+          ...varySpacing("\"", {
+            input: "<div style=\"content: attr(data-foo)\"></div>",
+            expected: "<div style=\"content: attr(data-a)\"></div>",
+            description: "missing closing semicolon is allowed",
+          }),
+        ],
+      },
+    ];
+
+    for (const { name, cases } of [...attrScenarios, ...styleScenarios]) {
       test(name, function() {
         for (const testCase of cases) {
           const {

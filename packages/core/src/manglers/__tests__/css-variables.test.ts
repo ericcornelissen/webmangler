@@ -13,6 +13,7 @@ import {
   embedAttributesInTags,
   SELF_CLOSING_TAGS,
   STANDARD_TAGS,
+  withOtherAttributes,
 } from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
@@ -296,7 +297,7 @@ suite("CSS Variable Mangler", function() {
     }
   });
 
-  suite("HTML", function() {
+  suite("HTML (style attribute)", function() {
     const SAMPLE_VARIABLE_DECLARATIONS: TestCase[] = [
       {
         input: "--foobar: 42;",
@@ -367,44 +368,11 @@ suite("CSS Variable Mangler", function() {
       {
         name: "with other attributes",
         cases: SAMPLE_VARIABLE_DECLARATIONS
-          .flatMap((testCase: TestCase): TestCase[] => [
-            {
-              input: `style="${testCase.input}"`,
-              expected: `style="${testCase.expected}"`,
-            },
-            {
-              input: `id="foobar" style="${testCase.input}"`,
-              expected: `id="foobar" style="${testCase.expected}"`,
-            },
-            {
-              input: `disabled style="${testCase.input}"`,
-              expected: `disabled style="${testCase.expected}"`,
-            },
-            {
-              input: `style="${testCase.input}" width="42"`,
-              expected: `style="${testCase.expected}" width="42"`,
-            },
-            {
-              input: `style="${testCase.input}" aria-hidden`,
-              expected: `style="${testCase.expected}" aria-hidden`,
-            },
-            {
-              input: `id="foobar" style="${testCase.input}" width="42"`,
-              expected: `id="foobar" style="${testCase.expected}" width="42"`,
-            },
-            {
-              input: `disabled style="${testCase.input}" aria-hidden`,
-              expected: `disabled style="${testCase.expected}" aria-hidden`,
-            },
-            {
-              input: `disabled style="${testCase.input}" width="42"`,
-              expected: `disabled style="${testCase.expected}" width="42"`,
-            },
-            {
-              input: `id="foobar" style="${testCase.input}" aria-hidden`,
-              expected: `id="foobar" style="${testCase.expected}" aria-hidden`,
-            },
-          ])
+          .map((testCase: TestCase): TestCase => ({
+            input: `style="${testCase.input}"`,
+            expected: `style="${testCase.expected}"`,
+          }))
+          .flatMap(withOtherAttributes)
           .flatMap(embedAttributesInTags),
       },
       {
@@ -561,7 +529,7 @@ suite("CSS Variable Mangler", function() {
                   `,
                 },
               ]),
-          ])),
+        ])),
       },
       {
         name: "variable-like strings in non-CSS places",

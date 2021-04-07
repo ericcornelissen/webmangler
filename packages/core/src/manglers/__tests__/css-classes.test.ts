@@ -20,6 +20,7 @@ import {
   embedAttributesInTags,
   SELF_CLOSING_TAGS,
   STANDARD_TAGS,
+  withOtherAttributes,
 } from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
@@ -287,7 +288,7 @@ suite("CSS Class Mangler", function() {
     }
   });
 
-  suite("HTML", function() {
+  suite("HTML (class attribute)", function() {
     const SAMPLE_CSS_CLASSES: TestCase[] = [
       {
         input: "cls-foobar",
@@ -320,7 +321,7 @@ suite("CSS Class Mangler", function() {
 
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "no CSS classes",
+        name: "no (matching) CSS classes",
         cases: [
           {
             input: "alt=\"Lorem ipsum dolor\"",
@@ -333,6 +334,10 @@ suite("CSS Class Mangler", function() {
           {
             input: "height=\"36\" width=\"42\"",
             expected: "height=\"36\" width=\"42\"",
+          },
+          {
+            input: "class=\"foobar\"",
+            expected: "class=\"foobar\"",
           },
         ].flatMap(embedAttributesInTags),
       },
@@ -353,44 +358,11 @@ suite("CSS Class Mangler", function() {
       {
         name: "with other attributes",
         cases: SAMPLE_CSS_CLASSES
-          .flatMap((testCase: TestCase): TestCase[] => [
-            {
-              input: `class="${testCase.input}"`,
-              expected: `class="${testCase.expected}"`,
-            },
-            {
-              input: `id="foobar" class="${testCase.input}"`,
-              expected: `id="foobar" class="${testCase.expected}"`,
-            },
-            {
-              input: `disabled class="${testCase.input}"`,
-              expected: `disabled class="${testCase.expected}"`,
-            },
-            {
-              input: `class="${testCase.input}" width="42"`,
-              expected: `class="${testCase.expected}" width="42"`,
-            },
-            {
-              input: `class="${testCase.input}" aria-hidden`,
-              expected: `class="${testCase.expected}" aria-hidden`,
-            },
-            {
-              input: `id="foobar" class="${testCase.input}" width="42"`,
-              expected: `id="foobar" class="${testCase.expected}" width="42"`,
-            },
-            {
-              input: `disabled class="${testCase.input}" aria-hidden`,
-              expected: `disabled class="${testCase.expected}" aria-hidden`,
-            },
-            {
-              input: `disabled class="${testCase.input}" width="42"`,
-              expected: `disabled class="${testCase.expected}" width="42"`,
-            },
-            {
-              input: `id="foobar" class="${testCase.input}" aria-hidden`,
-              expected: `id="foobar" class="${testCase.expected}" aria-hidden`,
-            },
-          ])
+          .map((testCase: TestCase): TestCase => ({
+            input: `class="${testCase.input}"`,
+            expected: `class="${testCase.expected}"`,
+          }))
+          .flatMap(withOtherAttributes)
           .flatMap(embedAttributesInTags),
       },
       {
