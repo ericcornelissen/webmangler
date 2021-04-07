@@ -26,12 +26,11 @@ import {
   varySpacing,
 } from "./test-helpers";
 
-import mangleEngine from "../../engine";
-import { getExpressions } from "../../index";
+import webmangler from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import HtmlIdMangler from "../html-ids";
 
-const builtInLanguages = [new BuiltInLanguageSupport()];
+const builtInLanguages = new BuiltInLanguageSupport();
 
 const DEFAULT_PATTERN = "id-[a-z]+";
 const SELECTORS: SelectorBeforeAndAfter[] = [
@@ -278,13 +277,11 @@ suite("HTML ID Mangler", function() {
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          const options = htmlIdMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlIdMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -737,13 +734,11 @@ suite("HTML ID Mangler", function() {
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          const options = htmlIdMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlIdMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -1073,13 +1068,11 @@ suite("HTML ID Mangler", function() {
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          const options = htmlIdMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlIdMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];

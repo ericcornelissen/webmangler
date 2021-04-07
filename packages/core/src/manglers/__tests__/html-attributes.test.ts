@@ -28,12 +28,11 @@ import {
 
 
 import { ALL_CHARS } from "../../characters";
-import mangleEngine from "../../engine";
-import { getExpressions } from "../../index";
+import webmangler from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import HtmlAttributeMangler from "../html-attributes";
 
-const builtInLanguages = [new BuiltInLanguageSupport()];
+const builtInLanguages = new BuiltInLanguageSupport();
 
 const DEFAULT_PATTERN = "data-[a-z]+";
 const SELECTORS: SelectorBeforeAndAfter[] = [
@@ -363,13 +362,11 @@ suite("HTML Attribute Mangler", function() {
             reservedAttrNames: reservedAttrNames,
             keepAttrPrefix: keepAttrPrefix,
           });
-          const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlAttributeMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -547,13 +544,11 @@ suite("HTML Attribute Mangler", function() {
             reservedAttrNames: reservedAttrNames,
             keepAttrPrefix: keepAttrPrefix,
           });
-          const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlAttributeMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -737,13 +732,11 @@ suite("HTML Attribute Mangler", function() {
             reservedAttrNames: reservedAttrNames,
             keepAttrPrefix: keepAttrPrefix,
           });
-          const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlAttributeMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -847,13 +840,11 @@ suite("HTML Attribute Mangler", function() {
         attrNamePattern: "data-[0-9]+",
         keepAttrPrefix: "",
       });
-      const options = htmlAttributeMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [htmlAttributeMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -870,13 +861,11 @@ suite("HTML Attribute Mangler", function() {
         reservedAttrNames: ["a"],
         keepAttrPrefix: "",
       });
-      const options = htmlAttributeMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [htmlAttributeMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];

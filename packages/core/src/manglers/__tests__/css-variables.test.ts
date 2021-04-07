@@ -18,12 +18,11 @@ import {
 } from "./test-helpers";
 
 import { ALL_CHARS } from "../../characters";
-import mangleEngine from "../../engine";
-import { getExpressions } from "../../index";
+import webmangler from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import CssVariableMangler from "../css-variables";
 
-const builtInLanguages = [new BuiltInLanguageSupport()];
+const builtInLanguages = new BuiltInLanguageSupport();
 
 const DEFAULT_PATTERN = "[a-z]+";
 
@@ -281,13 +280,11 @@ suite("CSS Variable Mangler", function() {
             reservedCssVarNames: reservedCssVarNames,
             keepCssVarPrefix: keepCssVarPrefix,
           });
-          const options = cssVariableMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssVariableMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -541,13 +538,11 @@ suite("CSS Variable Mangler", function() {
             reservedCssVarNames: reservedCssVarNames,
             keepCssVarPrefix: keepCssVarPrefix,
           });
-          const options = cssVariableMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssVariableMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -597,13 +592,11 @@ suite("CSS Variable Mangler", function() {
             reservedCssVarNames: reservedCssVarNames,
             keepCssVarPrefix: keepCssVarPrefix,
           });
-          const options = cssVariableMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssVariableMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -704,13 +697,11 @@ suite("CSS Variable Mangler", function() {
       const cssVariableMangler = new CssVariableMangler({
         cssVarNamePattern: "[0-9]+",
       });
-      const options = cssVariableMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [cssVariableMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -726,13 +717,11 @@ suite("CSS Variable Mangler", function() {
         cssVarNamePattern: "[0-9]+",
         reservedCssVarNames: ["a"],
       });
-      const options = cssVariableMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [cssVariableMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];

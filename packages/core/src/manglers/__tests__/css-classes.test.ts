@@ -27,12 +27,11 @@ import {
 } from "./test-helpers";
 
 import { ALL_CHARS } from "../../characters";
-import mangleEngine from "../../engine";
-import { getExpressions } from "../../index";
+import webmangler from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import CssClassMangler from "../css-classes";
 
-const builtInLanguages = [new BuiltInLanguageSupport()];
+const builtInLanguages = new BuiltInLanguageSupport();
 
 const DEFAULT_PATTERN = "cls-[a-z]+";
 const SELECTORS: SelectorBeforeAndAfter[] = [
@@ -269,13 +268,11 @@ suite("CSS Class Mangler", function() {
             reservedClassNames: reservedClassNames,
             keepClassNamePrefix: keepClassNamePrefix,
           });
-          const options = cssClassMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssClassMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -702,13 +699,11 @@ suite("CSS Class Mangler", function() {
             reservedClassNames: reservedClassNames,
             keepClassNamePrefix: keepClassNamePrefix,
           });
-          const options = cssClassMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssClassMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -927,13 +922,11 @@ suite("CSS Class Mangler", function() {
             reservedClassNames: reservedClassNames,
             keepClassNamePrefix: keepClassNamePrefix,
           });
-          const options = cssClassMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssClassMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -1078,13 +1071,11 @@ suite("CSS Class Mangler", function() {
       const cssClassMangler = new CssClassMangler({
         classNamePattern: "cls-[0-9]+",
       });
-      const options = cssClassMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [cssClassMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -1099,13 +1090,11 @@ suite("CSS Class Mangler", function() {
       const cssClassMangler = new CssClassMangler({
         classNamePattern: "cls-[0-9]+",
       });
-      const options = cssClassMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [cssClassMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
