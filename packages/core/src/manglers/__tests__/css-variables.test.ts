@@ -11,6 +11,7 @@ import {
 } from "./css-constants";
 import {
   embedAttributesInTags,
+  embedDeclarationsInStyle,
   SELF_CLOSING_TAGS,
   STANDARD_TAGS,
   withOtherAttributes,
@@ -300,27 +301,18 @@ suite("CSS Variable Mangler", function() {
   suite("HTML (style attribute)", function() {
     const SAMPLE_VARIABLE_DECLARATIONS: TestCase[] = [
       {
-        input: "--foobar: 42;",
-        expected: "--a: 42;",
+        input: "--foobar:42;",
+        expected: "--a:42;",
       },
       {
-        input: "font: var(--foobar);",
-        expected: "font: var(--a);",
+        input: "font:var(--foobar);",
+        expected: "font:var(--a);",
       },
       {
-        input: "font: var(--foobar, serif);",
-        expected: "font: var(--a, serif);",
+        input: "font:var(--foobar, serif);",
+        expected: "font:var(--a, serif);",
       },
     ];
-
-    const embedDeclarationsInAttributes = (testCase: TestCase): TestCase[] => {
-      return [
-        {
-          input: `style="${testCase.input}"`,
-          expected: `style="${testCase.expected}"`,
-        },
-      ];
-    };
 
     const scenarios: TestScenario<TestCase>[] = [
       {
@@ -347,31 +339,28 @@ suite("CSS Variable Mangler", function() {
       {
         name: "varying spacing in attributes",
         cases: SAMPLE_VARIABLE_DECLARATIONS
-          .flatMap(embedDeclarationsInAttributes)
+          .map(embedDeclarationsInStyle)
           .flatMap((testCase) => varySpacing(["=", "\""], testCase))
           .flatMap(embedAttributesInTags),
       },
       {
         name: "varying quotes",
         cases: SAMPLE_VARIABLE_DECLARATIONS
-          .flatMap(embedDeclarationsInAttributes)
+          .map(embedDeclarationsInStyle)
           .flatMap((testCase) => varyQuotes("html", testCase))
           .flatMap(embedAttributesInTags),
       },
       {
         name: "varying spacing in declarations",
         cases: SAMPLE_VARIABLE_DECLARATIONS
-          .flatMap(embedDeclarationsInAttributes)
+          .map(embedDeclarationsInStyle)
           .flatMap((testCase) => varySpacing([":", "(", ",", ")", ";"], testCase))
           .flatMap(embedAttributesInTags),
       },
       {
         name: "with other attributes",
         cases: SAMPLE_VARIABLE_DECLARATIONS
-          .map((testCase: TestCase): TestCase => ({
-            input: `style="${testCase.input}"`,
-            expected: `style="${testCase.expected}"`,
-          }))
+          .map(embedDeclarationsInStyle)
           .flatMap(withOtherAttributes)
           .flatMap(embedAttributesInTags),
       },
@@ -396,7 +385,7 @@ suite("CSS Variable Mangler", function() {
               expected: `color: red; ${testCase.expected}; background: blue;`,
             },
           ])
-          .flatMap(embedDeclarationsInAttributes)
+          .map(embedDeclarationsInStyle)
           .flatMap(embedAttributesInTags),
       },
       {
@@ -421,7 +410,7 @@ suite("CSS Variable Mangler", function() {
             }))
             .flatMap((testCase) => varySpacing([",", ")"], testCase)),
         ]
-        .flatMap(embedDeclarationsInAttributes)
+        .map(embedDeclarationsInStyle)
         .flatMap(embedAttributesInTags),
       },
       {

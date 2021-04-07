@@ -31,6 +31,20 @@ export function embedAttributesInTags(testCase: TestCase): TestCase[] {
 }
 
 /**
+ * Embed CSS declarations, encoded as a {@link TestCase}, into a style
+ * attribute.
+ *
+ * @param testCase The CSS declarations encoded as a {@link TestCase}.
+ * @returns A {@link TestCase}s with the declarations in a style attribute.
+ */
+export function embedDeclarationsInStyle(testCase: TestCase): TestCase {
+  return {
+    input: `style="${testCase.input}"`,
+    expected: `style="${testCase.expected}"`,
+  };
+}
+
+/**
  * A list of standard (non self-closing) HTML tags.
  */
 export const STANDARD_TAGS: string[] = [

@@ -11,13 +11,18 @@ import { format as printf } from "util";
 
 import {
   ATTRIBUTE_SELECTOR_OPERATORS,
+  CSS_PROPERTIES,
   CSS_VALUES,
   PSEUDO_ELEMENT_SELECTORS,
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
   TYPE_OR_UNITS,
 } from "./css-constants";
-import { embedAttributesInTags, withOtherAttributes } from "./html-helpers";
+import {
+  embedAttributesInTags,
+  embedDeclarationsInStyle,
+  withOtherAttributes,
+} from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
   isValidAttributeName,
@@ -457,6 +462,24 @@ suite("HTML Attribute Mangler", function() {
         },
       ],
     ];
+    const SAMPLE_ATTRIBUTE_USAGE: TestCase[] = [
+      {
+        input: "attr(data-foo)",
+        expected: "attr(data-a)",
+      },
+      {
+        input: "attr(data-foo px)",
+        expected: "attr(data-a px)",
+      },
+      {
+        input: "attr(data-foo, 42)",
+        expected: "attr(data-a, 42)",
+      },
+      {
+        input: "attr(data-foo px, 42)",
+        expected: "attr(data-a px, 42)",
+      },
+    ];
 
     const attrScenarios: TestScenario<TestCase>[] = [
       {
@@ -533,7 +556,7 @@ suite("HTML Attribute Mangler", function() {
 
     const styleScenarios: TestScenario<TestCase>[] = [
       {
-        name: "attribute value usage declaration",
+        name: "attribute value usage",
         cases: ATTRIBUTES
           .map(({ before, after }): TestCase => ({
             input: `<div style="content:attr(${before});"></div>`,
@@ -601,6 +624,59 @@ suite("HTML Attribute Mangler", function() {
                   })),
               ]),
           ]),
+      },
+      {
+        name: "attribute value usage with various properties",
+        cases: SAMPLE_ATTRIBUTE_USAGE
+          .flatMap((testCase: TestCase): TestCase[] => [
+            ...CSS_PROPERTIES
+              .map((property: string) => ({
+                input: `${property}: ${testCase.input}`,
+                expected: `${property}: ${testCase.expected}`,
+              })),
+          ])
+          .map(embedDeclarationsInStyle)
+          .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "attribute value usage with other attributes",
+        cases: SAMPLE_ATTRIBUTE_USAGE
+          .map((testCase: TestCase): TestCase => ({
+            input: `content: ${testCase.input}`,
+            expected: `content: ${testCase.expected}`,
+          }))
+          .map(embedDeclarationsInStyle)
+          .flatMap(withOtherAttributes)
+          .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "attribute value usage with other declarations",
+        cases: SAMPLE_ATTRIBUTE_USAGE
+          .flatMap((testCase: TestCase): TestCase[] => [
+            {
+              input: `content: ${testCase.input}`,
+              expected: `content: ${testCase.expected}`,
+            },
+            {
+              input: `color: red; content: ${testCase.input}`,
+              expected: `color: red; content: ${testCase.expected}`,
+            },
+            {
+              input: `content: ${testCase.input}; background: blue;`,
+              expected: `content: ${testCase.expected}; background: blue;`,
+            },
+            {
+              input: `
+                color: red; content: ${testCase.input}; background: blue;
+              `,
+              expected: `
+                color: red; content: ${testCase.expected}; background: blue;
+              `,
+            },
+          ])
+          .map(embedDeclarationsInStyle)
+          .flatMap(withOtherAttributes)
+          .flatMap(embedAttributesInTags),
       },
       {
         name: "edge cases",
