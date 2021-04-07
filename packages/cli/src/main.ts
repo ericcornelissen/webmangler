@@ -32,7 +32,7 @@ export default async function run(args: WebManglerCliArgs): Promise<void> {
 
   if (args.stats) {
     logger.debug("computing stats...");
-    const stats = getStatsBetween(inFiles, outFiles);
+    const stats = getStatsBetween({ inFiles, outFiles });
     logger.debug("stats computed");
     logger.debug("logging stats...");
     logStats(console.log, stats);
