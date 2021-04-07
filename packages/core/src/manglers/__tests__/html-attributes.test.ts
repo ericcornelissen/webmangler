@@ -20,18 +20,19 @@ import {
 import {
   getArrayOfFormattedStrings,
   isValidAttributeName,
-  varyQuotes,
+  varyCssQuotes,
+  varyHtmlQuotes,
+  varyJsQuotes,
   varySpacing,
 } from "./test-helpers";
 
 
 import { ALL_CHARS } from "../../characters";
-import mangleEngine from "../../engine";
-import { getExpressions } from "../../index";
+import webmangler from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import HtmlAttributeMangler from "../html-attributes";
 
-const builtInLanguages = [new BuiltInLanguageSupport()];
+const builtInLanguages = new BuiltInLanguageSupport();
 
 const DEFAULT_PATTERN = "data-[a-z]+";
 const SELECTORS: SelectorBeforeAndAfter[] = [
@@ -69,7 +70,11 @@ const ATTRIBUTES: SelectorBeforeAndAfter[] = [
 ];
 
 suite("HTML Attribute Mangler", function() {
+  const varyCommaSpacing = varySpacing(",");
+
   suite("CSS", function() {
+    const varyAttributeSelectorSpacing = varySpacing(["[", "]"]);
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "individual selectors",
@@ -103,7 +108,7 @@ suite("HTML Attribute Mangler", function() {
                   },
                 ]),
             ])
-            .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
+            .flatMap(varyAttributeSelectorSpacing),
           ...ATTRIBUTE_SELECTOR_OPERATORS
             .flatMap((operator: string): TestCase[] => [
               ...varySpacing(operator, {
@@ -111,7 +116,7 @@ suite("HTML Attribute Mangler", function() {
                 expected: `[data-a${operator}"bar"]{ }`,
               }),
             ])
-            .flatMap((testCase) => varyQuotes("css", testCase)),
+            .flatMap(varyCssQuotes),
         ],
       },
       {
@@ -181,7 +186,7 @@ suite("HTML Attribute Mangler", function() {
                 `,
               },
             ])
-            .flatMap((testCase) => varySpacing(["[", "]"], testCase)),
+            .flatMap(varyAttributeSelectorSpacing),
           ...SELECTOR_COMBINATORS
             .flatMap((connector) => [
               {
@@ -223,10 +228,10 @@ suite("HTML Attribute Mangler", function() {
                       `,
                     },
                   ])
-                  .flatMap((testCase) => varySpacing(",", testCase)),
+                  .flatMap(varyCommaSpacing),
               ]),
           ])
-          .flatMap((testCase) => varyQuotes("css", testCase)),
+          .flatMap(varyCssQuotes),
       },
       {
         name: "other selectors that match the pattern(s)",
@@ -267,11 +272,11 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div[data-foo] { content: \"[data-foo]\"; }",
             expected: "div[data-a] { content: \"[data-foo]\"; }",
           }),
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div[data-foo] { content: \"attr(data-foo);\"; }",
             expected: "div[data-a] { content: \"attr(data-foo);\"; }",
           }),
@@ -286,12 +291,12 @@ suite("HTML Attribute Mangler", function() {
                 expected: `div[data-a${operator}"attr(data-foo)"] { }`,
               },
             ])
-            .flatMap((testCase) => varySpacing("css", testCase)),
-          ...varySpacing("css", {
+            .flatMap(varyCssQuotes),
+          ...varyCssQuotes({
             input: "div { content: \"[data-foo]\"; font: attr(data-foo); }",
             expected: "div { content: \"[data-foo]\"; font: attr(data-a); }",
           }),
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div { content: \"attr(data-foo);\"; font: attr(data-foo); }",
             expected: "div { content: \"attr(data-foo);\"; font: attr(data-a); }",
           }),
@@ -318,7 +323,7 @@ suite("HTML Attribute Mangler", function() {
                 description: "unexpected attribute values should not prevent mangling",
               },
             ])
-            .flatMap((testCase) => varySpacing("css", testCase)),
+            .flatMap(varyCssQuotes),
         ],
       },
       {
@@ -357,13 +362,11 @@ suite("HTML Attribute Mangler", function() {
             reservedAttrNames: reservedAttrNames,
             keepAttrPrefix: keepAttrPrefix,
           });
-          const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlAttributeMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -382,7 +385,7 @@ suite("HTML Attribute Mangler", function() {
             input: "<div data-foo=\"bar\"></div>",
             expected: "<div data-a=\"bar\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div data-foo=\"bar\"></div>",
             expected: "<div data-a=\"bar\"></div>",
           }),
@@ -395,27 +398,27 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "multiple attributes",
         cases: [
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div id=\"foo\" data-foo=\"bar\"></div>",
             expected: "<div id=\"foo\" data-a=\"bar\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div data-foo=\"foo\" class=\"bar\"></div>",
             expected: "<div data-a=\"foo\" class=\"bar\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div id=\"praise\" data-foo=\"the\" class=\"sun\"></div>",
             expected: "<div id=\"praise\" data-a=\"the\" class=\"sun\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div id=\"foo\"><div data-foo=\"bar\"></div></div>",
             expected: "<div id=\"foo\"><div data-a=\"bar\"></div></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div data-foo=\"bar\"><div id=\"foo\"></div></div>",
             expected: "<div data-a=\"bar\"><div id=\"foo\"></div></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div data-foo=\"bar\"><div data-bar=\"foo\"></div></div>",
             expected: "<div data-a=\"bar\"><div data-b=\"foo\"></div></div>",
           }),
@@ -423,7 +426,7 @@ suite("HTML Attribute Mangler", function() {
             input: "<div data-foo=\"bar\"><div data-bar=\"foo\"></div></div>",
             expected: "<div data-a=\"bar\"><div data-b=\"foo\"></div></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
             expected: "<div data-a=\"bar\" data-b=\"foo\"></div>",
           }),
@@ -485,10 +488,10 @@ suite("HTML Attribute Mangler", function() {
                       `,
                     },
                   ])
-                  .flatMap((testCase) => varySpacing(",", testCase)),
+                  .flatMap(varyCommaSpacing),
               ]),
           ])
-          .flatMap((testCase) => varyQuotes("html", testCase)),
+          .flatMap(varyHtmlQuotes),
       },
       {
         name: "edge cases",
@@ -541,13 +544,11 @@ suite("HTML Attribute Mangler", function() {
             reservedAttrNames: reservedAttrNames,
             keepAttrPrefix: keepAttrPrefix,
           });
-          const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlAttributeMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -562,11 +563,11 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "single attribute selectors",
         cases: [
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "document.querySelectorAll(\"[data-foo]\");",
             expected: "document.querySelectorAll(\"[data-a]\");",
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "document.querySelectorAll(\".foo[data-bar]\");",
             expected: "document.querySelectorAll(\".foo[data-a]\");",
           }),
@@ -585,7 +586,7 @@ suite("HTML Attribute Mangler", function() {
               expected: `"[data-a]${connector}div[data-b]"`,
             };
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "document.querySelectorAll(\"a[href] span[data-foobar]\");",
             expected: "document.querySelectorAll(\"a[href] span[data-a]\");",
           }),
@@ -593,11 +594,11 @@ suite("HTML Attribute Mangler", function() {
             input: "document.querySelectorAll(\"span[data-foobar] a[href]\");",
             expected: "document.querySelectorAll(\"span[data-a] a[href]\");",
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "document.querySelectorAll(\"p[data-foo] b[data-bar]\");",
             expected: "document.querySelectorAll(\"p[data-a] b[data-b]\");",
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "document.querySelectorAll(\"[data-foo][data-bar]\");",
             expected: "document.querySelectorAll(\"[data-a][data-b]\");",
           }),
@@ -635,9 +636,9 @@ suite("HTML Attribute Mangler", function() {
             expected: "[data-a*=\\\"bar\\\"]",
           },
         ]
-        .flatMap((testCase) => varySpacing("css", testCase))
+        .flatMap(varyCssQuotes)
         .flatMap((testCase) => [
-          ...varySpacing("js", {
+          ...varyJsQuotes({
             input: "var s = \"%s\";",
             expected: "var s = \"%s\";",
           }).map((template) => ({
@@ -671,7 +672,7 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "attribute manipulation",
         cases: [
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "$el.getAttribute(\"data-foo\");",
             expected: "$el.getAttribute(\"data-a\");",
           }),
@@ -679,7 +680,7 @@ suite("HTML Attribute Mangler", function() {
             input: "$el.removeAttribute(\"data-bar\");",
             expected: "$el.removeAttribute(\"data-a\");",
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "let attr = \"data-foo\"; $el.setAttribute(attr, \"bar\");",
             expected: "let attr = \"data-a\"; $el.setAttribute(attr, \"bar\");",
           }),
@@ -731,13 +732,11 @@ suite("HTML Attribute Mangler", function() {
             reservedAttrNames: reservedAttrNames,
             keepAttrPrefix: keepAttrPrefix,
           });
-          const options = htmlAttributeMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlAttributeMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -841,13 +840,11 @@ suite("HTML Attribute Mangler", function() {
         attrNamePattern: "data-[0-9]+",
         keepAttrPrefix: "",
       });
-      const options = htmlAttributeMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [htmlAttributeMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -864,13 +861,11 @@ suite("HTML Attribute Mangler", function() {
         reservedAttrNames: ["a"],
         keepAttrPrefix: "",
       });
-      const options = htmlAttributeMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [htmlAttributeMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];

@@ -18,14 +18,19 @@ import {
   SELECTOR_COMBINATORS,
 } from "./css-constants";
 import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
-import { isValidIdName, varyQuotes, varySpacing } from "./test-helpers";
+import {
+  isValidIdName,
+  varyCssQuotes,
+  varyHtmlQuotes,
+  varyJsQuotes,
+  varySpacing,
+} from "./test-helpers";
 
-import mangleEngine from "../../engine";
-import { getExpressions } from "../../index";
+import webmangler from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import HtmlIdMangler from "../html-ids";
 
-const builtInLanguages = [new BuiltInLanguageSupport()];
+const builtInLanguages = new BuiltInLanguageSupport();
 
 const DEFAULT_PATTERN = "id-[a-z]+";
 const SELECTORS: SelectorBeforeAndAfter[] = [
@@ -58,6 +63,8 @@ const SELECTOR_PAIRS: SelectorPairBeforeAndAfter[] = [
 
 suite("HTML ID Mangler", function() {
   suite("CSS", function() {
+    const varyQuoteSpacing = varySpacing("\"");
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "individual selectors",
@@ -176,8 +183,8 @@ suite("HTML ID Mangler", function() {
                 expected: `[href${operator}"#a"] { }`,
               }),
             ])
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("css", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyCssQuotes),
         ],
       },
       {
@@ -224,11 +231,11 @@ suite("HTML ID Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div { content: \"#id-foo\"; } #id-foo { }",
             expected: "div { content: \"#id-foo\"; } #a { }",
           }),
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div[data-foo=\"#id-foo\"] { } #id-foo { }",
             expected: "div[data-foo=\"#id-foo\"] { } #a { }",
           }),
@@ -270,13 +277,11 @@ suite("HTML ID Mangler", function() {
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          const options = htmlIdMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlIdMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -307,11 +312,11 @@ suite("HTML ID Mangler", function() {
             input: "<p>foobar</p>",
             expected: "<p>foobar</p>",
           },
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div class=\"foo bar\"></div>",
             expected: "<div class=\"foo bar\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div data-foo=\"bar\"></div>",
             expected: "<div data-foo=\"bar\"></div>",
           }),
@@ -329,7 +334,7 @@ suite("HTML ID Mangler", function() {
               input: `<div ${attr}id-foo"></div>`,
               expected: `<div ${attr}a"></div>`,
             }),
-            ...varyQuotes("html", {
+            ...varyHtmlQuotes({
               input: `<div ${attr}id-foo"></div>`,
               expected: `<div ${attr}a"></div>`,
             }),
@@ -668,7 +673,7 @@ suite("HTML ID Mangler", function() {
             input: "<div id></div>",
             expected: "<div id></div>",
           },
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div id=\"\"></div>",
             expected: "<div id=\"\"></div>",
           }),
@@ -729,13 +734,11 @@ suite("HTML ID Mangler", function() {
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          const options = htmlIdMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlIdMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -750,7 +753,7 @@ suite("HTML ID Mangler", function() {
       {
         name: "id query selector",
         cases: [
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "document.querySelector(\"#id-foo\");",
             expected: "document.querySelector(\"#a\");",
           }),
@@ -996,7 +999,7 @@ suite("HTML ID Mangler", function() {
       {
         name: "getElementById",
         cases: [
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "document.getElementById(\"id-foo\");",
             expected: "document.getElementById(\"a\");",
           }),
@@ -1065,13 +1068,11 @@ suite("HTML ID Mangler", function() {
             reservedIds: reservedIds,
             keepIdPrefix: keepIdPrefix,
           });
-          const options = htmlIdMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [htmlIdMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];

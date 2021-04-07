@@ -20,17 +20,18 @@ import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import {
   getArrayOfFormattedStrings,
   isValidClassName,
-  varyQuotes,
+  varyCssQuotes,
+  varyHtmlQuotes,
+  varyJsQuotes,
   varySpacing,
 } from "./test-helpers";
 
 import { ALL_CHARS } from "../../characters";
-import mangleEngine from "../../engine";
-import { getExpressions } from "../../index";
+import webmangler from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import CssClassMangler from "../css-classes";
 
-const builtInLanguages = [new BuiltInLanguageSupport()];
+const builtInLanguages = new BuiltInLanguageSupport();
 
 const DEFAULT_PATTERN = "cls-[a-z]+";
 const SELECTORS: SelectorBeforeAndAfter[] = [
@@ -221,11 +222,11 @@ suite("CSS Class Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div { content: \".cls-foo\"; } .cls-foo { }",
             expected: "div { content: \".cls-foo\"; } .a { }",
           }),
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div[data-foo=\".cls-foo\"] { } .cls-foo { }",
             expected: "div[data-foo=\".cls-foo\"] { } .a { }",
           }),
@@ -267,13 +268,11 @@ suite("CSS Class Mangler", function() {
             reservedClassNames: reservedClassNames,
             keepClassNamePrefix: keepClassNamePrefix,
           });
-          const options = cssClassMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssClassMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -296,11 +295,11 @@ suite("CSS Class Mangler", function() {
             input: "<p>foobar</p>",
             expected: "<p>foobar</p>",
           },
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div id=\"foobar\"></div>",
             expected: "<div id=\"foobar\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div data-foo=\"bar\"></div>",
             expected: "<div data-foo=\"bar\"></div>",
           }),
@@ -317,7 +316,7 @@ suite("CSS Class Mangler", function() {
             input: "<div class=\"cls-foo\"></div>",
             expected: "<div class=\"a\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div class=\"cls-foo\"></div>",
             expected: "<div class=\"a\"></div>",
           }),
@@ -376,7 +375,7 @@ suite("CSS Class Mangler", function() {
             input: "<div class=\"cls-foo cls-bar\"></div>",
             expected: "<div class=\"a b\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div class=\"cls-foo cls-bar\"></div>",
             expected: "<div class=\"a b\"></div>",
           }),
@@ -642,7 +641,7 @@ suite("CSS Class Mangler", function() {
             input: "<div class></div>",
             expected: "<div class></div>",
           },
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div class=\"\"></div>",
             expected: "<div class=\"\"></div>",
           }),
@@ -700,13 +699,11 @@ suite("CSS Class Mangler", function() {
             reservedClassNames: reservedClassNames,
             keepClassNamePrefix: keepClassNamePrefix,
           });
-          const options = cssClassMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssClassMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -717,6 +714,11 @@ suite("CSS Class Mangler", function() {
   });
 
   suite("JavaScript", function() {
+    const varyQuoteSpacing = varySpacing("\"");
+    const varyCommaSpacing = varySpacing(",");
+    const varyParenthesisSpacing = varySpacing(["(", ")"]);
+    const varyCombinatorSpacing = varySpacing([">", "~", "+"]);
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "query selectors with one selector",
@@ -726,8 +728,8 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${before}");`,
               expected: `document.querySelectorAll("${after}");`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
           ...varySpacing("\"", {
             input: `
               document.querySelectorAll(".cls-foo");
@@ -738,7 +740,7 @@ suite("CSS Class Mangler", function() {
               document.querySelectorAll(".b");
             `,
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: `
               document.querySelectorAll(".cls-foo");
               document.querySelectorAll(".cls-bar");
@@ -770,7 +772,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA},${beforeB}");`,
               expected: `document.querySelectorAll("${afterA},${afterB}");`,
             }))
-            .flatMap((testCase) => varySpacing(",", testCase)),
+            .flatMap(varyCommaSpacing),
         ],
       },
       {
@@ -792,13 +794,13 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll(":not(${before})");`,
               expected: `document.querySelectorAll(":not(${after})");`,
             }))
-            .flatMap((testCase) => varySpacing(["(", ")"], testCase)),
+            .flatMap(varyParenthesisSpacing),
           ...SELECTOR_PAIRS
             .map(({ beforeA, beforeB, afterA, afterB }): TestCase => ({
               input: `querySelectorAll("${beforeA}:not(${beforeB})");`,
               expected: `querySelectorAll("${afterA}:not(${afterB})");`,
             }))
-            .flatMap((testCase) => varySpacing(["(", ")"], testCase)),
+            .flatMap(varyParenthesisSpacing),
         ],
       },
       {
@@ -819,7 +821,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA}>${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}>${afterB}");`,
             }))
-            .flatMap((testCase) => varySpacing(">", testCase)),
+            .flatMap(varyCombinatorSpacing),
         ],
       },
       {
@@ -830,7 +832,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA}+${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}+${afterB}");`,
             }))
-            .flatMap((testCase) => varySpacing("+", testCase)),
+            .flatMap(varyCombinatorSpacing),
         ],
       },
       {
@@ -841,7 +843,7 @@ suite("CSS Class Mangler", function() {
               input: `document.querySelectorAll("${beforeA}~${beforeB}");`,
               expected: `document.querySelectorAll("${afterA}~${afterB}");`,
             }))
-            .flatMap((testCase) => varySpacing("~", testCase)),
+            .flatMap(varyCombinatorSpacing),
         ],
       },
       {
@@ -852,35 +854,35 @@ suite("CSS Class Mangler", function() {
               input: `$el.classList.${method}("cls-foobar");`,
               expected: `$el.classList.${method}("a");`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
           ...["add", "toggle", "remove"]
             .map((method): TestCase => ({
               input: `var c = "cls-foobar"; $el.classList.${method}(c);`,
               expected: `var c = "a"; $el.classList.${method}(c);`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
           ...["add", "remove"]
             .map((method): TestCase => ({
               input: `$el.classList.${method}("cls-foo", "cls-bar");`,
               expected: `$el.classList.${method}("a", "b");`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
           ...["add", "toggle", "remove"]
             .map((method): TestCase => ({
               input: `$el.classList.${method}("foobar");`,
               expected: `$el.classList.${method}("foobar");`,
             }))
-            .flatMap((testCase) => varySpacing("\"", testCase))
-            .flatMap((testCase) => varyQuotes("js", testCase)),
+            .flatMap(varyQuoteSpacing)
+            .flatMap(varyJsQuotes),
         ],
       },
       {
         name: "edge cases",
         cases: [
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "var cls_foo = \"cls-foo\";",
             expected: "var cls_foo = \"a\";",
             pattern: "[a-z-_]+",
@@ -889,7 +891,7 @@ suite("CSS Class Mangler", function() {
               ignored.
             `,
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "var x = \"foo cls-foo bar\";",
             expected: "var x = \"foo cls-foo bar\";",
             description: `
@@ -920,13 +922,11 @@ suite("CSS Class Mangler", function() {
             reservedClassNames: reservedClassNames,
             keepClassNamePrefix: keepClassNamePrefix,
           });
-          const options = cssClassMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssClassMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -1071,13 +1071,11 @@ suite("CSS Class Mangler", function() {
       const cssClassMangler = new CssClassMangler({
         classNamePattern: "cls-[0-9]+",
       });
-      const options = cssClassMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [cssClassMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -1092,13 +1090,11 @@ suite("CSS Class Mangler", function() {
       const cssClassMangler = new CssClassMangler({
         classNamePattern: "cls-[0-9]+",
       });
-      const options = cssClassMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [cssClassMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];

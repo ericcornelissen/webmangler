@@ -38,6 +38,7 @@ function extractOptions(
  * @returns The {@link MangleExpression}s.
  * @since v0.1.14
  * @version v0.1.17
+ * @deprecated Will be removed in a future version.
  */
 export function getExpressions(
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
