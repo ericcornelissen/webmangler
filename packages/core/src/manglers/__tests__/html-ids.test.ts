@@ -224,11 +224,11 @@ suite("HTML ID Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div { content: \"#id-foo\"; } #id-foo { }",
             expected: "div { content: \"#id-foo\"; } #a { }",
           }),
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div[data-foo=\"#id-foo\"] { } #id-foo { }",
             expected: "div[data-foo=\"#id-foo\"] { } #a { }",
           }),

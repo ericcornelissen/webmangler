@@ -221,11 +221,11 @@ suite("CSS Class Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div { content: \".cls-foo\"; } .cls-foo { }",
             expected: "div { content: \".cls-foo\"; } .a { }",
           }),
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div[data-foo=\".cls-foo\"] { } .cls-foo { }",
             expected: "div[data-foo=\".cls-foo\"] { } .a { }",
           }),

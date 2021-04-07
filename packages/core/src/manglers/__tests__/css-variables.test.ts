@@ -197,19 +197,19 @@ suite("CSS Variable Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div { content: \"--foo\"; --foo: \"bar\"; }",
             expected: "div { content: \"--foo\"; --a: \"bar\"; }",
           }),
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div { content: \"--foo\"; color: var(--foo); }",
             expected: "div { content: \"--foo\"; color: var(--a); }",
           }),
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div { content: \"var(--foo)\"; --foo: \"bar\"; }",
             expected: "div { content: \"var(--foo)\"; --a: \"bar\"; }",
           }),
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div { content: \"var(--foo)\"; color: var(--foo); }",
             expected: "div { content: \"var(--foo)\"; color: var(--a); }",
           }),
@@ -236,7 +236,7 @@ suite("CSS Variable Mangler", function() {
                 description: "unexpected string values should not prevent mangling",
               },
             ])
-            .flatMap((testCase) => varySpacing("css", testCase)),
+            .flatMap((testCase) => varyQuotes("css", testCase)),
         ],
       },
       {

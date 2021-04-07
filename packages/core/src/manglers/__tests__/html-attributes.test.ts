@@ -267,11 +267,11 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div[data-foo] { content: \"[data-foo]\"; }",
             expected: "div[data-a] { content: \"[data-foo]\"; }",
           }),
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div[data-foo] { content: \"attr(data-foo);\"; }",
             expected: "div[data-a] { content: \"attr(data-foo);\"; }",
           }),
@@ -286,12 +286,12 @@ suite("HTML Attribute Mangler", function() {
                 expected: `div[data-a${operator}"attr(data-foo)"] { }`,
               },
             ])
-            .flatMap((testCase) => varySpacing("css", testCase)),
-          ...varySpacing("css", {
+            .flatMap((testCase) => varyQuotes("css", testCase)),
+          ...varyQuotes("css", {
             input: "div { content: \"[data-foo]\"; font: attr(data-foo); }",
             expected: "div { content: \"[data-foo]\"; font: attr(data-a); }",
           }),
-          ...varySpacing("css", {
+          ...varyQuotes("css", {
             input: "div { content: \"attr(data-foo);\"; font: attr(data-foo); }",
             expected: "div { content: \"attr(data-foo);\"; font: attr(data-a); }",
           }),
@@ -318,7 +318,7 @@ suite("HTML Attribute Mangler", function() {
                 description: "unexpected attribute values should not prevent mangling",
               },
             ])
-            .flatMap((testCase) => varySpacing("css", testCase)),
+            .flatMap((testCase) => varyQuotes("css", testCase)),
         ],
       },
       {
@@ -635,9 +635,9 @@ suite("HTML Attribute Mangler", function() {
             expected: "[data-a*=\\\"bar\\\"]",
           },
         ]
-        .flatMap((testCase) => varySpacing("css", testCase))
+        .flatMap((testCase) => varyQuotes("css", testCase))
         .flatMap((testCase) => [
-          ...varySpacing("js", {
+          ...varyQuotes("js", {
             input: "var s = \"%s\";",
             expected: "var s = \"%s\";",
           }).map((template) => ({
