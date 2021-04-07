@@ -16,7 +16,11 @@ import {
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
 } from "./css-constants";
-import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
+import {
+  embedAttributesInTags,
+  SELF_CLOSING_TAGS,
+  STANDARD_TAGS,
+} from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
   isValidClassName,
@@ -307,21 +311,6 @@ suite("CSS Class Mangler", function() {
       },
     ];
 
-    const embedAttributesInTags = (testCase: TestCase): TestCase[] => {
-      return [
-        ...STANDARD_TAGS
-          .map((tag: string): TestCase => ({
-            input: `<${tag} ${testCase.input}>Lorem ipsum</${tag}>`,
-            expected: `<${tag} ${testCase.expected}>Lorem ipsum</${tag}>`,
-          })),
-        ...SELF_CLOSING_TAGS
-          .map((tag: string): TestCase => ({
-            input: `<${tag} ${testCase.input}/>`,
-            expected: `<${tag} ${testCase.expected}/>`,
-          }))
-          .flatMap((_testCase) => varySpacing("/", _testCase)),
-      ];
-    };
     const embedClassesInAttribute = (testCase: TestCase): TestCase => {
       return {
         input: `class="${testCase.input}"`,
