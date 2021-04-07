@@ -1,6 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
-import type { QuoteLanguages } from "./test-helpers";
+import type { QuoteCategory } from "./test-helpers";
 
 import { expect } from "chai";
 
@@ -10,6 +10,9 @@ import {
   isValidClassName,
   isValidIdName,
   permuteObjects,
+  varyCssQuotes,
+  varyHtmlQuotes,
+  varyJsQuotes,
   varyQuotes,
   varySpacing,
 } from "./test-helpers";
@@ -190,12 +193,11 @@ suite("Manglers Test Helpers", function() {
   });
 
   suite("::varyQuotes", function() {
-    const languages: QuoteLanguages[] = [
-      "css",
-      "html",
-      "js",
+    const categories: QuoteCategory[] = [
+      "single-double",
       "single-backticks",
       "double-backticks",
+      "single-double-backticks",
     ];
 
     const scenarios: TestScenario<TestCase>[] = [
@@ -327,42 +329,16 @@ suite("Manglers Test Helpers", function() {
     ];
 
     type LanguageVerifier = (original: TestCase, result: TestCase[]) => void;
-    const verifiers: Map<QuoteLanguages, LanguageVerifier> = new Map([
-      ["css", function(original: TestCase, result: TestCase[]): void {
+    const verifiers: Map<QuoteCategory, LanguageVerifier> = new Map([
+      ["single-double", function(original: TestCase, result: TestCase[]): void {
         expect(result).to.have.length(2);
         expect(result).to.deep.include(Object.assign(original, {
-          input: original.input.replace(/('|"|`)/g, "\""),
-          expected: original.expected.replace(/('|"|`)/g, "\""),
-        }));
-        expect(result).to.deep.include(Object.assign(original, {
-          input: original.input.replace(/('|"|`)/g, "'"),
-          expected: original.expected.replace(/('|"|`)/g, "'"),
-        }));
-      }],
-      ["html", function(original: TestCase, result: TestCase[]): void {
-        expect(result).to.have.length(2);
-        expect(result).to.deep.include(Object.assign(original, {
-          input: original.input.replace(/('|"|`)/g, "\""),
-          expected: original.expected.replace(/('|"|`)/g, "\""),
-        }));
-        expect(result).to.deep.include(Object.assign(original, {
-          input: original.input.replace(/('|"|`)/g, "'"),
-          expected: original.expected.replace(/('|"|`)/g, "'"),
-        }));
-      }],
-      ["js", function(original: TestCase, result: TestCase[]): void {
-        expect(result).to.have.length(3);
-        expect(result).to.deep.include(Object.assign(original, {
-          input: original.input.replace(/('|"|`)/g, "\""),
-          expected: original.expected.replace(/('|"|`)/g, "\""),
-        }));
-        expect(result).to.deep.include(Object.assign(original, {
           input: original.input.replace(/('|"|`)/g, "'"),
           expected: original.expected.replace(/('|"|`)/g, "'"),
         }));
         expect(result).to.deep.include(Object.assign(original, {
-          input: original.input.replace(/('|"|`)/g, "`"),
-          expected: original.expected.replace(/('|"|`)/g, "`"),
+          input: original.input.replace(/('|"|`)/g, "\""),
+          expected: original.expected.replace(/('|"|`)/g, "\""),
         }));
       }],
       ["single-backticks", function(original: TestCase, result: TestCase[]): void {
@@ -386,18 +362,32 @@ suite("Manglers Test Helpers", function() {
           input: original.input.replace(/('|"|`)/g, "`"),
           expected: original.expected.replace(/('|"|`)/g, "`"),
         }));
-        // TODO
+      }],
+      ["single-double-backticks", function(original: TestCase, result: TestCase[]): void {
+        expect(result).to.have.length(3);
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "'"),
+          expected: original.expected.replace(/('|"|`)/g, "'"),
+        }));
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "\""),
+          expected: original.expected.replace(/('|"|`)/g, "\""),
+        }));
+        expect(result).to.deep.include(Object.assign(original, {
+          input: original.input.replace(/('|"|`)/g, "`"),
+          expected: original.expected.replace(/('|"|`)/g, "`"),
+        }));
       }],
     ]);
 
-    for (const language of languages) {
+    for (const category of categories) {
       for (const { name, cases } of scenarios) {
-        test(`${language} - ${name}`, function() {
-          const resultVerifier = verifiers.get(language) as LanguageVerifier;
+        test(`${category} - ${name}`, function() {
+          const resultVerifier = verifiers.get(category) as LanguageVerifier;
           expect(resultVerifier).not.to.be.undefined;
 
           for (const testCase of cases) {
-            const result = varyQuotes(language, testCase);
+            const result = varyQuotes(category, testCase);
             resultVerifier(testCase, result);
 
             for (const entry of result) {
@@ -410,17 +400,59 @@ suite("Manglers Test Helpers", function() {
         });
       }
 
-      test(`${language} - no quotes in input`, function() {
+      test(`${category} - no quotes in input`, function() {
         const testCase: TestCase = {
           input: "Hello world!",
           expected: "Hello world!",
         };
 
-        const result = varyQuotes(language, testCase);
+        const result = varyQuotes(category, testCase);
         expect(result).to.have.length(1);
         expect(result[0]).to.deep.equal(testCase);
       });
     }
+
+    suite("::varyCssQuotes", function() {
+      for (const { name, cases } of scenarios) {
+        test(name, function() {
+          const resultVerifier = verifiers.get("single-double") as LanguageVerifier;
+          expect(resultVerifier).not.to.be.undefined;
+
+          for (const testCase of cases) {
+            const result = varyCssQuotes(testCase);
+            resultVerifier(testCase, result);
+          }
+        });
+      }
+    });
+
+    suite("::varyHtmlQuotes", function() {
+      for (const { name, cases } of scenarios) {
+        test(name, function() {
+          const resultVerifier = verifiers.get("single-double") as LanguageVerifier;
+          expect(resultVerifier).not.to.be.undefined;
+
+          for (const testCase of cases) {
+            const result = varyHtmlQuotes(testCase);
+            resultVerifier(testCase, result);
+          }
+        });
+      }
+    });
+
+    suite("::varyJsQuotes", function() {
+      for (const { name, cases } of scenarios) {
+        test(name, function() {
+          const resultVerifier = verifiers.get("single-double-backticks") as LanguageVerifier;
+          expect(resultVerifier).not.to.be.undefined;
+
+          for (const testCase of cases) {
+            const result = varyJsQuotes(testCase);
+            resultVerifier(testCase, result);
+          }
+        });
+      }
+    });
   });
 
   suite("::varySpacing", function() {

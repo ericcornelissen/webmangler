@@ -11,7 +11,9 @@ import {
 } from "./css-constants";
 import {
   getArrayOfFormattedStrings,
-  varyQuotes,
+  varyCssQuotes,
+  varyHtmlQuotes,
+  varyJsQuotes,
   varySpacing,
 } from "./test-helpers";
 
@@ -30,7 +32,6 @@ suite("CSS Variable Mangler", function() {
 
   suite("CSS", function() {
     const varyDeclarationSpacing = varySpacing(["{", ":", ";", "}"]);
-    const varyCssQuotes = varyQuotes("css");
 
     const scenarios: TestScenario<TestCase>[] = [
       {
@@ -202,19 +203,19 @@ suite("CSS Variable Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varyQuotes("css", {
+          ...varyCssQuotes({
             input: "div { content: \"--foo\"; --foo: \"bar\"; }",
             expected: "div { content: \"--foo\"; --a: \"bar\"; }",
           }),
-          ...varyQuotes("css", {
+          ...varyCssQuotes({
             input: "div { content: \"--foo\"; color: var(--foo); }",
             expected: "div { content: \"--foo\"; color: var(--a); }",
           }),
-          ...varyQuotes("css", {
+          ...varyCssQuotes({
             input: "div { content: \"var(--foo)\"; --foo: \"bar\"; }",
             expected: "div { content: \"var(--foo)\"; --a: \"bar\"; }",
           }),
-          ...varyQuotes("css", {
+          ...varyCssQuotes({
             input: "div { content: \"var(--foo)\"; color: var(--foo); }",
             expected: "div { content: \"var(--foo)\"; color: var(--a); }",
           }),
@@ -298,7 +299,6 @@ suite("CSS Variable Mangler", function() {
 
   suite("HTML", function() {
     const varyDeclarationSpacing = varySpacing(["\"", ":", ";"]);
-    const varyHtmlQuotes = varyQuotes("html");
 
     const scenarios: TestScenario<TestCase>[] = [
       {
@@ -482,7 +482,7 @@ suite("CSS Variable Mangler", function() {
             expected: "<div style></div>",
             description: "style attribute without value should be ignored",
           },
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div style=\"\"></div>",
             expected: "<div style=\"\"></div>",
             description: "style attribute with empty value should be ignored",
@@ -562,7 +562,7 @@ suite("CSS Variable Mangler", function() {
       {
         name: "sample",
         cases: [
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "$el.style.getPropertyValue(\"--foobar\");",
             expected: "$el.style.getPropertyValue(\"--a\");",
           }),
@@ -570,7 +570,7 @@ suite("CSS Variable Mangler", function() {
             input: "$el.style.removeProperty(\"--foobar\");",
             expected: "$el.style.removeProperty(\"--a\");",
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "var x = \"--foo\", setProperty(x, \"bar\");",
             expected: "var x = \"--a\", setProperty(x, \"bar\");",
           }),

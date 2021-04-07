@@ -20,7 +20,9 @@ import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import {
   getArrayOfFormattedStrings,
   isValidClassName,
-  varyQuotes,
+  varyCssQuotes,
+  varyHtmlQuotes,
+  varyJsQuotes,
   varySpacing,
 } from "./test-helpers";
 
@@ -221,11 +223,11 @@ suite("CSS Class Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varyQuotes("css", {
+          ...varyCssQuotes({
             input: "div { content: \".cls-foo\"; } .cls-foo { }",
             expected: "div { content: \".cls-foo\"; } .a { }",
           }),
-          ...varyQuotes("css", {
+          ...varyCssQuotes({
             input: "div[data-foo=\".cls-foo\"] { } .cls-foo { }",
             expected: "div[data-foo=\".cls-foo\"] { } .a { }",
           }),
@@ -296,11 +298,11 @@ suite("CSS Class Mangler", function() {
             input: "<p>foobar</p>",
             expected: "<p>foobar</p>",
           },
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div id=\"foobar\"></div>",
             expected: "<div id=\"foobar\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div data-foo=\"bar\"></div>",
             expected: "<div data-foo=\"bar\"></div>",
           }),
@@ -317,7 +319,7 @@ suite("CSS Class Mangler", function() {
             input: "<div class=\"cls-foo\"></div>",
             expected: "<div class=\"a\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div class=\"cls-foo\"></div>",
             expected: "<div class=\"a\"></div>",
           }),
@@ -376,7 +378,7 @@ suite("CSS Class Mangler", function() {
             input: "<div class=\"cls-foo cls-bar\"></div>",
             expected: "<div class=\"a b\"></div>",
           }),
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div class=\"cls-foo cls-bar\"></div>",
             expected: "<div class=\"a b\"></div>",
           }),
@@ -642,7 +644,7 @@ suite("CSS Class Mangler", function() {
             input: "<div class></div>",
             expected: "<div class></div>",
           },
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div class=\"\"></div>",
             expected: "<div class=\"\"></div>",
           }),
@@ -721,7 +723,6 @@ suite("CSS Class Mangler", function() {
     const varyCommaSpacing = varySpacing(",");
     const varyParenthesisSpacing = varySpacing(["(", ")"]);
     const varyCombinatorSpacing = varySpacing([">", "~", "+"]);
-    const varyJsQuotes = varySpacing("js");
 
     const scenarios: TestScenario<TestCase>[] = [
       {
@@ -744,7 +745,7 @@ suite("CSS Class Mangler", function() {
               document.querySelectorAll(".b");
             `,
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: `
               document.querySelectorAll(".cls-foo");
               document.querySelectorAll(".cls-bar");
@@ -886,7 +887,7 @@ suite("CSS Class Mangler", function() {
       {
         name: "edge cases",
         cases: [
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "var cls_foo = \"cls-foo\";",
             expected: "var cls_foo = \"a\";",
             pattern: "[a-z-_]+",
@@ -895,7 +896,7 @@ suite("CSS Class Mangler", function() {
               ignored.
             `,
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "var x = \"foo cls-foo bar\";",
             expected: "var x = \"foo cls-foo bar\";",
             description: `
