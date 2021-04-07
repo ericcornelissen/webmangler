@@ -1,5 +1,7 @@
 import type { TestCase } from "./types";
 
+import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
+
 /**
  * Embed attributes, encoded as a {@link TestCase}, into a variety of tags. This
  * includes both normal and self-closing tags.
@@ -43,23 +45,6 @@ export function embedDeclarationsInStyle(testCase: TestCase): TestCase {
     expected: `style="${testCase.expected}"`,
   };
 }
-
-/**
- * A list of standard (non self-closing) HTML tags.
- */
-export const STANDARD_TAGS: string[] = [
-  "div",
-  "header",
-  "p",
-];
-
-/**
- * A list of standard self-closing HTML tags.
- */
-export const SELF_CLOSING_TAGS: string[] = [
-  "img",
-  "input",
-];
 
 /**
  * Generate {@link TestCase}s with a variety of other attributes from a single

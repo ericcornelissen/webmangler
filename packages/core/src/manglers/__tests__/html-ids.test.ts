@@ -17,7 +17,7 @@ import {
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
 } from "./css-constants";
-import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-helpers";
+import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import { isValidIdName, varyQuotes, varySpacing } from "./test-helpers";
 
 import mangleEngine from "../../engine";

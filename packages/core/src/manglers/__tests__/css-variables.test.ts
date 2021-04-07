@@ -9,11 +9,10 @@ import {
   CSS_VALUES,
   CSS_VALUES_NO_STRINGS,
 } from "./css-constants";
+import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import {
   embedAttributesInTags,
   embedDeclarationsInStyle,
-  SELF_CLOSING_TAGS,
-  STANDARD_TAGS,
   withOtherAttributes,
 } from "./html-helpers";
 import {

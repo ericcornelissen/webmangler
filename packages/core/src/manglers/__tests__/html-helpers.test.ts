@@ -1,0 +1,252 @@
+import type { TestScenario } from "@webmangler/testing";
+
+import type { TestCase } from "./types";
+
+import { expect } from "chai";
+
+import {
+  embedAttributesInTags,
+  embedDeclarationsInStyle,
+  withOtherAttributes,
+} from "./html-helpers";
+
+suite("HTML Test Helpers", function() {
+  suite("::embedAttributesInTags", function() {
+    const scenarios: TestScenario<TestCase>[] = [
+      {
+        name: "changing attributes",
+        cases: [
+          {
+            input: "class=\"foo\"",
+            expected: "class=\"bar\"",
+          },
+          {
+            input: "data-bar=\"foo\"",
+            expected: "data-baz=\"foo\"",
+          },
+          {
+            input: "height=\"36\" width=\"42\"",
+            expected: "height=\"42\" width=\"36\"",
+          },
+        ],
+      },
+      {
+        name: "unchanging attributes",
+        cases: [
+          {
+            input: "id=\"foobar\"",
+            expected: "id=\"foobar\"",
+          },
+          {
+            input: "height=\"36\" width=\"42\"",
+            expected: "height=\"36\" width=\"42\"",
+          },
+        ],
+      },
+    ];
+
+    for (const { name, cases } of scenarios) {
+      test(name, function() {
+        for (const testCase of cases) {
+          const results = embedAttributesInTags(testCase);
+          expect(results).to.have.length.above(1);
+          for (const result of results) {
+            expect(result.input).to.include(testCase.input);
+            expect(result.expected).to.include(testCase.expected);
+          }
+        }
+      });
+    }
+
+    test("standard tags", function() {
+      const testCase: TestCase = {
+        input: "id=\"foo\"",
+        expected: "id=\"bar\"",
+      };
+
+      const results = embedAttributesInTags(testCase);
+      const containsStandardTagTestCase = results.some((result) => {
+        return /^<[a-z]+[^/>]+>/.test(result.input);
+      });
+      expect(containsStandardTagTestCase).to.be.true;
+    });
+
+    test("self-closing (tag)", function() {
+      const testCase: TestCase = {
+        input: "id=\"foo\"",
+        expected: "id=\"bar\"",
+      };
+
+      const results = embedAttributesInTags(testCase);
+      const containsSelfClosingTagTestCase = results.some((result) => {
+        return /^<[a-z]+[^/>]+\/>/.test(result.input);
+      });
+      expect(containsSelfClosingTagTestCase).to.be.true;
+    });
+  });
+
+  suite("::embedDeclarationsInStyle", function() {
+    const scenarios: TestScenario<TestCase>[] = [
+      {
+        name: "changing declarations",
+        cases: [
+          {
+            input: "color: red;",
+            expected: "color: blue;",
+          },
+          {
+            input: "font: serif",
+            expected: "font: sans-serif",
+          },
+          {
+            input: "content: attr(data-foo);",
+            expected: "content: attr(data-bar);",
+          },
+          {
+            input: "--foo: 42;",
+            expected: "--bar: 42;",
+          },
+        ],
+      },
+      {
+        name: "unchanging declarations",
+        cases: [
+          {
+            input: "color: red;",
+            expected: "color: red;",
+          },
+          {
+            input: "font: serif",
+            expected: "font: serif",
+          },
+          {
+            input: "content: attr(data-foobar);",
+            expected: "content: attr(data-foobar);",
+          },
+          {
+            input: "--foobar: 42;",
+            expected: "--foobar: 42;",
+          },
+        ],
+      },
+    ];
+
+    for (const { name, cases } of scenarios) {
+      test(name, function() {
+        for (const testCase of cases) {
+          const result = embedDeclarationsInStyle(testCase);
+          expect(result.input).to.equal(`style="${testCase.input}"`);
+          expect(result.expected).to.include(`style="${testCase.expected}"`);
+        }
+      });
+    }
+  });
+
+  suite("::withOtherAttributes", function() {
+    suite("One TestCase", function() {
+      const scenarios: TestScenario<TestCase>[] = [
+        {
+          name: "unchanging attributes",
+          cases: [
+            {
+              input: "id=\"foobar\"",
+              expected: "id=\"foobar\"",
+            },
+            {
+              input: "data-foo=\"bar\"",
+              expected: "data-foo=\"bar\"",
+            },
+          ],
+        },
+        {
+          name: "changing attributes",
+          cases: [
+            {
+              input: "class=\"foo\"",
+              expected: "class=\"bar\"",
+            },
+            {
+              input: "data-foo=\"bar\"",
+              expected: "data-foo=\"baz\"",
+            },
+            {
+              input: "data-hello=\"world\"",
+              expected: "data-hey=\"world\"",
+            },
+          ],
+        },
+      ];
+
+      for (const { name, cases } of scenarios) {
+        test(name, function() {
+          for (const testCase of cases) {
+            const results = withOtherAttributes(testCase);
+            expect(results).to.have.length.above(1);
+            for (const result of results) {
+              expect(result.input).to.include(testCase.input);
+              expect(result.expected).to.include(testCase.expected);
+            }
+          }
+        });
+      }
+    });
+
+    suite("Pair of TestCases", function() {
+      const scenarios: TestScenario<[TestCase, TestCase]>[] = [
+        {
+          name: "sample",
+          cases: [
+            [
+              {
+                input: "id=\"foobar\"",
+                expected: "id=\"foobar\"",
+              },
+              {
+                input: "data-foo=\"bar\"",
+                expected: "data-foo=\"bar\"",
+              },
+            ],
+            [
+              {
+                input: "id=\"foo\"",
+                expected: "id=\"bar\"",
+              },
+              {
+                input: "data-foo=\"bar\"",
+                expected: "data-foo=\"bar\"",
+              },
+            ],
+            [
+              {
+                input: "class=\"hello\"",
+                expected: "class=\"world\"",
+              },
+              {
+                input: "data-foo=\"bar\"",
+                expected: "data-foo=\"baz\"",
+              },
+            ],
+          ],
+        },
+      ];
+
+      for (const { name, cases } of scenarios) {
+        test(name, function() {
+          for (const testCase of cases) {
+            const [testCaseA, testCaseB] = testCase;
+
+            const results = withOtherAttributes(testCase);
+            expect(results).to.have.length.above(1);
+            for (const result of results) {
+              expect(result.input).to.include(testCaseA.input);
+              expect(result.input).to.include(testCaseB.input);
+
+              expect(result.expected).to.include(testCaseA.expected);
+              expect(result.expected).to.include(testCaseB.expected);
+            }
+          }
+        });
+      }
+    });
+  });
+});

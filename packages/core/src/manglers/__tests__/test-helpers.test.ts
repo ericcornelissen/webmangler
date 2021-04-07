@@ -1,4 +1,5 @@
 import type { TestScenario } from "@webmangler/testing";
+
 import type { TestCase } from "./types";
 import type { QuoteLanguages } from "./test-helpers";
 

@@ -16,12 +16,8 @@ import {
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
 } from "./css-constants";
-import {
-  embedAttributesInTags,
-  SELF_CLOSING_TAGS,
-  STANDARD_TAGS,
-  withOtherAttributes,
-} from "./html-helpers";
+import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
+import { embedAttributesInTags, withOtherAttributes } from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
   isValidClassName,
