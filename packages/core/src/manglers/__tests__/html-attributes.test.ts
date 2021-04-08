@@ -20,8 +20,8 @@ import {
 } from "./css-constants";
 import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
 import {
+  embedAttributeValue,
   embedAttributesInTags,
-  embedDeclarationsInStyle,
   withOtherAttributes,
 } from "./html-helpers";
 import {
@@ -32,7 +32,6 @@ import {
   varyJsQuotes,
   varySpacing,
 } from "./test-helpers";
-
 
 import { ALL_CHARS } from "../../characters";
 import webmangler from "../../index";
@@ -384,6 +383,8 @@ suite("HTML Attribute Mangler", function() {
   });
 
   suite("HTML", function() {
+    const embedDeclarationsInStyle = embedAttributeValue("style");
+
     const varyAttributeSpacing = varySpacing(["=", "\""]);
     const varyDeclarationSpacing = varySpacing([":", "(", ")", ";"]);
 

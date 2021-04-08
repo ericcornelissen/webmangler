@@ -3,17 +3,19 @@ import type { TestCase } from "./types";
 
 import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
+import * as R from "ramda";
 
 import {
   CSS_PROPERTIES,
   CSS_VALUES,
   CSS_VALUES_NO_STRINGS,
 } from "./css-constants";
-import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
 import {
+  embedAttributeValue,
+  embedAttributesInAdjacentTags,
+  embedAttributesInNestedTags,
   embedAttributesInTags,
-  embedDeclarationsInStyle,
   withOtherAttributes,
 } from "./html-helpers";
 import {
@@ -302,223 +304,110 @@ suite("CSS Variable Mangler", function() {
   });
 
   suite("HTML", function() {
-    const varyAttributeSpacing = varySpacing(["=", "\""]);
-    const varyDeclarationSpacing = varySpacing([":", "(", ",", ")", ";"]);
-    const varyFunctionSpacing = varySpacing(["(", ",", ")"]);
-    const varyColonSemicolonSpacing = varySpacing([":", ";"]);
+    const embedDeclarationsInStyle = embedAttributeValue("style");
 
-    const SAMPLE_VARIABLE_DECLARATIONS: TestCase[] = [
+    const varyAttributeSpacing = varySpacing("=");
+
+    type TestInstance = {
+      readonly name: string;
+      factory(before: string, after: string): TestCase[];
+    }
+
+    const instances: TestInstance[] = [
       {
-        input: "--foobar:42;",
-        expected: "--a:42;",
+        name: "variable declaration",
+        factory: (before: string, after: string): TestCase[] => [
+          ...CSS_VALUES_NO_STRINGS
+            .map((value: string): TestCase => ({
+              input: `--${before}:${value};`,
+              expected: `--${after}:${value};`,
+            })),
+        ],
       },
       {
-        input: "font:var(--foobar);",
-        expected: "font:var(--a);",
+        name: "variable declaration (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing([":", ";"], {
+              input: `--${before}:42;`,
+              expected: `--${after}:42;`,
+          }),
+        ],
       },
       {
-        input: "font:var(--foobar, serif);",
-        expected: "font:var(--a, serif);",
+        name: "variable usage without default",
+        factory: (before: string, after: string): TestCase[] => [
+          ...CSS_PROPERTIES
+            .map((property: string): TestCase => ({
+              input: `${property}:var(--${before});`,
+              expected: `${property}:var(--${after});`,
+            })),
+        ],
+      },
+      {
+        name: "variable usage without default (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ")"], {
+              input: `content:var(--${before});`,
+              expected: `content:var(--${after});`,
+          }),
+        ],
+      },
+      {
+        name: "variable usage with default",
+        factory: (before: string, after: string): TestCase[] => [
+          ...CSS_PROPERTIES
+            .map((property: string): TestCase => ({
+              input: `${property}:var(--${before},42);`,
+              expected: `${property}:var(--${after},42);`,
+            })),
+          ...CSS_VALUES_NO_STRINGS
+            .map((value: string): TestCase => ({
+              input: `content:var(--${before},${value});`,
+              expected: `content:var(--${after},${value});`,
+            })),
+        ],
+      },
+      {
+        name: "variable usage with default (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ","], {
+              input: `content:var(--${before},42);`,
+              expected: `content:var(--${after},42);`,
+          }),
+        ],
       },
     ];
 
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "no CSS variables",
+        name: "no relevant content",
         cases: [
           {
-            input: "style=\"color: red;\"",
-            expected: "style=\"color: red;\"",
+            input: "style=\"color:red;\"",
+            expected: "style=\"color:red;\"",
           },
           ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
-            .filter((testCase) => /\sstyle=/.test(testCase.input)),
+            .filter((testCase) => /\s(style)=/.test(testCase.input)),
         ]
         .flatMap(varyHtmlQuotes)
         .flatMap(embedAttributesInTags),
       },
       {
-        name: "varying spacing in attributes",
-        cases: SAMPLE_VARIABLE_DECLARATIONS
-          .map(embedDeclarationsInStyle)
-          .flatMap(varyAttributeSpacing)
-          .flatMap(embedAttributesInTags),
-      },
-      {
-        name: "varying quotes",
-        cases: SAMPLE_VARIABLE_DECLARATIONS
-          .map(embedDeclarationsInStyle)
-          .flatMap(varyHtmlQuotes)
-          .flatMap(embedAttributesInTags),
-      },
-      {
-        name: "varying spacing in declarations",
-        cases: SAMPLE_VARIABLE_DECLARATIONS
-          .map(embedDeclarationsInStyle)
-          .flatMap(varyDeclarationSpacing)
-          .flatMap(embedAttributesInTags),
-      },
-      {
-        name: "with other attributes",
-        cases: SAMPLE_VARIABLE_DECLARATIONS
-          .map(embedDeclarationsInStyle)
-          .flatMap(withOtherAttributes)
-          .flatMap(embedAttributesInTags),
-      },
-      {
-        name: "with other declarations in style attribute",
-        cases: SAMPLE_VARIABLE_DECLARATIONS
-          .flatMap((testCase: TestCase): TestCase[] => [
-            {
-              input: `${testCase.input}`,
-              expected: `${testCase.expected}`,
-            },
-            {
-              input: `color: red; ${testCase.input}`,
-              expected: `color: red; ${testCase.expected}`,
-            },
-            {
-              input: `${testCase.input}; background: blue;`,
-              expected: `${testCase.expected}; background: blue;`,
-            },
-            {
-              input: `color: red; ${testCase.input}; background: blue;`,
-              expected: `color: red; ${testCase.expected}; background: blue;`,
-            },
-          ])
-          .map(embedDeclarationsInStyle)
-          .flatMap(embedAttributesInTags),
-      },
-      {
-        name: "different variable values",
+        name: "valueless style attribute",
         cases: [
-          ...CSS_VALUES_NO_STRINGS
-            .flatMap((value: string): TestCase => ({
-              input: `--foobar:${value};`,
-              expected: `--a:${value};`,
-            }))
-            .flatMap(varyColonSemicolonSpacing),
-          ...CSS_PROPERTIES
-            .flatMap((property: string): TestCase => ({
-              input: `${property}: var(--foobar);`,
-              expected: `${property}: var(--a);`,
-            }))
-            .flatMap(varyFunctionSpacing),
-          ...CSS_VALUES_NO_STRINGS
-            .flatMap((value: string): TestCase => ({
-              input: `color: var(--foo,${value});`,
-              expected: `color: var(--a,${value});`,
-            }))
-            .flatMap(varyFunctionSpacing),
+          {
+            input: "style",
+            expected: "style",
+          },
+          {
+            input: "style=\"\"",
+            expected: "style=\"\"",
+          },
         ]
-        .map(embedDeclarationsInStyle)
+        .flatMap(varyAttributeSpacing)
+        .flatMap(varyHtmlQuotes)
+        .flatMap(withOtherAttributes)
         .flatMap(embedAttributesInTags),
-      },
-      {
-        name: "variables in multiple attributes",
-        cases: [
-          [
-            {
-              input: "style=\"--foo: red;\"",
-              expected: "style=\"--a: red;\"",
-            },
-            {
-              input: "style=\"--bar: blue;\"",
-              expected: "style=\"--b: blue;\"",
-            },
-          ],
-          [
-            {
-              input: "style=\"--foobar: serif;\"",
-              expected: "style=\"--a: serif;\"",
-            },
-            {
-              input: "style=\"--foobar: sans-serif\"",
-              expected: "style=\"--a: sans-serif\"",
-            },
-          ],
-          [
-            {
-              input: "style=\"--foo: red; --bar: blue;\"",
-              expected: "style=\"--a: red; --b: blue;\"",
-            },
-            {
-              input: "style=\"--foo: blue;\"",
-              expected: "style=\"--a: blue;\"",
-            },
-          ],
-          [
-            {
-              input: "style=\"--foo: red; --bar: blue;\"",
-              expected: "style=\"--b: red; --a: blue;\"",
-            },
-            {
-              input: "style=\"--bar: red;\"",
-              expected: "style=\"--a: red;\"",
-            },
-          ],
-        ].flatMap(([testCaseA, testCaseB]): TestCase[] =>
-          STANDARD_TAGS.flatMap((tag1: string): TestCase[] => [
-            ...STANDARD_TAGS
-              .flatMap((tag2: string): TestCase[] => [
-                {
-                  input: `
-                    <${tag1} ${testCaseA.input}>Hello</${tag1}>
-                    <${tag2} ${testCaseB.input}>World!</${tag2}>
-                  `,
-                  expected: `
-                    <${tag1} ${testCaseA.expected}>Hello</${tag1}>
-                    <${tag2} ${testCaseB.expected}>World!</${tag2}>
-                  `,
-                },
-                {
-                  input: `
-                    <${tag1} ${testCaseA.input}>
-                      <${tag2} ${testCaseB.input}></${tag2}>
-                    </${tag1}>
-                  `,
-                  expected: `
-                    <${tag1} ${testCaseA.expected}>
-                      <${tag2} ${testCaseB.expected}></${tag2}>
-                    </${tag1}>
-                  `,
-                },
-              ]),
-            ...SELF_CLOSING_TAGS
-              .flatMap((tag2: string): TestCase[] => [
-                {
-                  input: `
-                    <${tag1} ${testCaseA.input}></${tag1}>
-                    <${tag2} ${testCaseB.input}/>
-                  `,
-                  expected: `
-                    <${tag1} ${testCaseA.expected}></${tag1}>
-                    <${tag2} ${testCaseB.expected}/>
-                  `,
-                },
-                {
-                  input: `
-                    <${tag2} ${testCaseA.input}/>
-                    <${tag1} ${testCaseB.input}></${tag1}>
-                  `,
-                  expected: `
-                    <${tag2} ${testCaseA.expected}/>
-                    <${tag1} ${testCaseB.expected}></${tag1}>
-                  `,
-                },
-                {
-                  input: `
-                    <${tag1} ${testCaseA.input}>
-                      <${tag2} ${testCaseB.input}/>
-                    </${tag1}>
-                  `,
-                  expected: `
-                    <${tag1} ${testCaseA.expected}>
-                      <${tag2} ${testCaseB.expected}/>
-                    </${tag1}>
-                  `,
-                },
-              ]),
-        ])),
       },
       {
         name: "variable-like strings in non-CSS places",
@@ -545,44 +434,134 @@ suite("CSS Variable Mangler", function() {
         name: "edge cases",
         cases: [
           {
-            input: "<div style></div>",
-            expected: "<div style></div>",
-            description: "style attribute without value should be ignored",
+            input: "<style class=\"foobar\"></style>",
+            expected: "<style class=\"foobar\"></style>",
+            description: "the tag \"style\" shouldn't cause problems",
           },
-          ...varyHtmlQuotes({
-            input: "<div style=\"\"></div>",
-            expected: "<div style=\"\"></div>",
-            description: "style attribute with empty value should be ignored",
+          ...varySpacing("/", {
+            input: "<style class=\"foobar\"/>",
+            expected: "<style class=\"foobar\"/>",
+            description: "the tag \"style\" shouldn't cause problems",
           }),
-          {
-            input: "<div style=\"--foo: red\"></div>",
-            expected: "<div style=\"--a: red\"></div>",
-            description: "it shouldn't be a problem if the `;` is missing",
-          },
-          {
-            input: "<div style=\"color: var(--foo)\"></div>",
-            expected: "<div style=\"color: var(--a)\"></div>",
-            description: "it shouldn't be a problem if the `;` is missing",
-          },
-          {
-            input: "<div style=\"--foo: red;\" style=\"--bar: blue;\"></div>",
-            expected: "<div style=\"--a: red;\" style=\"--b: blue;\"></div>",
-            description: "multiple style attributes on one element should all be mangled",
-          },
-          ...["data-", "x"]
-            .map((prefix) => ({
-              input: `<div ${prefix}style="--foo: red;"</div>`,
-              expected: `<div ${prefix}style="--foo: red;"</div>`,
-              description: "attributes with style-suffix should be ignored",
-            })),
-          {
-            input: "<style id=\"foo\"></style>",
-            expected: "<style id=\"foo\"></style>",
-            description: "The \"style\" tag shouldn't cause problems",
-          },
         ],
       },
     ];
+
+    for (const instance of instances) {
+      const { name, factory } = instance;
+
+      const PAIRS: [TestCase, TestCase][] = [
+        [factory("foo", "a"), factory("bar", "b")],
+        [factory("foobar", "a"), factory("foobar", "a")],
+      ].flatMap(([testCasesA, testCasesB]): [TestCase, TestCase][] => {
+        return R.zip(
+          testCasesA.map(embedDeclarationsInStyle),
+          testCasesB.map(embedDeclarationsInStyle),
+        );
+      });
+
+      scenarios.push(...[
+        {
+          name: `no matching ${name} in a style attribute`,
+          cases: factory("-foobar", "-foobar")
+            .map(embedDeclarationsInStyle)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} by itself in a style attribute`,
+          cases: factory("foobar", "a")
+            .map(embedDeclarationsInStyle)
+            .flatMap(varyAttributeSpacing)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} by itself in a style attribute with other attributes`,
+          cases: factory("foobar", "a")
+            .map(embedDeclarationsInStyle)
+            .flatMap(withOtherAttributes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with other declarations in a style attribute`,
+          cases: factory("foobar", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `${testCase.input}`,
+                expected: `${testCase.expected}`,
+              },
+              {
+                input: `color:red;${testCase.input}`,
+                expected: `color:red;${testCase.expected}`,
+              },
+              {
+                input: `${testCase.input};background:blue;`,
+                expected: `${testCase.expected};background:blue;`,
+              },
+              {
+                input: `color:red;${testCase.input};background:blue;`,
+                expected: `color:red;${testCase.expected};background:blue;`,
+              },
+            ])
+            .map(embedDeclarationsInStyle)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} in style attributes on adjacent elements`,
+          cases: PAIRS.flatMap(embedAttributesInAdjacentTags),
+        },
+        {
+          name: `${name} in style attributes on nested elements`,
+          cases: PAIRS.flatMap(embedAttributesInNestedTags),
+        },
+        {
+          name: `style-like attributes with ${name}`,
+          cases: ["x", "data-"]
+            .flatMap((prefix: string): TestCase[] => {
+              const attributeName = `${prefix}style`;
+              const embedDeclarations = embedAttributeValue(attributeName);
+              return factory("foobar", "foobar").map(embedDeclarations);
+            })
+            .flatMap(varyAttributeSpacing)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(withOtherAttributes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} edge cases`,
+          cases: [
+            ...factory("foobar", "a")
+              .map((testCase: TestCase): TestCase => ({
+                input: testCase.input.replace(";", ""),
+                expected: testCase.expected.replace(";", ""),
+                description: "missing \";\" should not matter",
+              }))
+              .map(embedDeclarationsInStyle),
+            ...factory("foobar", "a")
+              .flatMap((testCase: TestCase): TestCase[] => [
+                {
+                  input: `<style style="${testCase.input}"></style>`,
+                  expected: `<style style="${testCase.expected}"></style>`,
+                  description: "the tag \"style\" shouldn't cause problems",
+                },
+                ...varySpacing("/", {
+                  input: `<style style="${testCase.input}"/>`,
+                  expected: `<style style="${testCase.expected}"/>`,
+                  description: "the tag \"style\" shouldn't cause problems",
+                }),
+              ]),
+            ...PAIRS
+              .flatMap(([testCaseA, testCaseB]): TestCase => ({
+                input: `${testCaseA.input} ${testCaseB.input}`,
+                expected: `${testCaseA.expected} ${testCaseB.expected}`,
+                description: "multiple style attributes on one element should all be mangled",
+              })),
+          ]
+          .flatMap(embedAttributesInTags),
+        },
+      ]);
+    }
 
     for (const { name, cases } of scenarios) {
       test(name, function() {

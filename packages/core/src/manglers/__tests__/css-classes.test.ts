@@ -16,9 +16,14 @@ import {
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
 } from "./css-constants";
-import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
-import { embedAttributesInTags, withOtherAttributes } from "./html-helpers";
+import {
+  embedAttributeValue,
+  embedAttributesInAdjacentTags,
+  embedAttributesInNestedTags,
+  embedAttributesInTags,
+  withOtherAttributes,
+} from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
   isValidClassName,
@@ -285,7 +290,9 @@ suite("CSS Class Mangler", function() {
   });
 
   suite("HTML", function() {
-    const varyAttributeSpacing = varySpacing(["=", "\""]);
+    const embedClassesInAttribute = embedAttributeValue("class");
+
+    const varyAttributeSpacing = varySpacing("=");
 
     const SAMPLE_CSS_CLASSES: TestCase[] = [
       {
@@ -310,16 +317,72 @@ suite("CSS Class Mangler", function() {
       },
     ];
 
-    const embedClassesInAttribute = (testCase: TestCase): TestCase => {
-      return {
-        input: `class="${testCase.input}"`,
-        expected: `class="${testCase.expected}"`,
-      };
-    };
+    const PAIRS: [TestCase, TestCase][] = [
+      [
+        {
+          input: "class=\"cls-foo\"",
+          expected: "class=\"a\"",
+        },
+        {
+          input: "class=\"cls-bar\"",
+          expected: "class=\"b\"",
+        },
+      ],
+      [
+        {
+          input: "class=\"cls-foo\"",
+          expected: "class=\"a\"",
+        },
+        {
+          input: "class=\"bar\"",
+          expected: "class=\"bar\"",
+        },
+      ],
+      [
+        {
+          input: "class=\"foo\"",
+          expected: "class=\"foo\"",
+        },
+        {
+          input: "class=\"cls-bar\"",
+          expected: "class=\"a\"",
+        },
+      ],
+      [
+        {
+          input: "class=\"cls-foobar\"",
+          expected: "class=\"a\"",
+        },
+        {
+          input: "class=\"cls-foobar\"",
+          expected: "class=\"a\"",
+        },
+      ],
+      [
+        {
+          input: "class=\"cls-foo cls-bar\"",
+          expected: "class=\"a b\"",
+        },
+        {
+          input: "class=\"cls-foo\"",
+          expected: "class=\"a\"",
+        },
+      ],
+      [
+        {
+          input: "class=\"cls-foo cls-bar\"",
+          expected: "class=\"b a\"",
+        },
+        {
+          input: "class=\"cls-bar\"",
+          expected: "class=\"a\"",
+        },
+      ],
+    ];
 
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "no (matching) CSS classes",
+        name: "no relevant content",
         cases: [
           {
             input: "class=\"foobar\"",
@@ -332,206 +395,194 @@ suite("CSS Class Mangler", function() {
         .flatMap(embedAttributesInTags),
       },
       {
-        name: "varying spacing in attributes",
+        name: "as only attribute",
         cases: SAMPLE_CSS_CLASSES
-          .flatMap(embedClassesInAttribute)
+          .map(embedClassesInAttribute)
           .flatMap(varyAttributeSpacing)
-          .flatMap(embedAttributesInTags),
-      },
-      {
-        name: "varying quotes",
-        cases: SAMPLE_CSS_CLASSES
-          .flatMap(embedClassesInAttribute)
           .flatMap(varyHtmlQuotes)
           .flatMap(embedAttributesInTags),
       },
       {
         name: "with other attributes",
         cases: SAMPLE_CSS_CLASSES
-          .map((testCase: TestCase): TestCase => ({
-            input: `class="${testCase.input}"`,
-            expected: `class="${testCase.expected}"`,
-          }))
+          .map(embedClassesInAttribute)
           .flatMap(withOtherAttributes)
           .flatMap(embedAttributesInTags),
       },
       {
-        name: "classes in multiple attributes",
+        name: "on adjacent elements",
+        cases: PAIRS.flatMap(embedAttributesInAdjacentTags),
+      },
+      {
+        name: "on nested elements",
+        cases: PAIRS.flatMap(embedAttributesInNestedTags),
+      },
+      {
+        name: "valueless class attributes",
         cases: [
-          [
-            {
-              input: "class=\"cls-foo\"",
-              expected: "class=\"a\"",
-            },
-            {
-              input: "class=\"cls-bar\"",
-              expected: "class=\"b\"",
-            },
-          ],
-          [
-            {
-              input: "class=\"cls-foo\"",
-              expected: "class=\"a\"",
-            },
-            {
-              input: "class=\"bar\"",
-              expected: "class=\"bar\"",
-            },
-          ],
-          [
-            {
-              input: "class=\"foo\"",
-              expected: "class=\"foo\"",
-            },
-            {
-              input: "class=\"cls-bar\"",
-              expected: "class=\"a\"",
-            },
-          ],
-          [
-            {
-              input: "class=\"cls-foobar\"",
-              expected: "class=\"a\"",
-            },
-            {
-              input: "class=\"cls-foobar\"",
-              expected: "class=\"a\"",
-            },
-          ],
-          [
-            {
-              input: "class=\"cls-foo cls-bar\"",
-              expected: "class=\"a b\"",
-            },
-            {
-              input: "class=\"cls-foo\"",
-              expected: "class=\"a\"",
-            },
-          ],
-          [
-            {
-              input: "class=\"cls-foo cls-bar\"",
-              expected: "class=\"b a\"",
-            },
-            {
-              input: "class=\"cls-bar\"",
-              expected: "class=\"a\"",
-            },
-          ],
-        ].flatMap(([testCaseA, testCaseB]): TestCase[] =>
-          STANDARD_TAGS.flatMap((tag1: string): TestCase[] => [
-            ...STANDARD_TAGS
-              .flatMap((tag2: string): TestCase[] => [
-                {
-                  input: `
-                    <${tag1} ${testCaseA.input}>Hello</${tag1}>
-                    <${tag2} ${testCaseB.input}>World!</${tag2}>
-                  `,
-                  expected: `
-                    <${tag1} ${testCaseA.expected}>Hello</${tag1}>
-                    <${tag2} ${testCaseB.expected}>World!</${tag2}>
-                  `,
-                },
-                {
-                  input: `
-                    <${tag1} ${testCaseA.input}>
-                      <${tag2} ${testCaseB.input}></${tag2}>
-                    </${tag1}>
-                  `,
-                  expected: `
-                    <${tag1} ${testCaseA.expected}>
-                      <${tag2} ${testCaseB.expected}></${tag2}>
-                    </${tag1}>
-                  `,
-                },
-              ]),
-            ...SELF_CLOSING_TAGS
-              .flatMap((tag2: string): TestCase[] => [
-                {
-                  input: `
-                    <${tag1} ${testCaseA.input}></${tag1}>
-                    <${tag2} ${testCaseB.input}/>
-                  `,
-                  expected: `
-                    <${tag1} ${testCaseA.expected}></${tag1}>
-                    <${tag2} ${testCaseB.expected}/>
-                  `,
-                },
-                {
-                  input: `
-                    <${tag2} ${testCaseA.input}/>
-                    <${tag1} ${testCaseB.input}></${tag1}>
-                  `,
-                  expected: `
-                    <${tag2} ${testCaseA.expected}/>
-                    <${tag1} ${testCaseB.expected}></${tag1}>
-                  `,
-                },
-                {
-                  input: `
-                    <${tag1} ${testCaseA.input}>
-                      <${tag2} ${testCaseB.input}/>
-                    </${tag1}>
-                  `,
-                  expected: `
-                    <${tag1} ${testCaseA.expected}>
-                      <${tag2} ${testCaseB.expected}/>
-                    </${tag1}>
-                  `,
-                },
-              ]),
-        ])),
+          {
+            input: "class",
+            expected: "class",
+          },
+          {
+            input: "class=\"\"",
+            expected: "class=\"\"",
+          },
+        ]
+        .flatMap(varyAttributeSpacing)
+        .flatMap(varyHtmlQuotes)
+        .flatMap(withOtherAttributes)
+        .flatMap(embedAttributesInTags),
       },
       {
         name: "class-like strings in non-class places",
         cases: [
           {
-            input: "<p>cls-foo</p>",
-            expected: "<p>cls-foo</p>",
-            description: "anything inside tags should be ignored",
+            input: "<p>cls-foobar</p>",
+            expected: "<p>cls-foobar</p>",
+            description: "classes as innerHTML should be ignored",
           },
           {
-            input: "<div id=\"cls-foo\" class=\"cls-foo\"></div>",
-            expected: "<div id=\"cls-foo\" class=\"a\"></div>",
+            input: "<p>.cls-foobar</p>",
+            expected: "<p>.cls-foobar</p>",
+            description: "classes as innerHTML should be ignored",
           },
           {
-            input: "<p>.cls-foo</p>",
-            expected: "<p>.cls-foo</p>",
-            description: "anything inside tags should be ignored",
+            input: "<div alt=\"cls-foobar\"></div>",
+            expected: "<div alt=\"cls-foobar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div alt=\"cls-foo bar\"></div>",
+            expected: "<div alt=\"cls-foo bar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div alt=\"foo cls-bar\"></div>",
+            expected: "<div alt=\"foo cls-bar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div alt=\"praise cls-the sun\"></div>",
+            expected: "<div alt=\"praise cls-the sun\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+
+          {
+            input: "<p class=\"cls-foo\">cls-bar</p>",
+            expected: "<p class=\"a\">cls-bar</p>",
+            description: "classes as innerHTML should be ignored",
+          },
+          {
+            input: "<p class=\"cls-foo\">.cls-bar</p>",
+            expected: "<p class=\"a\">.cls-bar</p>",
+            description: "classes as innerHTML should be ignored",
+          },
+          {
+            input: "<div class=\"cls-foo\" alt=\"cls-bar\"></div>",
+            expected: "<div class=\"a\" alt=\"cls-bar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div class=\"cls-praise\" alt=\"cls-the sun\"></div>",
+            expected: "<div class=\"a\" alt=\"cls-the sun\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div class=\"cls-praise\" alt=\"the cls-sun\"></div>",
+            expected: "<div class=\"a\" alt=\"the cls-sun\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div class=\"cls-hello\" alt=\"world cls-foo bar\"></div>",
+            expected: "<div class=\"a\" alt=\"world cls-foo bar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+
+          {
+            input: "<p class=\"cls-foobar\">cls-foobar</p>",
+            expected: "<p class=\"a\">cls-foobar</p>",
+            description: "classes as innerHTML should be ignored",
+          },
+          {
+            input: "<p class=\"cls-foobar\">.cls-foobar</p>",
+            expected: "<p class=\"a\">.cls-foobar</p>",
+            description: "classes as innerHTML should be ignored",
+          },
+          {
+            input: "<div class=\"cls-foobar\" alt=\"cls-foobar\"></div>",
+            expected: "<div class=\"a\" alt=\"cls-foobar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div class=\"cls-foo\" alt=\"cls-foo bar\"></div>",
+            expected: "<div class=\"a\" alt=\"cls-foo bar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div class=\"cls-bar\" alt=\"foo cls-bar\"></div>",
+            expected: "<div class=\"a\" alt=\"foo cls-bar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div class=\"cls-the\" alt=\"praise cls-the sun\"></div>",
+            expected: "<div class=\"a\" alt=\"praise cls-the sun\"></div>",
+            description: "classes in non-class attributes should be ignored",
           },
         ],
+      },
+      {
+        name: "class-like attribute names",
+        cases: ["x", "data-"]
+          .map((prefix: string): TestCase => {
+            const attributeName = `${prefix}class`;
+            return embedAttributeValue(attributeName, {
+              input: "cls-foobar",
+              expected: "cls-foobar",
+            });
+          })
+          .flatMap(varyAttributeSpacing)
+          .flatMap(varyHtmlQuotes)
+          .flatMap(withOtherAttributes)
+          .flatMap(embedAttributesInTags),
       },
       {
         name: "edge cases",
         cases: [
           {
-            input: "<div class></div>",
-            expected: "<div class></div>",
+            input: "<class id=\"foobar\"></class>",
+            expected: "<class id=\"foobar\"></class>",
+            description: "the tag \"class\" shouldn't cause problems",
           },
-          ...varyHtmlQuotes({
-            input: "<div class=\"\"></div>",
-            expected: "<div class=\"\"></div>",
+          ...varySpacing("/", {
+            input: "<class id=\"foobar\"/>",
+            expected: "<class id=\"foobar\"/>",
+            description: "the tag \"class\" shouldn't cause problems",
           }),
+          {
+            input: "<class class=\"cls-foobar\"></class>",
+            expected: "<class class=\"a\"></class>",
+            description: "the tag \"class\" shouldn't cause problems",
+          },
+          ...varySpacing("/", {
+            input: "<class class=\"cls-foobar\"/>",
+            expected: "<class class=\"a\"/>",
+            description: "the tag \"class\" shouldn't cause problems",
+          }),
+          {
+            input: "<div class=\"cls-foobar cls-foobar\"></div>",
+            expected: "<div class=\"a a\"></div>",
+            description: "one class appearing multiple times in one attribute value",
+          },
           {
             input: "<div class=\"cls-foo\" class=\"cls-bar\"></div>",
             expected: "<div class=\"a\" class=\"b\"></div>",
             description: "multiple class attributes on one element should all be mangled",
           },
           {
-            input: "<div class=\"cls-foo cls-foo\"></div>",
-            expected: "<div class=\"a a\"></div>",
+            input: "<div class=\"cls-foobar\" class=\"cls-foobar\"></div>",
+            expected: "<div class=\"a\" class=\"a\"></div>",
             description: "multiple class attributes on one element should all be mangled",
-          },
-          ...["data-", "x"]
-            .map((prefix: string): TestCase => ({
-              input: `<div ${prefix}class="cls-foo"></div>`,
-              expected: `<div ${prefix}class="cls-foo"></div>`,
-              description: "Shouldn't mangle in attribute even if it ends in \"class\"",
-            })),
-          {
-            input: "<class id=\"foo\"></class>",
-            expected: "<class id=\"foo\"></class>",
-            description: "The tag \"class\" shouldn't cause problems",
           },
         ],
       },

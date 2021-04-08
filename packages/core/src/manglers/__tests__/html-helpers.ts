@@ -1,6 +1,26 @@
 import type { TestCase } from "./types";
 
+import { curry } from "ramda";
+
 import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
+
+/**
+ * Embed CSS declarations, encoded as a {@link TestCase}, into a style
+ * attribute.
+ *
+ * @param attr The name of the attribute.
+ * @param testCase The CSS declarations encoded as a {@link TestCase}.
+ * @returns A {@link TestCase}s with the declarations in a style attribute.
+ */
+export const embedAttributeValue = curry((
+  attr: string,
+  testCase: TestCase,
+): TestCase => {
+  return {
+    input: `${attr}="${testCase.input}"`,
+    expected: `${attr}="${testCase.expected}"`,
+  };
+});
 
 /**
  * Embed two attribute sets, encoded as a {@link TestCase}s, into a variety of
@@ -115,6 +135,7 @@ export function embedAttributesInNestedTags(
     },
   ];
 }
+
 /**
  * Embed attributes, encoded as a {@link TestCase}, into a variety of tags. This
  * includes both normal and self-closing tags.
@@ -143,20 +164,6 @@ export function embedAttributesInTags(testCase: TestCase): TestCase[] {
         },
       ]),
   ];
-}
-
-/**
- * Embed CSS declarations, encoded as a {@link TestCase}, into a style
- * attribute.
- *
- * @param testCase The CSS declarations encoded as a {@link TestCase}.
- * @returns A {@link TestCase}s with the declarations in a style attribute.
- */
-export function embedDeclarationsInStyle(testCase: TestCase): TestCase {
-  return {
-    input: `style="${testCase.input}"`,
-    expected: `style="${testCase.expected}"`,
-  };
 }
 
 /**

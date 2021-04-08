@@ -5,14 +5,72 @@ import type { TestCase } from "./types";
 import { expect } from "chai";
 
 import {
+  embedAttributeValue,
   embedAttributesInAdjacentTags,
   embedAttributesInNestedTags,
   embedAttributesInTags,
-  embedDeclarationsInStyle,
   withOtherAttributes,
 } from "./html-helpers";
 
 suite("HTML Test Helpers", function() {
+  suite("::embedAttributeValue", function() {
+    const scenarios: TestScenario<TestCase>[] = [
+      {
+        name: "changing values",
+        cases: [
+          {
+            input: "color: red;",
+            expected: "color: blue;",
+          },
+          {
+            input: "font: serif",
+            expected: "font: sans-serif",
+          },
+          {
+            input: "content: attr(data-foo);",
+            expected: "content: attr(data-bar);",
+          },
+          {
+            input: "--foo: 42;",
+            expected: "--bar: 42;",
+          },
+        ],
+      },
+      {
+        name: "unchanging values",
+        cases: [
+          {
+            input: "color: red;",
+            expected: "color: red;",
+          },
+          {
+            input: "font: serif",
+            expected: "font: serif",
+          },
+          {
+            input: "content: attr(data-foobar);",
+            expected: "content: attr(data-foobar);",
+          },
+          {
+            input: "--foobar: 42;",
+            expected: "--foobar: 42;",
+          },
+        ],
+      },
+    ];
+
+    for (const { name, cases } of scenarios) {
+      test(name, function() {
+        for (const testCase of cases) {
+          const attr = "style";
+          const result = embedAttributeValue(attr, testCase);
+          expect(result.input).to.equal(`${attr}="${testCase.input}"`);
+          expect(result.expected).to.include(`${attr}="${testCase.expected}"`);
+        }
+      });
+    }
+  });
+
   suite("::embedAttributesInAdjacentTags", function() {
     const scenarios: TestScenario<[TestCase, TestCase]>[] = [
       {
@@ -245,63 +303,6 @@ suite("HTML Test Helpers", function() {
       });
       expect(containsSelfClosingTagTestCase).to.be.true;
     });
-  });
-
-  suite("::embedDeclarationsInStyle", function() {
-    const scenarios: TestScenario<TestCase>[] = [
-      {
-        name: "changing declarations",
-        cases: [
-          {
-            input: "color: red;",
-            expected: "color: blue;",
-          },
-          {
-            input: "font: serif",
-            expected: "font: sans-serif",
-          },
-          {
-            input: "content: attr(data-foo);",
-            expected: "content: attr(data-bar);",
-          },
-          {
-            input: "--foo: 42;",
-            expected: "--bar: 42;",
-          },
-        ],
-      },
-      {
-        name: "unchanging declarations",
-        cases: [
-          {
-            input: "color: red;",
-            expected: "color: red;",
-          },
-          {
-            input: "font: serif",
-            expected: "font: serif",
-          },
-          {
-            input: "content: attr(data-foobar);",
-            expected: "content: attr(data-foobar);",
-          },
-          {
-            input: "--foobar: 42;",
-            expected: "--foobar: 42;",
-          },
-        ],
-      },
-    ];
-
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const result = embedDeclarationsInStyle(testCase);
-          expect(result.input).to.equal(`style="${testCase.input}"`);
-          expect(result.expected).to.include(`style="${testCase.expected}"`);
-        }
-      });
-    }
   });
 
   suite("::withOtherAttributes", function() {

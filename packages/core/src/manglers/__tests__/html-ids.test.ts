@@ -299,16 +299,23 @@ suite("HTML ID Mangler", function() {
   });
 
   suite("HTML", function() {
+    const ID_ATTRIBUTES: string[] = ["id", "for"];
+    const HREF_ATTRIBUTES: string[] = ["href"];
+    const ATTRIBUTES: string[] = [
+      ...ID_ATTRIBUTES,
+      ...HREF_ATTRIBUTES,
+    ];
+
     const varyAttributeSpacing = varySpacing("=\"");
 
     type TestInstance = {
-      readonly attribute: string;
+      readonly name: string;
       factory(idBefore: string, idAfter: string): TestCase[];
     }
 
     const instances: TestInstance[] = [
       {
-        attribute: "id",
+        name: "id attribute",
         factory: (idBefore: string, idAfter: string): TestCase[] => [
           {
             input: `id="${idBefore}"`,
@@ -317,7 +324,7 @@ suite("HTML ID Mangler", function() {
         ],
       },
       {
-        attribute: "for",
+        name: "for attribute",
         factory: (idBefore: string, idAfter: string): TestCase[] => [
           {
             input: `for="${idBefore}"`,
@@ -326,7 +333,7 @@ suite("HTML ID Mangler", function() {
         ],
       },
       {
-        attribute: "href",
+        name: "href attribute",
         factory: (idBefore: string, idAfter: string): TestCase[] => [
           {
             input: `href="#${idBefore}"`,
@@ -345,6 +352,31 @@ suite("HTML ID Mangler", function() {
     ];
 
     const scenarios: TestScenario<TestCase>[] = [
+      {
+        name: "no relevant content",
+        cases: UNCHANGING_ATTRIBUTES_TEST_SAMPLE
+          .filter((testCase) => /\s(id|for|href)=/.test(testCase.input))
+          .flatMap(varyHtmlQuotes)
+          .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "valueless id attributes",
+        cases: ATTRIBUTES
+          .flatMap((attribute: string): TestCase[] => [
+            {
+              input: attribute,
+              expected: attribute,
+            },
+            {
+              input: `${attribute}=""`,
+              expected: `${attribute}=""`,
+            },
+          ])
+          .flatMap(varyAttributeSpacing)
+          .flatMap(varyHtmlQuotes)
+          .flatMap(withOtherAttributes)
+          .flatMap(embedAttributesInTags),
+      },
       {
         name: "id-like strings in non-id places",
         cases: [
@@ -403,21 +435,24 @@ suite("HTML ID Mangler", function() {
       },
       {
         name: "ids in external URLs",
-        cases: [
-          {
-            input: "<a href=\"http://www.example.com/foo#id-bar\"></a>",
-            expected: "<a href=\"http://www.example.com/foo#id-bar\"></a>",
-          },
-          {
-            input: "<a href=\"https://www.example.com/foo#id-bar\"></a>",
-            expected: "<a href=\"https://www.example.com/foo#id-bar\"></a>",
-          },
-        ],
+        cases: HREF_ATTRIBUTES
+          .flatMap((attribute: string): TestCase[] => [
+            {
+              input: `<a ${attribute}="http://www.example.com/foo#id-bar"></a>`,
+              expected: `<a ${attribute}="http://www.example.com/foo#id-bar"></a>`,
+              description: "ignore IDs in external \"http\" URLs",
+            },
+            {
+              input: `<a ${attribute}="https://www.example.com/foo#id-bar"></a>`,
+              expected: `<a ${attribute}="https://www.example.com/foo#id-bar"></a>`,
+              description: "ignore IDs in external \"https\" URLs",
+            },
+          ]),
       },
     ];
 
     for (const instance of instances) {
-      const { attribute, factory } = instance;
+      const { name, factory } = instance;
 
       const ATTRIBUTE_VALUE_PAIRS: [TestCase, TestCase][] = [
         [factory("id-foo", "a"), factory("id-bar", "b")],
@@ -428,31 +463,26 @@ suite("HTML ID Mangler", function() {
 
       scenarios.push(...[
         {
-          name: `no (matching) ${attribute} value`,
-          cases: [
-            ...factory("foobar", "foobar"),
-            ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
-              .filter((testCase) => {
-                return new RegExp(`\\s${attribute}=`).test(testCase.input);
-              }),
-          ]
-          .flatMap(varyHtmlQuotes)
-          .flatMap(embedAttributesInTags),
-        },
-        {
-          name: `${attribute} with varying attribute spacing`,
-          cases: factory("id-foo", "a")
-            .flatMap(varyAttributeSpacing)
+          name: `no matching ${name} value`,
+          cases: factory("foobar", "foobar")
+            .flatMap(varyHtmlQuotes)
             .flatMap(embedAttributesInTags),
         },
         {
-          name: `${attribute} with other attributes`,
+          name: `${name} as only attribute`,
+          cases: factory("id-foo", "a")
+            .flatMap(varyAttributeSpacing)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with other attributes`,
           cases: factory("id-foo", "a")
             .flatMap(withOtherAttributes)
             .flatMap(embedAttributesInTags),
         },
         {
-          name: `${attribute} with unquoted values`,
+          name: `${name} with unquoted values`,
           cases: factory("id-foobar", "a")
             .map((testCase: TestCase): TestCase => ({
               input: testCase.input.replace(/"/g, ""),
@@ -462,41 +492,59 @@ suite("HTML ID Mangler", function() {
             .flatMap(embedAttributesInTags),
         },
         {
-          name: `${attribute} on adjacent elements`,
+          name: `${name} on adjacent elements`,
           cases: ATTRIBUTE_VALUE_PAIRS
             .flatMap(embedAttributesInAdjacentTags),
         },
         {
-          name: `${attribute} on nested elements`,
+          name: `${name} on nested elements`,
           cases: ATTRIBUTE_VALUE_PAIRS
             .flatMap(embedAttributesInNestedTags),
         },
         {
-          name: `${attribute} edge cases`,
+          name: `${name}-like attribute names`,
+          cases: ["x", "data-"]
+            .flatMap((prefix: string): TestCase[] => {
+              return factory("id-foobar", "id-foobar")
+                .map((testCase: TestCase): TestCase => ({
+                  input: `${prefix}${testCase.input}`,
+                  expected: `${prefix}${testCase.expected}`,
+                }));
+            })
+            .flatMap(varyAttributeSpacing)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(withOtherAttributes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} edge cases`,
           cases: [
-            ...withOtherAttributes({
-              input: `<div ${attribute}></div>`,
-              expected: `<div ${attribute}></div>`,
-            }),
-            ...withOtherAttributes({
-              input: `<div ${attribute}=""></div>`,
-              expected: `<div ${attribute}=""></div>`,
-            }),
-            {
-              input: `<${attribute} class="foobar"></${attribute}>`,
-              expected: `<${attribute} class="foobar"></${attribute}>`,
-            },
-            ...varySpacing("/", {
-              input: `<${attribute} class="foobar"/>`,
-              expected: `<${attribute} class="foobar"/>`,
-            }),
-            ...["x", "data-"]
-              .flatMap((prefix: string): TestCase[] =>
-                factory("id-foobar", "id-foobar")
-                  .map((testCase: TestCase): TestCase => ({
-                    input: `<div ${prefix}${testCase.input}></div>`,
-                    expected: `<div ${prefix}${testCase.expected}></div>`,
-                  }))),
+            ...factory("id-foobar", "a")
+              .flatMap((testCase: TestCase): TestCase[] => [
+                ...ATTRIBUTES
+                  .flatMap((attr: string): TestCase[] => [
+                    {
+                      input: `<${attr} class="foobar"></${attr}>`,
+                      expected: `<${attr} class="foobar"></${attr}>`,
+                      description: `the tag "${attr}" shouldn't cause problems`,
+                    },
+                    {
+                      input: `<${attr} class="foobar"/>`,
+                      expected: `<${attr} class="foobar"/>`,
+                      description: `the tag "${attr}" shouldn't cause problems`,
+                    },
+                    {
+                      input: `<${attr} ${testCase.input}></${attr}>`,
+                      expected: `<${attr} ${testCase.expected}></${attr}>`,
+                      description: `the tag "${attr}" shouldn't cause problems`,
+                    },
+                    {
+                      input: `<${attr} ${testCase.input}/>`,
+                      expected: `<${attr} ${testCase.expected}/>`,
+                      description: `the tag "${attr}" shouldn't cause problems`,
+                    },
+                  ]),
+              ]),
             ...ATTRIBUTE_VALUE_PAIRS
               .map(([testCaseA, testCaseB]): TestCase => ({
                 input: `
@@ -505,6 +553,7 @@ suite("HTML ID Mangler", function() {
                 expected: `
                   <div ${testCaseA.expected} ${testCaseB.expected}></div>
                 `,
+                description: "multiple id attributes on one element should all be mangled",
               })),
           ],
         },
