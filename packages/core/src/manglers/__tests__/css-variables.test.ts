@@ -17,22 +17,27 @@ import {
 } from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
-  varyQuotes,
+  varyCssQuotes,
+  varyHtmlQuotes,
+  varyJsQuotes,
   varySpacing,
 } from "./test-helpers";
 
 import { ALL_CHARS } from "../../characters";
-import mangleEngine from "../../engine";
-import { getExpressions } from "../../index";
+import webmangler from "../../index";
 import BuiltInLanguageSupport from "../../languages/builtin";
 import CssVariableMangler from "../css-variables";
 
-const builtInLanguages = [new BuiltInLanguageSupport()];
+const builtInLanguages = new BuiltInLanguageSupport();
 
 const DEFAULT_PATTERN = "[a-z]+";
 
 suite("CSS Variable Mangler", function() {
+  const varyVariableUsageSpacing = varySpacing([":", "(", ",", ")"]);
+
   suite("CSS", function() {
+    const varyDeclarationSpacing = varySpacing(["{", ":", ";", "}"]);
+
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "no declarations or usage",
@@ -69,7 +74,7 @@ suite("CSS Variable Mangler", function() {
                 expected: `:root{--a:${value};}`,
               },
             ])
-            .flatMap((testCase) => varySpacing(["{", ":", ";", "}"], testCase)),
+            .flatMap(varyDeclarationSpacing),
           {
             input: ":root { background: purple; --foo: black; }",
             expected: ":root { background: purple; --a: black; }",
@@ -131,7 +136,7 @@ suite("CSS Variable Mangler", function() {
                 expected: `div { color: var(--a,${value}); }`,
               },
             ])
-            .flatMap((testCase) => varySpacing(["(", ",", ")"], testCase)),
+            .flatMap(varyVariableUsageSpacing),
           {
             input: "div { background: black; color: var(--foo, yellow); }",
             expected: "div { background: black; color: var(--a, yellow); }",
@@ -203,19 +208,19 @@ suite("CSS Variable Mangler", function() {
       {
         name: "strings that match the pattern",
         cases: [
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div { content: \"--foo\"; --foo: \"bar\"; }",
             expected: "div { content: \"--foo\"; --a: \"bar\"; }",
           }),
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div { content: \"--foo\"; color: var(--foo); }",
             expected: "div { content: \"--foo\"; color: var(--a); }",
           }),
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div { content: \"var(--foo)\"; --foo: \"bar\"; }",
             expected: "div { content: \"var(--foo)\"; --a: \"bar\"; }",
           }),
-          ...varySpacing("css", {
+          ...varyCssQuotes({
             input: "div { content: \"var(--foo)\"; color: var(--foo); }",
             expected: "div { content: \"var(--foo)\"; color: var(--a); }",
           }),
@@ -242,7 +247,7 @@ suite("CSS Variable Mangler", function() {
                 description: "unexpected string values should not prevent mangling",
               },
             ])
-            .flatMap((testCase) => varySpacing("css", testCase)),
+            .flatMap(varyCssQuotes),
         ],
       },
       {
@@ -281,13 +286,11 @@ suite("CSS Variable Mangler", function() {
             reservedCssVarNames: reservedCssVarNames,
             keepCssVarPrefix: keepCssVarPrefix,
           });
-          const options = cssVariableMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssVariableMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -298,6 +301,11 @@ suite("CSS Variable Mangler", function() {
   });
 
   suite("HTML (style attribute)", function() {
+    const varyAttributeSpacing = varySpacing(["=", "\""]);
+    const varyDeclarationSpacing = varySpacing([":", "(", ",", ")", ";"]);
+    const varyFunctionSpacing = varySpacing(["(", ",", ")"]);
+    const varyColonSemicolonSpacing = varySpacing([":", ";"]);
+
     const SAMPLE_VARIABLE_DECLARATIONS: TestCase[] = [
       {
         input: "--foobar:42;",
@@ -339,21 +347,21 @@ suite("CSS Variable Mangler", function() {
         name: "varying spacing in attributes",
         cases: SAMPLE_VARIABLE_DECLARATIONS
           .map(embedDeclarationsInStyle)
-          .flatMap((testCase) => varySpacing(["=", "\""], testCase))
+          .flatMap(varyAttributeSpacing)
           .flatMap(embedAttributesInTags),
       },
       {
         name: "varying quotes",
         cases: SAMPLE_VARIABLE_DECLARATIONS
           .map(embedDeclarationsInStyle)
-          .flatMap((testCase) => varyQuotes("html", testCase))
+          .flatMap(varyHtmlQuotes)
           .flatMap(embedAttributesInTags),
       },
       {
         name: "varying spacing in declarations",
         cases: SAMPLE_VARIABLE_DECLARATIONS
           .map(embedDeclarationsInStyle)
-          .flatMap((testCase) => varySpacing([":", "(", ",", ")", ";"], testCase))
+          .flatMap(varyDeclarationSpacing)
           .flatMap(embedAttributesInTags),
       },
       {
@@ -395,19 +403,19 @@ suite("CSS Variable Mangler", function() {
               input: `--foobar:${value};`,
               expected: `--a:${value};`,
             }))
-            .flatMap((testCase) => varySpacing([":", ";"], testCase)),
+            .flatMap(varyColonSemicolonSpacing),
           ...CSS_PROPERTIES
             .flatMap((property: string): TestCase => ({
               input: `${property}: var(--foobar);`,
               expected: `${property}: var(--a);`,
             }))
-            .flatMap((testCase) => varySpacing(["(", ")"], testCase)),
+            .flatMap(varyFunctionSpacing),
           ...CSS_VALUES_NO_STRINGS
             .flatMap((value: string): TestCase => ({
               input: `color: var(--foo,${value});`,
               expected: `color: var(--a,${value});`,
             }))
-            .flatMap((testCase) => varySpacing([",", ")"], testCase)),
+            .flatMap(varyFunctionSpacing),
         ]
         .map(embedDeclarationsInStyle)
         .flatMap(embedAttributesInTags),
@@ -548,7 +556,7 @@ suite("CSS Variable Mangler", function() {
             expected: "<div style></div>",
             description: "style attribute without value should be ignored",
           },
-          ...varyQuotes("html", {
+          ...varyHtmlQuotes({
             input: "<div style=\"\"></div>",
             expected: "<div style=\"\"></div>",
             description: "style attribute with empty value should be ignored",
@@ -602,13 +610,11 @@ suite("CSS Variable Mangler", function() {
             reservedCssVarNames: reservedCssVarNames,
             keepCssVarPrefix: keepCssVarPrefix,
           });
-          const options = cssVariableMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssVariableMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -623,7 +629,7 @@ suite("CSS Variable Mangler", function() {
       {
         name: "sample",
         cases: [
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "$el.style.getPropertyValue(\"--foobar\");",
             expected: "$el.style.getPropertyValue(\"--a\");",
           }),
@@ -631,7 +637,7 @@ suite("CSS Variable Mangler", function() {
             input: "$el.style.removeProperty(\"--foobar\");",
             expected: "$el.style.removeProperty(\"--a\");",
           }),
-          ...varyQuotes("js", {
+          ...varyJsQuotes({
             input: "var x = \"--foo\", setProperty(x, \"bar\");",
             expected: "var x = \"--a\", setProperty(x, \"bar\");",
           }),
@@ -658,13 +664,11 @@ suite("CSS Variable Mangler", function() {
             reservedCssVarNames: reservedCssVarNames,
             keepCssVarPrefix: keepCssVarPrefix,
           });
-          const options = cssVariableMangler.options();
-          const expressions = getExpressions(
-            builtInLanguages,
-            options.languageOptions,
-          );
 
-          const result = mangleEngine(files, expressions, options);
+          const result = webmangler(files, {
+            plugins: [cssVariableMangler],
+            languages: [builtInLanguages],
+          });
           expect(result).to.have.length(1);
 
           const out = result[0];
@@ -765,13 +769,11 @@ suite("CSS Variable Mangler", function() {
       const cssVariableMangler = new CssVariableMangler({
         cssVarNamePattern: "[0-9]+",
       });
-      const options = cssVariableMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [cssVariableMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
@@ -787,13 +789,11 @@ suite("CSS Variable Mangler", function() {
         cssVarNamePattern: "[0-9]+",
         reservedCssVarNames: ["a"],
       });
-      const options = cssVariableMangler.options();
-      const expressions = getExpressions(
-        builtInLanguages,
-        options.languageOptions,
-      );
 
-      const result = mangleEngine(files, expressions, options);
+      const result = webmangler(files, {
+        plugins: [cssVariableMangler],
+        languages: [builtInLanguages],
+      });
       expect(result).to.have.lengthOf(1);
 
       const out = result[0];
