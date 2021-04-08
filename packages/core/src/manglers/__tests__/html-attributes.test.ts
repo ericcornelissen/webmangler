@@ -18,6 +18,7 @@ import {
   SELECTOR_COMBINATORS,
   TYPE_OR_UNITS,
 } from "./css-constants";
+import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
 import {
   embedAttributesInTags,
   embedDeclarationsInStyle,
@@ -491,20 +492,11 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "no (matching) attributes",
         cases: [
-          {
-            input: "",
-            expected: "",
-            description: "no attributes",
-          },
-          {
-            input: "id=\"foobar\"",
-            expected: "id=\"foobar\"",
-          },
-          {
-            input: "height=\"36\" width=\"42\"",
-            expected: "height=\"36\" width=\"42\"",
-          },
-        ].flatMap(embedAttributesInTags),
+          ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
+            .filter((testCase) => /\sdata-[a-z]+/.test(testCase.input)),
+        ]
+        .flatMap(varyHtmlQuotes)
+        .flatMap(embedAttributesInTags),
       },
       {
         name: "varying spacing in attributes",

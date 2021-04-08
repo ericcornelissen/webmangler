@@ -17,6 +17,7 @@ import {
   SELECTOR_COMBINATORS,
 } from "./css-constants";
 import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
+import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
 import { embedAttributesInTags, withOtherAttributes } from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
@@ -283,7 +284,7 @@ suite("CSS Class Mangler", function() {
     }
   });
 
-  suite("HTML (class attribute)", function() {
+  suite("HTML", function() {
     const varyAttributeSpacing = varySpacing(["=", "\""]);
 
     const SAMPLE_CSS_CLASSES: TestCase[] = [
@@ -321,22 +322,14 @@ suite("CSS Class Mangler", function() {
         name: "no (matching) CSS classes",
         cases: [
           {
-            input: "alt=\"Lorem ipsum dolor\"",
-            expected: "alt=\"Lorem ipsum dolor\"",
-          },
-          {
-            input: "data-foo=\"bar\"",
-            expected: "data-foo=\"bar\"",
-          },
-          {
-            input: "height=\"36\" width=\"42\"",
-            expected: "height=\"36\" width=\"42\"",
-          },
-          {
             input: "class=\"foobar\"",
             expected: "class=\"foobar\"",
           },
-        ].flatMap(embedAttributesInTags),
+          ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
+            .filter((testCase) => /\sclass=/.test(testCase.input)),
+        ]
+        .flatMap(varyHtmlQuotes)
+        .flatMap(embedAttributesInTags),
       },
       {
         name: "varying spacing in attributes",

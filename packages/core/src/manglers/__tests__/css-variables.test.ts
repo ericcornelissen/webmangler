@@ -10,6 +10,7 @@ import {
   CSS_VALUES_NO_STRINGS,
 } from "./css-constants";
 import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
+import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
 import {
   embedAttributesInTags,
   embedDeclarationsInStyle,
@@ -300,7 +301,7 @@ suite("CSS Variable Mangler", function() {
     }
   });
 
-  suite("HTML (style attribute)", function() {
+  suite("HTML", function() {
     const varyAttributeSpacing = varySpacing(["=", "\""]);
     const varyDeclarationSpacing = varySpacing([":", "(", ",", ")", ";"]);
     const varyFunctionSpacing = varySpacing(["(", ",", ")"]);
@@ -326,22 +327,14 @@ suite("CSS Variable Mangler", function() {
         name: "no CSS variables",
         cases: [
           {
-            input: "alt=\"Lorem ipsum dolor\"",
-            expected: "alt=\"Lorem ipsum dolor\"",
+            input: "style=\"color: red;\"",
+            expected: "style=\"color: red;\"",
           },
-          {
-            input: "data-foo=\"bar\"",
-            expected: "data-foo=\"bar\"",
-          },
-          {
-            input: "height=\"36\" width=\"42\"",
-            expected: "height=\"36\" width=\"42\"",
-          },
-          {
-            input: "style=\"color:red;\"",
-            expected: "style=\"color:red;\"",
-          },
-        ].flatMap(embedAttributesInTags),
+          ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
+            .filter((testCase) => /\sstyle=/.test(testCase.input)),
+        ]
+        .flatMap(varyHtmlQuotes)
+        .flatMap(embedAttributesInTags),
       },
       {
         name: "varying spacing in attributes",

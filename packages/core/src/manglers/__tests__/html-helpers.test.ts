@@ -5,12 +5,174 @@ import type { TestCase } from "./types";
 import { expect } from "chai";
 
 import {
+  embedAttributesInAdjacentTags,
+  embedAttributesInNestedTags,
   embedAttributesInTags,
   embedDeclarationsInStyle,
   withOtherAttributes,
 } from "./html-helpers";
 
 suite("HTML Test Helpers", function() {
+  suite("::embedAttributesInAdjacentTags", function() {
+    const scenarios: TestScenario<[TestCase, TestCase]>[] = [
+      {
+        name: "changing attributes",
+        cases: [
+          [
+            {
+              input: "class=\"foo\"",
+              expected: "class=\"bar\"",
+            },
+            {
+              input: "id=\"foo\"",
+              expected: "id=\"bar\"",
+            },
+          ],
+          [
+            {
+              input: "data-foo=\"bar\"",
+              expected: "data-foo=\"baz\"",
+            },
+            {
+              input: "data-bar=\"foo\"",
+              expected: "data-baz=\"foo\"",
+            },
+          ],
+          [
+            {
+              input: "height=\"36\" width=\"42\"",
+              expected: "height=\"42\" width=\"36\"",
+            },
+            {
+              input: "width=\"36\" height=\"42\"",
+              expected: "width=\"42\" height=\"36\"",
+            },
+          ],
+        ],
+      },
+      {
+        name: "unchanging attributes",
+        cases: [
+          [
+            {
+              input: "class=\"foo\"",
+              expected: "class=\"foo\"",
+            },
+            {
+              input: "id=\"bar\"",
+              expected: "id=\"bar\"",
+            },
+          ],
+          [
+            {
+              input: "height=\"36\" ",
+              expected: "height=\"36\"",
+            },
+            {
+              input: "width=\"42\"",
+              expected: "width=\"42\"",
+            },
+          ],
+        ],
+      },
+    ];
+
+    for (const { name, cases } of scenarios) {
+      test(name, function() {
+        for (const [testCaseA, testCaseB] of cases) {
+          const results = embedAttributesInAdjacentTags([testCaseA, testCaseB]);
+          expect(results).to.have.length.above(1);
+          for (const result of results) {
+            expect(result.input).to.include(testCaseA.input);
+            expect(result.input).to.include(testCaseB.input);
+            expect(result.expected).to.include(testCaseA.expected);
+            expect(result.expected).to.include(testCaseB.expected);
+          }
+        }
+      });
+    }
+  });
+
+  suite("::embedAttributesInNestedTags", function() {
+    const scenarios: TestScenario<[TestCase, TestCase]>[] = [
+      {
+        name: "changing attributes",
+        cases: [
+          [
+            {
+              input: "class=\"foo\"",
+              expected: "class=\"bar\"",
+            },
+            {
+              input: "id=\"foo\"",
+              expected: "id=\"bar\"",
+            },
+          ],
+          [
+            {
+              input: "data-foo=\"bar\"",
+              expected: "data-foo=\"baz\"",
+            },
+            {
+              input: "data-bar=\"foo\"",
+              expected: "data-baz=\"foo\"",
+            },
+          ],
+          [
+            {
+              input: "height=\"36\" width=\"42\"",
+              expected: "height=\"42\" width=\"36\"",
+            },
+            {
+              input: "width=\"36\" height=\"42\"",
+              expected: "width=\"42\" height=\"36\"",
+            },
+          ],
+        ],
+      },
+      {
+        name: "unchanging attributes",
+        cases: [
+          [
+            {
+              input: "class=\"foo\"",
+              expected: "class=\"foo\"",
+            },
+            {
+              input: "id=\"bar\"",
+              expected: "id=\"bar\"",
+            },
+          ],
+          [
+            {
+              input: "height=\"36\" ",
+              expected: "height=\"36\"",
+            },
+            {
+              input: "width=\"42\"",
+              expected: "width=\"42\"",
+            },
+          ],
+        ],
+      },
+    ];
+
+    for (const { name, cases } of scenarios) {
+      test(name, function() {
+        for (const [testCaseA, testCaseB] of cases) {
+          const results = embedAttributesInNestedTags([testCaseA, testCaseB]);
+          expect(results).to.have.length.above(1);
+          for (const result of results) {
+            expect(result.input).to.include(testCaseA.input);
+            expect(result.input).to.include(testCaseB.input);
+            expect(result.expected).to.include(testCaseA.expected);
+            expect(result.expected).to.include(testCaseB.expected);
+          }
+        }
+      });
+    }
+  });
+
   suite("::embedAttributesInTags", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {

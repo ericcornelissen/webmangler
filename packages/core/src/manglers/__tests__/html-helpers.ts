@@ -3,6 +3,119 @@ import type { TestCase } from "./types";
 import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 
 /**
+ * Embed two attribute sets, encoded as a {@link TestCase}s, into a variety of
+ * adjacent elements.
+ *
+ * @param testCases The attribute sets encoded as a {@link TestCase}s.
+ * @returns A variety of {@link TestCase}s for various adjacent configurations.
+ */
+export function embedAttributesInAdjacentTags(
+  testCases: [TestCase, TestCase],
+): TestCase[] {
+  const [testCaseA, testCaseB] = testCases;
+  return [
+    {
+      input: `
+        <div ${testCaseA.input}></div>
+        <div ${testCaseB.input}></div>
+      `,
+      expected: `
+        <div ${testCaseA.expected}></div>
+        <div ${testCaseB.expected}></div>
+      `,
+    },
+    {
+      input: `
+        <div ${testCaseA.input}></div>
+        <div></div>
+        <div ${testCaseB.input}></div>
+      `,
+      expected: `
+        <div ${testCaseA.expected}></div>
+        <div></div>
+        <div ${testCaseB.expected}></div>
+      `,
+    },
+    {
+      input: `
+        <div><div ${testCaseA.input}></div></div>
+        <div ${testCaseB.input}></div>
+      `,
+      expected: `
+        <div><div ${testCaseA.expected}></div></div>
+        <div ${testCaseB.expected}></div>
+      `,
+    },
+    {
+      input: `
+        <div ${testCaseA.input}></div>
+        <div><div ${testCaseB.input}></div></div>
+      `,
+      expected: `
+        <div ${testCaseA.expected}></div>
+        <div><div ${testCaseB.expected}></div></div>
+      `,
+    },
+  ];
+}
+
+/**
+ * Embed two attribute sets, encoded as a {@link TestCase}s, into a variety of
+ * nested elements.
+ *
+ * @param testCases The attribute sets encoded as a {@link TestCase}s.
+ * @returns A variety of {@link TestCase}s for various nested configurations.
+ */
+export function embedAttributesInNestedTags(
+  testCases: [TestCase, TestCase],
+): TestCase[] {
+  const [testCaseA, testCaseB] = testCases;
+  return [
+    {
+      input: `
+        <div ${testCaseA.input}>
+          <div ${testCaseB.input}></div>
+        </div>
+      `,
+      expected: `
+        <div ${testCaseA.expected}>
+          <div ${testCaseB.expected}></div>
+        </div>
+      `,
+    },
+    {
+      input: `
+        <div ${testCaseA.input}>
+          <div></div>
+          <div ${testCaseB.input}></div>
+        </div>
+      `,
+      expected: `
+        <div ${testCaseA.expected}>
+          <div></div>
+          <div ${testCaseB.expected}></div>
+        </div>
+      `,
+    },
+    {
+      input: `
+        <div ${testCaseA.input}>
+          <div>
+            <div ${testCaseB.input}></div>
+          </div>
+        </div>
+      `,
+      expected: `
+        <div ${testCaseA.expected}>
+          <div>
+            <div ${testCaseB.expected}></div>
+          </div>
+        </div>
+      `,
+    },
+  ];
+}
+/**
  * Embed attributes, encoded as a {@link TestCase}, into a variety of tags. This
  * includes both normal and self-closing tags.
  *
@@ -136,3 +249,4 @@ export function withOtherAttributes(
     ];
   }
 }
+
