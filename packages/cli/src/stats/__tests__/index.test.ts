@@ -9,12 +9,12 @@ import * as sinonChai from "sinon-chai";
 import FileStatsMock from "../__mocks__/file-stats.mock";
 import WebManglerCliFileMock from "../../fs/__mocks__/file.mock";
 
-import { getStatsBetween, logStats } from "../index";
+import { computeStats, logStats } from "../index";
 
 chaiUse(sinonChai);
 
 suite("Statistics", function() {
-  suite("::getStatsBetween", function() {
+  suite("::computeStats", function() {
     type TestCase = {
       expected: {
         filePath: string,
@@ -95,7 +95,7 @@ suite("Statistics", function() {
             expected,
           } = testCase;
 
-          const stats = getStatsBetween({
+          const stats = computeStats({
             duration,
             inFiles,
             outFiles,

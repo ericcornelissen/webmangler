@@ -51,7 +51,7 @@ function getDisplayPercentage(percentage: number): string {
  * @param data.outFiles The files after mangling.
  * @returns The {@link ManglerStats} for the run.
  */
-export function getStatsBetween(data: {
+export function computeStats(data: {
   duration: number,
   inFiles: WebManglerCliFile[],
   outFiles: WebManglerCliFile[],

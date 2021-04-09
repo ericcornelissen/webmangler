@@ -7,7 +7,7 @@ import webmangler from "webmangler";
 import getConfiguration from "./config";
 import * as fs from "./fs";
 import Logger from "./logger";
-import { getStatsBetween, logStats } from "./stats";
+import { computeStats, logStats } from "./stats";
 import { timeCall } from "./timing";
 
 /**
@@ -33,7 +33,7 @@ export default async function run(args: WebManglerCliArgs): Promise<void> {
 
   if (args.stats) {
     logger.debug("computing stats...");
-    const stats = getStatsBetween({ inFiles, outFiles, duration });
+    const stats = computeStats({ inFiles, outFiles, duration });
     logger.debug("stats computed");
     logger.debug("logging stats...");
     logStats(console.log, stats);
