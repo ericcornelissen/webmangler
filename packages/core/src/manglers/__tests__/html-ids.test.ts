@@ -268,7 +268,7 @@ suite("HTML ID Mangler", function() {
     run("css", scenarios);
   });
 
-  suite("HTML", function() {
+  suite("HTML - attributes", function() {
     const ID_ATTRIBUTES: string[] = ["id", "for"];
     const HREF_ATTRIBUTES: string[] = ["href"];
     const ATTRIBUTES: string[] = [
@@ -277,6 +277,7 @@ suite("HTML ID Mangler", function() {
     ];
 
     const varyAttributeSpacing = varySpacing("=\"");
+    const varyTagSpacing = varySpacing(["<", ">"]);
 
     type TestInstance = {
       readonly name: string;
@@ -284,6 +285,24 @@ suite("HTML ID Mangler", function() {
     }
 
     const instances: TestInstance[] = [
+      {
+        name: "id attribute",
+        factory: (idBefore: string, idAfter: string): TestCase[] => [
+          {
+            input: `id="${idBefore}"`,
+            expected: `id="${idAfter}"`,
+          },
+        ],
+      },
+      {
+        name: "for attribute",
+        factory: (idBefore: string, idAfter: string): TestCase[] => [
+          {
+            input: `for="${idBefore}"`,
+            expected: `for="${idAfter}"`,
+          },
+        ],
+      },
       {
         name: "id attribute",
         factory: (idBefore: string, idAfter: string): TestCase[] => [
@@ -351,43 +370,56 @@ suite("HTML ID Mangler", function() {
         name: "id-like strings in non-id places",
         cases: [
           {
-            input: "<div class=\"id-foo\"></div>",
-            expected: "<div class=\"id-foo\"></div>",
+            input: "<div class=\"id-foobar\"></div>",
+            expected: "<div class=\"id-foobar\"></div>",
           },
-          {
-            input: "<div>id-foo is an example identifier</div>",
-            expected: "<div>id-foo is an example identifier</div>",
-          },
-          {
-            input: "<div>#id-foo is an example identifier</div>",
-            expected: "<div>#id-foo is an example identifier</div>",
-          },
-
           {
             input: "<div id=\"id-foo\" class=\"id-bar\"></div>",
             expected: "<div id=\"a\" class=\"id-bar\"></div>",
+          },
+          {
+            input: "<div id=\"id-foobar\" class=\"id-foobar\"></div>",
+            expected: "<div id=\"a\" class=\"id-foobar\"></div>",
+          },
+
+          {
+            input: "<div>id-foobar is an example identifier</div>",
+            expected: "<div>id-foobar is an example identifier</div>",
           },
           {
             input: "<div id=\"id-foo\">id-bar is an example identifier</div>",
             expected: "<div id=\"a\">id-bar is an example identifier</div>",
           },
           {
-            input: "<div id=\"id-foo\">#id-bar is an example identifier</div>",
-            expected: "<div id=\"a\">#id-bar is an example identifier</div>",
+            input: "<div id=\"id-foobar\">id-foobar is an example identifier</div>",
+            expected: "<div id=\"a\">id-foobar is an example identifier</div>",
           },
 
           {
-            input: "<div id=\"id-foo\" class=\"id-foo\"></div>",
-            expected: "<div id=\"a\" class=\"id-foo\"></div>",
+            input: "<div>#id-foobar is an example identifier</div>",
+            expected: "<div>#id-foobar is an example identifier</div>",
           },
           {
-            input: "<div id=\"id-foo\">id-foo is an example identifier</div>",
-            expected: "<div id=\"a\">id-foo is an example identifier</div>",
+            input: "<div id=\"id-foo\">#id-bar is an example identifier</div>",
+            expected: "<div id=\"a\">#id-bar is an example identifier</div>",
           },
           {
-            input: "<div id=\"id-foo\">#id-foo is an example identifier</div>",
-            expected: "<div id=\"a\">#id-foo is an example identifier</div>",
+            input: "<div id=\"id-foobar\">#id-foobar is an example identifier</div>",
+            expected: "<div id=\"a\">#id-foobar is an example identifier</div>",
           },
+
+          ...varyTagSpacing({
+            input: "<div>id=\"id-foobar\"</div>",
+            expected: "<div>id=\"id-foobar\"</div>",
+          }),
+          ...varyTagSpacing({
+            input: "<div id=\"id-foo\">id=\"id-bar\"</div>",
+            expected: "<div id=\"a\">id=\"id-bar\"</div>",
+          }),
+          ...varyTagSpacing({
+            input: "<div id=\"id-foobar\">id=\"id-foobar\"</div>",
+            expected: "<div id=\"a\">id=\"id-foobar\"</div>",
+          }),
 
           {
             input: "<a href=\"/foo/id-bar\"></a>",
@@ -401,7 +433,7 @@ suite("HTML ID Mangler", function() {
             input: "<a href=\"/id-foo#id-bar\"></a>",
             expected: "<a href=\"/id-foo#a\"></a>",
           },
-        ],
+        ].flatMap(varyTagSpacing),
       },
       {
         name: "ids in external URLs",
@@ -487,45 +519,59 @@ suite("HTML ID Mangler", function() {
             .flatMap(embedAttributesInTags),
         },
         {
-          name: `${name} edge cases`,
+          name: `${name} with unexpected (non-closing) ">"`,
+          cases: factory("id-foobar", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `alt=">" ${testCase.input}`,
+                expected: `alt=">" ${testCase.expected}`,
+              },
+              {
+                input: `${testCase.input} alt=">"`,
+                expected: `${testCase.expected} alt=">"`,
+              },
+            ])
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} attribute repetition`,
           cases: [
-            ...factory("id-foobar", "a")
-              .flatMap((testCase: TestCase): TestCase[] => [
-                ...ATTRIBUTES
-                  .flatMap((attr: string): TestCase[] => [
-                    {
-                      input: `<${attr} class="foobar"></${attr}>`,
-                      expected: `<${attr} class="foobar"></${attr}>`,
-                      description: `the tag "${attr}" shouldn't cause problems`,
-                    },
-                    {
-                      input: `<${attr} class="foobar"/>`,
-                      expected: `<${attr} class="foobar"/>`,
-                      description: `the tag "${attr}" shouldn't cause problems`,
-                    },
-                    {
-                      input: `<${attr} ${testCase.input}></${attr}>`,
-                      expected: `<${attr} ${testCase.expected}></${attr}>`,
-                      description: `the tag "${attr}" shouldn't cause problems`,
-                    },
-                    {
-                      input: `<${attr} ${testCase.input}/>`,
-                      expected: `<${attr} ${testCase.expected}/>`,
-                      description: `the tag "${attr}" shouldn't cause problems`,
-                    },
-                  ]),
-              ]),
             ...ATTRIBUTE_VALUE_PAIRS
               .map(([testCaseA, testCaseB]): TestCase => ({
-                input: `
-                  <div ${testCaseA.input} ${testCaseB.input}></div>
-                `,
-                expected: `
-                  <div ${testCaseA.expected} ${testCaseB.expected}></div>
-                `,
-                description: "multiple id attributes on one element should all be mangled",
+                input: `${testCaseA.input} ${testCaseB.input}`,
+                expected: `${testCaseA.expected} ${testCaseB.expected}`,
               })),
-          ],
+            ...factory("id-foobar", "a")
+              .map((testCase: TestCase): TestCase => ({
+                input: `${testCase.input} ${testCase.input}`,
+                expected: `${testCase.expected} ${testCase.expected}`,
+              })),
+          ].flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with id-related attribute names as tags`,
+          cases: factory("id-foobar", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              ...ATTRIBUTES
+                .flatMap((attr: string): TestCase[] => [
+                  {
+                    input: `<${attr} class="foobar"></${attr}>`,
+                    expected: `<${attr} class="foobar"></${attr}>`,
+                  },
+                  {
+                    input: `<${attr} class="foobar"/>`,
+                    expected: `<${attr} class="foobar"/>`,
+                  },
+                  {
+                    input: `<${attr} ${testCase.input}></${attr}>`,
+                    expected: `<${attr} ${testCase.expected}></${attr}>`,
+                  },
+                  {
+                    input: `<${attr} ${testCase.input}/>`,
+                    expected: `<${attr} ${testCase.expected}/>`,
+                  },
+                ]),
+            ]),
         },
       ]);
     }

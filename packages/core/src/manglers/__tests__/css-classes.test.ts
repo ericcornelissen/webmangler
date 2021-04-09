@@ -259,10 +259,11 @@ suite("CSS Class Mangler", function() {
     run("css", scenarios);
   });
 
-  suite("HTML", function() {
+  suite("HTML - class attribute", function() {
     const embedClassesInAttribute = embedAttributeValue("class");
 
     const varyAttributeSpacing = varySpacing("=");
+    const varyTagSpacing = varySpacing(["<", ">"]);
 
     const SAMPLE_CSS_CLASSES: TestCase[] = [
       {
@@ -287,7 +288,7 @@ suite("CSS Class Mangler", function() {
       },
     ];
 
-    const PAIRS: [TestCase, TestCase][] = [
+    const SAMPLE_CSS_CLASS_PAIRS: [TestCase, TestCase][] = [
       [
         {
           input: "class=\"cls-foo\"",
@@ -359,7 +360,7 @@ suite("CSS Class Mangler", function() {
             expected: "class=\"foobar\"",
           },
           ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
-            .filter((testCase) => /\sclass=/.test(testCase.input)),
+            .filter((testCase) => /\s(class)=/.test(testCase.input)),
         ]
         .flatMap(varyHtmlQuotes)
         .flatMap(embedAttributesInTags),
@@ -381,11 +382,18 @@ suite("CSS Class Mangler", function() {
       },
       {
         name: "on adjacent elements",
-        cases: PAIRS.flatMap(embedAttributesInAdjacentTags),
+        cases: SAMPLE_CSS_CLASS_PAIRS.flatMap(embedAttributesInAdjacentTags),
       },
       {
         name: "on nested elements",
-        cases: PAIRS.flatMap(embedAttributesInNestedTags),
+        cases: SAMPLE_CSS_CLASS_PAIRS.flatMap(embedAttributesInNestedTags),
+      },
+      {
+        name: "with other attributes",
+        cases: SAMPLE_CSS_CLASSES
+          .map(embedClassesInAttribute)
+          .flatMap(withOtherAttributes)
+          .flatMap(embedAttributesInTags),
       },
       {
         name: "valueless class attributes",
@@ -407,9 +415,26 @@ suite("CSS Class Mangler", function() {
       {
         name: "class-like strings in non-class places",
         cases: [
+          ...varySpacing("\"", {
+            input: "<div class=\"cls-foo cls-bar\"></div>",
+            expected: "<div class=\"a b\"></div>",
+          }),
+          ...varyHtmlQuotes({
+            input: "<div class=\"cls-foo cls-bar\"></div>",
+            expected: "<div class=\"a b\"></div>",
+          }),
           {
-            input: "<p>cls-foobar</p>",
-            expected: "<p>cls-foobar</p>",
+            input: "<img class=\"cls-foo cls-bar\"/>",
+            expected: "<img class=\"a b\"/>",
+          },
+          {
+            input: "<p class=\"cls-foo\">cls-bar</p>",
+            expected: "<p class=\"a\">cls-bar</p>",
+            description: "classes as innerHTML should be ignored",
+          },
+          {
+            input: "<p class=\"cls-foobar\">cls-foobar</p>",
+            expected: "<p class=\"a\">cls-foobar</p>",
             description: "classes as innerHTML should be ignored",
           },
           {
@@ -418,39 +443,35 @@ suite("CSS Class Mangler", function() {
             description: "classes as innerHTML should be ignored",
           },
           {
-            input: "<div alt=\"cls-foobar\"></div>",
-            expected: "<div alt=\"cls-foobar\"></div>",
-            description: "classes in non-class attributes should be ignored",
-          },
-          {
-            input: "<div alt=\"cls-foo bar\"></div>",
-            expected: "<div alt=\"cls-foo bar\"></div>",
-            description: "classes in non-class attributes should be ignored",
-          },
-          {
             input: "<div alt=\"foo cls-bar\"></div>",
             expected: "<div alt=\"foo cls-bar\"></div>",
             description: "classes in non-class attributes should be ignored",
           },
           {
-            input: "<div alt=\"praise cls-the sun\"></div>",
-            expected: "<div alt=\"praise cls-the sun\"></div>",
-            description: "classes in non-class attributes should be ignored",
+            input: "<p class=\"cls-foobar\">.cls-foobar</p>",
+            expected: "<p class=\"a\">.cls-foobar</p>",
+            description: "classes as innerHTML should be ignored",
           },
 
           {
-            input: "<p class=\"cls-foo\">cls-bar</p>",
-            expected: "<p class=\"a\">cls-bar</p>",
-            description: "classes as innerHTML should be ignored",
-          },
-          {
-            input: "<p class=\"cls-foo\">.cls-bar</p>",
-            expected: "<p class=\"a\">.cls-bar</p>",
-            description: "classes as innerHTML should be ignored",
+            input: "<div alt=\"cls-foobar\"></div>",
+            expected: "<div alt=\"cls-foobar\"></div>",
+            description: "classes in non-class attributes should be ignored",
           },
           {
             input: "<div class=\"cls-foo\" alt=\"cls-bar\"></div>",
             expected: "<div class=\"a\" alt=\"cls-bar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div class=\"cls-foobar\" alt=\"cls-foobar\"></div>",
+            expected: "<div class=\"a\" alt=\"cls-foobar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+
+          {
+            input: "<div alt=\"cls-foo bar\"></div>",
+            expected: "<div alt=\"cls-foo bar\"></div>",
             description: "classes in non-class attributes should be ignored",
           },
           {
@@ -459,34 +480,19 @@ suite("CSS Class Mangler", function() {
             description: "classes in non-class attributes should be ignored",
           },
           {
-            input: "<div class=\"cls-praise\" alt=\"the cls-sun\"></div>",
-            expected: "<div class=\"a\" alt=\"the cls-sun\"></div>",
-            description: "classes in non-class attributes should be ignored",
-          },
-          {
-            input: "<div class=\"cls-hello\" alt=\"world cls-foo bar\"></div>",
-            expected: "<div class=\"a\" alt=\"world cls-foo bar\"></div>",
+            input: "<div class=\"cls-foo\" alt=\"cls-foo bar\"></div>",
+            expected: "<div class=\"a\" alt=\"cls-foo bar\"></div>",
             description: "classes in non-class attributes should be ignored",
           },
 
           {
-            input: "<p class=\"cls-foobar\">cls-foobar</p>",
-            expected: "<p class=\"a\">cls-foobar</p>",
-            description: "classes as innerHTML should be ignored",
-          },
-          {
-            input: "<p class=\"cls-foobar\">.cls-foobar</p>",
-            expected: "<p class=\"a\">.cls-foobar</p>",
-            description: "classes as innerHTML should be ignored",
-          },
-          {
-            input: "<div class=\"cls-foobar\" alt=\"cls-foobar\"></div>",
-            expected: "<div class=\"a\" alt=\"cls-foobar\"></div>",
+            input: "<div alt=\"foo cls-bar\"></div>",
+            expected: "<div alt=\"foo cls-bar\"></div>",
             description: "classes in non-class attributes should be ignored",
           },
           {
-            input: "<div class=\"cls-foo\" alt=\"cls-foo bar\"></div>",
-            expected: "<div class=\"a\" alt=\"cls-foo bar\"></div>",
+            input: "<div class=\"cls-praise\" alt=\"the cls-sun\"></div>",
+            expected: "<div class=\"a\" alt=\"the cls-sun\"></div>",
             description: "classes in non-class attributes should be ignored",
           },
           {
@@ -494,11 +500,38 @@ suite("CSS Class Mangler", function() {
             expected: "<div class=\"a\" alt=\"foo cls-bar\"></div>",
             description: "classes in non-class attributes should be ignored",
           },
+
+          {
+            input: "<div alt=\"praise cls-the sun\"></div>",
+            expected: "<div alt=\"praise cls-the sun\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
+          {
+            input: "<div class=\"cls-hello\" alt=\"world cls-foo bar\"></div>",
+            expected: "<div class=\"a\" alt=\"world cls-foo bar\"></div>",
+            description: "classes in non-class attributes should be ignored",
+          },
           {
             input: "<div class=\"cls-the\" alt=\"praise cls-the sun\"></div>",
             expected: "<div class=\"a\" alt=\"praise cls-the sun\"></div>",
             description: "classes in non-class attributes should be ignored",
           },
+
+          ...varyTagSpacing({
+            input: "<p>class=\"cls-foobar\"</p>",
+            expected: "<p>class=\"cls-foobar\"</p>",
+            description: "classes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<p class=\"cls-foo\">class=\"cls-bar\"</p>",
+            expected: "<p class=\"a\">class=\"cls-bar\"</p>",
+            description: "classes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<p class=\"cls-foobar\">class=\"cls-foobar\"</p>",
+            expected: "<p class=\"a\">class=\"cls-foobar\"</p>",
+            description: "classes as innerHTML should be ignored",
+          }),
         ],
       },
       {
@@ -517,43 +550,70 @@ suite("CSS Class Mangler", function() {
           .flatMap(embedAttributesInTags),
       },
       {
-        name: "edge cases",
+        name: "unexpected (non-closing) \">\"",
+        cases: [
+          {
+            input: "<div id=\">\" class=\"cls-foobar\"></div>",
+            expected: "<div id=\">\" class=\"a\"></div>",
+          },
+          {
+            input: "<div class=\"cls-foobar\" id=\">\"></div>",
+            expected: "<div class=\"a\" id=\">\"></div>",
+          },
+          {
+            input: "<div class=\"cls-foo\" id=\">\" class=\"cls-bar\"></div>",
+            expected: "<div class=\"a\" id=\">\" class=\"b\"></div>",
+          },
+          {
+            input: "<div class=\"> cls-foobar\"></div>",
+            expected: "<div class=\"> a\"></div>",
+          },
+          {
+            input: "<div class=\"cls-foobar >\"></div>",
+            expected: "<div class=\"a >\"></div>",
+          },
+          {
+            input: "<div class=\"cls-foo > cls-bar\"></div>",
+            expected: "<div class=\"a > b\"></div>",
+          },
+        ],
+      },
+      {
+        name: "attribute & value repetition",
+        cases: [
+          {
+            input: "class=\"cls-foobar cls-foobar\"",
+            expected: "class=\"a a\"",
+          },
+          {
+            input: "class=\"cls-foo\" class=\"cls-bar\"",
+            expected: "class=\"a\" class=\"b\"",
+          },
+          {
+            input: "class=\"cls-foobar\" class=\"cls-foobar\"",
+            expected: "class=\"a\" class=\"a\"",
+          },
+        ].flatMap(embedAttributesInTags),
+      },
+      {
+        name: "class as tag",
         cases: [
           {
             input: "<class id=\"foobar\"></class>",
             expected: "<class id=\"foobar\"></class>",
-            description: "the tag \"class\" shouldn't cause problems",
           },
           ...varySpacing("/", {
             input: "<class id=\"foobar\"/>",
             expected: "<class id=\"foobar\"/>",
-            description: "the tag \"class\" shouldn't cause problems",
           }),
           {
             input: "<class class=\"cls-foobar\"></class>",
             expected: "<class class=\"a\"></class>",
-            description: "the tag \"class\" shouldn't cause problems",
           },
           ...varySpacing("/", {
             input: "<class class=\"cls-foobar\"/>",
             expected: "<class class=\"a\"/>",
-            description: "the tag \"class\" shouldn't cause problems",
           }),
-          {
-            input: "<div class=\"cls-foobar cls-foobar\"></div>",
-            expected: "<div class=\"a a\"></div>",
-            description: "one class appearing multiple times in one attribute value",
-          },
-          {
-            input: "<div class=\"cls-foo\" class=\"cls-bar\"></div>",
-            expected: "<div class=\"a\" class=\"b\"></div>",
-            description: "multiple class attributes on one element should all be mangled",
-          },
-          {
-            input: "<div class=\"cls-foobar\" class=\"cls-foobar\"></div>",
-            expected: "<div class=\"a\" class=\"a\"></div>",
-            description: "multiple class attributes on one element should all be mangled",
-          },
         ],
       },
     ];

@@ -273,10 +273,11 @@ suite("CSS Variable Mangler", function() {
     run("css", scenarios);
   });
 
-  suite("HTML", function() {
+  suite("HTML - style attribute", function() {
     const embedDeclarationsInStyle = embedAttributeValue("style");
 
     const varyAttributeSpacing = varySpacing("=");
+    const varyTagSpacing = varySpacing(["<", ">"]);
 
     type TestInstance = {
       readonly name: string;
@@ -383,35 +384,25 @@ suite("CSS Variable Mangler", function() {
         name: "variable-like strings in non-CSS places",
         cases: [
           {
-            input: "<div id=\"--foo\" style=\"--foo: red;\"></div>",
-            expected: "<div id=\"--foo\" style=\"--a: red;\"></div>",
+            input: "<!--foo bar-->",
+            expected: "<!--foo bar-->",
           },
           {
-            input: "<div style=\"--foo: red;\" data-x=\"--foo: blue;\"></div>",
-            expected: "<div style=\"--a: red;\" data-x=\"--foo: blue;\"></div>",
+            input: "<!--foo bar--><div style=\"--foo:red;\"></div>",
+            expected: "<!--foo bar--><div style=\"--a:red;\"></div>",
           },
-          {
-            input: "<!--foo bar--><div style=\"--foo: red;\"></div>",
-            expected: "<!--foo bar--><div style=\"--a: red;\"></div>",
-          },
-          {
-            input: "<div style=\"--foo: red\">--foo: blue;</div>",
-            expected: "<div style=\"--a: red\">--foo: blue;</div>",
-          },
-        ],
+        ].flatMap(varyTagSpacing),
       },
       {
-        name: "edge cases",
+        name: "style as tag",
         cases: [
           {
             input: "<style class=\"foobar\"></style>",
             expected: "<style class=\"foobar\"></style>",
-            description: "the tag \"style\" shouldn't cause problems",
           },
           ...varySpacing("/", {
             input: "<style class=\"foobar\"/>",
             expected: "<style class=\"foobar\"/>",
-            description: "the tag \"style\" shouldn't cause problems",
           }),
         ],
       },
@@ -458,10 +449,6 @@ suite("CSS Variable Mangler", function() {
           cases: factory("foobar", "a")
             .flatMap((testCase: TestCase): TestCase[] => [
               {
-                input: `${testCase.input}`,
-                expected: `${testCase.expected}`,
-              },
-              {
                 input: `color:red;${testCase.input}`,
                 expected: `color:red;${testCase.expected}`,
               },
@@ -486,6 +473,56 @@ suite("CSS Variable Mangler", function() {
           cases: PAIRS.flatMap(embedAttributesInNestedTags),
         },
         {
+          name: `${name} strings in non-CSS places`,
+          cases: factory("foobar", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `<div alt="${testCase.input}"></div>`,
+                expected: `<div alt="${testCase.input}"></div>`,
+              },
+              {
+                input: `
+                  <div style="${testCase.input}"
+                       alt="${testCase.input}"></div>
+                `,
+                expected: `
+                  <div style="${testCase.expected}"
+                       alt="${testCase.input}"></div>
+                `,
+              },
+
+              ...varyTagSpacing({
+                input: `<div>${testCase.input}</div>`,
+                expected: `<div>${testCase.input}</div>`,
+              }),
+              ...varyTagSpacing({
+                input: `
+                  <div style="${testCase.input}">${testCase.input}</div>
+                `,
+                expected: `
+                  <div style="${testCase.expected}">${testCase.input}</div>
+                `,
+              }),
+
+              ...varyTagSpacing({
+                input: `<div>style="${testCase.input}"</div>`,
+                expected: `<div>style="${testCase.input}"</div>`,
+              }),
+              ...varyTagSpacing({
+                input: `
+                  <div style="${testCase.input}">
+                    style="${testCase.input}"
+                  </div>
+                `,
+                expected: `
+                  <div style="${testCase.expected}">
+                    style="${testCase.input}"
+                  </div>
+                `,
+              }),
+            ]),
+        },
+        {
           name: `style-like attributes with ${name}`,
           cases: ["x", "data-"]
             .flatMap((prefix: string): TestCase[] => {
@@ -499,6 +536,58 @@ suite("CSS Variable Mangler", function() {
             .flatMap(embedAttributesInTags),
         },
         {
+          name: `${name} with unexpected (non-closing) ">"`,
+          cases: factory("foobar", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `id=">" style="${testCase.input}"`,
+                expected: `id=">" style="${testCase.expected}"`,
+              },
+              {
+                input: `style=">;${testCase.input}"`,
+                expected: `style=">;${testCase.expected}"`,
+              },
+              {
+                input: `style="${testCase.input};>;"`,
+                expected: `style="${testCase.expected};>;"`,
+              },
+            ])
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with style attribute repetition`,
+          cases: [
+            ...PAIRS
+              .map(([testCaseA, testCaseB]): TestCase => ({
+                input: `${testCaseA.input} ${testCaseB.input}`,
+                expected: `${testCaseA.expected} ${testCaseB.expected}`,
+              })),
+            ...factory("foobar", "a")
+              .map((testCase: TestCase): TestCase => ({
+                input: `
+                  style="${testCase.input}" style="${testCase.input}"
+                `,
+                expected: `
+                  style="${testCase.expected}" style="${testCase.expected}"
+                `,
+              })),
+          ].flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with style as tag`,
+          cases: factory("foobar", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `<style style="${testCase.input}"></style>`,
+                expected: `<style style="${testCase.expected}"></style>`,
+              },
+              ...varySpacing("/", {
+                input: `<style style="${testCase.input}"/>`,
+                expected: `<style style="${testCase.expected}"/>`,
+              }),
+            ]),
+        },
+        {
           name: `${name} edge cases`,
           cases: [
             ...factory("foobar", "a")
@@ -507,28 +596,9 @@ suite("CSS Variable Mangler", function() {
                 expected: testCase.expected.replace(";", ""),
                 description: "missing \";\" should not matter",
               }))
-              .map(embedDeclarationsInStyle),
-            ...factory("foobar", "a")
-              .flatMap((testCase: TestCase): TestCase[] => [
-                {
-                  input: `<style style="${testCase.input}"></style>`,
-                  expected: `<style style="${testCase.expected}"></style>`,
-                  description: "the tag \"style\" shouldn't cause problems",
-                },
-                ...varySpacing("/", {
-                  input: `<style style="${testCase.input}"/>`,
-                  expected: `<style style="${testCase.expected}"/>`,
-                  description: "the tag \"style\" shouldn't cause problems",
-                }),
-              ]),
-            ...PAIRS
-              .flatMap(([testCaseA, testCaseB]): TestCase => ({
-                input: `${testCaseA.input} ${testCaseB.input}`,
-                expected: `${testCaseA.expected} ${testCaseB.expected}`,
-                description: "multiple style attributes on one element should all be mangled",
-              })),
-          ]
-          .flatMap(embedAttributesInTags),
+              .map(embedDeclarationsInStyle)
+              .flatMap(embedAttributesInTags),
+          ],
         },
       ]);
     }

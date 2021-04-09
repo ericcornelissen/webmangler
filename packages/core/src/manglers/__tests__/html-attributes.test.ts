@@ -556,34 +556,42 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "edge cases",
+        name: "unexpected (non-closing) \">\"",
         cases: [
           {
-            input: "<div data-foo=\"bar\" data-foo=\"baz\"></div>",
-            expected: "<div data-a=\"bar\" data-a=\"baz\"></div>",
-            description: "repeated attributes should all be mangled",
+            input: "id=\">\" data-foo=\"bar\"",
+            expected: "id=\">\" data-a=\"bar\"",
           },
           {
-            input: "<div id=\">\" data-foo=\"bar\"></div>",
-            expected: "<div id=\">\" data-a=\"bar\"></div>",
-            description: "closing `>` inside attribute values should be ignored",
+            input: "data-foo=\"bar\" id=\">\"",
+            expected: "data-a=\"bar\" id=\">\"",
           },
           {
-            input: "<div data-foo=\"bar\" id=\">\"></div>",
-            expected: "<div data-a=\"bar\" id=\">\"></div>",
-            description: "closing `>` inside attribute values should be ignored",
+            input: "data-praise=\">\" data-the=\"sun\"",
+            expected: "data-a=\">\" data-b=\"sun\"",
+          },
+        ].flatMap(embedAttributesInTags),
+      },
+      {
+        name: "attribute repetition",
+        cases: [
+          {
+            input: "data-foo=\"bar\" data-foo=\"baz\"",
+            expected: "data-a=\"bar\" data-a=\"baz\"",
           },
           {
-            input: "<div data-praise=\">\" data-the=\"sun\"></div>",
-            expected: "<div data-a=\">\" data-b=\"sun\"></div>",
-            description: "closing `>` inside attribute values should be ignored",
+            input: "data-foo data-foo",
+            expected: "data-a data-a",
           },
           {
-            input: "< div data-foo=\"bar\"></div>",
-            expected: "< div data-a=\"bar\"></div>",
-            description: "ignore spacing before opening tag",
+            input: "data-foo=\"bar\" data-foo",
+            expected: "data-a=\"bar\" data-a",
           },
-        ],
+          {
+            input: "data-foo data-foo=\"baz\"",
+            expected: "data-a data-a=\"baz\"",
+          },
+        ].flatMap(embedAttributesInTags),
       },
     ];
 
@@ -714,17 +722,15 @@ suite("HTML Attribute Mangler", function() {
         .flatMap(embedAttributesInTags),
       },
       {
-        name: "edge cases",
+        name: "style as tag",
         cases: [
           {
             input: "<style class=\"foobar\"></style>",
             expected: "<style class=\"foobar\"></style>",
-            description: "the tag \"style\" shouldn't cause problems",
           },
           ...varySpacing("/", {
             input: "<style class=\"foobar\"/>",
             expected: "<style class=\"foobar\"/>",
-            description: "the tag \"style\" shouldn't cause problems",
           }),
         ],
       },
@@ -857,6 +863,62 @@ suite("HTML Attribute Mangler", function() {
             .flatMap(embedAttributesInTags),
         },
         {
+          name: `${name} with unexpected (non-closing) ">"`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `id=">" style="${testCase.input}"`,
+                expected: `id=">" style="${testCase.expected}"`,
+              },
+              {
+                input: `style="${testCase.input}" id=">"`,
+                expected: `style="${testCase.expected}" id=">"`,
+              },
+              {
+                input: `style=">;${testCase.input}"`,
+                expected: `style=">;${testCase.expected}"`,
+              },
+              {
+                input: `style="${testCase.input};>;"`,
+                expected: `style="${testCase.expected};>;"`,
+              },
+            ])
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with style attribute repetition`,
+          cases: [
+            ...PAIRS
+              .map(([testCaseA, testCaseB]): TestCase => ({
+                input: `${testCaseA.input} ${testCaseB.input}`,
+                expected: `${testCaseA.expected} ${testCaseB.expected}`,
+              })),
+            ...factory("data-foobar", "data-a")
+              .map((testCase: TestCase): TestCase => ({
+                input: `
+                  style="${testCase.input}" style="${testCase.input}"
+                `,
+                expected: `
+                  style="${testCase.expected}" style="${testCase.expected}"
+                `,
+              })),
+          ].flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with style as tag`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `<style style="${testCase.input}"></style>`,
+                expected: `<style style="${testCase.expected}"></style>`,
+              },
+              ...varySpacing("/", {
+                input: `<style style="${testCase.input}"/>`,
+                expected: `<style style="${testCase.expected}"/>`,
+              }),
+            ]),
+        },
+        {
           name: "edge cases",
           cases: [
             ...factory("data-foobar", "data-a")
@@ -866,43 +928,6 @@ suite("HTML Attribute Mangler", function() {
                 description: "missing \";\" should not matter",
               }))
               .map(embedDeclarationsInStyle)
-              .flatMap(embedAttributesInTags),
-            ...factory("data-foobar", "data-a")
-              .flatMap((testCase: TestCase): TestCase[] => [
-                {
-                  input: `id=">" style="${testCase.input}"`,
-                  expected: `id=">" style="${testCase.expected}"`,
-                  description: "closing `>` inside attribute values should be ignored",
-                },
-                {
-                  input: `style=">;${testCase.input}"`,
-                  expected: `style=">;${testCase.expected}"`,
-                  description: "closing `>` inside attribute values should be ignored",
-                },
-                {
-                  input: `style="${testCase.input};>;"`,
-                  expected: `style="${testCase.expected};>;"`,
-                  description: "closing `>` inside attribute values should be ignored",
-                },
-              ])
-              .flatMap(embedAttributesInTags),
-            ...PAIRS
-              .flatMap(([testCaseA, testCaseB]): TestCase[] => [
-                {
-                  input: `${testCaseA.input} ${testCaseB.input}`,
-                  expected: `${testCaseA.expected} ${testCaseB.expected}`,
-                  description: "multiple style attributes on one element should all be mangled",
-                },
-                {
-                  input: `
-                    ${testCaseA.input} id=">" ${testCaseB.input}
-                  `,
-                  expected: `
-                    ${testCaseA.expected} id=">" ${testCaseB.expected}
-                  `,
-                  description: "multiple style attributes on one element should all be mangled",
-                },
-              ])
               .flatMap(embedAttributesInTags),
           ],
         },
