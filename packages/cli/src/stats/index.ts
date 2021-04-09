@@ -52,7 +52,7 @@ function getDisplayPercentage(percentage: number): string {
  * @returns The {@link ManglerStats} for the run.
  */
 export function getStatsBetween(data: {
-  duration?: number,
+  duration: number,
   inFiles: WebManglerCliFile[],
   outFiles: WebManglerCliFile[],
 }): ManglerStats {
@@ -83,7 +83,7 @@ export function getStatsBetween(data: {
 
   return {
     files: fileStats,
-    duration: duration || -1,
+    duration: duration,
   };
 }
 
@@ -97,6 +97,9 @@ export function logStats(
   log: (msg: string) => void,
   stats: ManglerStats,
 ): void {
+  const fileCount: number = stats.files.size;
+  const duration: number = roundToTwoDecimalPlaces(stats.duration);
+
   if (stats.files.size === 0) {
     return;
   }
@@ -119,5 +122,5 @@ export function logStats(
   const overallPercentage = getDisplayPercentage(changedPercentage);
   const overallReduction = `${overallBefore} -> ${overallAfter}`;
   log(`OVERALL ${overallPercentage} (${overallReduction})`);
-  log(`\nmangled ${stats.files.size} files in ${stats.duration} ms`);
+  log(`\nmangled ${fileCount} files in ${duration} ms`);
 }

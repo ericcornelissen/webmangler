@@ -89,8 +89,13 @@ suite("Statistics", function() {
             outFiles,
             expected,
           } = testCase;
+          const duration = -1;
 
-          const { files: result } = getStatsBetween({ inFiles, outFiles });
+          const { files: result } = getStatsBetween({
+            inFiles,
+            outFiles,
+            duration,
+          });
           expect(result.size).to.equal(expected.length);
           for (const expectedI of expected) {
             const {
