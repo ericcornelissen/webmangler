@@ -343,37 +343,7 @@ suite("HTML Attribute Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: attrNamePattern,
-            reserved: reservedAttrNames,
-            prefix: keepAttrPrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("css", input)];
-
-          const htmlAttributeMangler = new HtmlAttributeMangler({
-            attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
-            reservedAttrNames: reservedAttrNames,
-            keepAttrPrefix: keepAttrPrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [htmlAttributeMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("css", scenarios);
   });
 
   suite("HTML", function() {
@@ -525,37 +495,7 @@ suite("HTML Attribute Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: attrNamePattern,
-            reserved: reservedAttrNames,
-            prefix: keepAttrPrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("html", input)];
-
-          const htmlAttributeMangler = new HtmlAttributeMangler({
-            attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
-            reservedAttrNames: reservedAttrNames,
-            keepAttrPrefix: keepAttrPrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [htmlAttributeMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("html", scenarios);
   });
 
   suite("JavaScript", function() {
@@ -713,37 +653,7 @@ suite("HTML Attribute Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: attrNamePattern,
-            reserved: reservedAttrNames,
-            prefix: keepAttrPrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("js", input)];
-
-          const htmlAttributeMangler = new HtmlAttributeMangler({
-            attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
-            reservedAttrNames: reservedAttrNames,
-            keepAttrPrefix: keepAttrPrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [htmlAttributeMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("js", scenarios);
   });
 
   suite("Configuration", function() {
@@ -875,3 +785,44 @@ suite("HTML Attribute Mangler", function() {
     });
   });
 });
+
+/**
+ * Run an integration test.
+ *
+ * @param language The language being tested.
+ * @param scenarios The {@link TestScenario}s.
+ */
+function run(language: string, scenarios: TestScenario<TestCase>[]): void {
+  for (const { name, cases } of scenarios) {
+    test(name, function() {
+      for (const testCase of cases) {
+          const {
+            input,
+            expected,
+            pattern: attrNamePattern,
+            reserved: reservedAttrNames,
+            prefix: keepAttrPrefix,
+            description: failureMessage,
+          } = testCase;
+
+          const files = [new WebManglerFileMock(language, input)];
+
+          const htmlAttributeMangler = new HtmlAttributeMangler({
+            attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
+            reservedAttrNames: reservedAttrNames,
+            keepAttrPrefix: keepAttrPrefix,
+          });
+
+          const result = webmangler(files, {
+            plugins: [htmlAttributeMangler],
+            languages: [builtInLanguages],
+          });
+          expect(result).to.have.length(1);
+
+          const out = result[0];
+          expect(out.content).to.equal(expected, failureMessage);
+      }
+    });
+  }
+}
+

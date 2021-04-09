@@ -249,37 +249,7 @@ suite("CSS Class Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: classNamePattern,
-            reserved: reservedClassNames,
-            prefix: keepClassNamePrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("css", input)];
-
-          const cssClassMangler = new CssClassMangler({
-            classNamePattern: classNamePattern || DEFAULT_PATTERN,
-            reservedClassNames: reservedClassNames,
-            keepClassNamePrefix: keepClassNamePrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [cssClassMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("css", scenarios);
   });
 
   suite("HTML", function() {
@@ -680,37 +650,7 @@ suite("CSS Class Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: classNamePattern,
-            reserved: reservedClassNames,
-            prefix: keepClassNamePrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("html", input)];
-
-          const cssClassMangler = new CssClassMangler({
-            classNamePattern: classNamePattern || DEFAULT_PATTERN,
-            reservedClassNames: reservedClassNames,
-            keepClassNamePrefix: keepClassNamePrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [cssClassMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("html", scenarios);
   });
 
   suite("JavaScript", function() {
@@ -903,37 +843,7 @@ suite("CSS Class Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: classNamePattern,
-            reserved: reservedClassNames,
-            prefix: keepClassNamePrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("js", input)];
-
-          const cssClassMangler = new CssClassMangler({
-            classNamePattern: classNamePattern || DEFAULT_PATTERN,
-            reservedClassNames: reservedClassNames,
-            keepClassNamePrefix: keepClassNamePrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [cssClassMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("js", scenarios);
   });
 
   suite("Configuration", function() {
@@ -1104,3 +1014,43 @@ suite("CSS Class Mangler", function() {
     });
   });
 });
+
+/**
+ * Run an integration test.
+ *
+ * @param language The language being tested.
+ * @param scenarios The {@link TestScenario}s.
+ */
+function run(language: string, scenarios: TestScenario<TestCase>[]): void {
+  for (const { name, cases } of scenarios) {
+    test(name, function() {
+      for (const testCase of cases) {
+        const {
+          input,
+          expected,
+          pattern: classNamePattern,
+          reserved: reservedClassNames,
+          prefix: keepClassNamePrefix,
+          description: failureMessage,
+        } = testCase;
+
+        const files = [new WebManglerFileMock(language, input)];
+
+        const cssClassMangler = new CssClassMangler({
+          classNamePattern: classNamePattern || DEFAULT_PATTERN,
+          reservedClassNames: reservedClassNames,
+          keepClassNamePrefix: keepClassNamePrefix,
+        });
+
+        const result = webmangler(files, {
+          plugins: [cssClassMangler],
+          languages: [builtInLanguages],
+        });
+        expect(result).to.have.length(1);
+
+        const out = result[0];
+        expect(out.content).to.equal(expected, failureMessage);
+      }
+    });
+  }
+}
