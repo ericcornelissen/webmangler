@@ -1,5 +1,6 @@
 import type { FileStats, ManglerStats } from "../types";
 import type { WebManglerCliFile } from "../../fs";
+import type { TestScenario } from "@webmangler/testing";
 
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
@@ -14,23 +15,24 @@ chaiUse(sinonChai);
 
 suite("Statistics", function() {
   suite("::getStatsBetween", function() {
-    const scenarios: {
-      name: string,
-      cases: {
-        expected: {
-          filePath: string,
-          changed: boolean,
-          sizeBefore?: number,
-          sizeAfter?: number,
-        }[],
-        inFiles: WebManglerCliFile[],
-        outFiles: WebManglerCliFile[],
+    type TestCase = {
+      expected: {
+        filePath: string,
+        changed: boolean,
+        sizeBefore?: number,
+        sizeAfter?: number,
       }[],
-    }[] = [
+      duration: number,
+      inFiles: WebManglerCliFile[],
+      outFiles: WebManglerCliFile[],
+    };
+
+    const scenarios: TestScenario<TestCase>[] = [
       {
         name: "sample",
         cases: [
           {
+            duration: 1,
             inFiles: [
               new WebManglerCliFileMock({
                 path: "foo.bar",
@@ -53,6 +55,7 @@ suite("Statistics", function() {
             ],
           },
           {
+            duration: 2,
             inFiles: [
               new WebManglerCliFileMock({
                 path: "foo.bar",
@@ -73,6 +76,7 @@ suite("Statistics", function() {
         name: "corner cases",
         cases: [
           {
+            duration: 0,
             inFiles: [],
             outFiles: [],
             expected: [],
@@ -85,18 +89,21 @@ suite("Statistics", function() {
       test(name, function() {
         for (const testCase of cases) {
           const {
+            duration,
             inFiles,
             outFiles,
             expected,
           } = testCase;
-          const duration = -1;
 
-          const { files: result } = getStatsBetween({
+          const stats = getStatsBetween({
+            duration,
             inFiles,
             outFiles,
-            duration,
           });
-          expect(result.size).to.equal(expected.length);
+
+          expect(stats.duration).to.equal(duration);
+          expect(stats.files.size).to.equal(expected.length);
+
           for (const expectedI of expected) {
             const {
               filePath,
@@ -105,7 +112,7 @@ suite("Statistics", function() {
               sizeAfter,
             } = expectedI;
 
-            const fileStats = result.get(filePath) as FileStats;
+            const fileStats = stats.files.get(filePath) as FileStats;
             expect(fileStats).not.to.be.undefined;
             expect(fileStats.changed).to.equal(changed);
 
