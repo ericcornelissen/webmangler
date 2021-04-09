@@ -306,110 +306,50 @@ suite("HTML Test Helpers", function() {
   });
 
   suite("::withOtherAttributes", function() {
-    suite("One TestCase", function() {
-      const scenarios: TestScenario<TestCase>[] = [
-        {
-          name: "unchanging attributes",
-          cases: [
-            {
-              input: "id=\"foobar\"",
-              expected: "id=\"foobar\"",
-            },
-            {
-              input: "data-foo=\"bar\"",
-              expected: "data-foo=\"bar\"",
-            },
-          ],
-        },
-        {
-          name: "changing attributes",
-          cases: [
-            {
-              input: "class=\"foo\"",
-              expected: "class=\"bar\"",
-            },
-            {
-              input: "data-foo=\"bar\"",
-              expected: "data-foo=\"baz\"",
-            },
-            {
-              input: "data-hello=\"world\"",
-              expected: "data-hey=\"world\"",
-            },
-          ],
-        },
-      ];
+    const scenarios: TestScenario<TestCase>[] = [
+      {
+        name: "unchanging attributes",
+        cases: [
+          {
+            input: "id=\"foobar\"",
+            expected: "id=\"foobar\"",
+          },
+          {
+            input: "data-foo=\"bar\"",
+            expected: "data-foo=\"bar\"",
+          },
+        ],
+      },
+      {
+        name: "changing attributes",
+        cases: [
+          {
+            input: "class=\"foo\"",
+            expected: "class=\"bar\"",
+          },
+          {
+            input: "data-foo=\"bar\"",
+            expected: "data-foo=\"baz\"",
+          },
+          {
+            input: "data-hello=\"world\"",
+            expected: "data-hey=\"world\"",
+          },
+        ],
+      },
+    ];
 
-      for (const { name, cases } of scenarios) {
-        test(name, function() {
-          for (const testCase of cases) {
-            const results = withOtherAttributes(testCase);
-            expect(results).to.have.length.above(1);
-            for (const result of results) {
-              expect(result.input).to.include(testCase.input);
-              expect(result.expected).to.include(testCase.expected);
-            }
+    for (const { name, cases } of scenarios) {
+      test(name, function() {
+        for (const testCase of cases) {
+          const results = withOtherAttributes(testCase);
+          expect(results).to.have.length.above(1);
+          for (const result of results) {
+            expect(result.input).to.include(testCase.input);
+            expect(result.expected).to.include(testCase.expected);
           }
-        });
-      }
-    });
-
-    suite("Pair of TestCases", function() {
-      const scenarios: TestScenario<[TestCase, TestCase]>[] = [
-        {
-          name: "sample",
-          cases: [
-            [
-              {
-                input: "id=\"foobar\"",
-                expected: "id=\"foobar\"",
-              },
-              {
-                input: "data-foo=\"bar\"",
-                expected: "data-foo=\"bar\"",
-              },
-            ],
-            [
-              {
-                input: "id=\"foo\"",
-                expected: "id=\"bar\"",
-              },
-              {
-                input: "data-foo=\"bar\"",
-                expected: "data-foo=\"bar\"",
-              },
-            ],
-            [
-              {
-                input: "class=\"hello\"",
-                expected: "class=\"world\"",
-              },
-              {
-                input: "data-foo=\"bar\"",
-                expected: "data-foo=\"baz\"",
-              },
-            ],
-          ],
-        },
-      ];
-
-      for (const { name, cases } of scenarios) {
-        test(name, function() {
-          for (const testCase of cases) {
-            const [testCaseA, testCaseB] = testCase;
-
-            const results = withOtherAttributes(testCase);
-            expect(results).to.have.length.above(1);
-            for (const result of results) {
-              expect(result.input).to.include(testCaseA.input);
-              expect(result.input).to.include(testCaseB.input);
-
-              expect(result.expected).to.include(testCaseA.expected);
-              expect(result.expected).to.include(testCaseB.expected);
-            }
-          }
-        });
-      }
-    });
+        }
+      });
+    }
   });
 });
