@@ -265,37 +265,7 @@ suite("HTML ID Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: idNamePattern,
-            reserved: reservedIds,
-            prefix: keepIdPrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("css", input)];
-
-          const htmlIdMangler = new HtmlIdMangler({
-            idNamePattern: idNamePattern || DEFAULT_PATTERN,
-            reservedIds: reservedIds,
-            keepIdPrefix: keepIdPrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [htmlIdMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("css", scenarios);
   });
 
   suite("HTML", function() {
@@ -560,37 +530,7 @@ suite("HTML ID Mangler", function() {
       ]);
     }
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: idNamePattern,
-            reserved: reservedIds,
-            prefix: keepIdPrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("html", input)];
-
-          const htmlIdMangler = new HtmlIdMangler({
-            idNamePattern: idNamePattern || DEFAULT_PATTERN,
-            reservedIds: reservedIds,
-            keepIdPrefix: keepIdPrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [htmlIdMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("html", scenarios);
   });
 
   suite("JavaScript", function() {
@@ -894,37 +834,7 @@ suite("HTML ID Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: idNamePattern,
-            reserved: reservedIds,
-            prefix: keepIdPrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("js", input)];
-
-          const htmlIdMangler = new HtmlIdMangler({
-            idNamePattern: idNamePattern || DEFAULT_PATTERN,
-            reservedIds: reservedIds,
-            keepIdPrefix: keepIdPrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [htmlIdMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("js", scenarios);
   });
 
   suite("Configuration", function() {
@@ -1093,3 +1003,44 @@ suite("HTML ID Mangler", function() {
     });
   });
 });
+
+/**
+ * Run an integration test.
+ *
+ * @param language The language being tested.
+ * @param scenarios The {@link TestScenario}s.
+ */
+function run(language: string, scenarios: TestScenario<TestCase>[]): void {
+  for (const { name, cases } of scenarios) {
+    test(name, function() {
+      for (const testCase of cases) {
+        const {
+          input,
+          expected,
+          pattern: idNamePattern,
+          reserved: reservedIds,
+          prefix: keepIdPrefix,
+          description: failureMessage,
+        } = testCase;
+
+        const files = [new WebManglerFileMock(language, input)];
+
+        const htmlIdMangler = new HtmlIdMangler({
+          idNamePattern: idNamePattern || DEFAULT_PATTERN,
+          reservedIds: reservedIds,
+          keepIdPrefix: keepIdPrefix,
+        });
+
+        const result = webmangler(files, {
+          plugins: [htmlIdMangler],
+          languages: [builtInLanguages],
+        });
+        expect(result).to.have.length(1);
+
+        const out = result[0];
+        expect(out.content).to.equal(expected, failureMessage);
+      }
+    });
+  }
+}
+

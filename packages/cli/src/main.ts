@@ -7,7 +7,8 @@ import webmangler from "webmangler";
 import getConfiguration from "./config";
 import * as fs from "./fs";
 import Logger from "./logger";
-import { getStatsBetween, logStats } from "./stats";
+import { computeStats, logStats } from "./stats";
+import { timeCall } from "./timing";
 
 /**
  * Run _WebMangler_ on the CLI specified configuration.
@@ -27,12 +28,12 @@ export default async function run(args: WebManglerCliArgs): Promise<void> {
   logger.debug(`found ${inFiles.length} files`);
 
   logger.debug(`mangling ${inFiles.length} files...`);
-  const outFiles = webmangler(inFiles, config);
+  const [duration, outFiles] = timeCall(() => webmangler(inFiles, config));
   logger.debug(`${outFiles.length} files mangled`);
 
   if (args.stats) {
     logger.debug("computing stats...");
-    const stats = getStatsBetween(inFiles, outFiles);
+    const stats = computeStats({ inFiles, outFiles, duration });
     logger.debug("stats computed");
     logger.debug("logging stats...");
     logStats(console.log, stats);

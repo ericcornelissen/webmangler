@@ -270,37 +270,7 @@ suite("CSS Variable Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: cssVarNamePattern,
-            reserved: reservedCssVarNames,
-            prefix: keepCssVarPrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("css", input)];
-
-          const cssVariableMangler = new CssVariableMangler({
-            cssVarNamePattern: cssVarNamePattern || DEFAULT_PATTERN,
-            reservedCssVarNames: reservedCssVarNames,
-            keepCssVarPrefix: keepCssVarPrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [cssVariableMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("css", scenarios);
   });
 
   suite("HTML", function() {
@@ -563,37 +533,7 @@ suite("CSS Variable Mangler", function() {
       ]);
     }
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: cssVarNamePattern,
-            reserved: reservedCssVarNames,
-            prefix: keepCssVarPrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("html", input)];
-
-          const cssVariableMangler = new CssVariableMangler({
-            cssVarNamePattern: cssVarNamePattern || DEFAULT_PATTERN,
-            reservedCssVarNames: reservedCssVarNames,
-            keepCssVarPrefix: keepCssVarPrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [cssVariableMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("html", scenarios);
   });
 
   suite("JavaScript", function() {
@@ -617,37 +557,7 @@ suite("CSS Variable Mangler", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: cssVarNamePattern,
-            reserved: reservedCssVarNames,
-            prefix: keepCssVarPrefix,
-            description: failureMessage,
-          } = testCase;
-
-          const files = [new WebManglerFileMock("js", input)];
-
-          const cssVariableMangler = new CssVariableMangler({
-            cssVarNamePattern: cssVarNamePattern || DEFAULT_PATTERN,
-            reservedCssVarNames: reservedCssVarNames,
-            keepCssVarPrefix: keepCssVarPrefix,
-          });
-
-          const result = webmangler(files, {
-            plugins: [cssVariableMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
-
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
-        }
-      });
-    }
+    run("js", scenarios);
   });
 
   suite("Configuration", function() {
@@ -775,3 +685,43 @@ suite("CSS Variable Mangler", function() {
     });
   });
 });
+
+/**
+ * Run an integration test.
+ *
+ * @param language The language being tested.
+ * @param scenarios The {@link TestScenario}s.
+ */
+function run(language: string, scenarios: TestScenario<TestCase>[]): void {
+  for (const { name, cases } of scenarios) {
+    test(name, function() {
+      for (const testCase of cases) {
+        const {
+          input,
+          expected,
+          pattern: cssVarNamePattern,
+          reserved: reservedCssVarNames,
+          prefix: keepCssVarPrefix,
+          description: failureMessage,
+        } = testCase;
+
+        const files = [new WebManglerFileMock(language, input)];
+
+        const cssVariableMangler = new CssVariableMangler({
+          cssVarNamePattern: cssVarNamePattern || DEFAULT_PATTERN,
+          reservedCssVarNames: reservedCssVarNames,
+          keepCssVarPrefix: keepCssVarPrefix,
+        });
+
+        const result = webmangler(files, {
+          plugins: [cssVariableMangler],
+          languages: [builtInLanguages],
+        });
+        expect(result).to.have.length(1);
+
+        const out = result[0];
+        expect(out.content).to.equal(expected, failureMessage);
+      }
+    });
+  }
+}
