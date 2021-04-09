@@ -7,12 +7,14 @@ import type {
 
 import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
+import * as R from "ramda";
 import { format as printf } from "util";
 
 import {
   ATTRIBUTE_SELECTOR_OPERATORS,
   CSS_PROPERTIES,
   CSS_VALUES,
+  CSS_VALUES_NO_STRINGS,
   PSEUDO_ELEMENT_SELECTORS,
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
@@ -21,6 +23,8 @@ import {
 import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
 import {
   embedAttributeValue,
+  embedAttributesInAdjacentTags,
+  embedAttributesInNestedTags,
   embedAttributesInTags,
   withOtherAttributes,
 } from "./html-helpers";
@@ -76,10 +80,12 @@ const ATTRIBUTES: SelectorBeforeAndAfter[] = [
 ];
 
 suite("HTML Attribute Mangler", function() {
-  const varyCommaSpacing = varySpacing(",");
+  const varyAttributeSpacing = varySpacing(["=", "\""]);
+  const varyTagSpacing = varySpacing(["<", ">"]);
 
   suite("CSS", function() {
     const varyAttributeSelectorSpacing = varySpacing(["[", "]"]);
+    const varyCommaSpacing = varySpacing(",");
 
     const scenarios: TestScenario<TestCase>[] = [
       {
@@ -382,16 +388,11 @@ suite("HTML Attribute Mangler", function() {
     }
   });
 
-  suite("HTML", function() {
-    const embedDeclarationsInStyle = embedAttributeValue("style");
-
-    const varyAttributeSpacing = varySpacing(["=", "\""]);
-    const varyDeclarationSpacing = varySpacing([":", "(", ")", ";"]);
-
+  suite("HTML (attributes)", function() {
     const SAMPLE_ATTRIBUTES: TestCase[] = [
       {
-        input: "data-foo=\"bar\" data-hello=\"world\"",
-        expected: "data-a=\"bar\" data-b=\"world\"",
+        input: "data-foo=\"bar\"",
+        expected: "data-a=\"bar\"",
       },
       {
         input: "data-foobar",
@@ -470,78 +471,141 @@ suite("HTML Attribute Mangler", function() {
         },
       ],
     ];
-    const SAMPLE_ATTRIBUTE_USAGE: TestCase[] = [
-      {
-        input: "attr(data-foo)",
-        expected: "attr(data-a)",
-      },
-      {
-        input: "attr(data-foo px)",
-        expected: "attr(data-a px)",
-      },
-      {
-        input: "attr(data-foo, 42)",
-        expected: "attr(data-a, 42)",
-      },
-      {
-        input: "attr(data-foo px, 42)",
-        expected: "attr(data-a px, 42)",
-      },
-    ];
 
-    const attrScenarios: TestScenario<TestCase>[] = [
+    const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "no (matching) attributes",
+        name: "no relevant content",
         cases: [
           ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
-            .filter((testCase) => /\sdata-[a-z]+/.test(testCase.input)),
+            .filter((testCase) => /\s(data-[a-z]+)/.test(testCase.input)),
         ]
         .flatMap(varyHtmlQuotes)
         .flatMap(embedAttributesInTags),
       },
       {
-        name: "varying spacing in attributes",
-        cases: [
-          ...SAMPLE_ATTRIBUTES,
-          ...SAMPLE_ATTRIBUTE_PAIRS
-            .map(([testCaseA, testCaseB]): TestCase => ({
-              input: `${testCaseA.input} ${testCaseB.input}`,
-              expected: `${testCaseA.expected} ${testCaseB.expected}`,
-            })),
-        ]
-        .flatMap(embedAttributesInTags)
-        .flatMap(varyAttributeSpacing),
+        name: "as only attribute",
+        cases: SAMPLE_ATTRIBUTES
+          .flatMap(varyAttributeSpacing)
+          .flatMap(varyHtmlQuotes)
+          .flatMap(embedAttributesInTags),
       },
       {
         name: "with other attributes",
-        cases: [
-          ...SAMPLE_ATTRIBUTES,
-          ...SAMPLE_ATTRIBUTE_PAIRS,
-        ]
-        .flatMap(withOtherAttributes)
-        .flatMap(embedAttributesInTags),
+        cases: SAMPLE_ATTRIBUTES
+          .flatMap(withOtherAttributes)
+          .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "on adjacent elements",
+        cases: SAMPLE_ATTRIBUTE_PAIRS.flatMap(embedAttributesInAdjacentTags),
+      },
+      {
+        name: "on nested elements",
+        cases: SAMPLE_ATTRIBUTE_PAIRS.flatMap(embedAttributesInNestedTags),
       },
       {
         name: "attribute-like strings in non-attribute places",
         cases: [
           {
-            input: "<div class=\"data-foo\"></div>",
-            expected: "<div class=\"data-foo\"></div>",
-            description: "matches inside attribute value should be ignored",
+            input: "<div class=\"data-foobar\"></div>",
+            expected: "<div class=\"data-foobar\"></div>",
+            description: "data attributes as attribute value should be ignored",
           },
           {
-            input: "<div>data-foo is an attribute name</div>",
-            expected: "<div>data-foo is an attribute name</div>",
-            description: "matches outside an element tag should be ignored",
+            input: "<div data-foo class=\"data-bar\"></div>",
+            expected: "<div data-a class=\"data-bar\"></div>",
+            description: "data attributes as attribute value should be ignored",
           },
+          {
+            input: "<div data-praise=\"the\" class=\"data-sun\"></div>",
+            expected: "<div data-a=\"the\" class=\"data-sun\"></div>",
+            description: "data attributes as attribute value should be ignored",
+          },
+          {
+            input: "<div data-foobar class=\"data-foobar\"></div>",
+            expected: "<div data-a class=\"data-foobar\"></div>",
+            description: "data attributes as attribute value should be ignored",
+          },
+          {
+            input: "<div data-foo=\"bar\" class=\"data-foo\"></div>",
+            expected: "<div data-a=\"bar\" class=\"data-foo\"></div>",
+            description: "data attributes as attribute value should be ignored",
+          },
+
+          ...varyTagSpacing({
+            input: "<div>data-foobar is an attribute name</div>",
+            expected: "<div>data-foobar is an attribute name</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<div data-foo>data-bar is an attribute name</div>",
+            expected: "<div data-a>data-bar is an attribute name</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<div data-praise=\"the\">data-sun is an attribute name</div>",
+            expected: "<div data-a=\"the\">data-sun is an attribute name</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<div data-foobar>data-foobar is an attribute name</div>",
+            expected: "<div data-a>data-foobar is an attribute name</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<div data-foo=\"bar\">data-foo is an attribute name</div>",
+            expected: "<div data-a=\"bar\">data-foo is an attribute name</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
+
+          ...varyTagSpacing({
+            input: "<div>data-foo=\"bar\" is an attribute</div>",
+            expected: "<div>data-foo=\"bar\" is an attribute</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<div data-foobar>data-hello=\"world\" is an attribute</div>",
+            expected: "<div data-a>data-hello=\"world\" is an attribute</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<div data-foo=\"bar\">data-hello=\"world\" is an attribute</div>",
+            expected: "<div data-a=\"bar\">data-hello=\"world\" is an attribute</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<div data-foo>data-foo=\"bar\" is an attribute</div>",
+            expected: "<div data-a>data-foo=\"bar\" is an attribute</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
+          ...varyTagSpacing({
+            input: "<div data-foo=\"bar\">data-foo=\"bar\" is an attribute</div>",
+            expected: "<div data-a=\"bar\">data-foo=\"bar\" is an attribute</div>",
+            description: "data attributes as innerHTML should be ignored",
+          }),
         ],
       },
       {
         name: "edge cases",
         cases: [
           {
-            input: "<div data-foo=\">\" data-bar=\"foo\"></div>",
-            expected: "<div data-a=\">\" data-b=\"foo\"></div>",
+            input: "<div data-foo=\"bar\" data-foo=\"baz\"></div>",
+            expected: "<div data-a=\"bar\" data-a=\"baz\"></div>",
+            description: "repeated attributes should all be mangled",
+          },
+          {
+            input: "<div id=\">\" data-foo=\"bar\"></div>",
+            expected: "<div id=\">\" data-a=\"bar\"></div>",
+            description: "closing `>` inside attribute values should be ignored",
+          },
+          {
+            input: "<div data-foo=\"bar\" id=\">\"></div>",
+            expected: "<div data-a=\"bar\" id=\">\"></div>",
+            description: "closing `>` inside attribute values should be ignored",
+          },
+          {
+            input: "<div data-praise=\">\" data-the=\"sun\"></div>",
+            expected: "<div data-a=\">\" data-b=\"sun\"></div>",
             description: "closing `>` inside attribute values should be ignored",
           },
           {
@@ -553,143 +617,359 @@ suite("HTML Attribute Mangler", function() {
       },
     ];
 
-    const styleScenarios: TestScenario<TestCase>[] = [
+    for (const { name, cases } of scenarios) {
+      test(name, function() {
+        for (const testCase of cases) {
+          const {
+            input,
+            expected,
+            pattern: attrNamePattern,
+            reserved: reservedAttrNames,
+            prefix: keepAttrPrefix,
+            description: failureMessage,
+          } = testCase;
+
+          const files = [new WebManglerFileMock("html", input)];
+
+          const htmlAttributeMangler = new HtmlAttributeMangler({
+            attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
+            reservedAttrNames: reservedAttrNames,
+            keepAttrPrefix: keepAttrPrefix,
+          });
+
+          const result = webmangler(files, {
+            plugins: [htmlAttributeMangler],
+            languages: [builtInLanguages],
+          });
+          expect(result).to.have.length(1);
+
+          const out = result[0];
+          expect(out.content).to.equal(expected, failureMessage);
+        }
+      });
+    }
+  });
+
+  suite("HTML (style attribute)", function() {
+    const embedDeclarationsInStyle = embedAttributeValue("style");
+
+    type TestInstance = {
+      readonly name: string;
+      factory(idBefore: string, idAfter: string): TestCase[];
+    }
+
+    const instances: TestInstance[] = [
       {
-        name: "attribute value usage",
-        cases: ATTRIBUTES
-          .map(({ before, after }): TestCase => ({
-            input: `<div style="content:attr(${before});"></div>`,
-            expected: `<div style="content:attr(${after});"></div>`,
-          }))
-          .flatMap(varyDeclarationSpacing)
-          .flatMap(varyHtmlQuotes),
+        name: "attribute usage",
+        factory: (before: string, after: string): TestCase[] => [
+          ...CSS_PROPERTIES
+            .map((property: string): TestCase => ({
+              input: `${property}:attr(${before});`,
+              expected: `${property}:attr(${after});`,
+            })),
+        ],
       },
       {
-        name: "attribute value usage with type/unit",
-        cases: ATTRIBUTES
-          .flatMap(({ before, after }): TestCase[] => [
-            ...TYPE_OR_UNITS
-              .flatMap((typeOrUnit: string): TestCase => ({
-                input: `
-                  <div style="content: attr(${before} ${typeOrUnit});"></div>
-                `,
-                expected: `
-                  <div style="content: attr(${after} ${typeOrUnit});"></div>
-                `,
-              })),
-          ]),
+        name: "attribute usage (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ")"], {
+            input: `content:attr(${before});`,
+            expected: `content:attr(${after});`,
+          }),
+        ],
       },
       {
-        name: "attribute value usage with default",
-        cases: ATTRIBUTES
-          .flatMap(({ before, after }): TestCase[] => [
-            ...varySpacing(["(", ",", ")"], {
-              input: `<div style="content: attr(${before},42);"></div>`,
-              expected: `<div style="content: attr(${after},42);"></div>`,
-            }),
-            ...CSS_VALUES
-              .map((value: string): TestCase => ({
-                input: `
-                  <div style="content: attr(${before}, ${value});"></div>
-                `,
-                expected: `
-                  <div style="content: attr(${after}, ${value});"></div>
-                `,
-              })),
-          ]),
+        name: "attribute usage with default",
+        factory: (before: string, after: string): TestCase[] => [
+          ...CSS_VALUES_NO_STRINGS
+            .map((value: string): TestCase => ({
+              input: `content:attr(${before},${value});`,
+              expected: `content:attr(${after},${value});`,
+            })),
+        ],
       },
       {
-        name: "attribute value usage with type/unit and default",
-        cases: ATTRIBUTES
-          .flatMap(({ before, after }): TestCase[] => [
-            ...varySpacing(["(", ",", ")"], {
-              input: `<div style="content: attr(${before} px,42);"></div>`,
-              expected: `<div style="content: attr(${after} px,42);"></div>`,
-            }),
-            ...CSS_VALUES
-              .flatMap((value: string): TestCase[] => [
-                ...TYPE_OR_UNITS
-                  .flatMap((typeOrUnit: string): TestCase => ({
-                    input: `
-                      <div style=
-                        "content: attr(${before} ${typeOrUnit},${value});">
-                      </div>
-                    `,
-                    expected: `
-                      <div style=
-                        "content: attr(${after} ${typeOrUnit},${value});">
-                      </div>
-                    `,
-                  })),
-              ]),
-          ]),
+        name: "attribute usage with default (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ","], {
+            input: `content:attr(${before},42);`,
+            expected: `content:attr(${after},42);`,
+          }),
+        ],
       },
       {
-        name: "attribute value usage with various properties",
-        cases: SAMPLE_ATTRIBUTE_USAGE
-          .flatMap((testCase: TestCase): TestCase[] => [
-            ...CSS_PROPERTIES
-              .map((property: string) => ({
-                input: `${property}: ${testCase.input}`,
-                expected: `${property}: ${testCase.expected}`,
-              })),
-          ])
-          .map(embedDeclarationsInStyle)
-          .flatMap(embedAttributesInTags),
+        name: "attribute usage with type/unit",
+        factory: (before: string, after: string): TestCase[] => [
+          ...TYPE_OR_UNITS
+            .map((typeOrUnit: string): TestCase => ({
+              input: `content:attr(${before} ${typeOrUnit});`,
+              expected: `content:attr(${after} ${typeOrUnit});`,
+            })),
+        ],
       },
       {
-        name: "attribute value usage with other attributes",
-        cases: SAMPLE_ATTRIBUTE_USAGE
-          .map((testCase: TestCase): TestCase => ({
-            input: `content: ${testCase.input}`,
-            expected: `content: ${testCase.expected}`,
-          }))
-          .map(embedDeclarationsInStyle)
-          .flatMap(withOtherAttributes)
-          .flatMap(embedAttributesInTags),
+        name: "attribute usage with type/unit (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ")"], {
+            input: `content:attr(${before} px);`,
+            expected: `content:attr(${after} px);`,
+          }),
+        ],
       },
       {
-        name: "attribute value usage with other declarations",
-        cases: SAMPLE_ATTRIBUTE_USAGE
-          .flatMap((testCase: TestCase): TestCase[] => [
-            {
-              input: `content: ${testCase.input}`,
-              expected: `content: ${testCase.expected}`,
-            },
-            {
-              input: `color: red; content: ${testCase.input}`,
-              expected: `color: red; content: ${testCase.expected}`,
-            },
-            {
-              input: `content: ${testCase.input}; background: blue;`,
-              expected: `content: ${testCase.expected}; background: blue;`,
-            },
-            {
-              input: `
-                color: red; content: ${testCase.input}; background: blue;
-              `,
-              expected: `
-                color: red; content: ${testCase.expected}; background: blue;
-              `,
-            },
-          ])
-          .map(embedDeclarationsInStyle)
-          .flatMap(withOtherAttributes)
-          .flatMap(embedAttributesInTags),
+        name: "attribute usage with default and type/unit",
+        factory: (before: string, after: string): TestCase[] => [
+          ...TYPE_OR_UNITS
+            .map((typeOrUnit: string): TestCase => ({
+              input: `content:attr(${before} ${typeOrUnit},42);`,
+              expected: `content:attr(${after} ${typeOrUnit},42);`,
+            })),
+          ...CSS_VALUES_NO_STRINGS
+            .map((value: string): TestCase => ({
+              input: `content:attr(${before} px,${value});`,
+              expected: `content:attr(${after} px,${value});`,
+            })),
+        ],
       },
       {
-        name: "edge cases",
-        cases: [
-          ...varySpacing("\"", {
-            input: "<div style=\"content: attr(data-foo)\"></div>",
-            expected: "<div style=\"content: attr(data-a)\"></div>",
-            description: "missing closing semicolon is allowed",
+        name: "attribute usage with default and type/unit (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ","], {
+            input: `content:attr(${before} px,42);`,
+            expected: `content:attr(${after} px,42);`,
           }),
         ],
       },
     ];
 
-    for (const { name, cases } of [...attrScenarios, ...styleScenarios]) {
+    const scenarios: TestScenario<TestCase>[] = [
+      {
+        name: "no relevant content",
+        cases: [
+          {
+            input: "style=\"color:red;\"",
+            expected: "style=\"color:red;\"",
+          },
+          ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
+            .filter((testCase) => /\s(style)=/.test(testCase.input)),
+        ]
+        .flatMap(varyHtmlQuotes)
+        .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "valueless style attribute",
+        cases: [
+          {
+            input: "style",
+            expected: "style",
+          },
+          {
+            input: "style=\"\"",
+            expected: "style=\"\"",
+          },
+        ]
+        .flatMap(varyAttributeSpacing)
+        .flatMap(varyHtmlQuotes)
+        .flatMap(withOtherAttributes)
+        .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "edge cases",
+        cases: [
+          {
+            input: "<style class=\"foobar\"></style>",
+            expected: "<style class=\"foobar\"></style>",
+            description: "the tag \"style\" shouldn't cause problems",
+          },
+          ...varySpacing("/", {
+            input: "<style class=\"foobar\"/>",
+            expected: "<style class=\"foobar\"/>",
+            description: "the tag \"style\" shouldn't cause problems",
+          }),
+        ],
+      },
+    ];
+
+    for (const instance of instances) {
+      const { name, factory } = instance;
+
+      const PAIRS: [TestCase, TestCase][] = [
+        [factory("data-foo", "data-a"), factory("data-bar", "data-b")],
+        [factory("data-foobar", "data-a"), factory("data-foobar", "data-a")],
+      ].flatMap(([testCasesA, testCasesB]): [TestCase, TestCase][] => {
+        return R.zip(
+          testCasesA.map(embedDeclarationsInStyle),
+          testCasesB.map(embedDeclarationsInStyle),
+        );
+      });
+
+      scenarios.push(...[
+        {
+          name: `no matching ${name} in a style attribute`,
+          cases: factory("foobar", "foobar")
+            .map(embedDeclarationsInStyle)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} by itself in a style attribute`,
+          cases: factory("data-foobar", "data-a")
+            .map(embedDeclarationsInStyle)
+            .flatMap(varyAttributeSpacing)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} by itself in a style attribute with other attributes`,
+          cases: factory("data-foobar", "data-a")
+            .map(embedDeclarationsInStyle)
+            .flatMap(withOtherAttributes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with other declarations in a style attribute`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `color:red;${testCase.input}`,
+                expected: `color:red;${testCase.expected}`,
+              },
+              {
+                input: `${testCase.input};background:blue;`,
+                expected: `${testCase.expected};background:blue;`,
+              },
+              {
+                input: `color:red;${testCase.input};background:blue;`,
+                expected: `color:red;${testCase.expected};background:blue;`,
+              },
+            ])
+            .map(embedDeclarationsInStyle)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} in style attributes on adjacent elements`,
+          cases: PAIRS.flatMap(embedAttributesInAdjacentTags),
+        },
+        {
+          name: `${name} in style attributes on nested elements`,
+          cases: PAIRS.flatMap(embedAttributesInNestedTags),
+        },
+        {
+          name: `${name} strings in non-CSS places`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `<div alt="${testCase.input}"></div>`,
+                expected: `<div alt="${testCase.input}"></div>`,
+              },
+              {
+                input: `
+                  <div style="${testCase.input}"
+                       alt="${testCase.input}"></div>
+                `,
+                expected: `
+                  <div style="${testCase.expected}"
+                       alt="${testCase.input}"></div>
+                `,
+              },
+
+              ...varyTagSpacing({
+                input: `<div>${testCase.input}</div>`,
+                expected: `<div>${testCase.input}</div>`,
+              }),
+              ...varyTagSpacing({
+                input: `
+                  <div style="${testCase.input}">${testCase.input}</div>
+                `,
+                expected: `
+                  <div style="${testCase.expected}">${testCase.input}</div>
+                `,
+              }),
+
+              ...varyTagSpacing({
+                input: `<div>style="${testCase.input}"</div>`,
+                expected: `<div>style="${testCase.input}"</div>`,
+              }),
+              ...varyTagSpacing({
+                input: `
+                  <div style="${testCase.input}">
+                    style="${testCase.input}"
+                  </div>
+                `,
+                expected: `
+                  <div style="${testCase.expected}">
+                    style="${testCase.input}"
+                  </div>
+                `,
+              }),
+            ]),
+        },
+        {
+          name: `style-like attributes with ${name}`,
+          cases: ["x", "aria-"]
+            .flatMap((prefix: string): TestCase[] => {
+              const attributeName = `${prefix}style`;
+              const embedDeclarations = embedAttributeValue(attributeName);
+              return factory("data-foo", "data-foo").map(embedDeclarations);
+            })
+            .flatMap(varyHtmlQuotes)
+            .flatMap(withOtherAttributes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: "edge cases",
+          cases: [
+            ...factory("data-foobar", "data-a")
+              .map((testCase: TestCase): TestCase => ({
+                input: testCase.input.replace(";", ""),
+                expected: testCase.expected.replace(";", ""),
+                description: "missing \";\" should not matter",
+              }))
+              .map(embedDeclarationsInStyle)
+              .flatMap(embedAttributesInTags),
+            ...factory("data-foobar", "data-a")
+              .flatMap((testCase: TestCase): TestCase[] => [
+                {
+                  input: `id=">" style="${testCase.input}"`,
+                  expected: `id=">" style="${testCase.expected}"`,
+                  description: "closing `>` inside attribute values should be ignored",
+                },
+                {
+                  input: `style=">;${testCase.input}"`,
+                  expected: `style=">;${testCase.expected}"`,
+                  description: "closing `>` inside attribute values should be ignored",
+                },
+                {
+                  input: `style="${testCase.input};>;"`,
+                  expected: `style="${testCase.expected};>;"`,
+                  description: "closing `>` inside attribute values should be ignored",
+                },
+              ])
+              .flatMap(embedAttributesInTags),
+            ...PAIRS
+              .flatMap(([testCaseA, testCaseB]): TestCase[] => [
+                {
+                  input: `${testCaseA.input} ${testCaseB.input}`,
+                  expected: `${testCaseA.expected} ${testCaseB.expected}`,
+                  description: "multiple style attributes on one element should all be mangled",
+                },
+                {
+                  input: `
+                    ${testCaseA.input} id=">" ${testCaseB.input}
+                  `,
+                  expected: `
+                    ${testCaseA.expected} id=">" ${testCaseB.expected}
+                  `,
+                  description: "multiple style attributes on one element should all be mangled",
+                },
+              ])
+              .flatMap(embedAttributesInTags),
+          ],
+        },
+      ]);
+    }
+
+    for (const { name, cases } of scenarios) {
       test(name, function() {
         for (const testCase of cases) {
           const {
