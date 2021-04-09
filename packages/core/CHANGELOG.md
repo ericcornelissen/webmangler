@@ -8,7 +8,8 @@ Versioning].
 
 ## [Unreleased]
 
-- Fix various cases where attributes in HTML would not be mangled.
+- Fix various cases where attributes in HTML would not be mangled in HTML.
+- Fix accidental mangling of attribute-like strings in HTML.
 
 ## [0.1.17] - 2021-03-31
 
