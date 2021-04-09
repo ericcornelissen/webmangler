@@ -25,6 +25,11 @@ function newQuotedValueExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
+        \\<\\s*[a-zA-Z0-9]+\\s*[^>"']*
+        (?:
+          [^>]*
+          =("[^"]*"|'[^']*')
+        )*
         ${QUOTED_ATTRIBUTE_PATTERN(
           attributesPattern,
           `(?<${GROUP_QUOTE}>${QUOTES_PATTERN})`,
@@ -35,6 +40,8 @@ function newQuotedValueExpression(
       (?=
         ${valueSuffix}
         \\s*\\k<${GROUP_QUOTE}>
+        [^>]*
+        >
       )
     `,
     GROUP_MAIN,
@@ -81,7 +88,7 @@ function newUnquotedValueExpression(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.18
  */
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
