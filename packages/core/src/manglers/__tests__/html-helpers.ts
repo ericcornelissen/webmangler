@@ -15,10 +15,10 @@ export const embedAttributeValue = curry(function(
   attr: string,
   testCase: TestCase,
 ): TestCase {
-  return {
+  return Object.assign({}, testCase, {
     input: `${attr}="${testCase.input}"`,
     expected: `${attr}="${testCase.expected}"`,
-  };
+  });
 });
 
 /**
@@ -170,17 +170,19 @@ export function embedAttributesInTags(testCase: TestCase): TestCase[] {
           expected: `<${tag} ${testCase.expected} />`,
         },
       ]),
-  ];
+  ].map((r: TestCase): TestCase => Object.assign({}, testCase, r));
 }
 
 /**
- * Produce {@link TestCase}s with a variety of other attributes from a single
- * attribute {@link TestCase}.
+ * Embed attributes, encoded as a {@link TestCase}, into a variety of
+ * configurations with other attributes.
+ *
+ * NOTE: the original {@link TestCase} is not returned.
  *
  * @param testCase The single-attribute {@link TestCase}.
  * @returns Various {@link TestCase}s with two or more attributes.
  */
-export function withOtherAttributes(testCase: TestCase): TestCase[] {
+export function embedWithOtherAttributes(testCase: TestCase): TestCase[] {
   return [
     {
       input: `disabled ${testCase.input}`,
@@ -207,18 +209,6 @@ export function withOtherAttributes(testCase: TestCase): TestCase[] {
       expected: `${testCase.expected} width="42"`,
     },
     {
-      input: `disabled ${testCase.input} aria-hidden`,
-      expected: `disabled ${testCase.expected} aria-hidden`,
-    },
-    {
-      input: `alt="" ${testCase.input} for=""`,
-      expected: `alt="" ${testCase.expected} for=""`,
-    },
-    {
-      input: `id="foobar" ${testCase.input} width="42"`,
-      expected: `id="foobar" ${testCase.expected} width="42"`,
-    },
-    {
       input: `disabled ${testCase.input} for=""`,
       expected: `disabled ${testCase.expected} for=""`,
     },
@@ -242,6 +232,5 @@ export function withOtherAttributes(testCase: TestCase): TestCase[] {
       input: `id="foobar" ${testCase.input} for=""`,
       expected: `id="foobar" ${testCase.expected} for=""`,
     },
-  ];
+  ].map((r: TestCase): TestCase => Object.assign({}, testCase, r));
 }
-

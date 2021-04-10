@@ -20,13 +20,14 @@ import {
   SELECTOR_COMBINATORS,
   TYPE_OR_UNITS,
 } from "./css-constants";
+import { HTML_ATTRIBUTES } from "./html-constants";
 import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
 import {
   embedAttributeValue,
   embedAttributesInAdjacentTags,
   embedAttributesInNestedTags,
   embedAttributesInTags,
-  withOtherAttributes,
+  embedWithOtherAttributes,
 } from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
@@ -447,7 +448,7 @@ suite("HTML Attribute Mangler", function() {
         name: "no relevant content",
         cases: [
           ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
-            .filter((testCase) => /\s(data-[a-z]+)/.test(testCase.input)),
+            .filter((testCase) => !/(\s|^)(data-[a-z]+)/.test(testCase.input)),
         ]
         .flatMap(varyHtmlQuotes)
         .flatMap(embedAttributesInTags),
@@ -462,7 +463,7 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "with other attributes",
         cases: SAMPLE_ATTRIBUTES
-          .flatMap(withOtherAttributes)
+          .flatMap(embedWithOtherAttributes)
           .flatMap(embedAttributesInTags),
       },
       {
@@ -474,89 +475,101 @@ suite("HTML Attribute Mangler", function() {
         cases: SAMPLE_ATTRIBUTE_PAIRS.flatMap(embedAttributesInNestedTags),
       },
       {
-        name: "attribute-like strings in non-attribute places",
+        name: "attribute-like strings in HTML content",
         cases: [
           {
-            input: "<div class=\"data-foobar\"></div>",
-            expected: "<div class=\"data-foobar\"></div>",
-            description: "data attributes as attribute value should be ignored",
-          },
-          {
-            input: "<div data-foo class=\"data-bar\"></div>",
-            expected: "<div data-a class=\"data-bar\"></div>",
-            description: "data attributes as attribute value should be ignored",
-          },
-          {
-            input: "<div data-praise=\"the\" class=\"data-sun\"></div>",
-            expected: "<div data-a=\"the\" class=\"data-sun\"></div>",
-            description: "data attributes as attribute value should be ignored",
-          },
-          {
-            input: "<div data-foobar class=\"data-foobar\"></div>",
-            expected: "<div data-a class=\"data-foobar\"></div>",
-            description: "data attributes as attribute value should be ignored",
-          },
-          {
-            input: "<div data-foo=\"bar\" class=\"data-foo\"></div>",
-            expected: "<div data-a=\"bar\" class=\"data-foo\"></div>",
-            description: "data attributes as attribute value should be ignored",
-          },
-
-          ...varyTagSpacing({
             input: "<div>data-foobar is an attribute name</div>",
             expected: "<div>data-foobar is an attribute name</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-          ...varyTagSpacing({
+          },
+          {
             input: "<div data-foo>data-bar is an attribute name</div>",
             expected: "<div data-a>data-bar is an attribute name</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-          ...varyTagSpacing({
+          },
+          {
             input: "<div data-praise=\"the\">data-sun is an attribute name</div>",
             expected: "<div data-a=\"the\">data-sun is an attribute name</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-          ...varyTagSpacing({
+          },
+          {
             input: "<div data-foobar>data-foobar is an attribute name</div>",
             expected: "<div data-a>data-foobar is an attribute name</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-          ...varyTagSpacing({
+          },
+          {
             input: "<div data-foo=\"bar\">data-foo is an attribute name</div>",
             expected: "<div data-a=\"bar\">data-foo is an attribute name</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-
-          ...varyTagSpacing({
+          },
+          {
             input: "<div>data-foo=\"bar\" is an attribute</div>",
             expected: "<div>data-foo=\"bar\" is an attribute</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-          ...varyTagSpacing({
+          },
+          {
             input: "<div data-foobar>data-hello=\"world\" is an attribute</div>",
             expected: "<div data-a>data-hello=\"world\" is an attribute</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-          ...varyTagSpacing({
+          },
+          {
             input: "<div data-foo=\"bar\">data-hello=\"world\" is an attribute</div>",
             expected: "<div data-a=\"bar\">data-hello=\"world\" is an attribute</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-          ...varyTagSpacing({
+          },
+          {
             input: "<div data-foo>data-foo=\"bar\" is an attribute</div>",
             expected: "<div data-a>data-foo=\"bar\" is an attribute</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-          ...varyTagSpacing({
+          },
+          {
             input: "<div data-foo=\"bar\">data-foo=\"bar\" is an attribute</div>",
             expected: "<div data-a=\"bar\">data-foo=\"bar\" is an attribute</div>",
-            description: "data attributes as innerHTML should be ignored",
-          }),
-        ],
+          },
+        ].flatMap(varyTagSpacing),
       },
       {
-        name: "unexpected (non-closing) \">\"",
+        name: "attribute-like strings in attribute values",
+        cases: [
+          {
+            input: "data-foo=\"data-bar\"",
+            expected: "data-a=\"data-bar\"",
+          },
+          {
+            input: "data-foobar data-foo=\"data-bar\"",
+            expected: "data-a data-b=\"data-bar\"",
+          },
+          {
+            input: "data-hello=\"world\" data-foo=\"data-bar\"",
+            expected: "data-a=\"world\" data-b=\"data-bar\"",
+          },
+          {
+            input: "data-bar data-foo=\"data-bar\"",
+            expected: "data-a data-b=\"data-bar\"",
+          },
+          {
+            input: "data-foo=\"bar\" data-bar=\"data-foo\"",
+            expected: "data-a=\"bar\" data-b=\"data-foo\"",
+          },
+          ...HTML_ATTRIBUTES
+            .filter((attribute: string) => !/^(data-[a-z]+)$/.test(attribute))
+            .flatMap((attribute: string): TestCase[] => [
+              {
+                input: `${attribute}="data-foobar"`,
+                expected: `${attribute}="data-foobar"`,
+              },
+              {
+                input: `data-foo ${attribute}="data-bar"`,
+                expected: `data-a ${attribute}="data-bar"`,
+              },
+              {
+                input: `data-praise="the" ${attribute}="data-sun"`,
+                expected: `data-a="the" ${attribute}="data-sun"`,
+              },
+              {
+                input: `data-foobar ${attribute}="data-foobar"`,
+                expected: `data-a ${attribute}="data-foobar"`,
+              },
+              {
+                input: `data-foo="bar" ${attribute}="data-foo"`,
+                expected: `data-a="bar" ${attribute}="data-foo"`,
+              },
+            ]),
+        ].flatMap(embedAttributesInTags),
+      },
+      {
+        name: "non-closing \">\"",
         cases: [
           {
             input: "id=\">\" data-foo=\"bar\"",
@@ -569,6 +582,10 @@ suite("HTML Attribute Mangler", function() {
           {
             input: "data-praise=\">\" data-the=\"sun\"",
             expected: "data-a=\">\" data-b=\"sun\"",
+          },
+          {
+            input: "data-praise=\"the\" data-sun=\">\"",
+            expected: "data-a=\"the\" data-b=\">\"",
           },
         ].flatMap(embedAttributesInTags),
       },
@@ -699,7 +716,7 @@ suite("HTML Attribute Mangler", function() {
             expected: "style=\"color:red;\"",
           },
           ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
-            .filter((testCase) => /\s(style)=/.test(testCase.input)),
+            .filter((testCase) => /(\s|^)(style)=/.test(testCase.input)),
         ]
         .flatMap(varyHtmlQuotes)
         .flatMap(embedAttributesInTags),
@@ -718,7 +735,7 @@ suite("HTML Attribute Mangler", function() {
         ]
         .flatMap(varyAttributeSpacing)
         .flatMap(varyHtmlQuotes)
-        .flatMap(withOtherAttributes)
+        .flatMap(embedWithOtherAttributes)
         .flatMap(embedAttributesInTags),
       },
       {
@@ -769,7 +786,7 @@ suite("HTML Attribute Mangler", function() {
           name: `${name} by itself in a style attribute with other attributes`,
           cases: factory("data-foobar", "data-a")
             .map(embedDeclarationsInStyle)
-            .flatMap(withOtherAttributes)
+            .flatMap(embedWithOtherAttributes)
             .flatMap(embedAttributesInTags),
         },
         {
@@ -801,42 +818,26 @@ suite("HTML Attribute Mangler", function() {
           cases: PAIRS.flatMap(embedAttributesInNestedTags),
         },
         {
-          name: `${name} strings in non-CSS places`,
+          name: `${name} strings in HTML content`,
           cases: factory("data-foobar", "data-a")
             .flatMap((testCase: TestCase): TestCase[] => [
               {
-                input: `<div alt="${testCase.input}"></div>`,
-                expected: `<div alt="${testCase.input}"></div>`,
-              },
-              {
-                input: `
-                  <div style="${testCase.input}"
-                       alt="${testCase.input}"></div>
-                `,
-                expected: `
-                  <div style="${testCase.expected}"
-                       alt="${testCase.input}"></div>
-                `,
-              },
-
-              ...varyTagSpacing({
                 input: `<div>${testCase.input}</div>`,
                 expected: `<div>${testCase.input}</div>`,
-              }),
-              ...varyTagSpacing({
+              },
+              {
                 input: `
                   <div style="${testCase.input}">${testCase.input}</div>
                 `,
                 expected: `
                   <div style="${testCase.expected}">${testCase.input}</div>
                 `,
-              }),
-
-              ...varyTagSpacing({
+              },
+              {
                 input: `<div>style="${testCase.input}"</div>`,
                 expected: `<div>style="${testCase.input}"</div>`,
-              }),
-              ...varyTagSpacing({
+              },
+              {
                 input: `
                   <div style="${testCase.input}">
                     style="${testCase.input}"
@@ -847,8 +848,51 @@ suite("HTML Attribute Mangler", function() {
                     style="${testCase.input}"
                   </div>
                 `,
-              }),
-            ]),
+              },
+            ])
+            .flatMap(varyTagSpacing),
+        },
+        {
+          name: `${name} strings in non-style attribute`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              ...HTML_ATTRIBUTES
+                .filter((attribute: string) => !/^(data-[a-z]+)$/.test(attribute))
+                .flatMap((attribute: string): TestCase[] => [
+                  {
+                    input: `${attribute}="${testCase.input}"`,
+                    expected: `${attribute}="${testCase.input}"`,
+                  },
+                  {
+                    input: `
+                      style="${testCase.input}"
+                      ${attribute}="${testCase.input}"
+                    `,
+                    expected: `
+                      style="${testCase.expected}"
+                      ${attribute}="${testCase.input}"
+                    `,
+                  },
+                ]),
+              ...["x", "aria-"]
+                .flatMap((prefix: string): TestCase[] => [
+                  {
+                    input: `${prefix}style="${testCase.input}"`,
+                    expected: `${prefix}style="${testCase.input}"`,
+                  },
+                  {
+                    input: `
+                      style="${testCase.input}"
+                      ${prefix}style="${testCase.input}"
+                    `,
+                    expected: `
+                      style="${testCase.expected}"
+                      ${prefix}style="${testCase.input}"
+                    `,
+                  },
+                ]),
+            ])
+            .flatMap(embedAttributesInTags),
         },
         {
           name: `style-like attributes with ${name}`,
@@ -859,11 +903,11 @@ suite("HTML Attribute Mangler", function() {
               return factory("data-foo", "data-foo").map(embedDeclarations);
             })
             .flatMap(varyHtmlQuotes)
-            .flatMap(withOtherAttributes)
+            .flatMap(embedWithOtherAttributes)
             .flatMap(embedAttributesInTags),
         },
         {
-          name: `${name} with unexpected (non-closing) ">"`,
+          name: `${name} with non-closing ">"`,
           cases: factory("data-foobar", "data-a")
             .flatMap((testCase: TestCase): TestCase[] => [
               {
@@ -919,7 +963,7 @@ suite("HTML Attribute Mangler", function() {
             ]),
         },
         {
-          name: "edge cases",
+          name: `${name} with non-standard syntax`,
           cases: [
             ...factory("data-foobar", "data-a")
               .map((testCase: TestCase): TestCase => ({

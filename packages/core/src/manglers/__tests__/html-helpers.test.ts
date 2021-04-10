@@ -9,7 +9,7 @@ import {
   embedAttributesInAdjacentTags,
   embedAttributesInNestedTags,
   embedAttributesInTags,
-  withOtherAttributes,
+  embedWithOtherAttributes,
 } from "./html-helpers";
 
 suite("HTML Test Helpers", function() {
@@ -305,7 +305,7 @@ suite("HTML Test Helpers", function() {
     });
   });
 
-  suite("::withOtherAttributes", function() {
+  suite("::embedWithOtherAttributes", function() {
     const scenarios: TestScenario<TestCase>[] = [
       {
         name: "unchanging attributes",
@@ -342,7 +342,7 @@ suite("HTML Test Helpers", function() {
     for (const { name, cases } of scenarios) {
       test(name, function() {
         for (const testCase of cases) {
-          const results = withOtherAttributes(testCase);
+          const results = embedWithOtherAttributes(testCase);
           expect(results).to.have.length.above(1);
           for (const result of results) {
             expect(result.input).to.include(testCase.input);
