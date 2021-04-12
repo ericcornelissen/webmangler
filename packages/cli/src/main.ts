@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 
+import type { WebManglerOptions } from "webmangler";
+
 import type { WebManglerCliArgs } from "./types";
 
 import webmangler from "webmangler";
@@ -9,6 +11,24 @@ import * as fs from "./fs";
 import Logger from "./logger";
 import { computeStats, logStats } from "./stats";
 import { timeCall } from "./timing";
+
+/**
+ * Get the list of extension to read.
+ *
+ * @param config The {@link WebManglerOptions}.
+ * @returns A collection of extensions.
+ */
+function getExtensionsFilter(config: WebManglerOptions): Iterable<string> {
+  const result: Set<string> = new Set();
+  for (const plugin of config.languages) {
+    const languages = plugin.getLanguages();
+    for (const language of languages) {
+      result.add(language);
+    }
+  }
+
+  return result;
+}
 
 /**
  * Run _WebMangler_ on the CLI specified configuration.
@@ -23,7 +43,7 @@ export default async function run(args: WebManglerCliArgs): Promise<void> {
   logger.debug("configuration read");
 
   logger.debug("reading files provided on the CLI...");
-  const extensions = config.languages.flatMap((p) => p.getLanguages());
+  const extensions = Array.from(getExtensionsFilter(config));
   const inFiles = await fs.readFilesFiltered(args._, { extensions });
   logger.debug(`found ${inFiles.length} files`);
 
