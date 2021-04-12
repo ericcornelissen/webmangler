@@ -2,7 +2,11 @@ import type { MangleExpression } from "../../types";
 import type { SingleValueAttributeOptions } from "../options";
 
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
-import { QUOTED_ATTRIBUTE_PATTERN, QUOTES_PATTERN } from "./common";
+import {
+  QUOTED_ATTRIBUTE_PATTERN,
+  QUOTES_ARRAY,
+  QUOTES_PATTERN,
+} from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
@@ -21,14 +25,15 @@ function newQuotedValueExpression(
   attributesPattern: string,
   valuePrefix: string,
   valueSuffix: string,
-): MangleExpression {
-  return new SingleGroupMangleExpression(
+): MangleExpression[] {
+  return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
     `
       (?<=
-        \\<\\s*[a-zA-Z0-9]+\\s*[^>"']*
+        \\<\\s*[a-zA-Z0-9]+\\s+
         (?:
-          [^>]*
-          =("[^"]*"|'[^']*')
+          [^>\\s=]+
+          (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+          \\s+
         )*
         ${QUOTED_ATTRIBUTE_PATTERN(
           attributesPattern,
@@ -45,7 +50,7 @@ function newQuotedValueExpression(
       )
     `,
     GROUP_MAIN,
-  );
+  ));
 }
 
 /**
@@ -98,7 +103,7 @@ export default function singleValueAttributeExpressionFactory(
   const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
 
   return [
-    newQuotedValueExpression(attributesPattern, valuePrefix, valueSuffix),
+    ...newQuotedValueExpression(attributesPattern, valuePrefix, valueSuffix),
     newUnquotedValueExpression(attributesPattern, valuePrefix, valueSuffix),
   ];
 }

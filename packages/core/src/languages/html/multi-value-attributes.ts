@@ -19,10 +19,11 @@ function newElementAttributeMultiValueExpressions(
   return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
     `
       (?<=
-        \\<\\s*[a-zA-Z0-9]+\\s*[^>"']*
+        \\<\\s*[a-zA-Z0-9]+\\s+
         (?:
-          [^>]*
-          =("[^"]*"|'[^']*')
+          [^>\\s=]+
+          (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+          \\s+
         )*
         ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)}
       )
