@@ -12,13 +12,19 @@ import * as path from "path";
  */
 function hasSomeExtension(
   filePath: string,
-  extensions?: string[],
+  extensions?: Iterable<string>,
 ): boolean {
   if (extensions === undefined) {
     return true;
   }
 
-  return extensions.some((extension) => filePath.endsWith(`.${extension}`));
+  for (const extension of extensions) {
+    if (filePath.endsWith(`.${extension}`)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**

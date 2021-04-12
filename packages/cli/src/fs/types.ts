@@ -12,8 +12,9 @@ interface Filters {
    *
    * @example `["js", "ts"]`
    * @since v0.1.5
+   * @version v0.1.6
    */
-  readonly extensions?: string[];
+  readonly extensions?: Iterable<string>;
 }
 
 /**
