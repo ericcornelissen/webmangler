@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInBody, embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import attributeExpressionFactory from "../attributes";
@@ -17,17 +18,15 @@ suite("HTML - Attribute Expression Factory", function() {
     patterns: "data-[a-z-]+",
   };
 
-  const contentWithAttributes = `
-    <body data-foo="bar">
-      <h1 id="title">Title</h1>
+  const contentWithAttributes = embedContentInContext(`
+    <div data-foo="bar">
       <p data-style="italics">Lorem ipsum dolor ...</p>
-    </body>
-  `;
+      <img data-hello="world"/>
+    </div>
+  `);
   const contentWithoutAttributes = `
-    <body>
-      <h1>Title</h1>
-      <p>Lorem ipsum dolor ...</p>
-    </body>
+    <h1>Title</h1>
+    <p>Lorem ipsum dolor ...</p>
   `;
 
   suiteSetup(function() {
@@ -42,8 +41,8 @@ suite("HTML - Attribute Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithAttributes;
+    const budget = getRuntimeBudget(0.2);
+    const fileContent = embedContentInBody(contentWithAttributes);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
@@ -64,7 +63,8 @@ suite("HTML - Attribute Expression Factory", function() {
 
   test("large file", function() {
     const budget = getRuntimeBudget(10);
-    const fileContent = contentWithAttributes.repeat(100);
+    const largeContent = contentWithAttributes.repeat(100);
+    const fileContent = embedContentInBody(largeContent);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
@@ -85,7 +85,8 @@ suite("HTML - Attribute Expression Factory", function() {
 
   test("large file without attributes", function() {
     const budget = getRuntimeBudget(10);
-    const fileContent = contentWithoutAttributes.repeat(100);
+    const largeContent = contentWithoutAttributes.repeat(100);
+    const fileContent = embedContentInBody(largeContent);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
