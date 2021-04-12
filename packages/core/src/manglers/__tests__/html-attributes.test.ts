@@ -610,6 +610,67 @@ suite("HTML Attribute Mangler", function() {
           },
         ].flatMap(embedAttributesInTags),
       },
+      {
+        name: "prefixed & suffixed attributes",
+        cases: [
+          ...["x", "aria-"]
+            .flatMap((prefix: string): TestCase[] => [
+              {
+                input: `${prefix}data-foobar`,
+                expected: `${prefix}data-foobar`,
+              },
+              {
+                input: `${prefix}data-foo data-bar`,
+                expected: `${prefix}data-foo data-a`,
+              },
+              {
+                input: `${prefix}data-foobar data-foobar`,
+                expected: `${prefix}data-foobar data-a`,
+              },
+              {
+                input: `${prefix}data-foo="bar"`,
+                expected: `${prefix}data-foo="bar"`,
+              },
+              {
+                input: `${prefix}data-praise="the" data-sun`,
+                expected: `${prefix}data-praise="the" data-a`,
+              },
+              {
+                input: `${prefix}data-foo="bar" data-foo`,
+                expected: `${prefix}data-foo="bar" data-a`,
+              },
+            ]),
+          ...["-x", "Aria"]
+            .flatMap((suffix: string): TestCase[] => [
+              {
+                input: `data-foobar${suffix}`,
+                expected: `data-foobar${suffix}`,
+              },
+              {
+                input: `data-foo${suffix} data-bar`,
+                expected: `data-foo${suffix} data-a`,
+              },
+              {
+                input: `data-foobar${suffix} data-foobar`,
+                expected: `data-foobar${suffix} data-a`,
+              },
+              {
+                input: `data-foo${suffix}="bar"`,
+                expected: `data-foo${suffix}="bar"`,
+              },
+              {
+                input: `data-praise${suffix}="the" data-sun`,
+                expected: `data-praise${suffix}="the" data-a`,
+              },
+              {
+                input: `data-foo${suffix}="bar" data-foo`,
+                expected: `data-foo${suffix}="bar" data-a`,
+              },
+            ]),
+        ]
+        .flatMap(embedWithOtherAttributes)
+        .flatMap(embedAttributesInTags),
+      },
     ];
 
     run("html", scenarios);
@@ -888,6 +949,23 @@ suite("HTML Attribute Mangler", function() {
                     expected: `
                       style="${testCase.expected}"
                       ${prefix}style="${testCase.input}"
+                    `,
+                  },
+                ]),
+              ...["x", "-data"]
+                .flatMap((suffix: string): TestCase[] => [
+                  {
+                    input: `style${suffix}="${testCase.input}"`,
+                    expected: `style${suffix}="${testCase.input}"`,
+                  },
+                  {
+                    input: `
+                      style="${testCase.input}"
+                      style${suffix}="${testCase.input}"
+                    `,
+                    expected: `
+                      style="${testCase.expected}"
+                      style${suffix}="${testCase.input}"
                     `,
                   },
                 ]),

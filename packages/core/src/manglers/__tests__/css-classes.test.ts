@@ -529,6 +529,21 @@ suite("CSS Class Mangler", function() {
                 expected: `class="a" ${prefix}class="cls-foobar"`,
               },
             ]),
+          ...["x", "-data"]
+            .flatMap((suffix: string): TestCase[] => [
+              {
+                input: `class${suffix}="cls-foobar"`,
+                expected: `class${suffix}="cls-foobar"`,
+              },
+              {
+                input: `class="cls-foo" class${suffix}="cls-bar"`,
+                expected: `class="a" class${suffix}="cls-bar"`,
+              },
+              {
+                input: `class="cls-foobar" class${suffix}="cls-foobar"`,
+                expected: `class="a" class${suffix}="cls-foobar"`,
+              },
+            ]),
         ].flatMap(embedAttributesInTags),
       },
       {

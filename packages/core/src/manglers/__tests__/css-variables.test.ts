@@ -547,6 +547,23 @@ suite("CSS Variable Mangler", function() {
                     `,
                   },
                 ]),
+              ...["x", "-data"]
+                .flatMap((suffix: string): TestCase[] => [
+                  {
+                    input: `style${suffix}="${testCase.input}"`,
+                    expected: `style${suffix}="${testCase.input}"`,
+                  },
+                  {
+                    input: `
+                      style="${testCase.input}"
+                      style${suffix}="${testCase.input}"
+                    `,
+                    expected: `
+                      style="${testCase.expected}"
+                      style${suffix}="${testCase.input}"
+                    `,
+                  },
+                ]),
             ])
             .flatMap(embedAttributesInTags),
         },
