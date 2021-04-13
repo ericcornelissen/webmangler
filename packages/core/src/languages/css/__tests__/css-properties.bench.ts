@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import cssDeclarationPropertyExpressionFactory from "../css-properties";
@@ -17,12 +18,12 @@ suite("CSS - CSS Property Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithVariables = `
+  const contentWithVariables = embedContentInContext(`
     :root {
       --font-family: sans-serif;
     }
 
-    body {
+    .foo {
       --color: red;
       font-family: var(--font-family);
     }
@@ -31,7 +32,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       content: "bar";
       color: #123;
     }
-  `;
+  `);
   const contentWithoutVariables = `
     body {
       font-family: sans-serif;

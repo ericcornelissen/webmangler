@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import cssDeclarationValueExpressionFactory from "../css-values";
@@ -17,7 +18,7 @@ suite("CSS - CSS Value Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithVariables = `
+  const contentWithVariables = embedContentInContext(`
     #foobar {
       content: var(--foobar);
     }
@@ -29,7 +30,7 @@ suite("CSS - CSS Value Expression Factory", function() {
     .bar::after {
       content: var(--foo);
     }
-  `;
+  `);
   const contentWithoutVariables = `
     #foobar {
       content: "foobar";

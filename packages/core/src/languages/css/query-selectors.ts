@@ -3,7 +3,6 @@ import type { QuerySelectorOptions } from "../options";
 
 import { QUERY_SELECTOR_COMBINERS } from "../common";
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
-import { NOT_IN_A_BLOCK_OR_STRING } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -21,8 +20,10 @@ function newCssSelectorExpression(
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      ${NOT_IN_A_BLOCK_OR_STRING}
-      (?<=${selectorPrefix ? selectorPrefix : ""})
+      (?<=
+        (?:^|\\})[^\\{]*
+        ${selectorPrefix ? selectorPrefix : ""}
+      )
       (?<${GROUP_MAIN}>%s)
       (?=
         ${selectorSuffix ? selectorSuffix :
@@ -41,7 +42,7 @@ function newCssSelectorExpression(
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.18
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,

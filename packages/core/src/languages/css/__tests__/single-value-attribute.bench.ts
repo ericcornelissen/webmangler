@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import singleValueAttributeExpressionFactory from "../single-value-attributes";
@@ -17,7 +18,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithSingleValueAttribute = `
+  const contentWithSingleValueAttribute = embedContentInContext(`
     input[id="bar"] {
       font-family: sans-serif;
     }
@@ -26,7 +27,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
       content: "bar";
       color: #123;
     }
-  `;
+  `);
   const contentWithoutSingleValueAttribute = `
     body {
       font-family: sans-serif;

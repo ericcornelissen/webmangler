@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import querySelectorExpressionFactory from "../query-selectors";
@@ -17,7 +18,7 @@ suite("CSS - Query Selector Expression Factory", function() {
     patterns: "[a-zA-Z0-9]+",
   };
 
-  const contentWithQuerySelector = `
+  const contentWithQuerySelector = embedContentInContext(`
     body {
       font-family: sans-serif;
     }
@@ -30,7 +31,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       content: "bar";
       color: #123;
     }
-  `;
+  `);
   const contentWithoutQuerySelector = `
     body {
       font-family: sans-serif;
