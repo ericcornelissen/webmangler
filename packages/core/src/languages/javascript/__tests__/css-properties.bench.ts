@@ -42,7 +42,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
+    const budget = getRuntimeBudget(0.5);
     const fileContent = contentWithProperties;
 
     let files: WebManglerFile[] = [];

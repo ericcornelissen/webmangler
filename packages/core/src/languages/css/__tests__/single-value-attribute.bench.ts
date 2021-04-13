@@ -52,7 +52,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
+    const budget = getRuntimeBudget(0.5);
     const fileContent = contentWithSingleValueAttribute;
 
     let files: WebManglerFile[] = [];

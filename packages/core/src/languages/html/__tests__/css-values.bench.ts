@@ -44,7 +44,7 @@ suite("HTML - CSS Value Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.2);
+    const budget = getRuntimeBudget(0.5);
     const fileContent = embedContentInBody(contentWithVariables);
 
     let files: WebManglerFile[] = [];

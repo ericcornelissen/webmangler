@@ -60,7 +60,7 @@ suite("CSS - Query Selector Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
+    const budget = getRuntimeBudget(0.3);
     const fileContent = contentWithQuerySelector;
 
     let files: WebManglerFile[] = [];
