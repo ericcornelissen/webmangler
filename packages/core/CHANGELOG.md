@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Support mangling attributes selectors with unquoted values.
 
 ## [0.1.17] - 2021-03-31
 
