@@ -42,7 +42,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.5);
+    const budget = getRuntimeBudget(0.3);
     const fileContent = contentWithQuerySelector;
 
     let files: WebManglerFile[] = [];
@@ -63,7 +63,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(6);
     const fileContent = contentWithQuerySelector.repeat(100);
 
     let files: WebManglerFile[] = [];
@@ -84,7 +84,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
   });
 
   test("large file without query selectors", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(1);
     const fileContent = contentWithoutQuerySelector.repeat(100);
 
     let files: WebManglerFile[] = [];

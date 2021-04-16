@@ -48,7 +48,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.5);
+    const budget = getRuntimeBudget(0.3);
     const fileContent = embedContentInBody(contentWithSingleValueAttribute);
 
     let files: WebManglerFile[] = [];
@@ -69,7 +69,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(6);
     const largeContent = contentWithSingleValueAttribute.repeat(100);
     const fileContent = embedContentInBody(largeContent);
 
@@ -91,7 +91,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
   });
 
   test("large file without single-value attributes", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(1);
     const largeContent = contentWithoutSingleValueAttribute.repeat(100);
     const fileContent = embedContentInBody(largeContent);
 

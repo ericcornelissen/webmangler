@@ -43,7 +43,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.5);
+    const budget = getRuntimeBudget(0.3);
     const fileContent = contentWithProperties;
 
     let files: WebManglerFile[] = [];
@@ -64,7 +64,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(6);
     const fileContent = contentWithProperties.repeat(100);
 
     let files: WebManglerFile[] = [];
@@ -85,7 +85,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
   });
 
   test("large file without properties", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(1);
     const fileContent = contentWithoutProperties.repeat(100);
 
     let files: WebManglerFile[] = [];

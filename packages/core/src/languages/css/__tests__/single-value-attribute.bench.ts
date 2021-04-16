@@ -53,7 +53,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.5);
+    const budget = getRuntimeBudget(0.3);
     const fileContent = contentWithSingleValueAttribute;
 
     let files: WebManglerFile[] = [];
@@ -74,7 +74,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(6);
     const fileContent = contentWithSingleValueAttribute.repeat(100);
 
     let files: WebManglerFile[] = [];
@@ -95,7 +95,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
   });
 
   test("large file without single-value attributes", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(1);
     const fileContent = contentWithoutSingleValueAttribute.repeat(100);
 
     let files: WebManglerFile[] = [];
