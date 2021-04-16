@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import querySelectorExpressionFactory from "../query-selectors";
@@ -17,11 +18,11 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithQuerySelector = `
+  const contentWithQuerySelector = embedContentInContext(`
     const div = document.querySelectorAll("div");
     const foo = document.querySelectorAll(".foo");
     const bar = document.querySelectorAll("#bar");
-  `;
+  `);
   const contentWithoutQuerySelector = `
     const foo = "bar";
     const fooEl = document.getElementById(foo);
@@ -62,7 +63,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(45);
+    const budget = getRuntimeBudget(10);
     const fileContent = contentWithQuerySelector.repeat(100);
 
     let files: WebManglerFile[] = [];
@@ -83,7 +84,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
   });
 
   test("large file without query selectors", function() {
-    const budget = getRuntimeBudget(30);
+    const budget = getRuntimeBudget(10);
     const fileContent = contentWithoutQuerySelector.repeat(100);
 
     let files: WebManglerFile[] = [];

@@ -2,7 +2,10 @@ import type { MangleExpression } from "../../types";
 import type { QuerySelectorOptions } from "../options";
 
 import { QUERY_SELECTOR_COMBINERS } from "../common";
-import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
+import {
+  NestedGroupExpression,
+  SingleGroupMangleExpression,
+} from "../utils/mangle-expressions";
 import { QUOTES_ARRAY, QUOTES_PATTERN } from "./common";
 
 const GROUP_MAIN = "main";
@@ -20,10 +23,16 @@ function newQuerySelectorExpressions(
   selectorPrefix?: string,
   selectorSuffix?: string,
 ): MangleExpression[] {
-  return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
+  return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
+    `
+      (?<${GROUP_MAIN}>
+        ${quote}[^${quote}]*
+        %s
+        [^${quote}]*${quote}
+      )
+    `,
     `
       (?<=
-        ${quote}[^${quote}]*
         ${selectorPrefix ? selectorPrefix : ""}
       )
       (?<${GROUP_MAIN}>%s)
@@ -68,7 +77,7 @@ function newSelectorAsStandaloneStringExpression(): MangleExpression {
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.18
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,

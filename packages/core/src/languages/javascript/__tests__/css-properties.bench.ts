@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import cssDeclarationPropertyExpressionFactory from "../css-properties";
@@ -17,11 +18,11 @@ suite("JavaScript - CSS Property Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithProperties = `
+  const contentWithProperties = embedContentInContext(`
     $element.style.getPropertyValue("--color");
     $element.style.getPropertyValue("--font-size");
     $element.style.getPropertyValue("--margin-left");
-  `;
+  `);
   const contentWithoutProperties = `
     const foo = "bar";
     const fooEl = document.getElementById(foo);
