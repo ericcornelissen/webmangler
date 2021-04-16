@@ -1,6 +1,33 @@
+import { execFileSync } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
-import { execFileSync } from "child_process";
+
+const VERSION_MISSING = "[missing]";
+
+const CLI_DIR = "webmangler-cli";
+const MANIFEST_FILE = "package.json";
+const NODE_MODULES_DIR = "node_modules";
+const WEBMANGLER_DIR = "webmangler";
+
+/**
+ * The type representing the programs of which version information is provided.
+ */
+type VersionData = {
+  /**
+   * The version of the _Webmangler_ CLI.
+   */
+  readonly cli: string;
+
+  /**
+   * The version of the _Webmangler_ core.
+   */
+  readonly core: string;
+
+  /**
+   * The version of NodeJS.
+   */
+  readonly node: string;
+}
 
 /**
  * Get the version of the _WebMangler_ CLI dependency as a string.
@@ -11,12 +38,13 @@ import { execFileSync } from "child_process";
 function getWebManglerCliVersion(projectRoot: string): string {
   const manifestFilePath = path.resolve(
     projectRoot,
-    "node_modules",
-    "webmangler-cli",
-    "package.json",
+    NODE_MODULES_DIR,
+    CLI_DIR,
+    MANIFEST_FILE,
   );
+
   if (!fs.existsSync(manifestFilePath)) {
-    return "[missing]";
+    return VERSION_MISSING;
   }
 
   const manifestRaw = fs.readFileSync(manifestFilePath).toString();
@@ -33,12 +61,13 @@ function getWebManglerCliVersion(projectRoot: string): string {
 function getWebManglerVersion(projectRoot: string): string {
   const manifestFilePath = path.resolve(
     projectRoot,
-    "node_modules",
-    "webmangler",
-    "package.json",
+    NODE_MODULES_DIR,
+    WEBMANGLER_DIR,
+    MANIFEST_FILE,
   );
+
   if (!fs.existsSync(manifestFilePath)) {
-    return "[missing]";
+    return VERSION_MISSING;
   }
 
   const manifestRaw = fs.readFileSync(manifestFilePath).toString();
@@ -56,19 +85,16 @@ function getNodeVersion(): string {
 }
 
 /**
- * Get the version message for the _WebMangler_ CLI.
+ * Get the {@link VersionData} relevant to the _WebMangler_ CLI.
  *
- * @returns The version message.
+ * @returns The {@link VersionData}.
  */
-export default function getVersionMessage(): string {
+export function getVersionsData(): VersionData {
   const projectRoot = process.cwd();
-  const webManglerCliVersion = getWebManglerCliVersion(projectRoot);
-  const webManglerVersion = getWebManglerVersion(projectRoot);
-  const nodeVersion = getNodeVersion();
 
-  return [
-    `WebMangler CLI : ${webManglerCliVersion}`,
-    `WebMangler     : ${webManglerVersion}`,
-    `NodeJS         : ${nodeVersion}`,
-  ].join("\n").trim();
+  return {
+    cli: getWebManglerCliVersion(projectRoot),
+    core: getWebManglerVersion(projectRoot),
+    node: getNodeVersion(),
+  };
 }
