@@ -15,15 +15,15 @@ suite("DefaultLogger", function() {
 
     const debugMessage = "Why";
     const infoMessage = "not";
-    const warnMessage = "Zoidberg";
+    const printMessage = "Zoidberg";
+    const warnMessage = "?";
 
     logger.debug(debugMessage);
     logger.info(infoMessage);
+    logger.print(printMessage);
     logger.warn(warnMessage);
 
-    expect(MockWriter).not.to.have.been.calledWith(sinon.match(debugMessage));
-    expect(MockWriter).not.to.have.been.calledWith(sinon.match(infoMessage));
-    expect(MockWriter).not.to.have.been.calledWith(sinon.match(warnMessage));
+    expect(MockWriter).not.to.have.been.called;
   });
 
   test("level 0 (warn)", function() {
@@ -31,14 +31,17 @@ suite("DefaultLogger", function() {
 
     const debugMessage = "Praise";
     const infoMessage = "the";
-    const warnMessage = "sun";
+    const printMessage = "sun";
+    const warnMessage = "!";
 
     logger.debug(debugMessage);
     logger.info(infoMessage);
+    logger.print(printMessage);
     logger.warn(warnMessage);
 
     expect(MockWriter).not.to.have.been.calledWith(sinon.match(debugMessage));
     expect(MockWriter).not.to.have.been.calledWith(sinon.match(infoMessage));
+    expect(MockWriter).to.have.been.calledWith(sinon.match(printMessage));
     expect(MockWriter).to.have.been.calledWith(sinon.match(warnMessage));
   });
 
@@ -47,14 +50,14 @@ suite("DefaultLogger", function() {
 
     const debugMessage = "Lorem";
     const infoMessage = "ipsum";
-    const warnMessage = "dolor";
+    const printMessage = "dolor";
+    const warnMessage = "sit";
 
     logger.debug(debugMessage);
     logger.info(infoMessage);
-    expect(MockWriter).not.to.have.been.calledWith(sinon.match(debugMessage));
-    expect(MockWriter).to.have.been.calledWith(sinon.match(infoMessage));
-
+    logger.print(printMessage);
     logger.warn(warnMessage);
+
     expect(MockWriter).not.to.have.been.calledWith(sinon.match(debugMessage));
     expect(MockWriter).to.have.been.calledWith(sinon.match(warnMessage));
   });
@@ -64,6 +67,7 @@ suite("DefaultLogger", function() {
 
     const debugMessage = "R2-D2";
     const infoMessage = "C-3PO";
+    const printMessage = "BD-1";
     const warnMessage = "BB-8";
 
     logger.debug(debugMessage);
@@ -71,6 +75,9 @@ suite("DefaultLogger", function() {
 
     logger.info(infoMessage);
     expect(MockWriter).to.have.been.calledWith(sinon.match(infoMessage));
+
+    logger.print(printMessage);
+    expect(MockWriter).to.have.been.calledWith(sinon.match(printMessage));
 
     logger.warn(warnMessage);
     expect(MockWriter).to.have.been.calledWith(sinon.match(warnMessage));
