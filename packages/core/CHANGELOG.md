@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.18] - 2021-04-17
+
 - Fix accidental mangling in HTML content.
 - Fix various cases where attributes in HTML would not be mangled.
 - Improve performance of the built-in CSS language plugin.
