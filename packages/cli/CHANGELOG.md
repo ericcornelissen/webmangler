@@ -8,6 +8,11 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.6] - 2021-04-17
+
+- Add mangling time to the `--stats` output.
 - Add support for `webmangler` versions `^0.1.17`.
 
 ## [0.1.5] - 2021-03-19
