@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add support for `webmangler` versions `^0.1.17`.
 
 ## [0.1.5] - 2021-03-19
 
