@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInBody, embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import multiValueAttributeExpressionFactory from "../multi-value-attributes";
@@ -17,20 +18,20 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithMultiValueAttribute = `
-    <body class="foo bar">
+  const contentWithMultiValueAttribute = embedContentInContext(`
+    <div class="foo bar">
       <div id="foobar">
         <p class="left">Hello</p>
         <p class="green small" data-foo="bar">World!</p>
       </div>
-    </body>
-  `;
+    </div>
+  `);
   const contentWithoutMultiValueAttribute = `
-    <body id="foo">
+    <div id="foo">
       <div id="bar">
         <p>Hello world!</p>
       </div>
-    </body>
+    </div>
   `;
 
   suiteSetup(function() {
@@ -47,8 +48,8 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithMultiValueAttribute;
+    const budget = getRuntimeBudget(0.3);
+    const fileContent = embedContentInBody(contentWithMultiValueAttribute);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
@@ -68,8 +69,9 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
-    const fileContent = contentWithMultiValueAttribute.repeat(100);
+    const budget = getRuntimeBudget(6);
+    const largeContent = contentWithMultiValueAttribute.repeat(100);
+    const fileContent = embedContentInBody(largeContent);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
@@ -89,8 +91,9 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
   });
 
   test("large file without multi-value attributes", function() {
-    const budget = getRuntimeBudget(10);
-    const fileContent = contentWithoutMultiValueAttribute.repeat(100);
+    const budget = getRuntimeBudget(1);
+    const largeContent = contentWithoutMultiValueAttribute.repeat(100);
+    const fileContent = embedContentInBody(largeContent);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
