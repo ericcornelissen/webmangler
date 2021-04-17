@@ -38,7 +38,6 @@ module.exports = {
     ".temp/",
     "node_modules/",
     "packages/**/*.bench.ts",
-    "packages/**/*.mock.ts",
     "packages/**/*.test.ts",
   ],
 
