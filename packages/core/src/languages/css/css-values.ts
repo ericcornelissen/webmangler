@@ -2,7 +2,6 @@ import type { MangleExpression } from "../../types";
 import type { CssDeclarationValueOptions } from "../options";
 
 import { SingleGroupMangleExpression } from "../utils/mangle-expressions";
-import { IN_A_BLOCK_NOT_A_STRING } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -20,8 +19,8 @@ function newCssDeclarationValueExpression(
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      ${IN_A_BLOCK_NOT_A_STRING}
       (?<=
+        {[^\\}]*
         \\:\\s*
         ${valuePrefix}
       )
@@ -43,7 +42,7 @@ function newCssDeclarationValueExpression(
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.18
  */
 export default function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,

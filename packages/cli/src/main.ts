@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
-
 import type { WebManglerOptions } from "webmangler";
 
 import type { WebManglerCliArgs } from "./types";
+import type { Writer } from "./logger";
 
 import webmangler from "webmangler";
 
@@ -34,9 +33,13 @@ function getExtensionsFilter(config: WebManglerOptions): Iterable<string> {
  * Run _WebMangler_ on the CLI specified configuration.
  *
  * @param args The CLI arguments.
+ * @param writer A {@link Writer} to print with.
  */
-export default async function run(args: WebManglerCliArgs): Promise<void> {
-  const logger = new Logger(args.verbose, console.log);
+export default async function run(
+  args: WebManglerCliArgs,
+  writer: Writer,
+): Promise<void> {
+  const logger = new Logger(args.verbose, writer);
 
   logger.debug("reading configuration...");
   const config = getConfiguration(args.config);
@@ -56,7 +59,7 @@ export default async function run(args: WebManglerCliArgs): Promise<void> {
     const stats = computeStats({ inFiles, outFiles, duration });
     logger.debug("stats computed");
     logger.debug("logging stats...");
-    logStats(console.log, stats);
+    logStats(logger, stats);
     logger.debug("stats logged");
   }
 

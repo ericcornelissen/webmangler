@@ -8,7 +8,9 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Improve performance of the built-in CSS language plugin.
+- Improve performance of the built-in JavaScript language plugin.
+- Support mangling attributes selectors with unquoted values.
 
 ## [0.1.17] - 2021-03-31
 

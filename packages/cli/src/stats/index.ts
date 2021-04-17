@@ -1,5 +1,6 @@
 import type { ManglerStats } from "./types";
 import type { WebManglerCliFile } from "../fs";
+import type { Logger } from "../logger";
 
 import * as chalk from "chalk";
 
@@ -90,11 +91,11 @@ export function computeStats(data: {
 /**
  * Log statistics about a _WebMangler_ run to stdout.
  *
- * @param log A function to take a string and log it.
+ * @param logger A {@link Logger}.
  * @param stats The _WebMangler_ run statistics.
  */
 export function logStats(
-  log: (msg: string) => void,
+  logger: Logger,
   stats: ManglerStats,
 ): void {
   const fileCount: number = stats.files.size;
@@ -112,15 +113,15 @@ export function logStats(
     if (fileStats.changed) {
       const percentage = getDisplayPercentage(fileStats.changePercentage);
       const reduction = `${fileStats.sizeBefore} -> ${fileStats.sizeAfter}`;
-      log(`${filePath} ${percentage} (${reduction})`);
+      logger.print(`${filePath} ${percentage} (${reduction})`);
     } else {
-      log(`${filePath} [NOT MANGLED]`);
+      logger.print(`${filePath} [NOT MANGLED]`);
     }
   });
 
   const changedPercentage = getChangedPercentage(overallBefore, overallAfter);
   const overallPercentage = getDisplayPercentage(changedPercentage);
   const overallReduction = `${overallBefore} -> ${overallAfter}`;
-  log(`OVERALL ${overallPercentage} (${overallReduction})`);
-  log(`\nmangled ${fileCount} files in ${duration} ms`);
+  logger.print(`OVERALL ${overallPercentage} (${overallReduction})`);
+  logger.print(`\nmangled ${fileCount} files in ${duration} ms`);
 }

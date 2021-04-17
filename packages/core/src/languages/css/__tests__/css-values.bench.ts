@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import cssDeclarationValueExpressionFactory from "../css-values";
@@ -17,7 +18,7 @@ suite("CSS - CSS Value Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithVariables = `
+  const contentWithVariables = embedContentInContext(`
     #foobar {
       content: var(--foobar);
     }
@@ -29,7 +30,7 @@ suite("CSS - CSS Value Expression Factory", function() {
     .bar::after {
       content: var(--foo);
     }
-  `;
+  `);
   const contentWithoutVariables = `
     #foobar {
       content: "foobar";
@@ -59,7 +60,7 @@ suite("CSS - CSS Value Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.2);
+    const budget = getRuntimeBudget(0.3);
     const fileContent = contentWithVariables;
 
     let files: WebManglerFile[] = [];
@@ -80,7 +81,7 @@ suite("CSS - CSS Value Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(6);
     const fileContent = contentWithVariables.repeat(100);
 
     let files: WebManglerFile[] = [];
@@ -101,7 +102,7 @@ suite("CSS - CSS Value Expression Factory", function() {
   });
 
   test("large file without variables", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(1);
     const fileContent = contentWithoutVariables.repeat(100);
 
     let files: WebManglerFile[] = [];

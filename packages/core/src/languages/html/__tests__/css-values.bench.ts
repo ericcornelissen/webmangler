@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInBody, embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import cssDeclarationValueExpressionFactory from "../css-values";
@@ -17,19 +18,15 @@ suite("HTML - CSS Value Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithVariables = `
-    <body class="foobar">
-      <div style="color: var(--color)">
-        <p style="color: blue; font-size: var(--size)">Hello world!</p>
-      </div>
-    </body>
-  `;
+  const contentWithVariables = embedContentInContext(`
+    <div style="color: var(--color)">
+      <p style="color: blue; font-size: var(--size)">Hello world!</p>
+    </div>
+  `);
   const contentWithoutVariables = `
-    <body class="foobar">
-      <div>
-        <p style="color: blue">Hello world!</p>
-      </div>
-    </body>
+    <div style="background: red">
+      <p style="color: blue">Hello world!</p>
+    </div>
   `;
 
   suiteSetup(function() {
@@ -47,8 +44,8 @@ suite("HTML - CSS Value Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithVariables;
+    const budget = getRuntimeBudget(0.3);
+    const fileContent = embedContentInBody(contentWithVariables);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
@@ -68,8 +65,9 @@ suite("HTML - CSS Value Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
-    const fileContent = contentWithVariables.repeat(100);
+    const budget = getRuntimeBudget(6);
+    const largeContent = contentWithVariables.repeat(100);
+    const fileContent = embedContentInBody(largeContent);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
@@ -89,8 +87,9 @@ suite("HTML - CSS Value Expression Factory", function() {
   });
 
   test("large file without variables", function() {
-    const budget = getRuntimeBudget(10);
-    const fileContent = contentWithoutVariables.repeat(100);
+    const budget = getRuntimeBudget(1);
+    const largeContent = contentWithoutVariables.repeat(100);
+    const fileContent = embedContentInBody(largeContent);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
