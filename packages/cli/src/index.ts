@@ -1,13 +1,19 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
+
 import type { WebManglerCliArgs } from "./types";
 
 import yargs from "yargs";
 
-import getVersionMessage from "./version";
+import { getVersionsData } from "./version";
 import run from "./main";
 
-const versionMessage = getVersionMessage();
+const versionData = getVersionsData();
+const versionMessage = `WebMangler CLI : ${versionData.cli}
+WebMangler     : ${versionData.core}
+NodeJS         : ${versionData.node}`;
+
 const args = yargs(process.argv.slice(2))
   .scriptName("webmangler")
   .usage("$0 [options] <files>")
@@ -43,4 +49,7 @@ const args = yargs(process.argv.slice(2))
   })
   .argv;
 
-run(args as unknown as WebManglerCliArgs);
+run(
+  args as unknown as WebManglerCliArgs,
+  console.log,
+);

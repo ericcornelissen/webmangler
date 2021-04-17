@@ -2,6 +2,7 @@
  * Type defining a logger for the _WebMangler_ CLI.
  *
  * @since v0.1.2
+ * @version v0.1.6
  */
 interface Logger {
   /**
@@ -19,6 +20,14 @@ interface Logger {
    * @since v0.1.2
    */
   info(msg: string): void;
+
+  /**
+   * Print a message.
+   *
+   * @param msg the message.
+   * @since v0.1.6
+   */
+  print(msg: string): void;
 
   /**
    * Log a warning message.

@@ -1,3 +1,5 @@
 src/
 tsconfig.json
+
+# JavaScript files that are always empty
 types.js

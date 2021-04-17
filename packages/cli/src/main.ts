@@ -1,6 +1,7 @@
-/* eslint-disable no-console */
+import type { WebManglerOptions } from "webmangler";
 
 import type { WebManglerCliArgs } from "./types";
+import type { Writer } from "./logger";
 
 import webmangler from "webmangler";
 
@@ -11,19 +12,41 @@ import { computeStats, logStats } from "./stats";
 import { timeCall } from "./timing";
 
 /**
+ * Get the list of extension to read.
+ *
+ * @param config The {@link WebManglerOptions}.
+ * @returns A collection of extensions.
+ */
+function getExtensionsFilter(config: WebManglerOptions): Iterable<string> {
+  const result: Set<string> = new Set();
+  for (const plugin of config.languages) {
+    const languages = plugin.getLanguages();
+    for (const language of languages) {
+      result.add(language);
+    }
+  }
+
+  return result;
+}
+
+/**
  * Run _WebMangler_ on the CLI specified configuration.
  *
  * @param args The CLI arguments.
+ * @param writer A {@link Writer} to print with.
  */
-export default async function run(args: WebManglerCliArgs): Promise<void> {
-  const logger = new Logger(args.verbose, console.log);
+export default async function run(
+  args: WebManglerCliArgs,
+  writer: Writer,
+): Promise<void> {
+  const logger = new Logger(args.verbose, writer);
 
   logger.debug("reading configuration...");
   const config = getConfiguration(args.config);
   logger.debug("configuration read");
 
   logger.debug("reading files provided on the CLI...");
-  const extensions = config.languages.flatMap((p) => p.getLanguages());
+  const extensions = getExtensionsFilter(config);
   const inFiles = await fs.readFilesFiltered(args._, { extensions });
   logger.debug(`found ${inFiles.length} files`);
 
@@ -36,7 +59,7 @@ export default async function run(args: WebManglerCliArgs): Promise<void> {
     const stats = computeStats({ inFiles, outFiles, duration });
     logger.debug("stats computed");
     logger.debug("logging stats...");
-    logStats(console.log, stats);
+    logStats(logger, stats);
     logger.debug("stats logged");
   }
 

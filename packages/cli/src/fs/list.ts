@@ -6,19 +6,28 @@ import * as path from "path";
 /**
  * Find out if a file has any of a set of extensions.
  *
+ * If `extensions` is not provided this always returns `true`. If no extensions
+ * are provided this always returns `false`.
+ *
  * @param filePath The file path of interest.
  * @param [extensions] The extensions.
  * @returns `true` if `filepath` has one of the `extensions`, `false` otherwise.
  */
 function hasSomeExtension(
   filePath: string,
-  extensions?: string[],
+  extensions?: Iterable<string>,
 ): boolean {
   if (extensions === undefined) {
     return true;
   }
 
-  return extensions.some((extension) => filePath.endsWith(`.${extension}`));
+  for (const extension of extensions) {
+    if (filePath.endsWith(`.${extension}`)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
