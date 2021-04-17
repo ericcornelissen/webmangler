@@ -7,16 +7,28 @@ import type {
 
 import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
+import * as R from "ramda";
 import { format as printf } from "util";
 
 import {
   ATTRIBUTE_SELECTOR_OPERATORS,
+  CSS_PROPERTIES,
   CSS_VALUES,
+  CSS_VALUES_NO_STRINGS,
   PSEUDO_ELEMENT_SELECTORS,
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
   TYPE_OR_UNITS,
 } from "./css-constants";
+import { HTML_ATTRIBUTES } from "./html-constants";
+import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
+import {
+  embedAttributeValue,
+  embedAttributesInAdjacentTags,
+  embedAttributesInNestedTags,
+  embedAttributesInTags,
+  embedWithOtherAttributes,
+} from "./html-helpers";
 import {
   getArrayOfFormattedStrings,
   isValidAttributeName,
@@ -25,7 +37,6 @@ import {
   varyJsQuotes,
   varySpacing,
 } from "./test-helpers";
-
 
 import { ALL_CHARS } from "../../characters";
 import webmangler from "../../index";
@@ -70,10 +81,12 @@ const ATTRIBUTES: SelectorBeforeAndAfter[] = [
 ];
 
 suite("HTML Attribute Mangler", function() {
-  const varyCommaSpacing = varySpacing(",");
+  const varyAttributeSpacing = varySpacing(["=", "\""]);
+  const varyTagSpacing = varySpacing(["<", ">"]);
 
   suite("CSS", function() {
     const varyAttributeSelectorSpacing = varySpacing(["[", "]"]);
+    const varyCommaSpacing = varySpacing(",");
 
     const scenarios: TestScenario<TestCase>[] = [
       {
@@ -350,154 +363,702 @@ suite("HTML Attribute Mangler", function() {
     run("css", scenarios);
   });
 
-  suite("HTML", function() {
+  suite("HTML (attributes)", function() {
+    const SAMPLE_ATTRIBUTES: TestCase[] = [
+      {
+        input: "data-foo=\"bar\"",
+        expected: "data-a=\"bar\"",
+      },
+      {
+        input: "data-foobar",
+        expected: "data-a",
+      },
+    ];
+    const SAMPLE_ATTRIBUTE_PAIRS: [TestCase, TestCase][] = [
+      [
+        {
+          input: "data-foo=\"bar\"",
+          expected: "data-a=\"bar\"",
+        },
+        {
+          input: "data-hello=\"world\"",
+          expected: "data-b=\"world\"",
+        },
+      ],
+      [
+        {
+          input: "data-foo",
+          expected: "data-a",
+        },
+        {
+          input: "data-bar",
+          expected: "data-b",
+        },
+      ],
+      [
+        {
+          input: "data-praise=\"the\"",
+          expected: "data-a=\"the\"",
+        },
+        {
+          input: "data-sun",
+          expected: "data-b",
+        },
+      ],
+      [
+        {
+          input: "data-praise",
+          expected: "data-a",
+        },
+        {
+          input: "data-the=\"sun\"",
+          expected: "data-b=\"sun\"",
+        },
+      ],
+      [
+        {
+          input: "data-foo=\"bar\"",
+          expected: "data-a=\"bar\"",
+        },
+        {
+          input: "data-foo=\"baz\"",
+          expected: "data-a=\"baz\"",
+        },
+      ],
+      [
+        {
+          input: "data-foobar",
+          expected: "data-a",
+        },
+        {
+          input: "data-foobar",
+          expected: "data-a",
+        },
+      ],
+      [
+        {
+          input: "data-foo=\"bar\"",
+          expected: "data-a=\"bar\"",
+        },
+        {
+          input: "data-foo",
+          expected: "data-a",
+        },
+      ],
+    ];
+
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "single attribute",
+        name: "no relevant content",
         cases: [
-          ...varySpacing("=", {
-            input: "<div data-foo=\"bar\"></div>",
-            expected: "<div data-a=\"bar\"></div>",
-          }),
-          ...varyHtmlQuotes({
-            input: "<div data-foo=\"bar\"></div>",
-            expected: "<div data-a=\"bar\"></div>",
-          }),
-          ...varySpacing(">", {
-            input: "<div data-foo></div>",
-            expected: "<div data-a></div>",
+          ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
+            .filter((testCase) => !/(\s|^)(data-[a-z]+)/.test(testCase.input)),
+        ]
+        .flatMap(varyHtmlQuotes)
+        .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "as only attribute",
+        cases: SAMPLE_ATTRIBUTES
+          .flatMap(varyAttributeSpacing)
+          .flatMap(varyHtmlQuotes)
+          .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "with other attributes",
+        cases: SAMPLE_ATTRIBUTES
+          .flatMap(embedWithOtherAttributes)
+          .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "on adjacent elements",
+        cases: SAMPLE_ATTRIBUTE_PAIRS.flatMap(embedAttributesInAdjacentTags),
+      },
+      {
+        name: "on nested elements",
+        cases: SAMPLE_ATTRIBUTE_PAIRS.flatMap(embedAttributesInNestedTags),
+      },
+      {
+        name: "attribute-like strings in HTML content",
+        cases: [
+          {
+            input: "<div>data-foobar is an attribute name</div>",
+            expected: "<div>data-foobar is an attribute name</div>",
+          },
+          {
+            input: "<div data-foo>data-bar is an attribute name</div>",
+            expected: "<div data-a>data-bar is an attribute name</div>",
+          },
+          {
+            input: "<div data-praise=\"the\">data-sun is an attribute name</div>",
+            expected: "<div data-a=\"the\">data-sun is an attribute name</div>",
+          },
+          {
+            input: "<div data-foobar>data-foobar is an attribute name</div>",
+            expected: "<div data-a>data-foobar is an attribute name</div>",
+          },
+          {
+            input: "<div data-foo=\"bar\">data-foo is an attribute name</div>",
+            expected: "<div data-a=\"bar\">data-foo is an attribute name</div>",
+          },
+          {
+            input: "<div>data-foo=\"bar\" is an attribute</div>",
+            expected: "<div>data-foo=\"bar\" is an attribute</div>",
+          },
+          {
+            input: "<div data-foobar>data-hello=\"world\" is an attribute</div>",
+            expected: "<div data-a>data-hello=\"world\" is an attribute</div>",
+          },
+          {
+            input: "<div data-foo=\"bar\">data-hello=\"world\" is an attribute</div>",
+            expected: "<div data-a=\"bar\">data-hello=\"world\" is an attribute</div>",
+          },
+          {
+            input: "<div data-foo>data-foo=\"bar\" is an attribute</div>",
+            expected: "<div data-a>data-foo=\"bar\" is an attribute</div>",
+          },
+          {
+            input: "<div data-foo=\"bar\">data-foo=\"bar\" is an attribute</div>",
+            expected: "<div data-a=\"bar\">data-foo=\"bar\" is an attribute</div>",
+          },
+        ].flatMap(varyTagSpacing),
+      },
+      {
+        name: "attribute-like strings in attribute values",
+        cases: [
+          {
+            input: "data-foo=\"data-bar\"",
+            expected: "data-a=\"data-bar\"",
+          },
+          {
+            input: "data-foobar data-foo=\"data-bar\"",
+            expected: "data-a data-b=\"data-bar\"",
+          },
+          {
+            input: "data-hello=\"world\" data-foo=\"data-bar\"",
+            expected: "data-a=\"world\" data-b=\"data-bar\"",
+          },
+          {
+            input: "data-bar data-foo=\"data-bar\"",
+            expected: "data-a data-b=\"data-bar\"",
+          },
+          {
+            input: "data-foo=\"bar\" data-bar=\"data-foo\"",
+            expected: "data-a=\"bar\" data-b=\"data-foo\"",
+          },
+          ...HTML_ATTRIBUTES
+            .filter((attribute: string) => !/^(data-[a-z]+)$/.test(attribute))
+            .flatMap((attribute: string): TestCase[] => [
+              {
+                input: `${attribute}="data-foobar"`,
+                expected: `${attribute}="data-foobar"`,
+              },
+              {
+                input: `data-foo ${attribute}="data-bar"`,
+                expected: `data-a ${attribute}="data-bar"`,
+              },
+              {
+                input: `data-praise="the" ${attribute}="data-sun"`,
+                expected: `data-a="the" ${attribute}="data-sun"`,
+              },
+              {
+                input: `data-foobar ${attribute}="data-foobar"`,
+                expected: `data-a ${attribute}="data-foobar"`,
+              },
+              {
+                input: `data-foo="bar" ${attribute}="data-foo"`,
+                expected: `data-a="bar" ${attribute}="data-foo"`,
+              },
+            ]),
+        ].flatMap(embedAttributesInTags),
+      },
+      {
+        name: "non-closing \">\"",
+        cases: [
+          {
+            input: "id=\">\" data-foo=\"bar\"",
+            expected: "id=\">\" data-a=\"bar\"",
+          },
+          {
+            input: "data-foo=\"bar\" id=\">\"",
+            expected: "data-a=\"bar\" id=\">\"",
+          },
+          {
+            input: "data-praise=\">\" data-the=\"sun\"",
+            expected: "data-a=\">\" data-b=\"sun\"",
+          },
+          {
+            input: "data-praise=\"the\" data-sun=\">\"",
+            expected: "data-a=\"the\" data-b=\">\"",
+          },
+        ].flatMap(embedAttributesInTags),
+      },
+      {
+        name: "attribute repetition",
+        cases: [
+          {
+            input: "data-foo=\"bar\" data-foo=\"baz\"",
+            expected: "data-a=\"bar\" data-a=\"baz\"",
+          },
+          {
+            input: "data-foo data-foo",
+            expected: "data-a data-a",
+          },
+          {
+            input: "data-foo=\"bar\" data-foo",
+            expected: "data-a=\"bar\" data-a",
+          },
+          {
+            input: "data-foo data-foo=\"baz\"",
+            expected: "data-a data-a=\"baz\"",
+          },
+        ].flatMap(embedAttributesInTags),
+      },
+      {
+        name: "prefixed & suffixed attributes",
+        cases: [
+          ...["x", "aria-"]
+            .flatMap((prefix: string): TestCase[] => [
+              {
+                input: `${prefix}data-foobar`,
+                expected: `${prefix}data-foobar`,
+              },
+              {
+                input: `${prefix}data-foo data-bar`,
+                expected: `${prefix}data-foo data-a`,
+              },
+              {
+                input: `${prefix}data-foobar data-foobar`,
+                expected: `${prefix}data-foobar data-a`,
+              },
+              {
+                input: `${prefix}data-foo="bar"`,
+                expected: `${prefix}data-foo="bar"`,
+              },
+              {
+                input: `${prefix}data-praise="the" data-sun`,
+                expected: `${prefix}data-praise="the" data-a`,
+              },
+              {
+                input: `${prefix}data-foo="bar" data-foo`,
+                expected: `${prefix}data-foo="bar" data-a`,
+              },
+            ]),
+          ...["-x", "Aria"]
+            .flatMap((suffix: string): TestCase[] => [
+              {
+                input: `data-foobar${suffix}`,
+                expected: `data-foobar${suffix}`,
+              },
+              {
+                input: `data-foo${suffix} data-bar`,
+                expected: `data-foo${suffix} data-a`,
+              },
+              {
+                input: `data-foobar${suffix} data-foobar`,
+                expected: `data-foobar${suffix} data-a`,
+              },
+              {
+                input: `data-foo${suffix}="bar"`,
+                expected: `data-foo${suffix}="bar"`,
+              },
+              {
+                input: `data-praise${suffix}="the" data-sun`,
+                expected: `data-praise${suffix}="the" data-a`,
+              },
+              {
+                input: `data-foo${suffix}="bar" data-foo`,
+                expected: `data-foo${suffix}="bar" data-a`,
+              },
+            ]),
+        ]
+        .flatMap(embedWithOtherAttributes)
+        .flatMap(embedAttributesInTags),
+      },
+    ];
+
+    run("html", scenarios);
+  });
+
+  suite("HTML (style attribute)", function() {
+    const embedDeclarationsInStyle = embedAttributeValue("style");
+
+    type TestInstance = {
+      readonly name: string;
+      factory(idBefore: string, idAfter: string): TestCase[];
+    }
+
+    const instances: TestInstance[] = [
+      {
+        name: "attribute usage",
+        factory: (before: string, after: string): TestCase[] => [
+          ...CSS_PROPERTIES
+            .map((property: string): TestCase => ({
+              input: `${property}:attr(${before});`,
+              expected: `${property}:attr(${after});`,
+            })),
+        ],
+      },
+      {
+        name: "attribute usage (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ")"], {
+            input: `content:attr(${before});`,
+            expected: `content:attr(${after});`,
           }),
         ],
       },
       {
-        name: "multiple attributes",
-        cases: [
-          ...varyHtmlQuotes({
-            input: "<div id=\"foo\" data-foo=\"bar\"></div>",
-            expected: "<div id=\"foo\" data-a=\"bar\"></div>",
-          }),
-          ...varyHtmlQuotes({
-            input: "<div data-foo=\"foo\" class=\"bar\"></div>",
-            expected: "<div data-a=\"foo\" class=\"bar\"></div>",
-          }),
-          ...varyHtmlQuotes({
-            input: "<div id=\"praise\" data-foo=\"the\" class=\"sun\"></div>",
-            expected: "<div id=\"praise\" data-a=\"the\" class=\"sun\"></div>",
-          }),
-          ...varyHtmlQuotes({
-            input: "<div id=\"foo\"><div data-foo=\"bar\"></div></div>",
-            expected: "<div id=\"foo\"><div data-a=\"bar\"></div></div>",
-          }),
-          ...varyHtmlQuotes({
-            input: "<div data-foo=\"bar\"><div id=\"foo\"></div></div>",
-            expected: "<div data-a=\"bar\"><div id=\"foo\"></div></div>",
-          }),
-          ...varyHtmlQuotes({
-            input: "<div data-foo=\"bar\"><div data-bar=\"foo\"></div></div>",
-            expected: "<div data-a=\"bar\"><div data-b=\"foo\"></div></div>",
-          }),
-          ...varySpacing("=", {
-            input: "<div data-foo=\"bar\"><div data-bar=\"foo\"></div></div>",
-            expected: "<div data-a=\"bar\"><div data-b=\"foo\"></div></div>",
-          }),
-          ...varyHtmlQuotes({
-            input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
-            expected: "<div data-a=\"bar\" data-b=\"foo\"></div>",
-          }),
-          ...varySpacing("=", {
-            input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
-            expected: "<div data-a=\"bar\" data-b=\"foo\"></div>",
-          }),
-          {
-            input: "<a href=\"https://www.example.com/\" data-foo></a>",
-            expected: "<a href=\"https://www.example.com/\" data-a></a>",
-          },
-          {
-            input: "<a data-foo href=\"https://www.example.com/\"></a>",
-            expected: "<a data-a href=\"https://www.example.com/\"></a>",
-          },
+        name: "attribute usage with default",
+        factory: (before: string, after: string): TestCase[] => [
+          ...CSS_VALUES_NO_STRINGS
+            .map((value: string): TestCase => ({
+              input: `content:attr(${before},${value});`,
+              expected: `content:attr(${after},${value});`,
+            })),
         ],
       },
       {
-        name: "value usage",
-        cases: ATTRIBUTES
-          .flatMap(({ before, after }): TestCase[] => [
-            {
-              input: `<div style="content: attr(${before});"></div>`,
-              expected: `<div style="content: attr(${after});"></div>`,
-            },
-            ...TYPE_OR_UNITS
-              .flatMap((typeOrUnit): TestCase[] => [
-                {
-                  input: `
-                    <div style="content: attr(${before} ${typeOrUnit});"></div>
-                  `,
-                  expected: `
-                    <div style="content: attr(${after} ${typeOrUnit});"></div>
-                  `,
-                },
-              ]),
-            ...CSS_VALUES
-              .flatMap((value): TestCase[] => [
-                {
-                  input: `
-                    <div style="content: attr(${before},${value});"></div>
-                  `,
-                  expected: `
-                    <div style="content: attr(${after},${value});"></div>
-                  `,
-                },
-                ...TYPE_OR_UNITS
-                  .flatMap((typeOrUnit): TestCase[] => [
-                    {
-                      input: `
-                        <div style=
-                          "content: attr(${before} ${typeOrUnit},${value});">
-                        </div>
-                      `,
-                      expected: `
-                        <div style=
-                          "content: attr(${after} ${typeOrUnit},${value});">
-                        </div>
-                      `,
-                    },
-                  ])
-                  .flatMap(varyCommaSpacing),
-              ]),
-          ])
-          .flatMap(varyHtmlQuotes),
+        name: "attribute usage with default (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ","], {
+            input: `content:attr(${before},42);`,
+            expected: `content:attr(${after},42);`,
+          }),
+        ],
       },
       {
-        name: "edge cases",
-        cases: [
-          {
-            input: "<div data-foo=\">\" data-bar=\"foo\"></div>",
-            expected: "<div data-a=\">\" data-b=\"foo\"></div>",
-            description: "closing `>` inside attribute values should be ignored",
-          },
-          {
-            input: "<div data-foo=\"bar\" data-foo=\"baz\"></div>",
-            expected: "<div data-a=\"bar\" data-a=\"baz\"></div>",
-            description: "Repeated attributes should all be mangled consistently",
-          },
-          {
-            input: "<div class=\"data-foo\"></div>",
-            expected: "<div class=\"data-foo\"></div>",
-            description: "matches inside attribute value should be ignored",
-          },
-          {
-            input: "<div>data-foo is an attribute name</div>",
-            expected: "<div>data-foo is an attribute name</div>",
-            description: "matches outside an element tag should be ignored",
-          },
-          {
-            input: "< div data-foo=\"bar\"></div>",
-            expected: "< div data-a=\"bar\"></div>",
-            description: "ignore spacing before opening tag",
-          },
+        name: "attribute usage with type/unit",
+        factory: (before: string, after: string): TestCase[] => [
+          ...TYPE_OR_UNITS
+            .map((typeOrUnit: string): TestCase => ({
+              input: `content:attr(${before} ${typeOrUnit});`,
+              expected: `content:attr(${after} ${typeOrUnit});`,
+            })),
+        ],
+      },
+      {
+        name: "attribute usage with type/unit (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ")"], {
+            input: `content:attr(${before} px);`,
+            expected: `content:attr(${after} px);`,
+          }),
+        ],
+      },
+      {
+        name: "attribute usage with default and type/unit",
+        factory: (before: string, after: string): TestCase[] => [
+          ...TYPE_OR_UNITS
+            .map((typeOrUnit: string): TestCase => ({
+              input: `content:attr(${before} ${typeOrUnit},42);`,
+              expected: `content:attr(${after} ${typeOrUnit},42);`,
+            })),
+          ...CSS_VALUES_NO_STRINGS
+            .map((value: string): TestCase => ({
+              input: `content:attr(${before} px,${value});`,
+              expected: `content:attr(${after} px,${value});`,
+            })),
+        ],
+      },
+      {
+        name: "attribute usage with default and type/unit (spacing)",
+        factory: (before: string, after: string): TestCase[] => [
+          ...varySpacing(["(", ","], {
+            input: `content:attr(${before} px,42);`,
+            expected: `content:attr(${after} px,42);`,
+          }),
         ],
       },
     ];
+
+    const scenarios: TestScenario<TestCase>[] = [
+      {
+        name: "no relevant content",
+        cases: [
+          {
+            input: "style=\"color:red;\"",
+            expected: "style=\"color:red;\"",
+          },
+          ...UNCHANGING_ATTRIBUTES_TEST_SAMPLE
+            .filter((testCase) => /(\s|^)(style)=/.test(testCase.input)),
+        ]
+        .flatMap(varyHtmlQuotes)
+        .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "valueless style attribute",
+        cases: [
+          {
+            input: "style",
+            expected: "style",
+          },
+          {
+            input: "style=\"\"",
+            expected: "style=\"\"",
+          },
+        ]
+        .flatMap(varyAttributeSpacing)
+        .flatMap(varyHtmlQuotes)
+        .flatMap(embedWithOtherAttributes)
+        .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "style as tag",
+        cases: [
+          {
+            input: "<style class=\"foobar\"></style>",
+            expected: "<style class=\"foobar\"></style>",
+          },
+          ...varySpacing("/", {
+            input: "<style class=\"foobar\"/>",
+            expected: "<style class=\"foobar\"/>",
+          }),
+        ],
+      },
+    ];
+
+    for (const instance of instances) {
+      const { name, factory } = instance;
+
+      const PAIRS: [TestCase, TestCase][] = [
+        [factory("data-foo", "data-a"), factory("data-bar", "data-b")],
+        [factory("data-foobar", "data-a"), factory("data-foobar", "data-a")],
+      ].flatMap(([testCasesA, testCasesB]): [TestCase, TestCase][] => {
+        return R.zip(
+          testCasesA.map(embedDeclarationsInStyle),
+          testCasesB.map(embedDeclarationsInStyle),
+        );
+      });
+
+      scenarios.push(...[
+        {
+          name: `no matching ${name} in a style attribute`,
+          cases: factory("foobar", "foobar")
+            .map(embedDeclarationsInStyle)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} by itself in a style attribute`,
+          cases: factory("data-foobar", "data-a")
+            .map(embedDeclarationsInStyle)
+            .flatMap(varyAttributeSpacing)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} by itself in a style attribute with other attributes`,
+          cases: factory("data-foobar", "data-a")
+            .map(embedDeclarationsInStyle)
+            .flatMap(embedWithOtherAttributes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with other declarations in a style attribute`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `color:red;${testCase.input}`,
+                expected: `color:red;${testCase.expected}`,
+              },
+              {
+                input: `${testCase.input};background:blue;`,
+                expected: `${testCase.expected};background:blue;`,
+              },
+              {
+                input: `color:red;${testCase.input};background:blue;`,
+                expected: `color:red;${testCase.expected};background:blue;`,
+              },
+            ])
+            .map(embedDeclarationsInStyle)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} in style attributes on adjacent elements`,
+          cases: PAIRS.flatMap(embedAttributesInAdjacentTags),
+        },
+        {
+          name: `${name} in style attributes on nested elements`,
+          cases: PAIRS.flatMap(embedAttributesInNestedTags),
+        },
+        {
+          name: `${name} strings in HTML content`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `<div>${testCase.input}</div>`,
+                expected: `<div>${testCase.input}</div>`,
+              },
+              {
+                input: `
+                  <div style="${testCase.input}">${testCase.input}</div>
+                `,
+                expected: `
+                  <div style="${testCase.expected}">${testCase.input}</div>
+                `,
+              },
+              {
+                input: `<div>style="${testCase.input}"</div>`,
+                expected: `<div>style="${testCase.input}"</div>`,
+              },
+              {
+                input: `
+                  <div style="${testCase.input}">
+                    style="${testCase.input}"
+                  </div>
+                `,
+                expected: `
+                  <div style="${testCase.expected}">
+                    style="${testCase.input}"
+                  </div>
+                `,
+              },
+            ])
+            .flatMap(varyTagSpacing),
+        },
+        {
+          name: `${name} strings in non-style attribute`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              ...HTML_ATTRIBUTES
+                .filter((attribute: string) => !/^(data-[a-z]+)$/.test(attribute))
+                .flatMap((attribute: string): TestCase[] => [
+                  {
+                    input: `${attribute}="${testCase.input}"`,
+                    expected: `${attribute}="${testCase.input}"`,
+                  },
+                  {
+                    input: `
+                      style="${testCase.input}"
+                      ${attribute}="${testCase.input}"
+                    `,
+                    expected: `
+                      style="${testCase.expected}"
+                      ${attribute}="${testCase.input}"
+                    `,
+                  },
+                ]),
+              ...["x", "aria-"]
+                .flatMap((prefix: string): TestCase[] => [
+                  {
+                    input: `${prefix}style="${testCase.input}"`,
+                    expected: `${prefix}style="${testCase.input}"`,
+                  },
+                  {
+                    input: `
+                      style="${testCase.input}"
+                      ${prefix}style="${testCase.input}"
+                    `,
+                    expected: `
+                      style="${testCase.expected}"
+                      ${prefix}style="${testCase.input}"
+                    `,
+                  },
+                ]),
+              ...["x", "-data"]
+                .flatMap((suffix: string): TestCase[] => [
+                  {
+                    input: `style${suffix}="${testCase.input}"`,
+                    expected: `style${suffix}="${testCase.input}"`,
+                  },
+                  {
+                    input: `
+                      style="${testCase.input}"
+                      style${suffix}="${testCase.input}"
+                    `,
+                    expected: `
+                      style="${testCase.expected}"
+                      style${suffix}="${testCase.input}"
+                    `,
+                  },
+                ]),
+            ])
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `style-like attributes with ${name}`,
+          cases: ["x", "aria-"]
+            .flatMap((prefix: string): TestCase[] => {
+              const attributeName = `${prefix}style`;
+              const embedDeclarations = embedAttributeValue(attributeName);
+              return factory("data-foo", "data-foo").map(embedDeclarations);
+            })
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedWithOtherAttributes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with non-closing ">"`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `id=">" style="${testCase.input}"`,
+                expected: `id=">" style="${testCase.expected}"`,
+              },
+              {
+                input: `style="${testCase.input}" id=">"`,
+                expected: `style="${testCase.expected}" id=">"`,
+              },
+              {
+                input: `style=">;${testCase.input}"`,
+                expected: `style=">;${testCase.expected}"`,
+              },
+              {
+                input: `style="${testCase.input};>;"`,
+                expected: `style="${testCase.expected};>;"`,
+              },
+            ])
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with style attribute repetition`,
+          cases: [
+            ...PAIRS
+              .map(([testCaseA, testCaseB]): TestCase => ({
+                input: `${testCaseA.input} ${testCaseB.input}`,
+                expected: `${testCaseA.expected} ${testCaseB.expected}`,
+              })),
+            ...factory("data-foobar", "data-a")
+              .map((testCase: TestCase): TestCase => ({
+                input: `
+                  style="${testCase.input}" style="${testCase.input}"
+                `,
+                expected: `
+                  style="${testCase.expected}" style="${testCase.expected}"
+                `,
+              })),
+          ].flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with style as tag`,
+          cases: factory("data-foobar", "data-a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `<style style="${testCase.input}"></style>`,
+                expected: `<style style="${testCase.expected}"></style>`,
+              },
+              ...varySpacing("/", {
+                input: `<style style="${testCase.input}"/>`,
+                expected: `<style style="${testCase.expected}"/>`,
+              }),
+            ]),
+        },
+        {
+          name: `${name} with non-standard syntax`,
+          cases: [
+            ...factory("data-foobar", "data-a")
+              .map((testCase: TestCase): TestCase => ({
+                input: testCase.input.replace(";", ""),
+                expected: testCase.expected.replace(";", ""),
+                description: "missing \";\" should not matter",
+              }))
+              .map(embedDeclarationsInStyle)
+              .flatMap(embedAttributesInTags),
+          ],
+        },
+      ]);
+    }
 
     run("html", scenarios);
   });

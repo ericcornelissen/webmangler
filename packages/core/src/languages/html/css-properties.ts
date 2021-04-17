@@ -20,7 +20,15 @@ function newStyleDeclarationPropertyExpressions(
 ): MangleExpression[] {
   return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
     `
-      (?<=${QUOTED_ATTRIBUTE_PATTERN("style", quote)})
+      (?<=
+        \\<\\s*[a-zA-Z0-9]+\\s+
+        (?:
+          [^>\\s=]+
+          (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+          \\s+
+        )*
+        ${QUOTED_ATTRIBUTE_PATTERN("style", quote)}
+      )
       (?<${GROUP_MAIN}>
         (?:[^${quote}]+)?
         ${propertyPrefix}
@@ -29,7 +37,11 @@ function newStyleDeclarationPropertyExpressions(
         \\s*:
         (?:[^${quote}]+)?
       )
-      (?=\\s*${quote})
+      (?=
+        \\s*${quote}
+        [^>]*
+        >
+      )
     `,
     `
       (?<=
@@ -54,7 +66,7 @@ function newStyleDeclarationPropertyExpressions(
  * @param options The {@link CssDeclarationPropertyOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.18
  */
 export default function cssDeclarationPropertyExpressionFactory(
   options: CssDeclarationPropertyOptions,

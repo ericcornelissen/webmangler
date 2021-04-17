@@ -8,6 +8,8 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix accidental mangling in HTML content.
+- Fix various cases where attributes in HTML would not be mangled.
 - Improve performance of the built-in CSS language plugin.
 - Improve performance of the built-in JavaScript language plugin.
 - Support mangling attributes selectors with unquoted values.

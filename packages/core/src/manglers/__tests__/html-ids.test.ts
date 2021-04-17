@@ -9,6 +9,7 @@ import type {
 
 import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
+import * as R from "ramda";
 
 import {
   ATTRIBUTE_SELECTOR_OPERATORS,
@@ -17,7 +18,14 @@ import {
   PSEUDO_SELECTORS,
   SELECTOR_COMBINATORS,
 } from "./css-constants";
-import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
+import { HTML_ATTRIBUTES } from "./html-constants";
+import { UNCHANGING_ATTRIBUTES_TEST_SAMPLE } from "./html-fixtures";
+import {
+  embedAttributesInAdjacentTags,
+  embedAttributesInNestedTags,
+  embedAttributesInTags,
+  embedWithOtherAttributes,
+} from "./html-helpers";
 import {
   isValidIdName,
   varyCssQuotes,
@@ -261,429 +269,327 @@ suite("HTML ID Mangler", function() {
     run("css", scenarios);
   });
 
-  suite("HTML", function() {
-    const ATTR_SAMPLE: string[] = [
-      "id=\"",
-      "for=\"",
-      "href=\"#",
-      "href=\"/foo/bar#",
-      "href=\"/foo/bar?hello=world#",
+  suite("HTML - attributes", function() {
+    const ID_ATTRIBUTES: string[] = ["id", "for"];
+    const HREF_ATTRIBUTES: string[] = ["href"];
+    const ATTRIBUTES: string[] = [
+      ...ID_ATTRIBUTES,
+      ...HREF_ATTRIBUTES,
+    ];
+
+    const varyAttributeSpacing = varySpacing("=\"");
+    const varyTagSpacing = varySpacing(["<", ">"]);
+
+    type TestInstance = {
+      readonly name: string;
+      factory(idBefore: string, idAfter: string): TestCase[];
+    }
+
+    const instances: TestInstance[] = [
+      {
+        name: "id attribute",
+        factory: (idBefore: string, idAfter: string): TestCase[] => [
+          {
+            input: `id="${idBefore}"`,
+            expected: `id="${idAfter}"`,
+          },
+        ],
+      },
+      {
+        name: "for attribute",
+        factory: (idBefore: string, idAfter: string): TestCase[] => [
+          {
+            input: `for="${idBefore}"`,
+            expected: `for="${idAfter}"`,
+          },
+        ],
+      },
+      {
+        name: "id attribute",
+        factory: (idBefore: string, idAfter: string): TestCase[] => [
+          {
+            input: `id="${idBefore}"`,
+            expected: `id="${idAfter}"`,
+          },
+        ],
+      },
+      {
+        name: "for attribute",
+        factory: (idBefore: string, idAfter: string): TestCase[] => [
+          {
+            input: `for="${idBefore}"`,
+            expected: `for="${idAfter}"`,
+          },
+        ],
+      },
+      {
+        name: "href attribute",
+        factory: (idBefore: string, idAfter: string): TestCase[] => [
+          {
+            input: `href="#${idBefore}"`,
+            expected: `href="#${idAfter}"`,
+          },
+          {
+            input: `href="/foo/bar#${idBefore}"`,
+            expected: `href="/foo/bar#${idAfter}"`,
+          },
+          {
+            input: `href="/foo/bar?hello=world#${idBefore}"`,
+            expected: `href="/foo/bar?hello=world#${idAfter}"`,
+          },
+        ],
+      },
     ];
 
     const scenarios: TestScenario<TestCase>[] = [
       {
-        name: "non-id attributes",
-        cases: [
-          {
-            input: "<div></div>",
-            expected: "<div></div>",
-          },
-          {
-            input: "<p>foobar</p>",
-            expected: "<p>foobar</p>",
-          },
-          ...varyHtmlQuotes({
-            input: "<div class=\"foo bar\"></div>",
-            expected: "<div class=\"foo bar\"></div>",
-          }),
-          ...varyHtmlQuotes({
-            input: "<div data-foo=\"bar\"></div>",
-            expected: "<div data-foo=\"bar\"></div>",
-          }),
-        ],
-      },
-      ...ATTR_SAMPLE
-        .map((attr): TestScenario<TestCase> => ({
-          name: `\`${attr}id-xxx"\` on one element`,
-          cases: [
-            ...varySpacing("=\"", {
-              input: `<div ${attr}id-foo"></div>`,
-              expected: `<div ${attr}a"></div>`,
-            }),
-            ...varySpacing("\"", {
-              input: `<div ${attr}id-foo"></div>`,
-              expected: `<div ${attr}a"></div>`,
-            }),
-            ...varyHtmlQuotes({
-              input: `<div ${attr}id-foo"></div>`,
-              expected: `<div ${attr}a"></div>`,
-            }),
-            ...STANDARD_TAGS
-              .map((tag) => ({
-                input: `<${tag} ${attr}id-foo"></${tag}>`,
-                expected: `<${tag} ${attr}a"></${tag}>`,
-              })),
-            ...SELF_CLOSING_TAGS
-              .map((tag) => ({
-                input: `<${tag} ${attr}id-foo"/>`,
-                expected: `<${tag} ${attr}a"/>`,
-              })),
-            {
-              input: `<p ${attr}id-foo">Hello world!</p>`,
-              expected: `<p ${attr}a">Hello world!</p>`,
-            },
-            {
-              input: `<div class="foo" ${attr}id-bar"></div>`,
-              expected: `<div class="foo" ${attr}a"></div>`,
-            },
-            {
-              input: `<div ${attr}id-foo" data-foo="bar"></div>`,
-              expected: `<div ${attr}a" data-foo="bar"></div>`,
-            },
-            {
-              input: `<div class="foo" ${attr}id-bar" data-foo="bar"></div>`,
-              expected: `<div class="foo" ${attr}a" data-foo="bar"></div>`,
-            },
-            {
-              input: `<div disabled ${attr}id-foo"></div>`,
-              expected: `<div disabled ${attr}a"></div>`,
-            },
-            {
-              input: `<div ${attr}id-foo" aria-hidden></div>`,
-              expected: `<div ${attr}a" aria-hidden></div>`,
-            },
-            {
-              input: `<div disabled ${attr}id-foo" aria-hidden></div>`,
-              expected: `<div disabled ${attr}a" aria-hidden></div>`,
-            },
-            {
-              input: `<div class="foo" ${attr}id-bar" aria-hidden></div>`,
-              expected: `<div class="foo" ${attr}a" aria-hidden></div>`,
-            },
-            {
-              input: `<div disabled ${attr}id-foo" data-foo="bar"></div>`,
-              expected: `<div disabled ${attr}a" data-foo="bar"></div>`,
-            },
-          ],
-        })),
-      ...ATTR_SAMPLE
-        .map((attr): TestScenario<TestCase> => ({
-          name: `adjacent elements with \`${attr}id-xxx"\``,
-          cases: [
-            {
-              input: `
-                <div ${attr}id-foo"></div>
-                <div ${attr}id-bar"></div>
-              `,
-              expected: `
-                <div ${attr}a"></div>
-                <div ${attr}b"></div>
-              `,
-            },
-            {
-              input: `
-                <div></div>
-                <div ${attr}id-foo"></div>
-                <div ${attr}id-bar"></div>
-              `,
-              expected: `
-                <div></div>
-                <div ${attr}a"></div>
-                <div ${attr}b"></div>
-              `,
-            },
-            {
-              input: `
-                <div ${attr}id-foo"></div>
-                <div></div>
-                <div ${attr}id-bar"></div>
-              `,
-              expected: `
-                <div ${attr}a"></div>
-                <div></div>
-                <div ${attr}b"></div>
-              `,
-            },
-            {
-              input: `
-                <div ${attr}id-foo"></div>
-                <div ${attr}id-bar"></div>
-                <div></div>
-              `,
-              expected: `
-                <div ${attr}a"></div>
-                <div ${attr}b"></div>
-                <div></div>
-              `,
-            },
-            {
-              input: `
-                <div></div>
-                <div ${attr}id-foo"></div>
-                <div></div>
-                <div ${attr}id-bar"></div>
-              `,
-              expected: `
-                <div></div>
-                <div ${attr}a"></div>
-                <div></div>
-                <div ${attr}b"></div>
-              `,
-            },
-            {
-              input: `
-                <div></div>
-                <div ${attr}id-foo"></div>
-                <div ${attr}id-bar"></div>
-                <div></div>
-              `,
-              expected: `
-                <div></div>
-                <div ${attr}a"></div>
-                <div ${attr}b"></div>
-                <div></div>
-              `,
-            },
-            {
-              input: `
-                <div></div>
-                <div ${attr}id-foo"></div>
-                <div></div>
-                <div ${attr}id-bar"></div>
-                <div></div>
-              `,
-              expected: `
-                <div></div>
-                <div ${attr}a"></div>
-                <div></div>
-                <div ${attr}b"></div>
-                <div></div>
-              `,
-            },
-            {
-              input: `
-                <div ${attr}id-praise"></div>
-                <div></div>
-                <div ${attr}id-the"></div>
-                <div></div>
-                <div ${attr}id-sun"></div>
-              `,
-              expected: `
-                <div ${attr}a"></div>
-                <div></div>
-                <div ${attr}b"></div>
-                <div></div>
-                <div ${attr}c"></div>
-              `,
-            },
-          ],
-        })),
-      ...ATTR_SAMPLE
-        .map((attr): TestScenario<TestCase> => ({
-          name: `nested elements with \`${attr}id-xxx"\``,
-          cases: [
-            {
-              input: `
-                <div ${attr}id-foo">
-                  <p></p>
-                </div>
-              `,
-              expected: `
-                <div ${attr}a">
-                  <p></p>
-                </div>
-              `,
-            },
-            {
-              input: `
-                <div>
-                  <p ${attr}id-bar"></p>
-                </div>
-              `,
-              expected: `
-                <div>
-                  <p ${attr}a"></p>
-                </div>
-              `,
-            },
-            {
-              input: `
-                <div ${attr}id-foo">
-                  <p ${attr}id-bar"></p>
-                </div>
-              `,
-              expected: `
-                <div ${attr}a">
-                  <p ${attr}b"></p>
-                </div>
-              `,
-            },
-            {
-              input: `
-                <div>
-                  <p>
-                    <b ${attr}id-foobar"></b>
-                  </p>
-                </div>
-              `,
-              expected: `
-                <div>
-                  <p>
-                    <b ${attr}a"></b>
-                  </p>
-                </div>
-              `,
-            },
-            {
-              input: `
-                <div ${attr}id-foo">
-                  <p ${attr}id-bar">
-                    <b></b>
-                  </p>
-                </div>
-              `,
-              expected: `
-                <div ${attr}a">
-                  <p ${attr}b">
-                    <b></b>
-                  </p>
-                </div>
-              `,
-            },
-            {
-              input: `
-                <div ${attr}id-foo">
-                  <p>
-                    <b ${attr}id-bar"></b>
-                  </p>
-                </div>
-              `,
-              expected: `
-                <div ${attr}a">
-                  <p>
-                    <b ${attr}b"></b>
-                  </p>
-                </div>
-              `,
-            },
-            {
-              input: `
-                <div>
-                  <p ${attr}id-foo">
-                    <b ${attr}id-bar"></b>
-                  </p>
-                </div>
-              `,
-              expected: `
-                <div>
-                  <p ${attr}a">
-                    <b ${attr}b"></b>
-                  </p>
-                </div>
-              `,
-            },
-            {
-              input: `
-                <div ${attr}id-praise">
-                  <p ${attr}id-the">
-                    <b ${attr}id-sun"></b>
-                  </p>
-                </div>
-              `,
-              expected: `
-                <div ${attr}a">
-                  <p ${attr}b">
-                    <b ${attr}c"></b>
-                  </p>
-                </div>
-              `,
-            },
-          ],
-        })),
-      {
-        name: "unquoted ids",
-        cases: [
-          {
-            input: "<div id=foobar></div>",
-            expected: "<div id=a></div>",
-            pattern: "[a-z]+",
-          },
-          {
-            input: "<div id=foo class=\"bar\"></div>",
-            expected: "<div id=a class=\"bar\"></div>",
-            pattern: "[a-z]+",
-          },
-          ...varySpacing("/", {
-            input: "<img id=foobar/>",
-            expected: "<img id=a/>",
-            pattern: "[a-z]+",
-          }),
-        ],
+        name: "no relevant content",
+        cases: UNCHANGING_ATTRIBUTES_TEST_SAMPLE
+          .filter((testCase) => !/(\s|^)(id|for|href)=/.test(testCase.input))
+          .flatMap(varyHtmlQuotes)
+          .flatMap(embedAttributesInTags),
       },
       {
-        name: "non-id attributes that match the pattern",
+        name: "valueless id attributes",
+        cases: ATTRIBUTES
+          .flatMap((attribute: string): TestCase[] => [
+            {
+              input: attribute,
+              expected: attribute,
+            },
+            {
+              input: `${attribute}=""`,
+              expected: `${attribute}=""`,
+            },
+          ])
+          .flatMap(varyAttributeSpacing)
+          .flatMap(varyHtmlQuotes)
+          .flatMap(embedWithOtherAttributes)
+          .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "id-like strings in HTML content",
         cases: [
           {
-            input: "<div class=\"id-foo\" id=\"id-foo\"></div>",
-            expected: "<div class=\"id-foo\" id=\"a\"></div>",
+            input: "<div>id-foobar</div>",
+            expected: "<div>id-foobar</div>",
           },
           {
-            input: "<div class=\"id-foo\"></div><div id=\"id-foo\"></div>",
-            expected: "<div class=\"id-foo\"></div><div id=\"a\"></div>",
+            input: "<div>#id-foobar</div>",
+            expected: "<div>#id-foobar</div>",
           },
-        ],
+        ].flatMap(varyTagSpacing),
+      },
+      {
+        name: "id-like strings in non-id attributes",
+        cases: HTML_ATTRIBUTES
+          .filter((attribute: string) => !/^(id|for|href)$/.test(attribute))
+          .flatMap((attribute: string): TestCase[] => [
+            {
+              input: `${attribute}="id-foobar"`,
+              expected: `${attribute}="id-foobar"`,
+            },
+            {
+              input: `${attribute}="#id-foobar"`,
+              expected: `${attribute}="#id-foobar"`,
+            },
+          ])
+          .flatMap(embedAttributesInTags),
       },
       {
         name: "ids in external URLs",
-        cases: [
-          {
-            input: "<a href=\"http://www.example.com/foo#id-bar\"></a>",
-            expected: "<a href=\"http://www.example.com/foo#id-bar\"></a>",
-          },
-          {
-            input: "<a href=\"https://www.example.com/foo#id-bar\"></a>",
-            expected: "<a href=\"https://www.example.com/foo#id-bar\"></a>",
-          },
-        ],
-      },
-      {
-        name: "edge cases",
-        cases: [
-          {
-            input: "<div id></div>",
-            expected: "<div id></div>",
-          },
-          ...varyHtmlQuotes({
-            input: "<div id=\"\"></div>",
-            expected: "<div id=\"\"></div>",
-          }),
-          {
-            input: "<p>id-foo</p>",
-            expected: "<p>id-foo</p>",
-            description: "Anything inside tags matching the pattern should be ignored.",
-          },
-          {
-            input: "<p>#id-foo</p>",
-            expected: "<p>#id-foo</p>",
-            description: "Anything inside tags matching the pattern should be ignored.",
-          },
-          {
-            input: "<div id=\"id-foo\" id=\"id-bar\"></div>",
-            expected: "<div id=\"a\" id=\"b\"></div>",
-            description: "multiple class attributes on one element should all be mangled",
-          },
-          {
-            input: "<div id=\"id-foobar\" id=\"id-foobar\"></div>",
-            expected: "<div id=\"a\" id=\"a\"></div>",
-            description: "multiple class attributes on one element should all be mangled",
-          },
-          ...ATTR_SAMPLE
-            .flatMap((attr): TestCase[] => [
-              ...["data-", "x"]
-                .map((prefix): TestCase => ({
-                  input: `<div ${prefix}${attr}id-foo"></div>`,
-                  expected: `<div ${prefix}${attr}id-foo"></div>`,
-                  description: "Shouldn't mangle in attribute even if it ends in \"id\"",
-                })),
-            ]),
-          {
-            input: "<id class=\"foo\"></id>",
-            expected: "<id class=\"foo\"></id>",
-            description: "The tag \"id\" shouldn't cause problems.",
-          },
-        ],
+        cases: HREF_ATTRIBUTES
+          .flatMap((attribute: string): TestCase[] => [
+            {
+              input: `<a ${attribute}="http://www.example.com/foo#id-bar"></a>`,
+              expected: `<a ${attribute}="http://www.example.com/foo#id-bar"></a>`,
+              description: "ignore ids in external \"http\" URLs",
+            },
+            {
+              input: `<a ${attribute}="https://www.example.com/foo#id-bar"></a>`,
+              expected: `<a ${attribute}="https://www.example.com/foo#id-bar"></a>`,
+              description: "ignore ids in external \"https\" URLs",
+            },
+          ]),
       },
     ];
+
+    for (const instance of instances) {
+      const { name, factory } = instance;
+
+      const ATTRIBUTE_VALUE_PAIRS: [TestCase, TestCase][] = [
+        [factory("id-foo", "a"), factory("id-bar", "b")],
+        [factory("id-foobar", "a"), factory("id-foobar", "a")],
+      ].flatMap(([testCasesA, testCasesB]): [TestCase, TestCase][] => {
+        return R.zip(testCasesA, testCasesB);
+      });
+
+      scenarios.push(...[
+        {
+          name: `no matching ${name} value`,
+          cases: factory("foobar", "foobar")
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} as only attribute`,
+          cases: factory("id-foo", "a")
+            .flatMap(varyAttributeSpacing)
+            .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with other attributes`,
+          cases: factory("id-foo", "a")
+            .flatMap(embedWithOtherAttributes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with unquoted values`,
+          cases: factory("id-foobar", "a")
+            .map((testCase: TestCase): TestCase => ({
+              input: testCase.input.replace(/"/g, ""),
+              expected: testCase.expected.replace(/"/g, ""),
+            }))
+            .flatMap(embedWithOtherAttributes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} on adjacent elements`,
+          cases: ATTRIBUTE_VALUE_PAIRS
+            .flatMap(embedAttributesInAdjacentTags),
+        },
+        {
+          name: `${name} on nested elements`,
+          cases: ATTRIBUTE_VALUE_PAIRS
+            .flatMap(embedAttributesInNestedTags),
+        },
+        {
+          name: `${name} with id in HTML content`,
+          cases: factory("id-foo", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `<div ${testCase.input}>id-bar</div>`,
+                expected: `<div ${testCase.expected}>id-bar</div>`,
+              },
+              {
+                input: `<div ${testCase.input}>id-foo</div>`,
+                expected: `<div ${testCase.expected}>id-foo</div>`,
+              },
+              {
+                input: `<div ${testCase.input}>#id-bar</div>`,
+                expected: `<div ${testCase.expected}>#id-bar</div>`,
+              },
+              {
+                input: `<div ${testCase.input}>#id-foo</div>`,
+                expected: `<div ${testCase.expected}>#id-foo</div>`,
+              },
+              {
+                input: `<div>${testCase.input}</div>`,
+                expected: `<div>${testCase.input}</div>`,
+              },
+              {
+                input: `<div ${testCase.input}>${testCase.input}</div>`,
+                expected: `<div ${testCase.expected}>${testCase.input}</div>`,
+              },
+            ])
+            .flatMap(varyTagSpacing),
+        },
+        {
+          name: `${name} with id in non-id tag`,
+          cases: factory("id-foo", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `${testCase.input} alt="id-bar"`,
+                expected: `${testCase.expected} alt="id-bar"`,
+              },
+              {
+                input: `${testCase.input} alt="id-foo"`,
+                expected: `${testCase.expected} alt="id-foo"`,
+              },
+              {
+                input: `${testCase.input} alt="#id-bar"`,
+                expected: `${testCase.expected} alt="#id-bar"`,
+              },
+              {
+                input: `${testCase.input} alt="#id-foo"`,
+                expected: `${testCase.expected} alt="#id-foo"`,
+              },
+              ...["x", "data-"]
+                .flatMap((prefix: string): TestCase[] => [
+                  {
+                    input: `${prefix}${testCase.input}`,
+                    expected: `${prefix}${testCase.input}`,
+                  },
+                  {
+                    input: `
+                      ${testCase.input} ${prefix}${testCase.input}"
+                    `,
+                    expected: `
+                      ${testCase.expected} ${prefix}${testCase.input}"
+                    `,
+                  },
+                ]),
+            ])
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with non-closing ">"`,
+          cases: factory("id-foobar", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: `alt=">" ${testCase.input}`,
+                expected: `alt=">" ${testCase.expected}`,
+              },
+              {
+                input: `${testCase.input} alt=">"`,
+                expected: `${testCase.expected} alt=">"`,
+              },
+            ])
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} attribute repetition`,
+          cases: [
+            ...ATTRIBUTE_VALUE_PAIRS
+              .map(([testCaseA, testCaseB]): TestCase => ({
+                input: `${testCaseA.input} ${testCaseB.input}`,
+                expected: `${testCaseA.expected} ${testCaseB.expected}`,
+              })),
+            ...factory("id-foobar", "a")
+              .map((testCase: TestCase): TestCase => ({
+                input: `${testCase.input} ${testCase.input}`,
+                expected: `${testCase.expected} ${testCase.expected}`,
+              })),
+          ].flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with id-related attribute names as tags`,
+          cases: factory("id-foobar", "a")
+            .flatMap((testCase: TestCase): TestCase[] => [
+              ...ATTRIBUTES
+                .flatMap((attr: string): TestCase[] => [
+                  {
+                    input: `<${attr} class="foobar"></${attr}>`,
+                    expected: `<${attr} class="foobar"></${attr}>`,
+                  },
+                  {
+                    input: `<${attr} class="foobar"/>`,
+                    expected: `<${attr} class="foobar"/>`,
+                  },
+                  {
+                    input: `<${attr} ${testCase.input}></${attr}>`,
+                    expected: `<${attr} ${testCase.expected}></${attr}>`,
+                  },
+                  {
+                    input: `<${attr} ${testCase.input}/>`,
+                    expected: `<${attr} ${testCase.expected}/>`,
+                  },
+                ]),
+            ]),
+        },
+      ]);
+    }
 
     run("html", scenarios);
   });

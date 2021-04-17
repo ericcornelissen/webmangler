@@ -9,7 +9,7 @@
 export const QUOTED_ATTRIBUTE_PATTERN = (
   attributesPattern: string,
   quotePattern: string,
-): string => `\\s(?:${attributesPattern})\\s*=\\s*${quotePattern}\\s*`;
+): string => `(?:${attributesPattern})\\s*=\\s*${quotePattern}\\s*`;
 
 /**
  * Array of characters that are quotes in HTML.

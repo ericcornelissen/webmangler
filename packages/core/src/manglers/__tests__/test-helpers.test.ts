@@ -1,6 +1,7 @@
 import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "./types";
+
 import type { QuoteCategory } from "./test-helpers";
+import type { TestCase } from "./types";
 
 import { expect } from "chai";
 
