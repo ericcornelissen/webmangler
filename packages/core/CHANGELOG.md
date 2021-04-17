@@ -8,8 +8,11 @@ Versioning].
 
 ## [Unreleased]
 
-- Fix various cases where attributes in HTML would not be mangled.
 - Fix accidental mangling in HTML content.
+- Fix various cases where attributes in HTML would not be mangled.
+- Improve performance of the built-in CSS language plugin.
+- Improve performance of the built-in JavaScript language plugin.
+- Support mangling attributes selectors with unquoted values.
 
 ## [0.1.17] - 2021-03-31
 

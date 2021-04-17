@@ -32,14 +32,13 @@ type BenchmarkRunStats = {
 const DEFAULT_REPETITIONS = 200;
 
 /**
- * Get the speed of the CPU in MHz of the current system.
+ * Get an estimate of the current speed of the CPU in MHz.
  *
  * @returns The CPU speed in MHz.
  */
 function getCpuSpeedInMHz(): number {
   const cpus = os.cpus();
-  const firstCpu = cpus[0];
-  return firstCpu.speed;
+  return cpus.reduce((acc, cpu) => acc + cpu.speed, 0) / cpus.length;
 }
 
 /**

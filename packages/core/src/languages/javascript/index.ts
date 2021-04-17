@@ -58,7 +58,7 @@ export type JavaScriptLanguagePluginOptions = {
  * });
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.18
  */
 export default class JavaScriptLanguagePlugin extends SimpleLanguagePlugin {
   /**

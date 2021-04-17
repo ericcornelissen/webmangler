@@ -125,6 +125,10 @@ suite("HTML Attribute Mangler", function() {
           ...ATTRIBUTE_SELECTOR_OPERATORS
             .flatMap((operator: string): TestCase[] => [
               ...varySpacing(operator, {
+                input: `[data-foo${operator}bar]{ }`,
+                expected: `[data-a${operator}bar]{ }`,
+              }),
+              ...varySpacing(operator, {
                 input: `[data-foo${operator}"bar"]{ }`,
                 expected: `[data-a${operator}"bar"]{ }`,
               }),
@@ -1112,6 +1116,10 @@ suite("HTML Attribute Mangler", function() {
       {
         name: "attribute value selector",
         cases: [
+          {
+            input: "[data-foo=bar]",
+            expected: "[data-a=bar]",
+          },
           {
             input: "[data-foo=\\\"bar\\\"]",
             expected: "[data-a=\\\"bar\\\"]",

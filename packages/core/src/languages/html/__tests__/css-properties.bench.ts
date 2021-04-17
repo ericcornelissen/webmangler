@@ -7,6 +7,7 @@ import {
   benchmarkFn,
   getRuntimeBudget,
 } from "../../__tests__/benchmark-helpers";
+import { embedContentInBody, embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import cssDeclarationPropertyExpressionFactory from "../css-properties";
@@ -17,19 +18,15 @@ suite("HTML - CSS Property Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithVariables = `
-    <body>
-      <div style="--color: red">
-        <p style="color: var(--color); --font: sans-serif">Hello world!</p>
-      </div>
-    </body>
-  `;
+  const contentWithVariables = embedContentInContext(`
+    <div style="--color: red">
+      <p style="color: var(--color); --font: sans-serif">Hello world!</p>
+    </div>
+  `);
   const contentWithoutVariables = `
-    <body>
-      <div style="color: red">
-        <p>Hello world!</p>
-      </div>
-    </body>
+    <div style="color: red">
+      <p>Hello world!</p>
+    </div>
   `;
 
   suiteSetup(function() {
@@ -46,8 +43,8 @@ suite("HTML - CSS Property Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithVariables;
+    const budget = getRuntimeBudget(0.3);
+    const fileContent = embedContentInBody(contentWithVariables);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
@@ -67,8 +64,9 @@ suite("HTML - CSS Property Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
-    const fileContent = contentWithVariables.repeat(100);
+    const budget = getRuntimeBudget(6);
+    const largeContent = contentWithVariables.repeat(100);
+    const fileContent = embedContentInBody(largeContent);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
@@ -88,8 +86,9 @@ suite("HTML - CSS Property Expression Factory", function() {
   });
 
   test("large file without variables", function() {
-    const budget = getRuntimeBudget(10);
-    const fileContent = contentWithoutVariables.repeat(100);
+    const budget = getRuntimeBudget(1);
+    const largeContent = contentWithoutVariables.repeat(100);
+    const fileContent = embedContentInBody(largeContent);
 
     let files: WebManglerFile[] = [];
     let mangledFiles: WebManglerFile[] = [];
