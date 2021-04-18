@@ -8,7 +8,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Benchmark a function using `benchmarkFn`.
+- Get a system-dependent runtime budget using `getRuntimeBudget`.
 
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
