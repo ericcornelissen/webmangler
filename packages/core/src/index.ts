@@ -36,11 +36,8 @@ function extractOptions(
  * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
  * @param languageOptions The {@link MangleExpressionOptions}.
  * @returns The {@link MangleExpression}s.
- * @since v0.1.14
- * @version v0.1.17
- * @deprecated Will be removed in a future version.
  */
-export function getExpressions(
+function getExpressions(
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
   languageOptions: Iterable<MangleExpressionOptions<unknown>>,
 ): Map<string, Iterable<MangleExpression>> {
