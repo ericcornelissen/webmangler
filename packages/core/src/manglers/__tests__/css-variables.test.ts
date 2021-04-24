@@ -278,6 +278,7 @@ suite("CSS Variable Mangler", function() {
     const embedDeclarationsInStyle = embedAttributeValue("style");
 
     const varyAttributeSpacing = varySpacing("=");
+    const varyDeclarationSpacing = varySpacing([":", ",", ";"]);
     const varyTagSpacing = varySpacing(["<", ">"]);
 
     type TestInstance = {
@@ -297,15 +298,6 @@ suite("CSS Variable Mangler", function() {
         ],
       },
       {
-        name: "variable declaration (spacing)",
-        factory: (before: string, after: string): TestCase[] => [
-          ...varySpacing([":", ";"], {
-              input: `--${before}:42;`,
-              expected: `--${after}:42;`,
-          }),
-        ],
-      },
-      {
         name: "variable usage without default",
         factory: (before: string, after: string): TestCase[] => [
           ...CSS_PROPERTIES
@@ -316,36 +308,23 @@ suite("CSS Variable Mangler", function() {
         ],
       },
       {
-        name: "variable usage without default (spacing)",
-        factory: (before: string, after: string): TestCase[] => [
-          ...varySpacing(["(", ")"], {
-              input: `content:var(--${before});`,
-              expected: `content:var(--${after});`,
-          }),
-        ],
-      },
-      {
-        name: "variable usage with default",
+        name: "variable usage with default (different properties)",
         factory: (before: string, after: string): TestCase[] => [
           ...CSS_PROPERTIES
             .map((property: string): TestCase => ({
               input: `${property}:var(--${before},42);`,
               expected: `${property}:var(--${after},42);`,
             })),
+        ],
+      },
+      {
+        name: "variable usage with default (different values)",
+        factory: (before: string, after: string): TestCase[] => [
           ...CSS_VALUES_NO_STRINGS
             .map((value: string): TestCase => ({
               input: `content:var(--${before},${value});`,
               expected: `content:var(--${after},${value});`,
             })),
-        ],
-      },
-      {
-        name: "variable usage with default (spacing)",
-        factory: (before: string, after: string): TestCase[] => [
-          ...varySpacing(["(", ","], {
-              input: `content:var(--${before},42);`,
-              expected: `content:var(--${after},42);`,
-          }),
         ],
       },
     ];
@@ -436,6 +415,30 @@ suite("CSS Variable Mangler", function() {
             .map(embedDeclarationsInStyle)
             .flatMap(varyAttributeSpacing)
             .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name}, vary spacing`,
+          cases: factory("foobar", "a")
+            .map(embedDeclarationsInStyle)
+            .flatMap(varyDeclarationSpacing)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} in an unquoted style attribute`,
+          cases: factory("foobar", "a")
+            .map(embedDeclarationsInStyle)
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: testCase.input.replace(/"/g, ""),
+                expected: testCase.expected.replace(/"/g, ""),
+              },
+              {
+                input: testCase.input.replace(/("|;)/g, ""),
+                expected: testCase.expected.replace(/("|;)/g, ""),
+              },
+            ])
+            .flatMap(varyAttributeSpacing)
             .flatMap(embedAttributesInTags),
         },
         {

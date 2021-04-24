@@ -8,7 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Support mangling CSS classes when attribute value is not quoted.
+- Support mangling CSS variables when the style attribute value is not quoted.
+- Support mangling attribute usage when the style attribute value is not quoted.
+- Fix mangling unquoted IDs in certain edge cases.
 
 ## [0.1.18] - 2021-04-17
 

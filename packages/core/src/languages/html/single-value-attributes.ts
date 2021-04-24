@@ -71,7 +71,7 @@ function newUnquotedValueExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
-        \\s(?:${attributesPattern})\\s*=
+        \\s(?:${attributesPattern})\\s*=\\s*
         ${valuePrefix}
       )
       (?<${GROUP_MAIN}>%s)
@@ -93,7 +93,7 @@ function newUnquotedValueExpression(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.18
+ * @version v0.1.19
  */
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,

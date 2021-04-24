@@ -1,7 +1,10 @@
 import type { MangleExpression } from "../../types";
 import type { CssDeclarationValueOptions } from "../options";
 
-import { NestedGroupMangleExpression } from "../utils/mangle-expressions";
+import {
+  NestedGroupMangleExpression,
+  SingleGroupMangleExpression,
+} from "../utils/mangle-expressions";
 import { QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";
@@ -59,6 +62,39 @@ function newStyleDeclarationValueExpressions(
 }
 
 /**
+ * Get {@link MangleExpression}s to match the value of CSS declarations in
+ * unquoted HTML attributes, e.g. `serif` in `<div style=font:serif><div>"`.
+ *
+ * @param propertyPrefix The prefix required on properties.
+ * @param propertySuffix The suffix required on properties.
+ * @returns The {@link MangleExpression}s to match unquoted attribute values.
+ */
+function newUnquotedStyleDeclarationValueExpressions(
+  propertyPrefix: string,
+  propertySuffix: string,
+): MangleExpression[] {
+  return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
+    `
+      (?<=
+        \\<\\s*[a-zA-Z0-9]+\\s+
+        (?:
+          [^>\\s=]+
+          (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+          \\s+
+        )*
+        style\\s*=\\s*[^\\s"']+:${propertyPrefix}
+      )
+      (?<${GROUP_MAIN}>%s)
+      (?=
+        ${propertySuffix}
+        (?:\\;|\\s|\\/|\\>)
+      )
+    `,
+    GROUP_MAIN,
+  ));
+}
+
+/**
  * Get the set of {@link MangleExpression}s to match the values of CSS
  * declarations in CSS. This will match:
  * - Values in style attributes (e.g. `bar` in `<img style="foo: bar">`).
@@ -66,7 +102,7 @@ function newStyleDeclarationValueExpressions(
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.18
+ * @version v0.1.19
  */
 export default function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,
@@ -76,5 +112,6 @@ export default function cssDeclarationValueExpressionFactory(
 
   return [
     ...newStyleDeclarationValueExpressions(valuePrefix, valueSuffix),
+    ...newUnquotedStyleDeclarationValueExpressions(valuePrefix, valueSuffix),
   ];
 }
