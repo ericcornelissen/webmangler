@@ -60,7 +60,7 @@ export default class NameGenerator {
    * @version v0.1.17
    */
   constructor(
-    reserved: Iterable<string> = new Set(),
+    reserved: Iterable<string> = [],
     charSet: CharSet = NameGenerator.DEFAULT_CHARSET,
   ) {
     const charSetNoDuplicates = new Set(charSet);
