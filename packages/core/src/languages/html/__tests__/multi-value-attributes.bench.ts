@@ -66,7 +66,7 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(6);
+    const budget = getRuntimeBudget(10);
     const largeContent = contentWithMultiValueAttribute.repeat(100);
     const fileContent = embedContentInBody(largeContent);
 
