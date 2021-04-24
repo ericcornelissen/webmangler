@@ -277,7 +277,13 @@ suite("HTML ID Mangler", function() {
       ...HREF_ATTRIBUTES,
     ];
 
-    const varyAttributeSpacing = varySpacing("=\"");
+    const varyAttributeSpacing = (testCase: TestCase): TestCase[] => {
+      return varySpacing("=", testCase)
+        .map(({ input, expected }: TestCase): TestCase => ({
+          input: input.replace(/\?([a-z]+)\s*=\s*([a-z]+)/g, "?$1=$2"),
+          expected: expected.replace(/\?([a-z]+)\s*=\s*([a-z]+)/g, "?$1=$2"),
+        }));
+    };
     const varyTagSpacing = varySpacing(["<", ">"]);
 
     type TestInstance = {
