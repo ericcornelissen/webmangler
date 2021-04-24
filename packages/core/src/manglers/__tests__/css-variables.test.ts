@@ -274,7 +274,7 @@ suite("CSS Variable Mangler", function() {
     run("css", scenarios);
   });
 
-  suite.only("HTML - style attribute", function() {
+  suite("HTML - style attribute", function() {
     const embedDeclarationsInStyle = embedAttributeValue("style");
 
     const varyAttributeSpacing = varySpacing("=");

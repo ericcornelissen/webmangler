@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Support mangling CSS classes when attribute value is not quoted.
+- Support mangling CSS variables when attribute value is not quoted.
 
 ## [0.1.18] - 2021-04-17
 
