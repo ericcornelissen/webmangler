@@ -5,22 +5,9 @@ import type { CharSet } from "./characters";
  * configure the _WebMangler_ core.
  *
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.18
  */
 interface MangleOptions extends MangleEngineOptions {
-  /**
-   * The {@link MangleExpressionOptions} for every set of {@link
-   * MangleExpression}s that should be used when mangling.
-   *
-   * By providing multiple options for the same set of {@link MangleExpression}s
-   * the _WebMangler_ core will use a set with each configuration when mangling.
-   *
-   * @since v0.1.14
-   * @version v0.1.17
-   * @deprecated Use `languageOptions` instead.
-   */
-  readonly expressionOptions?: Iterable<MangleExpressionOptions<unknown>>;
-
   /**
    * The {@link MangleExpressionOptions} for every set of {@link
    * MangleExpression}s that should be used when mangling.

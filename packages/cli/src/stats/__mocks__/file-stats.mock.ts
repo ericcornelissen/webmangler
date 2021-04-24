@@ -10,10 +10,14 @@ export default class FileStatsMock implements FileStats {
   sizeAfter: number;
   sizeBefore: number;
 
-  constructor(sizeBefore: number, sizeAfter: number, changedSize?: number) {
+  constructor(
+    sizeBefore: number,
+    sizeAfter: number,
+    changePercentage?: number,
+  ) {
     this.changed = (sizeBefore !== sizeAfter);
-    this.changePercentage = changedSize === undefined ?
-      getChangedPercentage(sizeBefore, sizeAfter) : changedSize;
+    this.changePercentage = changePercentage === undefined ?
+      getChangedPercentage(sizeBefore, sizeAfter) : changePercentage;
     this.sizeBefore = sizeBefore;
     this.sizeAfter = sizeAfter;
   }

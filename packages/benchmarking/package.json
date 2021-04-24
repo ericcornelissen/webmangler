@@ -1,0 +1,34 @@
+{
+  "name": "@webmangler/benchmarking",
+  "version": "0.1.0",
+  "description": "WebMangler benchmarking utilities",
+  "license": "Unlicense",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ericcornelissen/webmangler",
+    "directory": "packages/benchmarking"
+  },
+  "bugs": {
+    "url": "https://github.com/ericcornelissen/webmangler/issues"
+  },
+  "author": {
+    "name": "Eric Cornelissen",
+    "email": "ericornelissen@gmail.com",
+    "url": "https://ericcornelissen.dev/"
+  },
+  "scripts": {
+    "clean": "rm -rf *.js *.d.ts",
+    "precompile": "npm run clean",
+    "compile": "tsc",
+    "prepublishOnly": "npm run compile",
+    "postpublish": "npm run clean"
+  },
+  "devDependencies": {
+    "typescript": "4.2.4"
+  },
+  "engines": {
+    "node": ">=12.16.0"
+  }
+}

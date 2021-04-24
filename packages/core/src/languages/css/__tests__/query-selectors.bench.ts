@@ -1,12 +1,10 @@
 import type { WebManglerFile } from "../../../types";
 
+import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
-import {
-  benchmarkFn,
-  getRuntimeBudget,
-} from "../../__tests__/benchmark-helpers";
+import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import querySelectorExpressionFactory from "../query-selectors";
@@ -17,7 +15,7 @@ suite("CSS - Query Selector Expression Factory", function() {
     patterns: "[a-zA-Z0-9]+",
   };
 
-  const contentWithQuerySelector = `
+  const contentWithQuerySelector = embedContentInContext(`
     body {
       font-family: sans-serif;
     }
@@ -30,7 +28,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       content: "bar";
       color: #123;
     }
-  `;
+  `);
   const contentWithoutQuerySelector = `
     body {
       font-family: sans-serif;
@@ -60,7 +58,7 @@ suite("CSS - Query Selector Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
+    const budget = getRuntimeBudget(0.3);
     const fileContent = contentWithQuerySelector;
 
     let files: WebManglerFile[] = [];
@@ -81,7 +79,7 @@ suite("CSS - Query Selector Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(6);
     const fileContent = contentWithQuerySelector.repeat(100);
 
     let files: WebManglerFile[] = [];
@@ -102,7 +100,7 @@ suite("CSS - Query Selector Expression Factory", function() {
   });
 
   test("large file without query selectors", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(1);
     const fileContent = contentWithoutQuerySelector.repeat(100);
 
     let files: WebManglerFile[] = [];

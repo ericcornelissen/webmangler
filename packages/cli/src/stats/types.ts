@@ -26,7 +26,17 @@ type FileStats = {
 /**
  * Statistics about a _WebMangler_ run.
  */
-type ManglerStats = Map<string, FileStats>;
+type ManglerStats = {
+  /**
+   * The time it took to mangle.
+   */
+  readonly duration: number;
+
+  /**
+   * The {@link FileStats} for every mangled file.
+   */
+  readonly files: Map<string, FileStats>;
+};
 
 export type {
   FileStats,

@@ -1,12 +1,10 @@
 import type { WebManglerFile } from "../../../types";
 
+import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
-import {
-  benchmarkFn,
-  getRuntimeBudget,
-} from "../../__tests__/benchmark-helpers";
+import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
 import cssDeclarationPropertyExpressionFactory from "../css-properties";
@@ -17,11 +15,11 @@ suite("JavaScript - CSS Property Expression Factory", function() {
     patterns: "[a-zA-Z0-9-]+",
   };
 
-  const contentWithProperties = `
+  const contentWithProperties = embedContentInContext(`
     $element.style.getPropertyValue("--color");
     $element.style.getPropertyValue("--font-size");
     $element.style.getPropertyValue("--margin-left");
-  `;
+  `);
   const contentWithoutProperties = `
     const foo = "bar";
     const fooEl = document.getElementById(foo);
@@ -42,7 +40,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.1);
+    const budget = getRuntimeBudget(0.3);
     const fileContent = contentWithProperties;
 
     let files: WebManglerFile[] = [];
@@ -63,7 +61,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(6);
     const fileContent = contentWithProperties.repeat(100);
 
     let files: WebManglerFile[] = [];
@@ -84,7 +82,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
   });
 
   test("large file without properties", function() {
-    const budget = getRuntimeBudget(10);
+    const budget = getRuntimeBudget(1);
     const fileContent = contentWithoutProperties.repeat(100);
 
     let files: WebManglerFile[] = [];

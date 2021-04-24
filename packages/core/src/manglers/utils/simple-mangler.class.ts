@@ -9,7 +9,7 @@ import type {
  * Interface defining the configuration of a {@link SimpleLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.18
  */
 export interface SimpleManglerOptions {
   /**
@@ -18,15 +18,6 @@ export interface SimpleManglerOptions {
    * @since v0.1.7
    */
   charSet: CharSet;
-
-  /**
-   * The {@link MangleExpressionOptions} to use when mangling.
-   *
-   * @since v0.1.14
-   * @version v0.1.17
-   * @deprecated Use `languageOptions` instead.
-   */
-  expressionOptions?: Iterable<MangleExpressionOptions<unknown>>;
 
   /**
    * The configuration for the {@link WebManglerLanguagePlugin}s.
@@ -101,11 +92,11 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
    *
    * @param options The {@link SimpleManglerOptions} (previously `id`).
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.18
    */
   constructor(options: SimpleManglerOptions) {
     this.charSet = options.charSet;
-    this.languageOptions = options.languageOptions || options.expressionOptions;
+    this.languageOptions = options.languageOptions;
     this.patterns = options.patterns;
     this.prefix = options.prefix;
     this.reserved = options.reserved;

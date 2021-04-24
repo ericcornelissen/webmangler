@@ -1,5 +1,6 @@
 import type { ManglerStats } from "./types";
 import type { WebManglerCliFile } from "../fs";
+import type { Logger } from "../logger";
 
 import * as chalk from "chalk";
 
@@ -45,26 +46,31 @@ function getDisplayPercentage(percentage: number): string {
 /**
  * Compute the statistics about one _WebMangler_ run.
  *
- * @param inFiles The files selected for mangling.
- * @param outFiles The files after mangling.
+ * @param data The data to convert into stats.
+ * @param data.duration The time it took to mangle.
+ * @param data.inFiles The files selected for mangling.
+ * @param data.outFiles The files after mangling.
  * @returns The {@link ManglerStats} for the run.
  */
-export function getStatsBetween(
+export function computeStats(data: {
+  duration: number,
   inFiles: WebManglerCliFile[],
   outFiles: WebManglerCliFile[],
-): ManglerStats {
-  const stats = new Map();
+}): ManglerStats {
+  const { duration, inFiles, outFiles } = data;
+
+  const fileStats = new Map();
   inFiles.forEach((inFile) => {
     const outFile = outFiles.find((file) => file.path === inFile.path);
     if (outFile === undefined) {
-      stats.set(inFile.path, {
+      fileStats.set(inFile.path, {
         changed: false,
         changePercentage: 0,
         sizeBefore: inFile.originalSize,
         sizeAfter: inFile.originalSize,
       });
     } else {
-      stats.set(inFile.path, {
+      fileStats.set(inFile.path, {
         changed: true,
         changePercentage: getChangedPercentage(
           inFile.originalSize,
@@ -76,37 +82,46 @@ export function getStatsBetween(
     }
   });
 
-  return stats;
+  return {
+    files: fileStats,
+    duration: duration,
+  };
 }
 
 /**
  * Log statistics about a _WebMangler_ run to stdout.
  *
- * @param log A function to take a string and log it.
+ * @param logger A {@link Logger}.
  * @param stats The _WebMangler_ run statistics.
  */
 export function logStats(
-  log: (msg: string) => void,
+  logger: Logger,
   stats: ManglerStats,
 ): void {
+  const fileCount: number = stats.files.size;
+  const duration: number = roundToTwoDecimalPlaces(stats.duration);
+
+  if (stats.files.size === 0) {
+    return;
+  }
+
   let overallBefore = 0;
   let overallAfter = 0;
-  stats.forEach((fileStats, filePath) => {
+  stats.files.forEach((fileStats, filePath) => {
     overallBefore += fileStats.sizeBefore;
     overallAfter += fileStats.sizeAfter;
     if (fileStats.changed) {
       const percentage = getDisplayPercentage(fileStats.changePercentage);
       const reduction = `${fileStats.sizeBefore} -> ${fileStats.sizeAfter}`;
-      log(`${filePath} ${percentage} (${reduction})`);
+      logger.print(`${filePath} ${percentage} (${reduction})`);
     } else {
-      log(`${filePath} [NOT MANGLED]`);
+      logger.print(`${filePath} [NOT MANGLED]`);
     }
   });
 
-  if (stats.size > 0) {
-    const changedPercentage = getChangedPercentage(overallBefore, overallAfter);
-    const percentage = getDisplayPercentage(changedPercentage);
-    const reduction = `${overallBefore} -> ${overallAfter}`;
-    log(`OVERALL ${percentage} (${reduction})`);
-  }
+  const changedPercentage = getChangedPercentage(overallBefore, overallAfter);
+  const overallPercentage = getDisplayPercentage(changedPercentage);
+  const overallReduction = `${overallBefore} -> ${overallAfter}`;
+  logger.print(`OVERALL ${overallPercentage} (${overallReduction})`);
+  logger.print(`\nmangled ${fileCount} files in ${duration} ms`);
 }

@@ -1,6 +1,7 @@
 import type { TestCase } from "./types";
 
 import { deepStrictEqual } from "assert";
+import { curry } from "ramda";
 import { format as printf } from "util";
 
 /**
@@ -35,7 +36,7 @@ function cloneObject<T>(o: T, r?: unknown): T {
  * @param arr The full array being filtered.
  * @returns `true` if this is the first instance of `value`, `false` otherwise.
  */
-function duplicates<T>(value: T, index: number, arr: T[]): boolean {
+function duplicates(value: unknown, index: number, arr: unknown[]): boolean {
   const firstIndexOfValue = arr.findIndex((x) => {
     try {
       deepStrictEqual(x, value);
@@ -160,50 +161,64 @@ export function permuteObjects<T>(objects: T[]): T[] {
 }
 
 /**
- * Type representing the languages supported by the {@link varyQuotes} function.
+ * Type representing the categories of quotes.
  */
-export type QuoteLanguages =
-  "css" | "html" | "js" | "single-backticks" | "double-backticks";
+export type QuoteCategory =
+  "single-double" | "single-backticks" | "double-backticks" | "single-double-backticks";
 
 /**
  * Vary the quotes used in the snippets of code of `testCase` for a certain
- * `language`.
+ * {@link QuoteCategory}.
  *
- * @param language The language `testCase` is written in.
+ * Note: this function is curried by default.
+ *
+ * @param category The target {@link QuoteCategory}.
  * @param testCase The {@link TestCase} to vary.
- * @returns A variation of `testCase` for every quote allowed by `language`.
+ * @returns A variation of `testCase` for every quote allowed by `category`.
  */
-export function varyQuotes(
-  language: QuoteLanguages,
+export const varyQuotes = curry((
+  category: QuoteCategory,
   testCase: TestCase,
-): TestCase[] {
-  const doubleQuotesAllowed = ["css", "html", "js", "double-backticks"];
-  const singleQuotesAllowed = ["css", "html", "js", "single-backticks"];
-  const backticksAllowed = ["js", "double-backticks", "single-backticks"];
+): TestCase[] => {
+  const DOUBLE_QUOTES: QuoteCategory[] = [
+    "single-double",
+    "double-backticks",
+    "single-double-backticks",
+  ];
+  const SINGLE_QUOTES: QuoteCategory[] = [
+    "single-double",
+    "single-backticks",
+    "single-double-backticks",
+  ];
+  const BACKTICKS: QuoteCategory[] = [
+    "single-backticks",
+    "double-backticks",
+    "single-double-backticks",
+  ];
 
-  const doubleQuotes = cloneObject(testCase, {
+  const doubleQuoted = cloneObject(testCase, {
     input: testCase.input.replace(/('|`)/g, "\""),
     expected: testCase.expected.replace(/('|`)/g, "\""),
   });
 
   const result: TestCase[] = [];
-  if (doubleQuotesAllowed.includes(language)) {
-    result.push(doubleQuotes);
+  if (DOUBLE_QUOTES.includes(category)) {
+    result.push(doubleQuoted);
   }
-  if (singleQuotesAllowed.includes(language)) {
+  if (SINGLE_QUOTES.includes(category)) {
     const singleQuotes = cloneObject(testCase, {
-      input: doubleQuotes.input.replace(/"/g, "'"),
-      expected: doubleQuotes.expected.replace(/"/g, "'"),
+      input: doubleQuoted.input.replace(/"/g, "'"),
+      expected: doubleQuoted.expected.replace(/"/g, "'"),
     });
 
     if (!result.find(({ input }) => input === singleQuotes.input)) {
       result.push(singleQuotes);
     }
   }
-  if (backticksAllowed.includes(language)) {
+  if (BACKTICKS.includes(category)) {
     const backticks = cloneObject(testCase, {
-      input: doubleQuotes.input.replace(/"/g, "`"),
-      expected: doubleQuotes.expected.replace(/"/g, "`"),
+      input: doubleQuoted.input.replace(/"/g, "`"),
+      expected: doubleQuoted.expected.replace(/"/g, "`"),
     });
 
     if (!result.find(({ input }) => input === backticks.input)) {
@@ -212,7 +227,31 @@ export function varyQuotes(
   }
 
   return result;
-}
+});
+
+/**
+ * Vary the quotes in a snippet of CSS.
+ *
+ * @param testCase The {@link TestCase} to vary.
+ * @returns A variation of `testCase` for every quote allowed in CSS.
+ */
+export const varyCssQuotes = varyQuotes("single-double");
+
+/**
+ * Vary the quotes in a snippet of HTML.
+ *
+ * @param testCase The {@link TestCase} to vary.
+ * @returns A variation of `testCase` for every quote allowed in HTML.
+ */
+export const varyHtmlQuotes = varyQuotes("single-double");
+
+/**
+ * Vary the quotes in a snippet of JavaScript.
+ *
+ * @param testCase The {@link TestCase} to vary.
+ * @returns A variation of `testCase` for every quote allowed in JavaScript.
+ */
+export const varyJsQuotes = varyQuotes("single-double-backticks");
 
 /**
  * Expand a single {@link TestCase} to multiple similar {@link TestCase}s that
@@ -221,14 +260,16 @@ export function varyQuotes(
  * If multiple strings are provided, every combination of spacing is created.
  * Hence, this function outputs exponentially many {@link TestCase}s.
  *
+ * Note: this function is curried by default.
+ *
  * @param strings The string(s) to vary the spacing around.
  * @param testCase The {@link TestCase} to vary the spacing in.
  * @returns One or more {@link TestCase}s based on `testCase`.
  */
-export function varySpacing(
+export const varySpacing = curry((
   strings: string | string[],
   testCase: TestCase,
-): TestCase[] {
+): TestCase[] => {
   if (strings.length === 0) {
     return [testCase];
   }
@@ -259,4 +300,4 @@ export function varySpacing(
   });
 
   return result;
-}
+});

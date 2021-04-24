@@ -1,6 +1,6 @@
 {
   "name": "webmangler",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "The WebMangler core",
   "license": "MIT",
   "main": "index.js",
@@ -26,8 +26,9 @@
     "postpublish": "npm run clean"
   },
   "devDependencies": {
+    "@webmangler/benchmarking": "0.1.0",
     "@webmangler/testing": "0.1.2",
-    "typescript": "4.2.3"
+    "typescript": "4.2.4"
   },
   "engines": {
     "node": ">=12.16.0"

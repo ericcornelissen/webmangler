@@ -4,6 +4,7 @@ import type { WebManglerFile } from "webmangler";
  * A set of filters for listing and reading multiple files.
  *
  * @since v0.1.5
+ * @version v0.1.6
  */
 interface Filters {
   /**
@@ -12,8 +13,9 @@ interface Filters {
    *
    * @example `["js", "ts"]`
    * @since v0.1.5
+   * @version v0.1.6
    */
-  readonly extensions?: string[];
+  readonly extensions?: Iterable<string>;
 }
 
 /**

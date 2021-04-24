@@ -171,7 +171,7 @@ export type HtmlAttributeManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.18
  */
 export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**
@@ -221,8 +221,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
       languageOptions: [
         ATTRIBUTE_EXPRESSION_OPTIONS,
         ATTRIBUTE_USAGE_EXPRESSION_OPTIONS,
-        HtmlAttributeMangler.getAttributeSelectorExpressionOptions("\""),
-        HtmlAttributeMangler.getAttributeSelectorExpressionOptions("'"),
+        HtmlAttributeMangler.getAttributeSelectorExpressionOptions(),
       ],
     });
   }
@@ -281,26 +280,15 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    * Get the {@link MangleExpressionOptions} for mangling attributes query
    * selectors with specific quotation marks.
    *
-   * @param quote The quotation mark for the expression.
    * @returns The {@link QuerySelectorOptions}.
    */
-  private static getAttributeSelectorExpressionOptions(
-    quote: "\"" | "'",
-  ): MangleExpressionOptions<QuerySelectorOptions> {
+  private static getAttributeSelectorExpressionOptions():
+      MangleExpressionOptions<QuerySelectorOptions> {
     return {
       name: "query-selectors",
       options: {
         prefix: "\\[\\s*",
-        suffix: `
-          \\s*
-          (?:
-            (?:=|~=|\\|=|\\^=|\\$=|\\*=)
-            \\s*
-            \\\\?${quote}[^${quote}]+\\\\?${quote}
-            \\s*
-          )?
-          \\]
-        `,
+        suffix: "\\s*(?:\\]|(?:=|~=|\\|=|\\^=|\\$=|\\*=))",
       },
     };
   }

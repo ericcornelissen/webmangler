@@ -15,8 +15,10 @@ module.exports = {
       2,
       "always",
       [
+        "benchmarking",
         "cli",
         "core",
+        "deps",
         "hook",
         "script",
         "testing",

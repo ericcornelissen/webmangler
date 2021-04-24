@@ -1,29 +1,6 @@
 import * as path from "path";
 
 /**
- * Filter duplicates from an array.
- *
- * @example
- * const array = ["foo", "bar", "foo", "baz"];
- * const result = array.filter(duplicates);
- * // `result` is `["foo", "bar", "baz"]`
- *
- * @param value A value in the `array`.
- * @param index The (current) index of the value in `array`.
- * @param array An array of values.
- * @returns `true` if this is first appearance of `value`, `false` otherwise.
- * @deprecated Use a `new Set()` instead of filtering duplicates from an array.
- */
-export function duplicates(
-  value: unknown,
-  index: number,
-  array: unknown[],
-): boolean {
-  const firstAppearanceIndex = array.indexOf(value);
-  return index === firstAppearanceIndex;
-}
-
-/**
  * Get the type from a file path based on its extension. If the file path does
  * not have an extension an empty string will be returned.
  *

@@ -1,7 +1,7 @@
 import type { Logger, Writer } from "./types";
 import type { LogLevel } from "./level";
 
-import { isDebug, isInfo, isWarn } from "./level";
+import { isDebug, isInfo, isSilent, isWarn } from "./level";
 
 /**
  * Utility function that does nothing.
@@ -25,6 +25,11 @@ export default class DefaultLogger implements Logger {
   private readonly _info: Writer;
 
   /**
+   * Function behind {@link DefaultLogger.print}.
+   */
+  private readonly _print: Writer;
+
+  /**
    * Function behind {@link DefaultLogger.warn}.
    */
   private readonly _warn: Writer;
@@ -39,6 +44,7 @@ export default class DefaultLogger implements Logger {
   constructor(level: LogLevel, writer: Writer) {
     this._debug = isDebug(level) ? writer : NOOP;
     this._info = isInfo(level) ? writer : NOOP;
+    this._print =  isSilent(level) ? NOOP : writer;
     this._warn = isWarn(level) ? writer : NOOP;
   }
 
@@ -54,6 +60,13 @@ export default class DefaultLogger implements Logger {
    */
   info(msg: string): void {
     this._info(`[INFO]  ${msg}`);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  print(msg: string): void {
+    this._print(msg);
   }
 
   /**
