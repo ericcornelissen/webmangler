@@ -1,5 +1,7 @@
 # WebMangler Benchmarking Utilities
 
+[![NPM Package][npm-image]][npm-url]
+
 A collection of benchmarking utilities for _WebMangler_ packages and plugins.
 
 ## Usage
@@ -28,3 +30,6 @@ suite("My benchmark", function() {
   });
 });
 ```
+
+[npm-url]: https://www.npmjs.com/package/@webmangler/benchmarking "NPM package"
+[npm-image]: https://img.shields.io/npm/v/@webmangler/benchmarking.svg

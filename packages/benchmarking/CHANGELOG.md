@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.0] - 2021-04-24
+
 - Benchmark a function using `benchmarkFn`.
 - Get a system-dependent runtime budget using `getRuntimeBudget`.
 

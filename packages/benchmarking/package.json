@@ -25,10 +25,10 @@
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
   },
-  "engines": {
-    "node": ">=12.16.0"
-  },
   "devDependencies": {
     "typescript": "^4.2.4"
+  },
+  "engines": {
+    "node": ">=12.16.0"
   }
 }
