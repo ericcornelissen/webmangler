@@ -2,9 +2,9 @@ import type { TestScenario } from "@webmangler/testing";
 
 import { expect } from "chai";
 
-import NestedGroupExpression from "../nested-group.class";
+import NestedGroupMangleExpression from "../nested-group.class";
 
-suite("NestedGroupExpression", function() {
+suite("NestedGroupMangleExpression", function() {
   suite("::exec", function() {
     type TestCase = {
       patternTemplate: string;
@@ -80,7 +80,7 @@ suite("NestedGroupExpression", function() {
             expected,
           } = testCase;
 
-          const subject = new NestedGroupExpression(
+          const subject = new NestedGroupMangleExpression(
             patternTemplate,
             subPatternTemplate,
             group,
@@ -214,7 +214,7 @@ suite("NestedGroupExpression", function() {
             expected,
           } = testCase;
 
-          const subject = new NestedGroupExpression(
+          const subject = new NestedGroupMangleExpression(
             patternTemplate,
             subPatternTemplate,
             group,

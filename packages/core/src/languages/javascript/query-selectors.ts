@@ -3,7 +3,7 @@ import type { QuerySelectorOptions } from "../options";
 
 import { QUERY_SELECTOR_COMBINERS } from "../common";
 import {
-  NestedGroupExpression,
+  NestedGroupMangleExpression,
   SingleGroupMangleExpression,
 } from "../utils/mangle-expressions";
 import { QUOTES_ARRAY, QUOTES_PATTERN } from "./common";
@@ -23,7 +23,7 @@ function newQuerySelectorExpressions(
   selectorPrefix?: string,
   selectorSuffix?: string,
 ): MangleExpression[] {
-  return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
+  return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
     `
       (?<${GROUP_MAIN}>
         ${quote}[^${quote}]*
