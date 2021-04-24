@@ -8,9 +8,11 @@ work and how you can create one.
 - [Plugins](#plugins)
   - [What is a Plugin](#what-is-a-plugin)
   - [Create a Plugin](#create-a-plugin)
+  - [Plugin Utilities](#plugin-utilities)
 - [Language Plugins](#language-plugins)
   - [What is a Language Plugin](#what-is-a-language-plugin)
   - [Create a Language Plugin](#create-a-language-plugin)
+  - [Language Plugin Utilities](#language-plugin-utilities)
 
 ## Plugins
 
@@ -190,6 +192,50 @@ export class MyWebManglerPlugin implements WebManglerPlugin {
         { name: "attributes", options: null },
       ],
     };
+  }
+}
+```
+
+### Plugin Utilities
+
+This section describes the utilities provided by the [WebMangler Core] to create
+a `WebManglerPlugin`. In many cases you can use these instead of creating one
+from scratch.
+
+#### `MultiManglerPlugin`
+
+This utility class can be used to create a `WebManglerPlugin` that combines
+multiple `WebManglerPlugin`s. It can be used by creating a class that extends
+`MultiManglerPlugin` and providing the `WebManglerPlugin`s to `super()` in your
+class' constructor.
+
+```ts
+import { MultiManglerPlugin } from "webmangler/manglers/utils";
+
+export default class MyMultiMangler extends MultiManglerPlugin {
+  constructor() {
+    super([
+      // Plugins that should be included.
+    ]);
+  }
+}
+```
+
+#### `SimpleManglerPlugin`
+
+This utility class can be used to create a `WebManglerPlugin` that, once created
+needs to return some predetermined configuration. It can be used by creating a
+class that extends `SimpleManglerPlugin` and providing the required values to
+`super()` in your class' constructor.
+
+```ts
+import { SimpleManglerPlugin } from "webmangler/manglers/utils";
+
+export default class MySimpleMangler extends SimpleManglerPlugin {
+  constructor() {
+    super({
+      // Specify required values.
+    });
   }
 }
 ```
@@ -386,6 +432,51 @@ export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
 
   getLanguages(): string[] {
     return this.languages;
+  }
+}
+```
+
+### Language Plugin Utilities
+
+This section describes the utilities provided by the [WebMangler Core] to create
+a `WebManglerLanguagePlugin`. In many cases you can use these instead of
+creating one from scratch.
+
+#### `MultiLanguagePlugin`
+
+This utility class can be used to create a `WebManglerLanguagePlugin` that
+combines multiple `WebManglerLanguagePlugin`s. It can be used by creating a
+class that extends `MultiLanguagePlugin` and providing the
+`WebManglerLanguagePlugin`s to `super()` in your class' constructor.
+
+```ts
+import { MultiLanguagePlugin } from "webmangler/languages/utils";
+
+export default class MyMultiLanguagePlugin extends MultiLanguagePlugin {
+  constructor() {
+    super([
+      // Language plugins that should be included.
+    ]);
+  }
+}
+```
+
+#### `SimpleLanguagePlugin`
+
+This utility class can be used to create a `WebManglerLanguagePlugin` that, once
+created needs to return some predetermined configuration. It can be used by
+creating a class that extends `SimpleLanguagePlugin` and providing the required
+values to `super()` in your class' constructor.
+
+```ts
+import { SimpleLanguagePlugin } from "webmangler/languages/utils";
+
+export default class MySimpleLanguagePlugin extends SimpleLanguagePlugin {
+  constructor() {
+    super(
+      [/* language extensions that are supported. */],
+      /* Mapping from expression category name to expression factory. */
+    );
   }
 }
 ```
