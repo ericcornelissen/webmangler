@@ -387,6 +387,26 @@ suite("CSS Class Mangler", function() {
           .flatMap(embedAttributesInTags),
       },
       {
+        name: "unquoted class values",
+        cases: [
+          {
+            input: "cls-foo",
+            expected: "a",
+          },
+          {
+            input: "cls-bar",
+            expected: "a",
+          },
+        ]
+        .map(embedClassesInAttribute)
+        .map((testCase: TestCase): TestCase => ({
+          input: testCase.input.replace(/"/g, ""),
+          expected: testCase.expected.replace(/"/g, ""),
+        }))
+        .flatMap(varyAttributeSpacing)
+        .flatMap(embedAttributesInTags),
+      },
+      {
         name: "with other attributes",
         cases: SAMPLE_CSS_CLASSES
           .map(embedClassesInAttribute)
