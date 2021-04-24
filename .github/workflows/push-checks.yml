@@ -43,6 +43,7 @@ jobs:
     strategy:
       matrix:
         package:
+          - benchmarking
           - cli
           - core
           - testing
@@ -95,6 +96,7 @@ jobs:
     strategy:
       matrix:
         package:
+          - benchmarking
           - cli
           - core
           - testing
