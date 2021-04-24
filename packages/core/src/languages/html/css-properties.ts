@@ -2,7 +2,7 @@ import type { MangleExpression } from "../../types";
 import type { CssDeclarationPropertyOptions } from "../options";
 
 import {
-  NestedGroupExpression,
+  NestedGroupMangleExpression,
   SingleGroupMangleExpression,
 } from "../utils/mangle-expressions";
 import { QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
@@ -21,7 +21,7 @@ function newStyleDeclarationPropertyExpressions(
   propertyPrefix: string,
   propertySuffix: string,
 ): MangleExpression[] {
-  return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
+  return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
     `
       (?<=
         \\<\\s*[a-zA-Z0-9]+\\s+

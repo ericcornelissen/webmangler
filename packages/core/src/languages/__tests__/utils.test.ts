@@ -8,6 +8,10 @@ suite("Exports of webmangler/languages/utils", function() {
       expect(utils).to.haveOwnProperty("NestedGroupExpression");
     });
 
+    test("has NestedGroupMangleExpression", function() {
+      expect(utils).to.haveOwnProperty("NestedGroupMangleExpression");
+    });
+
     test("has SingleGroupMangleExpression", function() {
       expect(utils).to.haveOwnProperty("SingleGroupMangleExpression");
     });
