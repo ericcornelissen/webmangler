@@ -308,7 +308,7 @@ suite("CSS Variable Mangler", function() {
         ],
       },
       {
-        name: "variable usage with default",
+        name: "variable usage with default (different properties)",
         factory: (before: string, after: string): TestCase[] => [
           ...CSS_PROPERTIES
             .map((property: string): TestCase => ({
@@ -318,7 +318,7 @@ suite("CSS Variable Mangler", function() {
         ],
       },
       {
-        name: "variable usage with default",
+        name: "variable usage with default (different values)",
         factory: (before: string, after: string): TestCase[] => [
           ...CSS_VALUES_NO_STRINGS
             .map((value: string): TestCase => ({
@@ -428,10 +428,16 @@ suite("CSS Variable Mangler", function() {
           name: `${name} in an unquoted style attribute`,
           cases: factory("foobar", "a")
             .map(embedDeclarationsInStyle)
-            .map((testCase: TestCase): TestCase => ({
-              input: testCase.input.replace(/"/g, ""),
-              expected: testCase.expected.replace(/"/g, ""),
-            }))
+            .flatMap((testCase: TestCase): TestCase[] => [
+              {
+                input: testCase.input.replace(/"/g, ""),
+                expected: testCase.expected.replace(/"/g, ""),
+              },
+              {
+                input: testCase.input.replace(/("|;)/g, ""),
+                expected: testCase.expected.replace(/("|;)/g, ""),
+              },
+            ])
             .flatMap(varyAttributeSpacing)
             .flatMap(embedAttributesInTags),
         },
