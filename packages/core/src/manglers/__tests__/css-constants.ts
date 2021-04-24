@@ -49,6 +49,9 @@ export const CSS_PROPERTIES = [
   "background",
   "color",
   "font",
+  "margin-top",
+  "-moz-box-align",
+  "-webkit-box-align",
 ];
 
 /**
