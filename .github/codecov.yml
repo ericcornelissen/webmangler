@@ -11,10 +11,14 @@ comment:
   require_head: yes
 
 flags:
+  package-benchmarking:
+    paths:
+      - packages/benchmarking/**/*.ts
+    carryforward: true
   package-cli:
     paths:
       - packages/cli/**/*.ts
-    carryforward: false
+    carryforward: true
   package-core:
     paths:
       - packages/core/**/*.ts

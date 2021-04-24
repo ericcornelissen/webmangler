@@ -1,12 +1,9 @@
 import type { WebManglerFile } from "../../../types";
 
+import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
-import {
-  benchmarkFn,
-  getRuntimeBudget,
-} from "../../__tests__/benchmark-helpers";
 import { embedContentInContext } from "./benchmark-helpers";
 
 import manglerEngine from "../../../engine";
