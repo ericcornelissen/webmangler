@@ -305,24 +305,6 @@ suite("HTML ID Mangler", function() {
         ],
       },
       {
-        name: "id attribute",
-        factory: (idBefore: string, idAfter: string): TestCase[] => [
-          {
-            input: `id="${idBefore}"`,
-            expected: `id="${idAfter}"`,
-          },
-        ],
-      },
-      {
-        name: "for attribute",
-        factory: (idBefore: string, idAfter: string): TestCase[] => [
-          {
-            input: `for="${idBefore}"`,
-            expected: `for="${idAfter}"`,
-          },
-        ],
-      },
-      {
         name: "href attribute",
         factory: (idBefore: string, idAfter: string): TestCase[] => [
           {
