@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Support mangling CSS classes when attribute value is not quoted.
 
 ## [0.1.18] - 2021-04-17
 
