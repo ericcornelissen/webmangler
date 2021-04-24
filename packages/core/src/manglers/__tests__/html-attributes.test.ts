@@ -1365,31 +1365,31 @@ function run(language: string, scenarios: TestScenario<TestCase>[]): void {
   for (const { name, cases } of scenarios) {
     test(name, function() {
       for (const testCase of cases) {
-          const {
-            input,
-            expected,
-            pattern: attrNamePattern,
-            reserved: reservedAttrNames,
-            prefix: keepAttrPrefix,
-            description: failureMessage,
-          } = testCase;
+        const {
+          input,
+          expected,
+          pattern: attrNamePattern,
+          reserved: reservedAttrNames,
+          prefix: keepAttrPrefix,
+          description: failureMessage,
+        } = testCase;
 
-          const files = [new WebManglerFileMock(language, input)];
+        const files = [new WebManglerFileMock(language, input)];
 
-          const htmlAttributeMangler = new HtmlAttributeMangler({
-            attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
-            reservedAttrNames: reservedAttrNames,
-            keepAttrPrefix: keepAttrPrefix,
-          });
+        const htmlAttributeMangler = new HtmlAttributeMangler({
+          attrNamePattern: attrNamePattern || DEFAULT_PATTERN,
+          reservedAttrNames: reservedAttrNames,
+          keepAttrPrefix: keepAttrPrefix,
+        });
 
-          const result = webmangler(files, {
-            plugins: [htmlAttributeMangler],
-            languages: [builtInLanguages],
-          });
-          expect(result).to.have.length(1);
+        const result = webmangler(files, {
+          plugins: [htmlAttributeMangler],
+          languages: [builtInLanguages],
+        });
+        expect(result).to.have.length(1);
 
-          const out = result[0];
-          expect(out.content).to.equal(expected, failureMessage);
+        const out = result[0];
+        expect(out.content).to.equal(expected, failureMessage);
       }
     });
   }
