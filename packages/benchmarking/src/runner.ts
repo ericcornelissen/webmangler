@@ -1,6 +1,7 @@
 import type {
   BenchmarkCallback,
   BenchmarkParameters,
+  BenchmarkSetup,
   BenchmarkStats,
   BenchmarkRunStats,
 } from "./types";
@@ -49,6 +50,17 @@ function getRepetitions(params: BenchmarkParameters): number {
 }
 
 /**
+ * Given the {@link BenchmarkParameters}, returns the setup function.
+ *
+ * @param params The {@link BenchmarkParameters}.
+ * @returns The setup function, or a dummy setup function.
+ */
+function getSetupFn(params: BenchmarkParameters): BenchmarkSetup {
+  const NOOP: BenchmarkSetup = () => null;
+  return params.setup || NOOP;
+}
+
+/**
  * Benchmark a function. I.e. run it many times and measure its performance.
  *
  * The number of repetitions can be tweaked to improve the reliability of the
@@ -63,10 +75,12 @@ function getRepetitions(params: BenchmarkParameters): number {
  */
 export function benchmarkFn(params: BenchmarkParameters): BenchmarkStats {
   const fn = params.fn;
+  const setupFn = getSetupFn(params);
   const repetitions = getRepetitions(params);
 
   const results: BenchmarkRunStats[] = [];
   for (let n = 0; n < repetitions; n++) {
+    setupFn();
     const runStats = measureOneRun(fn);
     results.push(runStats);
   }
