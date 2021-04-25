@@ -28,5 +28,31 @@ suite("Benchmarking runner", function() {
         expect(result.medianDuration).not.to.be.undefined;
       }
     });
+
+    test("setup", function() {
+      const setupSpy = sinon.spy();
+
+      benchmarkFn({
+        fn: sinon.spy(),
+        setup: setupSpy,
+      });
+
+      expect(setupSpy).to.have.been.called;
+    });
+
+    test("setup with custom iterations", function() {
+      const testCases: number[] = [1, 25, 50, 75];
+      for (const repetitions of testCases) {
+        const setupSpy = sinon.spy();
+
+        benchmarkFn({
+          fn: sinon.spy(),
+          repetitions,
+          setup: setupSpy,
+        });
+
+        expect(setupSpy).to.have.callCount(repetitions);
+      }
+    });
   });
 });

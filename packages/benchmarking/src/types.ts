@@ -6,6 +6,13 @@
 export type BenchmarkCallback = () => void;
 
 /**
+ * The behaviour of a benchmark run setup.
+ *
+ * @since v0.1.1
+ */
+export type BenchmarkSetup = () => void;
+
+/**
  * The parameters for benchmarking a function.
  *
  * @since v0.1.1
@@ -17,6 +24,16 @@ export type BenchmarkParameters = {
    * @since v0.1.1
    */
   readonly fn: BenchmarkCallback;
+
+  /**
+   * A function to prepare a benchmark run. This function is called before every
+   * benchmark repetition and its resources ARE NOT included in the benchmarking
+   * results.
+   *
+   * @since v0.1.1
+   * @default `() => { }`
+   */
+  readonly setup?: BenchmarkSetup;
 
   /**
    * The number of repetitions. This can be increased to improve the reliability
