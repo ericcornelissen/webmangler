@@ -1,5 +1,6 @@
 import type {
   BenchmarkCallback,
+  BenchmarkParameters,
   BenchmarkStats,
   BenchmarkRunStats,
 } from "./types";
@@ -38,6 +39,16 @@ function measureOneRun(fn: BenchmarkCallback): BenchmarkRunStats {
 }
 
 /**
+ * Given the {@link BenchmarkParameters}, returns the number of repetitions.
+ *
+ * @param params The {@link BenchmarkParameters}.
+ * @returns The number of repetitions.
+ */
+function getRepetitions(params: BenchmarkParameters): number {
+  return params.repetitions || DEFAULT_REPETITIONS;
+}
+
+/**
  * Benchmark a function. I.e. run it many times and measure its performance.
  *
  * The number of repetitions can be tweaked to improve the reliability of the
@@ -45,15 +56,15 @@ function measureOneRun(fn: BenchmarkCallback): BenchmarkRunStats {
  *
  * NOTE: The behaviour of this function below 1 repetitions is not defined.
  *
- * @param fn The function to benchmark.
- * @param [repetitions] The number of repetitions.
+ * @param params The {@link BenchmarkParameters}.
  * @returns The benchmarking results.
  * @since v0.1.0
+ * @version v0.1.1
  */
-export function benchmarkFn(
-  fn: BenchmarkCallback,
-  repetitions: number = DEFAULT_REPETITIONS,
-): BenchmarkStats {
+export function benchmarkFn(params: BenchmarkParameters): BenchmarkStats {
+  const fn = params.fn;
+  const repetitions = getRepetitions(params);
+
   const results: BenchmarkRunStats[] = [];
   for (let n = 0; n < repetitions; n++) {
     const runStats = measureOneRun(fn);
