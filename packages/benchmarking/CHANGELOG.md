@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add option to setup individual benchmark runs.
 
 ## [0.1.0] - 2021-04-24
 
