@@ -44,20 +44,15 @@ suite("JavaScript - CSS Property Expression Factory", function() {
     const fileContent = contentWithProperties;
 
     let files: WebManglerFile[] = [];
-    let mangledFiles: WebManglerFile[] = [];
-    const result = benchmarkFn(() => {
-      files = [new WebManglerFileMock("js", fileContent)];
-      mangledFiles = manglerEngine(
-        files,
-        expressionsMap,
-        mangleEngineOptions,
-      );
+    const result = benchmarkFn({
+      setup: () => files = [new WebManglerFileMock("js", fileContent)],
+      fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 
     expect(result.medianDuration).to.be.below(budget);
 
-    expect(mangledFiles).to.have.lengthOf(1);
-    expect(mangledFiles[0].content).not.to.equal(fileContent);
+    expect(files).to.have.lengthOf(1);
+    expect(files[0].content).not.to.equal(fileContent);
   });
 
   test("large file", function() {
@@ -65,20 +60,15 @@ suite("JavaScript - CSS Property Expression Factory", function() {
     const fileContent = contentWithProperties.repeat(100);
 
     let files: WebManglerFile[] = [];
-    let mangledFiles: WebManglerFile[] = [];
-    const result = benchmarkFn(() => {
-      files = [new WebManglerFileMock("js", fileContent)];
-      mangledFiles = manglerEngine(
-        files,
-        expressionsMap,
-        mangleEngineOptions,
-      );
+    const result = benchmarkFn({
+      setup: () => files = [new WebManglerFileMock("js", fileContent)],
+      fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 
     expect(result.medianDuration).to.be.below(budget);
 
-    expect(mangledFiles).to.have.lengthOf(1);
-    expect(mangledFiles[0].content).not.to.equal(fileContent);
+    expect(files).to.have.lengthOf(1);
+    expect(files[0].content).not.to.equal(fileContent);
   });
 
   test("large file without properties", function() {
@@ -86,19 +76,14 @@ suite("JavaScript - CSS Property Expression Factory", function() {
     const fileContent = contentWithoutProperties.repeat(100);
 
     let files: WebManglerFile[] = [];
-    let mangledFiles: WebManglerFile[] = [];
-    const result = benchmarkFn(() => {
-      files = [new WebManglerFileMock("js", fileContent)];
-      mangledFiles = manglerEngine(
-        files,
-        expressionsMap,
-        mangleEngineOptions,
-      );
+    const result = benchmarkFn({
+      setup: () => files = [new WebManglerFileMock("js", fileContent)],
+      fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 
     expect(result.medianDuration).to.be.below(budget);
 
-    expect(mangledFiles).to.have.lengthOf(1);
-    expect(mangledFiles[0].content).to.equal(fileContent);
+    expect(files).to.have.lengthOf(1);
+    expect(files[0].content).to.equal(fileContent);
   });
 });
