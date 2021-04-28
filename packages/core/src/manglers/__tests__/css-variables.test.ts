@@ -128,6 +128,10 @@ suite("CSS Variable Mangler", function() {
             input: "div { color: var(--foo); } p { font: var(--bar); }",
             expected: "div { color: var(--a); } p { font: var(--b); }",
           },
+          {
+            input: "div { margin: 0 var(--foo); }",
+            expected: "div { margin: 0 var(--a); }",
+          },
         ],
       },
       {

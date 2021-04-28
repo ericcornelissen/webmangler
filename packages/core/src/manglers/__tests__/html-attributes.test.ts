@@ -247,6 +247,10 @@ suite("HTML Attribute Mangler", function() {
                   ])
                   .flatMap(varyCommaSpacing),
               ]),
+            {
+              input: `div { margin: 0 attr(${before}); }`,
+              expected: `div { margin: 0 attr(${after}); }`,
+            },
           ])
           .flatMap(varyCssQuotes),
       },
