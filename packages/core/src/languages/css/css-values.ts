@@ -20,14 +20,17 @@ function newCssDeclarationValueExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
-        {[^\\}]*
-        \\:\\s*
+        \\{
+        [^\\}]+
+        \\:
+        \\s*
+        ([^;]*\\s)?
         ${valuePrefix}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
         ${valueSuffix}
-        \\s*(?:\\;|\\})
+        (?:\\s|\\;|\\})
       )
     `,
     GROUP_MAIN,
