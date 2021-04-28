@@ -8,6 +8,8 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix mangling CSS variables in multi-value CSS values.
+- Fix mangling HTML attributes in multi-value CSS values.
 - Support mangling CSS classes when attribute value is not quoted.
 - Support mangling CSS variables when the style attribute value is not quoted.
 - Support mangling attribute usage when the style attribute value is not quoted.
