@@ -34,7 +34,8 @@ function newStyleDeclarationValueExpressions(
       )
       (?<${GROUP_MAIN}>
         [^${quote}]+
-        :\\s*
+        \\:\\s*
+        ([^;]*\\s)?
         ${valuePrefix}
         %s
         ${valueSuffix}
@@ -48,13 +49,14 @@ function newStyleDeclarationValueExpressions(
     `,
     `
       (?<=
-        :\\s*
+        \\:\\s*
+        ([^;]*\\s)?
         ${valuePrefix}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
         ${valueSuffix}
-        \\s*(;|$)
+        (?:\\s|\\;|$)
       )
     `,
     GROUP_MAIN,
