@@ -348,6 +348,20 @@ suite("CSS Variable Mangler", function() {
         .flatMap(embedAttributesInTags),
       },
       {
+        name: "multi-value CSS declaration",
+        cases: [
+          {
+            input: "style=\"margin: 0 var(--foobar);\"",
+            expected: "style=\"margin: 0 var(--a);\"",
+          },
+          {
+            input: "style=\"margin: 1em var(--foo) 1px var(--bar);\"",
+            expected: "style=\"margin: 1em var(--a) 1px var(--b);\"",
+          },
+        ]
+        .flatMap(embedAttributesInTags),
+      },
+      {
         name: "valueless style attribute",
         cases: [
           {

@@ -772,6 +772,20 @@ suite("HTML Attribute Mangler", function() {
         .flatMap(embedAttributesInTags),
       },
       {
+        name: "multi-value CSS declaration",
+        cases: [
+          {
+            input: "style=\"margin: 0 attr(data-foobar);\"",
+            expected: "style=\"margin: 0 attr(data-a);\"",
+          },
+          {
+            input: "style=\"margin: 1em attr(data-foo) 1px attr(data-bar);\"",
+            expected: "style=\"margin: 1em attr(data-a) 1px attr(data-b);\"",
+          },
+        ]
+        .flatMap(embedAttributesInTags),
+      },
+      {
         name: "valueless style attribute",
         cases: [
           {
