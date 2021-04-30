@@ -35,7 +35,7 @@ function newStyleDeclarationValueExpressions(
       (?<${GROUP_MAIN}>
         [^${quote}]+
         \\:\\s*
-        ([^;]*\\s)?
+        ([^;${quote}]*\\s)?
         ${valuePrefix}
         %s
         ${valueSuffix}
