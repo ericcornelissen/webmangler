@@ -43,6 +43,27 @@ suite("HTML - CSS Value Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "multi-value",
+      cases: [
+        {
+          input: "<div style=\"margin: 0 42px;\"></div>",
+          pattern: "[0-9]+",
+          expected: ["42"],
+          options: {
+            suffix: "px",
+          },
+        },
+        {
+          input: "<div style=\"padding: 0 3px 0 14px;\"></div>",
+          pattern: "[0-9]+",
+          expected: ["3", "14"],
+          options: {
+            suffix: "px",
+          },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {
