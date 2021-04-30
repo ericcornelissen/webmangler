@@ -4,7 +4,7 @@ import type { MultiValueAttributeOptions } from "../../options";
 
 import { expect } from "chai";
 
-import { matchesAsExpected } from "../../__tests__/test-helpers";
+import { getAllMatches } from "../../__tests__/test-helpers";
 
 import multiValueAttributeExpressionFactory from "../multi-value-attributes";
 
@@ -52,8 +52,8 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
         } = testCase;
 
         const expressions = multiValueAttributeExpressionFactory(options);
-        const result = matchesAsExpected(expressions, input, pattern, expected);
-        expect(result).to.equal(true, `in "${input}"`);
+        const matches = getAllMatches(expressions, input, pattern);
+        expect(matches).to.deep.equal(expected);
       }
     });
   }
