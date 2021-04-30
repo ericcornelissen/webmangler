@@ -16,7 +16,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
         {
           input: "document.querySelectorAll(\"div\");",
           pattern: "[a-z]+",
-          expected: ["div", "div"],
+          expected: ["div"],
           options: { },
         },
         {
