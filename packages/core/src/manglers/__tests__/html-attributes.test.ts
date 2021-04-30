@@ -247,6 +247,10 @@ suite("HTML Attribute Mangler", function() {
                   ])
                   .flatMap(varyCommaSpacing),
               ]),
+            {
+              input: `div { margin: 0 attr(${before}); }`,
+              expected: `div { margin: 0 attr(${after}); }`,
+            },
           ])
           .flatMap(varyCssQuotes),
       },
@@ -765,6 +769,20 @@ suite("HTML Attribute Mangler", function() {
             .filter((testCase) => /(\s|^)(style)=/.test(testCase.input)),
         ]
         .flatMap(varyHtmlQuotes)
+        .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "multi-value CSS declaration",
+        cases: [
+          {
+            input: "style=\"margin: 0 attr(data-foobar);\"",
+            expected: "style=\"margin: 0 attr(data-a);\"",
+          },
+          {
+            input: "style=\"margin: 1em attr(data-foo) 1px attr(data-bar);\"",
+            expected: "style=\"margin: 1em attr(data-a) 1px attr(data-b);\"",
+          },
+        ]
         .flatMap(embedAttributesInTags),
       },
       {
