@@ -25,7 +25,9 @@ suite("My benchmark", function() {
   test("normal usage", function() {
     const runtimeBudget = getRuntimeBudget(5); // In milliseconds
 
-    const benchmarkResult = benchmarkFn(() => slowFunction("foo", "bar"));
+    const benchmarkResult = benchmarkFn({
+      fn: () => slowFunction("foo", "bar"),
+    });
     expect(benchmarkResult.medianDuration).to.be.below(runtimeBudget);
   });
 });
