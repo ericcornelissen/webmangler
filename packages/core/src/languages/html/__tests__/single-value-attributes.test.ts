@@ -4,7 +4,7 @@ import type { SingleValueAttributeOptions } from "../../options";
 
 import { expect } from "chai";
 
-import { matchesAsExpected } from "../../__tests__/test-helpers";
+import { getAllMatches } from "../../__tests__/test-helpers";
 
 import singleValueAttributeExpressionFactory from "../single-value-attributes";
 
@@ -16,7 +16,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
         {
           input: "<div id=\"foobar\"></div>",
           pattern: "[a-z]+",
-          expected: ["foobar"],
+          expected: ["foobar", "foobar"],
           options: {
             attributeNames: ["id"],
           },
@@ -24,7 +24,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
         {
           input: "<div id=\"foo\"><div id=\"bar\"></div></div>",
           pattern: "[a-z]+",
-          expected: ["foo", "bar"],
+          expected: ["foo", "bar", "foo", "bar"],
           options: {
             attributeNames: ["id"],
           },
@@ -32,7 +32,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
         {
           input: "<div id=\"foobar\"></div>",
           pattern: "[a-z]+",
-          expected: ["bar"],
+          expected: ["bar", "bar"],
           options: {
             attributeNames: ["id"],
             valuePrefix: "foo",
@@ -41,7 +41,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
         {
           input: "<div id=\"foobar\"></div>",
           pattern: "[a-z]+",
-          expected: ["foo"],
+          expected: ["foo", "foo"],
           options: {
             attributeNames: ["id"],
             valueSuffix: "bar",
@@ -86,8 +86,8 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
         } = testCase;
 
         const expressions = singleValueAttributeExpressionFactory(options);
-        const result = matchesAsExpected(expressions, input, pattern, expected);
-        expect(result).to.equal(true, `in "${input}"`);
+        const matches = getAllMatches(expressions, input, pattern);
+        expect(matches).to.deep.equal(expected);
       }
     });
   }

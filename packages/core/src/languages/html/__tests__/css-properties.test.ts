@@ -4,7 +4,7 @@ import type { CssDeclarationPropertyOptions } from "../../options";
 
 import { expect } from "chai";
 
-import { matchesAsExpected } from "../../__tests__/test-helpers";
+import { getAllMatches } from "../../__tests__/test-helpers";
 
 import cssDeclarationPropertyExpressionFactory from "../css-properties";
 
@@ -56,8 +56,8 @@ suite("HTML - CSS Property Expression Factory", function() {
         } = testCase;
 
         const expressions = cssDeclarationPropertyExpressionFactory(options);
-        const result = matchesAsExpected(expressions, input, pattern, expected);
-        expect(result).to.equal(true, `in "${input}"`);
+        const matches = getAllMatches(expressions, input, pattern);
+        expect(matches).to.deep.equal(expected);
       }
     });
   }

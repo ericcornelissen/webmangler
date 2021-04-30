@@ -4,7 +4,7 @@ import type { SingleValueAttributeOptions } from "../../options";
 
 import { expect } from "chai";
 
-import { matchesAsExpected } from "../../__tests__/test-helpers";
+import { getAllMatches } from "../../__tests__/test-helpers";
 
 import singleValueAttributeExpressionFactory from "../single-value-attributes";
 
@@ -64,8 +64,8 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         } = testCase;
 
         const expressions = singleValueAttributeExpressionFactory(options);
-        const result = matchesAsExpected(expressions, input, pattern, expected);
-        expect(result).to.equal(true, `in "${input}"`);
+        const matches = getAllMatches(expressions, input, pattern);
+        expect(matches).to.deep.equal(expected);
       }
     });
   }
