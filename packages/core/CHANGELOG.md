@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix incorrect counting of certain mangled values to improve compression.
 - Support mangling CSS classes when attribute value is not quoted.
 - Support mangling CSS variables when the style attribute value is not quoted.
 - Support mangling attribute usage when the style attribute value is not quoted.
