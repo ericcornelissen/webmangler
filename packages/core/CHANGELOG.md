@@ -8,7 +8,11 @@ Versioning].
 
 ## [Unreleased]
 
-- Fix incorrect counting of certain mangled values to improve compression.
+- _No changes yet_
+
+## [0.1.19] - 2021-04-30
+
+- Fix incorrect counting of certain mangled values in JS to improve compression.
 - Fix mangling CSS variables in multi-value CSS values.
 - Fix mangling HTML attributes in multi-value CSS values.
 - Fix mangling unquoted IDs in certain edge cases.
