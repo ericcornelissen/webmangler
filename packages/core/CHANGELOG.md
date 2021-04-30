@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix incorrect counting of certain mangled values to improve compression.
 - Fix mangling CSS variables in multi-value CSS values.
 - Fix mangling HTML attributes in multi-value CSS values.
 - Fix mangling unquoted IDs in certain edge cases.
