@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add `findAll` method to `MangleExpressionMock`.
 
 ## [0.1.2] - 2021-03-19
 
