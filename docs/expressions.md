@@ -95,7 +95,7 @@ inserted into. For brevity the pattern template here is a bit simplistic, but we
 do allow the users of this `MangleExpression` to choose which selector should be
 matched.
 
-```diffs
+```diff
   export class MyMangleExpression implements MangleExpression {
 +   private readonly patternTemplate: string;
 

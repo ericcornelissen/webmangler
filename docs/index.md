@@ -18,8 +18,8 @@ JavaScript minimizer.
 
 ## Getting Started
 
-You can use WebMangler in various ways, your options are listed below. If you're
-unsure, try the CLI.
+You can use WebMangler in the various ways listed below. If you're unsure, try
+the CLI.
 
 - Command line: [WebMangler CLI]
 - Programmatically: [WebMangler Core]

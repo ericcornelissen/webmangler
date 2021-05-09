@@ -199,8 +199,7 @@ export class MyWebManglerPlugin implements WebManglerPlugin {
 ### Plugin Utilities
 
 This section describes the utilities provided by the [WebMangler Core] to create
-a `WebManglerPlugin`. In many cases you can use these instead of creating one
-from scratch.
+a `WebManglerPlugin`.
 
 #### `MultiManglerPlugin`
 
@@ -224,9 +223,11 @@ export default class MyMultiMangler extends MultiManglerPlugin {
 #### `SimpleManglerPlugin`
 
 This utility class can be used to create a `WebManglerPlugin` that, once created
-needs to return some predetermined configuration. It can be used by creating a
-class that extends `SimpleManglerPlugin` and providing the required values to
-`super()` in your class' constructor.
+needs to return some predetermined configuration. In many cases you can use this
+class instead of creating a plugin from scratch.
+
+It can be used by creating a class that extends `SimpleManglerPlugin` and
+providing the required values to `super()` in your class' constructor.
 
 ```ts
 import { SimpleManglerPlugin } from "webmangler/manglers/utils";
@@ -439,8 +440,7 @@ export class MyWebManglerLanguagePlugin implements WebManglerLanguagePlugin {
 ### Language Plugin Utilities
 
 This section describes the utilities provided by the [WebMangler Core] to create
-a `WebManglerLanguagePlugin`. In many cases you can use these instead of
-creating one from scratch.
+a `WebManglerLanguagePlugin`.
 
 #### `MultiLanguagePlugin`
 
@@ -464,9 +464,11 @@ export default class MyMultiLanguagePlugin extends MultiLanguagePlugin {
 #### `SimpleLanguagePlugin`
 
 This utility class can be used to create a `WebManglerLanguagePlugin` that, once
-created needs to return some predetermined configuration. It can be used by
-creating a class that extends `SimpleLanguagePlugin` and providing the required
-values to `super()` in your class' constructor.
+created needs to return some predetermined configuration. In many cases you can
+use this utility instead of creating a plugin from scratch.
+
+It can be used by creating a class that extends `SimpleLanguagePlugin` and
+providing the required values to `super()` in your class' constructor.
 
 ```ts
 import { SimpleLanguagePlugin } from "webmangler/languages/utils";
