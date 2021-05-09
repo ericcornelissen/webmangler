@@ -247,6 +247,10 @@ suite("HTML Attribute Mangler", function() {
                   ])
                   .flatMap(varyCommaSpacing),
               ]),
+            {
+              input: `div { margin: 0 attr(${before}); }`,
+              expected: `div { margin: 0 attr(${after}); }`,
+            },
           ])
           .flatMap(varyCssQuotes),
       },
@@ -683,6 +687,8 @@ suite("HTML Attribute Mangler", function() {
   suite("HTML (style attribute)", function() {
     const embedDeclarationsInStyle = embedAttributeValue("style");
 
+    const varyDeclarationSpacing = varySpacing([":", ",", ";"]);
+
     type TestInstance = {
       readonly name: string;
       factory(idBefore: string, idAfter: string): TestCase[];
@@ -700,15 +706,6 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "attribute usage (spacing)",
-        factory: (before: string, after: string): TestCase[] => [
-          ...varySpacing(["(", ")"], {
-            input: `content:attr(${before});`,
-            expected: `content:attr(${after});`,
-          }),
-        ],
-      },
-      {
         name: "attribute usage with default",
         factory: (before: string, after: string): TestCase[] => [
           ...CSS_VALUES_NO_STRINGS
@@ -716,15 +713,6 @@ suite("HTML Attribute Mangler", function() {
               input: `content:attr(${before},${value});`,
               expected: `content:attr(${after},${value});`,
             })),
-        ],
-      },
-      {
-        name: "attribute usage with default (spacing)",
-        factory: (before: string, after: string): TestCase[] => [
-          ...varySpacing(["(", ","], {
-            input: `content:attr(${before},42);`,
-            expected: `content:attr(${after},42);`,
-          }),
         ],
       },
       {
@@ -738,36 +726,33 @@ suite("HTML Attribute Mangler", function() {
         ],
       },
       {
-        name: "attribute usage with type/unit (spacing)",
+        name: "attribute usage with default and type/unit (different properties)",
         factory: (before: string, after: string): TestCase[] => [
-          ...varySpacing(["(", ")"], {
-            input: `content:attr(${before} px);`,
-            expected: `content:attr(${after} px);`,
-          }),
+          ...CSS_PROPERTIES
+            .map((property: string): TestCase => ({
+              input: `${property}:attr(${before} px,42);`,
+              expected: `${property}:attr(${after} px,42);`,
+            })),
         ],
       },
       {
-        name: "attribute usage with default and type/unit",
+        name: "attribute usage with default and type/unit (different types/units)",
         factory: (before: string, after: string): TestCase[] => [
           ...TYPE_OR_UNITS
             .map((typeOrUnit: string): TestCase => ({
               input: `content:attr(${before} ${typeOrUnit},42);`,
               expected: `content:attr(${after} ${typeOrUnit},42);`,
             })),
+        ],
+      },
+      {
+        name: "attribute usage with default and type/unit (different values)",
+        factory: (before: string, after: string): TestCase[] => [
           ...CSS_VALUES_NO_STRINGS
             .map((value: string): TestCase => ({
               input: `content:attr(${before} px,${value});`,
               expected: `content:attr(${after} px,${value});`,
             })),
-        ],
-      },
-      {
-        name: "attribute usage with default and type/unit (spacing)",
-        factory: (before: string, after: string): TestCase[] => [
-          ...varySpacing(["(", ","], {
-            input: `content:attr(${before} px,42);`,
-            expected: `content:attr(${after} px,42);`,
-          }),
         ],
       },
     ];
@@ -784,6 +769,20 @@ suite("HTML Attribute Mangler", function() {
             .filter((testCase) => /(\s|^)(style)=/.test(testCase.input)),
         ]
         .flatMap(varyHtmlQuotes)
+        .flatMap(embedAttributesInTags),
+      },
+      {
+        name: "multi-value CSS declaration",
+        cases: [
+          {
+            input: "style=\"margin: 0 attr(data-foobar);\"",
+            expected: "style=\"margin: 0 attr(data-a);\"",
+          },
+          {
+            input: "style=\"margin: 1em attr(data-foo) 1px attr(data-bar);\"",
+            expected: "style=\"margin: 1em attr(data-a) 1px attr(data-b);\"",
+          },
+        ]
         .flatMap(embedAttributesInTags),
       },
       {
@@ -845,6 +844,13 @@ suite("HTML Attribute Mangler", function() {
             .map(embedDeclarationsInStyle)
             .flatMap(varyAttributeSpacing)
             .flatMap(varyHtmlQuotes)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name}, vary spacing`,
+          cases: factory("data-foobar", "data-a")
+            .map(embedDeclarationsInStyle)
+            .flatMap(varyDeclarationSpacing)
             .flatMap(embedAttributesInTags),
         },
         {
@@ -1058,6 +1064,28 @@ suite("HTML Attribute Mangler", function() {
           ],
         },
       ]);
+
+      if (!factory("data-foobar", "data-a")[0].input.includes(" ")) {
+        scenarios.push({
+          name: `${name} in an unquoted style attribute`,
+          cases: [
+            ...factory("data-foobar", "data-a")
+              .map(embedDeclarationsInStyle)
+              .flatMap((testCase: TestCase): TestCase[] => [
+                {
+                  input: testCase.input.replace(/"/g, ""),
+                  expected: testCase.expected.replace(/"/g, ""),
+                },
+                {
+                  input: testCase.input.replace(/("|;)/g, ""),
+                  expected: testCase.expected.replace(/("|;)/g, ""),
+                },
+              ])
+              .flatMap(varyAttributeSpacing)
+              .flatMap(embedAttributesInTags),
+          ],
+        });
+      }
     }
 
     run("html", scenarios);

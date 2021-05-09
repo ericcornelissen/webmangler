@@ -8,11 +8,11 @@ import { format as printf } from "util";
 type RegExpMatchGroups = { [key: string]: string };
 
 /**
- * A {@link NestedGroupExpression} is a {@link MangleExpression} implementation
- * that matches and replaces in one-level nested substrings.
+ * A {@link NestedGroupMangleExpression} is a {@link MangleExpression}
+ * implementation that matches and replaces in one-level nested substrings.
  *
  * @example
- * new NestedGroupExpression(
+ * new NestedGroupMangleExpression(
  *   "(?<=')(?<GROUP_NAME>%s)(?=')",
  *   "(?<=\s)([a-z])(?=\s)"
  *   "GROUP_NAME",
@@ -22,8 +22,10 @@ type RegExpMatchGroups = { [key: string]: string };
  * // into "var pw = 'correct zebra cell staple';"
  *
  * @since v0.1.12
+ * @deprecated Make sure you're importing `NestedGroupMangleExpression` instead
+ * of `NestedGroupExpression`.
  */
-export default class NestedGroupExpression implements MangleExpression {
+export default class NestedGroupMangleExpression implements MangleExpression {
   /**
    * The top-level template string to use as (generic) pattern to find
    * substrings in the target string that can be processed by the

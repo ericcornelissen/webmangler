@@ -427,18 +427,18 @@ suite("HTML ID Mangler", function() {
             .flatMap(embedAttributesInTags),
         },
         {
-          name: `${name} with other attributes`,
-          cases: factory("id-foo", "a")
-            .flatMap(embedWithOtherAttributes)
-            .flatMap(embedAttributesInTags),
-        },
-        {
-          name: `${name} with unquoted values`,
+          name: `${name} with unquoted value`,
           cases: factory("id-foobar", "a")
             .map((testCase: TestCase): TestCase => ({
               input: testCase.input.replace(/"/g, ""),
               expected: testCase.expected.replace(/"/g, ""),
             }))
+            .flatMap(varyAttributeSpacing)
+            .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with other attributes`,
+          cases: factory("id-foo", "a")
             .flatMap(embedWithOtherAttributes)
             .flatMap(embedAttributesInTags),
         },

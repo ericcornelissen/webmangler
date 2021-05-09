@@ -4,7 +4,7 @@ import type { CssDeclarationValueOptions } from "../../options";
 
 import { expect } from "chai";
 
-import { matchesAsExpected } from "../../__tests__/test-helpers";
+import { getAllMatches } from "../../__tests__/test-helpers";
 
 import cssDeclarationValueExpressionFactory from "../css-values";
 
@@ -43,6 +43,27 @@ suite("CSS - CSS Value Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "multi-value",
+      cases: [
+        {
+          input: "div { margin: 0 42px; }",
+          pattern: "[0-9]+",
+          expected: ["42"],
+          options: {
+            suffix: "px",
+          },
+        },
+        {
+          input: "div { padding: 0 3px 0 14px; }",
+          pattern: "[0-9]+",
+          expected: ["3", "14"],
+          options: {
+            suffix: "px",
+          },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {
@@ -56,8 +77,8 @@ suite("CSS - CSS Value Expression Factory", function() {
         } = testCase;
 
         const expressions = cssDeclarationValueExpressionFactory(options);
-        const result = matchesAsExpected(expressions, input, pattern, expected);
-        expect(result).to.equal(true, `in "${input}"`);
+        const matches = getAllMatches(expressions, input, pattern);
+        expect(matches).to.deep.equal(expected);
       }
     });
   }

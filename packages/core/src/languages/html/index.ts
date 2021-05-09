@@ -67,7 +67,7 @@ export type HtmlLanguagePluginOptions = {
  * });
  *
  * @since v0.1.0
- * @version v0.1.18
+ * @version v0.1.19
  */
 export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
   /**

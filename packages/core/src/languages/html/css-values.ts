@@ -1,7 +1,10 @@
 import type { MangleExpression } from "../../types";
 import type { CssDeclarationValueOptions } from "../options";
 
-import { NestedGroupExpression } from "../utils/mangle-expressions";
+import {
+  NestedGroupMangleExpression,
+  SingleGroupMangleExpression,
+} from "../utils/mangle-expressions";
 import { QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";
@@ -18,7 +21,7 @@ function newStyleDeclarationValueExpressions(
   valuePrefix: string,
   valueSuffix: string,
 ): MangleExpression[] {
-  return QUOTES_ARRAY.map((quote) => new NestedGroupExpression(
+  return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
     `
       (?<=
         \\<\\s*[a-zA-Z0-9]+\\s+
@@ -32,6 +35,7 @@ function newStyleDeclarationValueExpressions(
       (?<${GROUP_MAIN}>
         [^${quote}]+
         :\\s*
+        ([^;${quote}]*\\s)?
         ${valuePrefix}
         %s
         ${valueSuffix}
@@ -46,12 +50,46 @@ function newStyleDeclarationValueExpressions(
     `
       (?<=
         :\\s*
+        ([^;]*\\s)?
         ${valuePrefix}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
         ${valueSuffix}
-        \\s*(;|$)
+        (?:\\s|\\;|$)
+      )
+    `,
+    GROUP_MAIN,
+  ));
+}
+
+/**
+ * Get {@link MangleExpression}s to match the value of CSS declarations in
+ * unquoted HTML attributes, e.g. `serif` in `<div style=font:serif><div>"`.
+ *
+ * @param propertyPrefix The prefix required on properties.
+ * @param propertySuffix The suffix required on properties.
+ * @returns The {@link MangleExpression}s to match unquoted attribute values.
+ */
+function newUnquotedStyleDeclarationValueExpressions(
+  propertyPrefix: string,
+  propertySuffix: string,
+): MangleExpression[] {
+  return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
+    `
+      (?<=
+        \\<\\s*[a-zA-Z0-9]+\\s+
+        (?:
+          [^>\\s=]+
+          (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+          \\s+
+        )*
+        style\\s*=\\s*[^\\s"']+:${propertyPrefix}
+      )
+      (?<${GROUP_MAIN}>%s)
+      (?=
+        ${propertySuffix}
+        (?:\\;|\\s|\\/|\\>)
       )
     `,
     GROUP_MAIN,
@@ -66,7 +104,7 @@ function newStyleDeclarationValueExpressions(
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.18
+ * @version v0.1.19
  */
 export default function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,
@@ -76,5 +114,6 @@ export default function cssDeclarationValueExpressionFactory(
 
   return [
     ...newStyleDeclarationValueExpressions(valuePrefix, valueSuffix),
+    ...newUnquotedStyleDeclarationValueExpressions(valuePrefix, valueSuffix),
   ];
 }
