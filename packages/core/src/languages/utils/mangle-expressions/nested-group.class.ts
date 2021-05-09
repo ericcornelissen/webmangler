@@ -22,8 +22,6 @@ type RegExpMatchGroups = { [key: string]: string };
  * // into "var pw = 'correct zebra cell staple';"
  *
  * @since v0.1.12
- * @deprecated Make sure you're importing `NestedGroupMangleExpression` instead
- * of `NestedGroupExpression`.
  */
 export default class NestedGroupMangleExpression implements MangleExpression {
   /**
