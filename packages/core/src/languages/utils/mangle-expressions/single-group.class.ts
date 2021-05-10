@@ -20,6 +20,7 @@ type RegExpMatchGroups = { [key: string]: string };
  * // into "foo--baz--".
  *
  * @since v0.1.11
+ * @version v0.1.20
  */
 export default class SingleGroupMangleExpression implements MangleExpression {
   /**
@@ -32,18 +33,26 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    */
   private readonly groupName: string;
 
+
   /**
    * Create an expression from a pattern template with a named group to match
    * and replace.
    *
    * NOTE 1: whitespace is automatically removed from `patternTemplate`.
-   * NOTE 2: the class assumes the provided group is present in the template.
+   * NOTE 2: the class assumes the provided group is present in the template. If
+   * it is not this class will fail silently.
    *
    * @param patternTemplate The generic pattern (only one "%s" allowed).
    * @param groupName The name of a group in `patternTemplate`.
+   * @param [ignoreStrings] Should strings be ignored entirely.
    * @since v0.1.11
+   * @version v0.1.20
    */
-  constructor(patternTemplate: string, groupName: string) {
+  constructor(
+    patternTemplate: string,
+    groupName: string,
+    ignoreStrings = false,
+  ) {
     this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
   }

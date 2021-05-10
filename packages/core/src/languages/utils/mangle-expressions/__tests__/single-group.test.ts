@@ -9,6 +9,7 @@ suite("SingleGroupMangleExpression", function() {
     type TestCase = {
       patternTemplate: string;
       group: string;
+      ignoreStrings?: boolean;
       pattern: string;
       s: string;
       expected: string[];
@@ -42,6 +43,35 @@ suite("SingleGroupMangleExpression", function() {
         ],
       },
       {
+        name: "ignore strings",
+        cases: [
+          {
+            patternTemplate: "(?<=\\-)(?<g>%s)",
+            group: "g",
+            ignoreStrings: true,
+            pattern: "[a-z]+",
+            s: "\"-hello\" -world",
+            expected: ["world"],
+          },
+          {
+            patternTemplate: "(?<=\\#)(?<g>%s)",
+            group: "g",
+            ignoreStrings: true,
+            pattern: "[a-z]+",
+            s: "#foo '#bar'",
+            expected: ["foo"],
+          },
+          {
+            patternTemplate: "(?<=\\.)(?<g>%s)",
+            group: "g",
+            ignoreStrings: true,
+            pattern: "[a-z]+",
+            s: ".praise `.the` .sun",
+            expected: ["praise", "sun"],
+          },
+        ],
+      },
+      {
         name: "corner cases",
         cases: [
           {
@@ -68,6 +98,7 @@ suite("SingleGroupMangleExpression", function() {
           const {
             patternTemplate,
             group,
+            ignoreStrings,
             pattern,
             s,
             expected,
@@ -76,6 +107,7 @@ suite("SingleGroupMangleExpression", function() {
           const subject = new SingleGroupMangleExpression(
             patternTemplate,
             group,
+            ignoreStrings,
           );
 
           let i = 0;
@@ -94,6 +126,7 @@ suite("SingleGroupMangleExpression", function() {
     type TestCase = {
       patternTemplate: string;
       group: string;
+      ignoreStrings?: true,
       replacements: Map<string, string>;
       s: string;
       expected: string;
@@ -131,6 +164,45 @@ suite("SingleGroupMangleExpression", function() {
             ]),
             s: "Hello world! Hey planet!",
             expected: "Hello mundo! Hey planeta!",
+          },
+        ],
+      },
+      {
+        name: "ignore strings",
+        cases: [
+          {
+            patternTemplate: "(?<=\\-)(?<g>%s)",
+            group: "g",
+            ignoreStrings: true,
+            replacements: new Map([
+              ["hello", "hey"],
+              ["world", "planet"],
+            ]),
+            s: "\"-hello\" -world",
+            expected: "\"-hello\" -planet",
+          },
+          {
+            patternTemplate: "(?<=\\#)(?<g>%s)",
+            group: "g",
+            ignoreStrings: true,
+            replacements: new Map([
+              ["foo", "oof"],
+              ["bar", "baz"],
+            ]),
+            s: "#foo '#bar'",
+            expected: "#oof '#bar'",
+          },
+          {
+            patternTemplate: "(?<=\\.)(?<g>%s)",
+            group: "g",
+            ignoreStrings: true,
+            replacements: new Map([
+              ["praise", "fear"],
+              ["the", "a"],
+              ["sun", "moon"],
+            ]),
+            s: ".praise `.the` .sun",
+            expected: ".fear `.the` .moon",
           },
         ],
       },
@@ -188,6 +260,7 @@ suite("SingleGroupMangleExpression", function() {
           const {
             patternTemplate,
             group,
+            ignoreStrings,
             replacements,
             s,
             expected,
@@ -196,6 +269,7 @@ suite("SingleGroupMangleExpression", function() {
           const subject = new SingleGroupMangleExpression(
             patternTemplate,
             group,
+            ignoreStrings,
           );
 
           const result = subject.replaceAll(s, replacements);
