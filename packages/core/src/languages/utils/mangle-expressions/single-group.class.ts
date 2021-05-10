@@ -8,6 +8,30 @@ import { format as printf } from "util";
 type RegExpMatchGroups = { [key: string]: string };
 
 /**
+ * Normalize a pattern template provided to a built-in {@link MangleExpression}.
+ *
+ * @param patternTemplate The user-provided pattern template.
+ * @param ignoreStrings Should strings be ignored entirely.
+ * @returns The normalized pattern template.
+ */
+function prepareTemplate(
+    patternTemplate: string,
+    ignoreStrings: boolean,
+  ): string {
+  if (ignoreStrings) {
+    patternTemplate = `
+      (?:
+        (?:"[^"]*"|'[^']*'|\`[^\`]*\`)
+        |
+        ${patternTemplate}
+      )
+    `;
+  }
+
+  return patternTemplate.replace(/\s/g, "");
+}
+
+/**
  * A {@link SingleGroupMangleExpression} is a {@link MangleExpression}
  * implementation that matches and replaces based on a single named group.
  *
@@ -33,7 +57,6 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    */
   private readonly groupName: string;
 
-
   /**
    * Create an expression from a pattern template with a named group to match
    * and replace.
@@ -53,26 +76,30 @@ export default class SingleGroupMangleExpression implements MangleExpression {
     groupName: string,
     ignoreStrings = false,
   ) {
-    this.patternTemplate = patternTemplate.replace(/\s/g, "");
+    this.patternTemplate = prepareTemplate(patternTemplate, ignoreStrings);
     this.groupName = groupName;
   }
 
   /**
    * @inheritdoc
    * @since v0.1.11
+   * @version v0.1.20
    */
   public * exec(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(pattern);
     let match: RegExpExecArray | null = null;
     while ((match = regExp.exec(s)) !== null) {
       const groups = match.groups as RegExpMatchGroups;
-      yield groups[this.groupName];
+      if (this.didMatch(groups)) {
+        yield groups[this.groupName];
+      }
     }
   }
 
   /**
    * @inheritdoc
    * @since v0.1.11
+   * @version v0.1.20
    */
   public replaceAll(s: string, replacements: Map<string, string>): string {
     if (replacements.size === 0) {
@@ -81,12 +108,26 @@ export default class SingleGroupMangleExpression implements MangleExpression {
 
     const pattern = Array.from(replacements.keys()).join("|");
     const regExp = this.newRegExp(pattern);
-    return s.replace(regExp, (...args: unknown[]): string => {
+    return s.replace(regExp, (match: string, ...args: unknown[]): string => {
       const groups = args[args.length - 1] as RegExpMatchGroups;
-      const original = groups[this.groupName];
-      const replacement = replacements.get(original);
-      return replacement as string;
+      if (this.didMatch(groups)) {
+        const original = groups[this.groupName];
+        const replacement = replacements.get(original);
+        return replacement as string;
+      } else {
+        return match;
+      }
     });
+  }
+
+  /**
+   * Determine if the configured group matched.
+   *
+   * @param groups The {@link RegExpMatchGroups}.
+   * @returns `true` if the configured group matched, `false` otherwise.
+   */
+  private didMatch(groups: RegExpMatchGroups): boolean {
+    return groups[this.groupName] !== undefined;
   }
 
   /**
