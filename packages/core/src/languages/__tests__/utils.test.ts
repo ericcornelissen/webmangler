@@ -4,10 +4,6 @@ import * as utils from "../utils";
 
 suite("Exports of webmangler/languages/utils", function() {
   suite("MangleExpressions", function() {
-    test("has NestedGroupExpression", function() {
-      expect(utils).to.haveOwnProperty("NestedGroupExpression");
-    });
-
     test("has NestedGroupMangleExpression", function() {
       expect(utils).to.haveOwnProperty("NestedGroupMangleExpression");
     });

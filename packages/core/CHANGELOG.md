@@ -8,10 +8,17 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.19] - 2021-04-30
+
+- Fix incorrect counting of certain mangled values in JS to improve compression.
+- Fix mangling CSS variables in multi-value CSS values.
+- Fix mangling HTML attributes in multi-value CSS values.
+- Fix mangling unquoted IDs in certain edge cases.
 - Support mangling CSS classes when attribute value is not quoted.
 - Support mangling CSS variables when the style attribute value is not quoted.
 - Support mangling attribute usage when the style attribute value is not quoted.
-- Fix mangling unquoted IDs in certain edge cases.
 
 ## [0.1.18] - 2021-04-17
 

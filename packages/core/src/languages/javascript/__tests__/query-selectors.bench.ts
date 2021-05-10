@@ -43,20 +43,15 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     const fileContent = contentWithQuerySelector;
 
     let files: WebManglerFile[] = [];
-    let mangledFiles: WebManglerFile[] = [];
-    const result = benchmarkFn(() => {
-      files = [new WebManglerFileMock("js", fileContent)];
-      mangledFiles = manglerEngine(
-        files,
-        expressionsMap,
-        mangleEngineOptions,
-      );
+    const result = benchmarkFn({
+      setup: () => files = [new WebManglerFileMock("js", fileContent)],
+      fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 
     expect(result.medianDuration).to.be.below(budget);
 
-    expect(mangledFiles).to.have.lengthOf(1);
-    expect(mangledFiles[0].content).to.not.equal(fileContent);
+    expect(files).to.have.lengthOf(1);
+    expect(files[0].content).to.not.equal(fileContent);
   });
 
   test("large file", function() {
@@ -64,20 +59,15 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     const fileContent = contentWithQuerySelector.repeat(100);
 
     let files: WebManglerFile[] = [];
-    let mangledFiles: WebManglerFile[] = [];
-    const result = benchmarkFn(() => {
-      files = [new WebManglerFileMock("js", fileContent)];
-      mangledFiles = manglerEngine(
-        files,
-        expressionsMap,
-        mangleEngineOptions,
-      );
-    }, 100);
+    const result = benchmarkFn({
+      setup: () => files = [new WebManglerFileMock("js", fileContent)],
+      fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
+    });
 
     expect(result.medianDuration).to.be.below(budget);
 
-    expect(mangledFiles).to.have.lengthOf(1);
-    expect(mangledFiles[0].content).to.not.equal(fileContent);
+    expect(files).to.have.lengthOf(1);
+    expect(files[0].content).to.not.equal(fileContent);
   });
 
   test("large file without query selectors", function() {
@@ -85,19 +75,14 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     const fileContent = contentWithoutQuerySelector.repeat(100);
 
     let files: WebManglerFile[] = [];
-    let mangledFiles: WebManglerFile[] = [];
-    const result = benchmarkFn(() => {
-      files = [new WebManglerFileMock("js", fileContent)];
-      mangledFiles = manglerEngine(
-        files,
-        expressionsMap,
-        mangleEngineOptions,
-      );
+    const result = benchmarkFn({
+      setup: () => files = [new WebManglerFileMock("js", fileContent)],
+      fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 
     expect(result.medianDuration).to.be.below(budget);
 
-    expect(mangledFiles).to.have.lengthOf(1);
-    expect(mangledFiles[0].content).not.equal(fileContent);
+    expect(files).to.have.lengthOf(1);
+    expect(files[0].content).not.equal(fileContent);
   });
 });

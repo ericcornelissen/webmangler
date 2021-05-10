@@ -77,13 +77,18 @@ function newSelectorAsStandaloneStringExpression(): MangleExpression {
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.18
+ * @version v0.1.19
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): Iterable<MangleExpression> {
-  return [
+  const result = [
     ...newQuerySelectorExpressions(options.prefix, options.suffix),
-    newSelectorAsStandaloneStringExpression(),
   ];
+
+  if (options.suffix || options.prefix) {
+    result.push(newSelectorAsStandaloneStringExpression());
+  }
+
+  return result;
 }

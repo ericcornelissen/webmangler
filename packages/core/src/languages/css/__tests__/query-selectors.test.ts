@@ -4,7 +4,7 @@ import type { QuerySelectorOptions } from "../../options";
 
 import { expect } from "chai";
 
-import { matchesAsExpected } from "../../__tests__/test-helpers";
+import { getAllMatches } from "../../__tests__/test-helpers";
 
 import querySelectorExpressionFactory from "../query-selectors";
 
@@ -88,8 +88,8 @@ suite("CSS - Query Selector Expression Factory", function() {
         } = testCase;
 
         const expressions = querySelectorExpressionFactory(options);
-        const result = matchesAsExpected(expressions, input, pattern, expected);
-        expect(result).to.equal(true, `in "${input}"`);
+        const matches = getAllMatches(expressions, input, pattern);
+        expect(matches).to.deep.equal(expected);
       }
     });
   }
