@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix mangling query selectors in nested CSS selectors.
 
 ## [0.1.19] - 2021-04-30
 
