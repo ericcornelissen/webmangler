@@ -68,6 +68,19 @@ suite("CSS - Query Selector Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "nested",
+      cases: [
+        {
+          input: "@media (max-width: 420px) { .foobar { } }",
+          pattern: "[a-z]+",
+          expected: ["foobar"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {
