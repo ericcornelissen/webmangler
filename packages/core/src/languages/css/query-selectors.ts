@@ -30,6 +30,7 @@ function newCssSelectorExpression(
       )
     `,
     GROUP_MAIN,
+    true,
   );
 }
 
