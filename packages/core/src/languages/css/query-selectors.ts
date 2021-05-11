@@ -22,7 +22,8 @@ function newCssSelectorExpression(
     `
       (?<=
         (?:^|\\})[^\\{]*
-        ${selectorPrefix ? selectorPrefix : ""}
+        ${selectorPrefix ? selectorPrefix :
+          `(?:${QUERY_SELECTOR_COMBINERS}|\\}|^)`}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
