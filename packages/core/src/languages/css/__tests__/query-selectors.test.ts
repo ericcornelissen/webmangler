@@ -20,6 +20,12 @@ suite("CSS - Query Selector Expression Factory", function() {
           options: { },
         },
         {
+          input: "bar, foobar, baz { }",
+          pattern: "ba(r|z)",
+          expected: ["bar", "baz"],
+          options: { },
+        },
+        {
           input: ".foobar { }",
           pattern: "[a-z]+",
           expected: ["foobar"],

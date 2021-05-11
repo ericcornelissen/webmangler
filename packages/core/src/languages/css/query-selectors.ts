@@ -21,7 +21,8 @@ function newCssSelectorExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
-        ${selectorPrefix ? selectorPrefix : ""}
+        ${selectorPrefix ? selectorPrefix :
+          `(?:${QUERY_SELECTOR_COMBINERS}|\\}|^)`}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
