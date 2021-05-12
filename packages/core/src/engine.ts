@@ -46,9 +46,16 @@ function countInstances(
     const fileExpressions = expressions.get(file.type) || [];
     for (const pattern of patterns) {
       for (const expression of fileExpressions) {
-        for (const name of expression.exec(file.content, pattern)) {
-          const count = countMap.get(name) || 0;
-          countMap.set(name, count + 1);
+        if (expression.findAll) {
+          for (const name of expression.findAll(file.content, pattern)) {
+            const count = countMap.get(name) || 0;
+            countMap.set(name, count + 1);
+          }
+        } else {
+          for (const name of expression.exec(file.content, pattern)) {
+            const count = countMap.get(name) || 0;
+            countMap.set(name, count + 1);
+          }
         }
       }
     }
