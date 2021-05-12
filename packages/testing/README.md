@@ -98,7 +98,7 @@ with the _WebMangler_ core. The following mocks are available:
 #### `MangleExpressionMock`
 
 A mocked implementation of the `MangleExpression` type. Can be instantiated with
-custom `exec()` and `replaceAll()` behaviour if needed.
+custom `findAll()` and `replaceAll()` behaviour if needed.
 
 ##### Example
 
@@ -121,7 +121,7 @@ mangleExpression = new MangleExpressionMock(execStub);
 
 | Input        | Type   | Description                       |
 | ------------ | ------ | --------------------------------- |
-| `exec`       | [Stub] | Implementation of `exec()`.       |
+| `findAll`    | [Stub] | Implementation of `findAll()`.    |
 | `replaceAll` | [Stub] | Implementation of `replaceAll()`. |
 
 #### `WebManglerFileMock`
