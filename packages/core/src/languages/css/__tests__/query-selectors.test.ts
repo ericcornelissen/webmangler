@@ -20,6 +20,12 @@ suite("CSS - Query Selector Expression Factory", function() {
           options: { },
         },
         {
+          input: "bar, foobar, baz { }",
+          pattern: "ba(r|z)",
+          expected: ["bar", "baz"],
+          options: { },
+        },
+        {
           input: ".foobar { }",
           pattern: "[a-z]+",
           expected: ["foobar"],
@@ -58,6 +64,19 @@ suite("CSS - Query Selector Expression Factory", function() {
           options: {
             prefix: "\\[",
             suffix: "\\]",
+          },
+        },
+      ],
+    },
+    {
+      name: "nested",
+      cases: [
+        {
+          input: "@media (max-width: 420px) { .foobar { } }",
+          pattern: "[a-z]+",
+          expected: ["foobar"],
+          options: {
+            prefix: "\\.",
           },
         },
       ],

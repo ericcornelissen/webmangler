@@ -20,6 +20,12 @@ suite("JavaScript - Query Selector Expression Factory", function() {
           options: { },
         },
         {
+          input: "document.querySelectorAll(\"bar > foobar > baz\");",
+          pattern: "ba(r|z)",
+          expected: ["bar", "baz"],
+          options: { },
+        },
+        {
           input: "document.querySelectorAll(\".foobar\");",
           pattern: "[a-z]+",
           expected: ["foobar"],

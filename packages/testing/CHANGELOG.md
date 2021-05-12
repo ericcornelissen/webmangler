@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Add `findAll` method to `MangleExpressionMock`.
+- Drop Sinon.JS v9 support.
 
 ## [0.1.2] - 2021-03-19
 

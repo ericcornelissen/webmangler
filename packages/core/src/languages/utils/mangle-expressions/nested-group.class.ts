@@ -23,8 +23,6 @@ type RegExpMatchGroups = { [key: string]: string };
  *
  * @since v0.1.12
  * @version v0.1.20
- * @deprecated Make sure you're importing `NestedGroupMangleExpression` instead
- * of `NestedGroupExpression`.
  */
 export default class NestedGroupMangleExpression implements MangleExpression {
   /**

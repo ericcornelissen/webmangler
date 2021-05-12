@@ -21,8 +21,8 @@ function newCssSelectorExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
-        (?:^|\\})[^\\{]*
-        ${selectorPrefix ? selectorPrefix : ""}
+        ${selectorPrefix ? selectorPrefix :
+          `(?:${QUERY_SELECTOR_COMBINERS}|\\}|^)`}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
@@ -31,6 +31,7 @@ function newCssSelectorExpression(
       )
     `,
     GROUP_MAIN,
+    true,
   );
 }
 
@@ -42,7 +43,7 @@ function newCssSelectorExpression(
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.18
+ * @version v0.1.20
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,

@@ -33,7 +33,8 @@ function newQuerySelectorExpressions(
     `,
     `
       (?<=
-        ${selectorPrefix ? selectorPrefix : ""}
+        ${selectorPrefix ? selectorPrefix :
+          `(?:${quote}|${QUERY_SELECTOR_COMBINERS})`}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
@@ -77,7 +78,7 @@ function newSelectorAsStandaloneStringExpression(): MangleExpression {
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.19
+ * @version v0.1.20
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
