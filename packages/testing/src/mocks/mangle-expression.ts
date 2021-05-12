@@ -11,14 +11,23 @@ let uniqueId = 0;
  * A simple mock for _WebMangler_'s {@link MangleExpression} interface.
  *
  * @since v0.1.1
+ * @version v0.1.3
  */
 export default class MangleExpressionMock {
   /**
    * The `exec` method of the mock.
    *
    * @since v0.1.1
+   * @deprecated
    */
   public readonly exec: SinonStub;
+
+  /**
+   * The `findAll` method of the mock.
+   *
+   * @since v0.1.3
+   */
+  public readonly findAll: SinonStub;
 
   /**
    * The `replaceAll` method of the mock.
@@ -31,28 +40,30 @@ export default class MangleExpressionMock {
    * Create a new {@link MangleExpressionMock}. Optionally with specific
    * behaviour.
    *
-   * @param [execStub] A {@link SinonStub} for the mock.
+   * @param [findAllStub] A {@link SinonStub} for the mock.
    * @param [replaceAllStub] A {@link SinonStub} for the mock.
    * @since v0.1.1
    */
   constructor(
-    execStub?: SinonStub,
+    findAllStub?: SinonStub,
     replaceAllStub?: SinonStub,
   ) {
     this.exec =
-      MangleExpressionMock.getExecStub(execStub);
+      MangleExpressionMock.getFindAllStub(findAllStub);
+    this.findAll =
+      MangleExpressionMock.getFindAllStub(findAllStub);
     this.replaceAll =
       MangleExpressionMock.getReplaceAllStub(replaceAllStub);
   }
 
   /**
-   * Get the `exec` {@link SinonStub} for an {@link MangleExpressionMock}
+   * Get the `findAll` {@link SinonStub} for an {@link MangleExpressionMock}
    * instance.
    *
    * @param [providedStub] The provided {@link SinonStub}, if any.
-   * @returns A {@link SinonStub} for the `exec` method.
+   * @returns A {@link SinonStub} for the `findAll` method.
    */
-  private static getExecStub(providedStub?: SinonStub): SinonStub {
+  private static getFindAllStub(providedStub?: SinonStub): SinonStub {
     if (providedStub) {
       return providedStub;
     }

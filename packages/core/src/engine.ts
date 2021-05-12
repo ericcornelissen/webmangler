@@ -46,9 +46,16 @@ function countInstances(
     const fileExpressions = expressions.get(file.type) || [];
     for (const pattern of patterns) {
       for (const expression of fileExpressions) {
-        for (const name of expression.exec(file.content, pattern)) {
-          const count = countMap.get(name) || 0;
-          countMap.set(name, count + 1);
+        if (expression.findAll) {
+          for (const name of expression.findAll(file.content, pattern)) {
+            const count = countMap.get(name) || 0;
+            countMap.set(name, count + 1);
+          }
+        } else {
+          for (const name of expression.exec(file.content, pattern)) {
+            const count = countMap.get(name) || 0;
+            countMap.set(name, count + 1);
+          }
         }
       }
     }
@@ -193,7 +200,7 @@ function parseOptions(options: MangleEngineOptions): {
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.20
  */
 export default function mangle<Files extends Iterable<WebManglerFile>>(
   files: Files,

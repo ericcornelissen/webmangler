@@ -65,11 +65,11 @@ interface MangleEngineOptions {
 }
 
 /**
- * Interface representing a regular expression-like object that can be used to
- * find and replace patterns by _WebMangler_.
+ * Type representing an object that can be used  by _WebMangler_ to find and
+ * replace strings to be mangled that match custom patterns.
  *
  * @since v0.1.0
- * @version v0.1.13
+ * @version v0.1.20
  */
 interface MangleExpression {
   /**
@@ -79,8 +79,19 @@ interface MangleExpression {
    * @param pattern The pattern to execute the expression with.
    * @returns The matched substrings in `s`.
    * @since v0.1.0
+   * @deprecated Renamed to `findAll`.
    */
   exec(s: string, pattern: string): Iterable<string>;
+
+  /**
+   * Find all strings matching `pattern` in the given string `s`.
+   *
+   * @param s The string to search in.
+   * @param pattern The pattern to search with.
+   * @returns The matched substrings in `s`.
+   * @since v0.1.20
+   */
+  findAll(s: string, pattern: string): Iterable<string>;
 
   /**
    * Replace multiple substrings in a string by other substrings.

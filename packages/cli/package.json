@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/yargs": "16.0.1",
-    "@webmangler/testing": "0.1.2",
+    "@webmangler/testing": "0.1.3",
     "typescript": "4.2.4",
     "webmangler": "0.1.17"
   },

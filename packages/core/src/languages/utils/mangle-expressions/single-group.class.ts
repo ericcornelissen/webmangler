@@ -84,8 +84,17 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    * @inheritdoc
    * @since v0.1.11
    * @version v0.1.20
+   * @deprecated
    */
   public * exec(s: string, pattern: string): IterableIterator<string> {
+    yield * this.findAll(s, pattern);
+  }
+
+  /**
+   * @inheritdoc
+   * @since v0.1.20
+   */
+  public * findAll(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(pattern);
     let match: RegExpExecArray | null = null;
     while ((match = regExp.exec(s)) !== null) {

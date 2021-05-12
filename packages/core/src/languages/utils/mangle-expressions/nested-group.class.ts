@@ -22,6 +22,7 @@ type RegExpMatchGroups = { [key: string]: string };
  * // into "var pw = 'correct zebra cell staple';"
  *
  * @since v0.1.12
+ * @version v0.1.20
  */
 export default class NestedGroupMangleExpression implements MangleExpression {
   /**
@@ -68,8 +69,17 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.12
+   * @deprecated
    */
   public * exec(s: string, pattern: string): IterableIterator<string> {
+    yield * this.findAll(s, pattern);
+  }
+
+  /**
+   * @inheritdoc
+   * @since v0.1.20
+   */
+  public * findAll(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(this.patternTemplate, pattern);
     let match: RegExpExecArray | null = null;
     while ((match = regExp.exec(s)) !== null) {
