@@ -24,9 +24,9 @@ import { RecommendedManglers } from "webmangler/manglers";
 
 // Read in the files you want to mangle ...
 const files = [
-  { name: "index.css", content: "..." },
-  { name: "index.html", content: "..." },
-  { name: "index.js", content: "..." },
+  { type: "css", content: "..." },
+  { type: "html", content: "..." },
+  { type: "js", content: "..." },
 ];
 
 // and run WebMangler.
@@ -36,7 +36,7 @@ const mangledFiles = webmangler(files, {
 });
 
 console.log(mangledFiles[0]);
-// Outputs:  { name: "index.css", content: "..." }
+// Outputs:  { type: "css", content: "..." }
 ```
 
 Which will mangler CSS classes, CSS variables, and HTML data attributes in CSS,

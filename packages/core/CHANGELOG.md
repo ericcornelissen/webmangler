@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.20] - 2021-05-13
+
 - Add option to ignore strings to `SingleGroupMangleExpression`.
 - Fix mangling query selectors in nested CSS selectors.
 - Fix unintended mangling of some query selectors.
