@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Drop Sinon.JS v9 support.
 
 ## [0.1.2] - 2021-03-19
 
