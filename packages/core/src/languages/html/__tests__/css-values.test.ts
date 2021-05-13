@@ -64,6 +64,27 @@ suite("HTML - CSS Value Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "edge cases",
+      cases: [
+        {
+          input: "<div style=\"margin: 42px !important;\"></div>",
+          pattern: "[0-9]+",
+          expected: ["42"],
+          options: {
+            suffix: "px",
+          },
+        },
+        {
+          input: "<div style=\"padding: 0 3px 0 14px!important;\"></div>",
+          pattern: "[0-9]+",
+          expected: ["3", "14"],
+          options: {
+            suffix: "px",
+          },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

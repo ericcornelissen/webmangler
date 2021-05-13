@@ -82,6 +82,7 @@ const ATTRIBUTES: SelectorBeforeAndAfter[] = [
 
 suite("HTML Attribute Mangler", function() {
   const varyAttributeSpacing = varySpacing(["=", "\""]);
+  const varyImportantSpacing = varySpacing("!important");
   const varyTagSpacing = varySpacing(["<", ">"]);
 
   suite("CSS", function() {
@@ -360,6 +361,11 @@ suite("HTML Attribute Mangler", function() {
             expected: ":root { color: attr(data-a) }",
             description: "lack of semicolon should not prevent mangling",
           },
+          ...varyImportantSpacing({
+            input: ":root { color: attr(data-foo)!important; }",
+            expected: ":root { color: attr(data-a)!important; }",
+            description: "should still work with !important",
+          }),
         ],
       },
     ];
@@ -1059,6 +1065,20 @@ suite("HTML Attribute Mangler", function() {
                 expected: testCase.expected.replace(";", ""),
                 description: "missing \";\" should not matter",
               }))
+              .map(embedDeclarationsInStyle)
+              .flatMap(embedAttributesInTags),
+          ],
+        },
+        {
+          name: `${name} with !important`,
+          cases: [
+            ...factory("data-foobar", "data-a")
+              .map((testCase: TestCase): TestCase => ({
+                input: testCase.input.replace(";", "!important;"),
+                expected: testCase.expected.replace(";", "!important;"),
+                description: "should still work with !important",
+              }))
+              .flatMap(varyImportantSpacing)
               .map(embedDeclarationsInStyle)
               .flatMap(embedAttributesInTags),
           ],
