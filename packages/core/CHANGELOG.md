@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix mangling CSS values when `!important` is used.
 
 ## [0.1.20] - 2021-05-13
 
