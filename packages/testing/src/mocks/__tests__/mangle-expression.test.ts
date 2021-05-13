@@ -9,19 +9,19 @@ import MangleExpressionMock from "../mangle-expression";
 chaiUse(sinonChai);
 
 suite("MangleExpressionMock", function() {
-  suite("::exec", function() {
+  suite("::findAll", function() {
     test("default stub", function() {
       const pluginMock = new MangleExpressionMock();
-      expect(pluginMock.exec).not.to.throw();
-      expect(pluginMock.exec()).not.to.be.undefined;
+      expect(pluginMock.findAll).not.to.throw();
+      expect(pluginMock.findAll()).not.to.be.undefined;
     });
 
     test("custom stub", function() {
-      const execStub: SinonStub = sinon.stub();
+      const findAllStub: SinonStub = sinon.stub();
 
-      const pluginMock = new MangleExpressionMock(execStub);
-      expect(pluginMock.exec).not.to.throw();
-      expect(execStub).to.have.callCount(1);
+      const pluginMock = new MangleExpressionMock(findAllStub);
+      expect(pluginMock.findAll).not.to.throw();
+      expect(findAllStub).to.have.callCount(1);
     });
   });
 

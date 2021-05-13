@@ -5,7 +5,7 @@ import { expect } from "chai";
 import SingleGroupMangleExpression from "../single-group.class";
 
 suite("SingleGroupMangleExpression", function() {
-  suite("::exec", function() {
+  suite("::findAll", function() {
     type TestCase = {
       patternTemplate: string;
       group: string;
@@ -111,7 +111,7 @@ suite("SingleGroupMangleExpression", function() {
           );
 
           let i = 0;
-          for (const str of subject.exec(s, pattern)) {
+          for (const str of subject.findAll(s, pattern)) {
             expect(str).to.equal(expected[i]);
             i++;
           }

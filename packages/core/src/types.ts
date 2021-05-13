@@ -69,20 +69,9 @@ interface MangleEngineOptions {
  * replace strings to be mangled that match custom patterns.
  *
  * @since v0.1.0
- * @version v0.1.20
+ * @version v0.1.21
  */
 interface MangleExpression {
-  /**
-   * Execute the {@link MangleExpression} on a string for a given pattern.
-   *
-   * @param s The string to execute the expression on.
-   * @param pattern The pattern to execute the expression with.
-   * @returns The matched substrings in `s`.
-   * @since v0.1.0
-   * @deprecated Renamed to `findAll`.
-   */
-  exec(s: string, pattern: string): Iterable<string>;
-
   /**
    * Find all strings matching `pattern` in the given string `s`.
    *

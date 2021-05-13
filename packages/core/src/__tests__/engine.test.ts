@@ -696,31 +696,4 @@ suite("ManglerEngine", function() {
       }
     });
   }
-
-  test("has fallback for MangleExpression.exec", function() {
-    const charSet: CharSet = ["a", "b", "c"];
-    const patterns: string[] = ["(foo|bar)"];
-
-    const files: WebManglerFile[] = [
-      new WebManglerFileMock("css", ".foo { } #bar { }"),
-    ];
-
-    const cssExpressionMock = {
-      exec: sinon.stub()
-        .withArgs("css", ".foo { } #bar { }", "(foo|bar)")
-        .returns(["foo"]),
-      replaceAll: sinon.stub(),
-    } as unknown as MangleExpression;
-
-    const expressions: Map<string, MangleExpression[]> = new Map([
-      ["css", [cssExpressionMock]],
-    ]);
-
-    engine(files, expressions, {
-      charSet: charSet,
-      patterns: patterns,
-    });
-
-    expect(cssExpressionMock.exec).to.have.been.called;
-  });
 });

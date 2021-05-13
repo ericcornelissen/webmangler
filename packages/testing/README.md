@@ -111,10 +111,10 @@ let mangleExpression;
 // With default implementations of all methods.
 mangleExpression = new MangleExpressionMock();
 
-// With custom implementation of the `exec` method.
+// With custom implementation of the `findAll` method.
 const matches = ["foo", "bar"];
-const execStub = sinon.stub().returns(matches);
-mangleExpression = new MangleExpressionMock(execStub);
+const findAllStub = sinon.stub().returns(matches);
+mangleExpression = new MangleExpressionMock(findAllStub);
 ```
 
 ##### Arguments

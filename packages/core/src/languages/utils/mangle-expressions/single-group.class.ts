@@ -44,7 +44,7 @@ function prepareTemplate(
  * // into "foo--baz--".
  *
  * @since v0.1.11
- * @version v0.1.20
+ * @version v0.1.21
  */
 export default class SingleGroupMangleExpression implements MangleExpression {
   /**
@@ -78,16 +78,6 @@ export default class SingleGroupMangleExpression implements MangleExpression {
   ) {
     this.patternTemplate = prepareTemplate(patternTemplate, ignoreStrings);
     this.groupName = groupName;
-  }
-
-  /**
-   * @inheritdoc
-   * @since v0.1.11
-   * @version v0.1.20
-   * @deprecated
-   */
-  public * exec(s: string, pattern: string): IterableIterator<string> {
-    yield * this.findAll(s, pattern);
   }
 
   /**

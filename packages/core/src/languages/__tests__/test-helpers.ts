@@ -16,7 +16,7 @@ export function getAllMatches(
 ): string[] {
   const matches: string[] = [];
   Array.from(expressions).some((expression) => {
-    for (const match of expression.exec(input, pattern)) {
+    for (const match of expression.findAll(input, pattern)) {
       matches.push(match);
     }
   });
