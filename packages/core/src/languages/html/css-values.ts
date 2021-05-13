@@ -39,7 +39,10 @@ function newStyleDeclarationValueExpressions(
         ${valuePrefix}
         %s
         ${valueSuffix}
-        (?:\\s*\\;[^${quote}]*)?
+        (?:
+          (\\s|\\!|\\;)
+          [^${quote}]*
+        )?
       )
       (?=
         \\s*${quote}
@@ -56,7 +59,7 @@ function newStyleDeclarationValueExpressions(
       (?<${GROUP_MAIN}>%s)
       (?=
         ${valueSuffix}
-        (?:\\s|\\;|$)
+        (?:\\s|\\!|\\;|$)
       )
     `,
     GROUP_MAIN,
@@ -104,7 +107,7 @@ function newUnquotedStyleDeclarationValueExpressions(
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.19
+ * @version v0.1.21
  */
 export default function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,
