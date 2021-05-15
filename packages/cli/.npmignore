@@ -1,8 +1,8 @@
 src/
-tsconfig.json
+tsconfig.*
 
 # JavaScript files that are always empty
-lib/types.js
+types.js
 
 # Temporary
 .webmanglerrc.js

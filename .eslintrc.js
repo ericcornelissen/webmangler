@@ -296,7 +296,7 @@ module.exports = {
     // Generated & temporary
     "_reports/",
     ".temp/",
-    "lib/",
+    "build/",
 
     // Generated in packages/core
     "packages/core/languages/",

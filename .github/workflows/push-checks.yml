@@ -34,6 +34,10 @@ jobs:
         working-directory: ./packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
         run: npm ci
+      - name: Compile packages/${{ matrix.package }}
+        working-directory: ./packages/${{ matrix.package }}
+        if: steps.changes.outputs.changed == 'true'
+        run: npm run compile
       - name: Run benchmarks for packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
         run: npm run benchmark:${{ matrix.package }}
@@ -122,6 +126,10 @@ jobs:
         working-directory: ./packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
         run: npm ci
+      - name: Compile packages/${{ matrix.package }}
+        working-directory: ./packages/${{ matrix.package }}
+        if: steps.changes.outputs.changed == 'true'
+        run: npm run compile
       - name: Run test suite for packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
         run: npm run coverage:${{ matrix.package }}

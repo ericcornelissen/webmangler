@@ -5,6 +5,9 @@
 # Dependencies
 node_modules/
 
+# TypeScript
+*.tsbuildinfo
+
 # Generated & temporary
 _reports/
 .temp/
