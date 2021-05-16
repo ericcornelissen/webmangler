@@ -8,30 +8,6 @@ import { format as printf } from "util";
 type RegExpMatchGroups = { [key: string]: string };
 
 /**
- * Normalize a pattern template provided to a built-in {@link MangleExpression}.
- *
- * @param patternTemplate The user-provided pattern template.
- * @param ignoreStrings Should strings be ignored entirely.
- * @returns The normalized pattern template.
- */
-function prepareTemplate(
-    patternTemplate: string,
-    ignoreStrings: boolean,
-  ): string {
-  if (ignoreStrings) {
-    patternTemplate = `
-      (?:
-        (?:"[^"]*"|'[^']*'|\`[^\`]*\`)
-        |
-        ${patternTemplate}
-      )
-    `;
-  }
-
-  return patternTemplate.replace(/\s/g, "");
-}
-
-/**
  * A {@link SingleGroupMangleExpression} is a {@link MangleExpression}
  * implementation that matches and replaces based on a single named group.
  *
@@ -67,16 +43,17 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    *
    * @param patternTemplate The generic pattern (only one "%s" allowed).
    * @param groupName The name of a group in `patternTemplate`.
-   * @param [ignoreStrings] Should strings be ignored entirely.
+   * @param [ignoreStrings] Ignored, will be removed in a future version.
    * @since v0.1.11
-   * @version v0.1.20
+   * @version v0.1.21
+   * @deprecated
    */
   constructor(
     patternTemplate: string,
     groupName: string,
-    ignoreStrings = false,
+    ignoreStrings = false, // eslint-disable-line @typescript-eslint/no-unused-vars
   ) {
-    this.patternTemplate = prepareTemplate(patternTemplate, ignoreStrings);
+    this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
   }
 

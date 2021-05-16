@@ -20,18 +20,21 @@ function newCssSelectorExpression(
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      (?<=
-        ${selectorPrefix ? selectorPrefix :
-          `(?:${QUERY_SELECTOR_COMBINERS}|\\}|^)`}
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        ${selectorSuffix ? selectorSuffix :
-          `(?:${QUERY_SELECTOR_COMBINERS}|\\{|$)`}
+      (?:
+        (?:"[^"]*"|'[^']*')
+        |
+        (?<=
+          ${selectorPrefix ? selectorPrefix :
+            `(?:${QUERY_SELECTOR_COMBINERS}|\\}|^)`}
+        )
+        (?<${GROUP_MAIN}>%s)
+        (?=
+          ${selectorSuffix ? selectorSuffix :
+            `(?:${QUERY_SELECTOR_COMBINERS}|\\{|$)`}
+        )
       )
     `,
     GROUP_MAIN,
-    true,
   );
 }
 
