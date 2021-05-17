@@ -37,6 +37,7 @@ const builtInLanguages = new BuiltInLanguageSupport();
 const DEFAULT_PATTERN = "[a-z]+";
 
 suite("CSS Variable Mangler", function() {
+  const varyImportantSpacing = varySpacing("!important");
   const varyVariableUsageSpacing = varySpacing([":", "(", ",", ")"]);
 
   suite("CSS", function() {
@@ -271,6 +272,11 @@ suite("CSS Variable Mangler", function() {
             expected: ":root { color: var(--a) }",
             description: "lack of semicolon should not prevent mangling",
           },
+          ...varyImportantSpacing({
+            input: ":root { color: var(--foo)!important; }",
+            expected: ":root { color: var(--a)!important; }",
+            description: "should still work with !important",
+          }),
         ],
       },
     ];
@@ -654,6 +660,20 @@ suite("CSS Variable Mangler", function() {
             }))
             .map(embedDeclarationsInStyle)
             .flatMap(embedAttributesInTags),
+        },
+        {
+          name: `${name} with !important`,
+          cases: [
+            ...factory("foobar", "a")
+              .map((testCase: TestCase): TestCase => ({
+                input: testCase.input.replace(";", "!important;"),
+                expected: testCase.expected.replace(";", "!important;"),
+                description: "should still work with !important",
+              }))
+              .flatMap(varyImportantSpacing)
+              .map(embedDeclarationsInStyle)
+              .flatMap(embedAttributesInTags),
+          ],
         },
       ]);
     }

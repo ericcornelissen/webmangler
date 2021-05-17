@@ -17,6 +17,7 @@ const FILES_AND_FOLDERS_TO_DELETE = [
 ].map(fromRoot);
 
 const PACKAGES_TO_CLEAN = [
+  "packages/benchmarking",
   "packages/cli",
   "packages/core",
   "packages/testing",

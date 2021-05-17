@@ -10,7 +10,16 @@
     "preserveConstEnums": true,
     "removeComments": false,
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+
+    "baseUrl": "./",
+    "paths": {
+      "@webmangler/benchmarking": ["packages/benchmarking/build"],
+      "@webmangler/testing": ["packages/testing/build"],
+      "webmangler": ["packages/core/build"],
+      "webmangler/languages": ["packages/core/build/languages"],
+      "webmangler/manglers": ["packages/core/build/manglers"]
+    }
   },
   "exclude": [
     "node_modules/"

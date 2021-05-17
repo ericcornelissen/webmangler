@@ -5,7 +5,7 @@ import { expect } from "chai";
 import NestedGroupMangleExpression from "../nested-group.class";
 
 suite("NestedGroupMangleExpression", function() {
-  suite("::exec", function() {
+  suite("::findAll", function() {
     type TestCase = {
       patternTemplate: string;
       subPatternTemplate: string;
@@ -87,7 +87,7 @@ suite("NestedGroupMangleExpression", function() {
           );
 
           let i = 0;
-          for (const str of subject.exec(s, pattern)) {
+          for (const str of subject.findAll(s, pattern)) {
             expect(str).to.equal(expected[i]);
             i++;
           }

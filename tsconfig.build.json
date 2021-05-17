@@ -6,6 +6,7 @@
   },
   "exclude": [
     "node_modules/",
+    "**/build/",
     "**/__mocks__/**/*",
     "**/__tests__/**/*"
   ]

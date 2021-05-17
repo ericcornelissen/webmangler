@@ -3,8 +3,15 @@
   "version": "0.1.20",
   "description": "The WebMangler core",
   "license": "MIT",
-  "main": "index.js",
-  "typings": "index.d.ts",
+  "main": "./build/index.js",
+  "typings": "./build/index.d.ts",
+  "exports": {
+    ".": "./build/index.js",
+    "./languages": "./build/languages/index.js",
+    "./languages/utils": "./build/languages/utils/index.js",
+    "./manglers": "./build/manglers/index.js",
+    "./manglers/utils": "./build/manglers/utils/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ericcornelissen/webmangler",
@@ -19,15 +26,12 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "clean": "rm -rf languages/ manglers/ *.js *.d.ts",
-    "precompile": "npm run clean",
-    "compile": "tsc",
+    "clean": "rm -rf build/ *.tsbuildinfo",
+    "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
   },
   "devDependencies": {
-    "@webmangler/benchmarking": "0.1.1",
-    "@webmangler/testing": "0.1.3",
     "typescript": "4.2.4"
   },
   "engines": {

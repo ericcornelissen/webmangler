@@ -2,5 +2,4 @@
 node_modules/
 
 # Generated & temporary
-/*.d.ts
-/*.js
+build/

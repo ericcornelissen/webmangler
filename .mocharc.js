@@ -18,6 +18,7 @@ module.exports = {
   spec: `packages/${specPackage}/**/*.${specSuffix}.ts`,
   require: [
     "ts-node/register",
+    "tsconfig-paths/register",
   ],
 
   "watch-files": [

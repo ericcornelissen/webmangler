@@ -11,17 +11,9 @@ let uniqueId = 0;
  * A simple mock for _WebMangler_'s {@link MangleExpression} interface.
  *
  * @since v0.1.1
- * @version v0.1.3
+ * @version v0.1.4
  */
 export default class MangleExpressionMock {
-  /**
-   * The `exec` method of the mock.
-   *
-   * @since v0.1.1
-   * @deprecated
-   */
-  public readonly exec: SinonStub;
-
   /**
    * The `findAll` method of the mock.
    *
@@ -48,8 +40,6 @@ export default class MangleExpressionMock {
     findAllStub?: SinonStub,
     replaceAllStub?: SinonStub,
   ) {
-    this.exec =
-      MangleExpressionMock.getFindAllStub(findAllStub);
     this.findAll =
       MangleExpressionMock.getFindAllStub(findAllStub);
     this.replaceAll =
