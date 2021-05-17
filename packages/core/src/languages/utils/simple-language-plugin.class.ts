@@ -1,4 +1,17 @@
-import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
+import type {
+  MangleExpression,
+  WebManglerEmbed,
+  WebManglerFile,
+  WebManglerLanguagePlugin,
+} from "../../types";
+
+/**
+ * A function that extracts {@link WebManglerEmbed}s from a {@link
+ * WebManglerFile}.
+ *
+ * @since v0.1.21
+ */
+export type EmbedsGetter = (file: WebManglerFile) => Iterable<WebManglerEmbed>;
 
 /**
  * A function that produces a set of {@link MangleExpression}s given the set's
@@ -19,7 +32,7 @@ export type ExpressionFactory = (options: any) => Iterable<MangleExpression>; //
  * WebManglerLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.21
  */
 export default abstract class SimpleLanguagePlugin
     implements WebManglerLanguagePlugin {
@@ -27,13 +40,19 @@ export default abstract class SimpleLanguagePlugin
    * The languages, including aliases, that this {@link SimpleLanguagePlugin}
    * supports.
    */
-  private readonly languages: Iterable<string>;
+  private readonly languages: string[];
 
   /**
    * A map from {@link MangleExpression}-set names to a functions that produce
    * the respective set of {@link MangleExpression}s given the set's options.
    */
   private readonly expressionFactories: Map<string, ExpressionFactory>;
+
+  /**
+   * A collection of functions that can get {@link WebManglerEmbed}s from a
+   * supported file.
+   */
+  private readonly embedsGetters: Iterable<EmbedsGetter>;
 
   /**
    * Initialize a new {@link SimpleLanguagePlugin}.
@@ -47,15 +66,36 @@ export default abstract class SimpleLanguagePlugin
    *
    * @param languages Supported language, including aliases.
    * @param expressionFactories The {@link ExpressionFactory}s to use.
+   * @param [embedsGetters] The {@link EmbedsGetter} to use.
    * @since v0.1.15
-   * @version v0.1.17
+   * @version v0.1.21
    */
   constructor(
     languages: Iterable<string>,
     expressionFactories: Map<string, ExpressionFactory>,
+    embedsGetters?: Iterable<EmbedsGetter>,
   ) {
-    this.languages = languages;
+    this.embedsGetters = embedsGetters || [];
     this.expressionFactories = expressionFactories;
+    this.languages = Array.from(languages);
+  }
+
+  /**
+   * @inheritDoc
+   * @version v0.1.21
+   */
+  getEmbeds(file: WebManglerFile): Iterable<WebManglerEmbed> {
+    const result: WebManglerEmbed[] = [];
+    if (!this.languages.includes(file.type)) {
+      return result;
+    }
+
+    for (const getEmbed of this.embedsGetters) {
+      const embeds = getEmbed(file);
+      result.push(...embeds);
+    }
+
+    return result;
   }
 
   /**

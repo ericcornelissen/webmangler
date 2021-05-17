@@ -11,9 +11,16 @@ let uniqueId = 0;
  * A simple mock for _WebMangler_'s {@link WebManglerPluginLanguage} interface.
  *
  * @since v0.1.1
- * @version v0.1.3
+ * @version v0.1.4
  */
 export default class WebManglerPluginLanguageMock {
+  /**
+   * The `getEmbeds` method of the mock.
+   *
+   * @since v0.1.4
+   */
+  public readonly getEmbeds: SinonStub;
+
   /**
    * The `getExpressions` method of the mock.
    *
@@ -35,11 +42,13 @@ export default class WebManglerPluginLanguageMock {
    * @param [getExpressionsStub] A {@link SinonStub} for the mock.
    * @param [getLanguagesStub] A {@link SinonStub} for the mock.
    * @since v0.1.1
+   * @version v0.1.4
    */
   constructor(
     getExpressionsStub?: SinonStub,
     getLanguagesStub?: SinonStub,
   ) {
+    this.getEmbeds = sinon.stub().returns([uniqueId++]);
     this.getExpressions =
       WebManglerPluginLanguageMock.getGetExpressionsStub(getExpressionsStub);
     this.getLanguages =
