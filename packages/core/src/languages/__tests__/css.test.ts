@@ -63,7 +63,7 @@ suite("Built-in CSS Language Plugin", function() {
     test("get default languages", function() {
       const plugin = new CssLanguagePlugin();
       const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
+      expect(result).to.include.members(DEFAULT_EXTENSIONS);
     });
 
     test("get configured languages", function() {
@@ -71,8 +71,8 @@ suite("Built-in CSS Language Plugin", function() {
 
       const plugin = new CssLanguagePlugin({ cssExtensions });
       const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
-      expect(result).to.include.keys(cssExtensions);
+      expect(result).to.include.members(DEFAULT_EXTENSIONS);
+      expect(result).to.include.members(cssExtensions);
     });
   });
 });
