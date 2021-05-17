@@ -20,7 +20,7 @@ function newCssDeclarationPropertyExpression(
   return new SingleGroupMangleExpression(
     `
       (?<=
-        (?:\\;|\\{)\\s*
+        (?:\\;|\\{|\\*\\/)\\s*
         ${propertyPrefix}
       )
       (?<${GROUP_MAIN}>%s)
