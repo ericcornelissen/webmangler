@@ -4,7 +4,21 @@ import type {
   WebManglerLanguagePlugin,
 } from "./types";
 
-let runIdentifier = "";
+type EmbedsMap = Map<WebManglerFile, Iterable<IdentifiableWebManglerEmbed>>;
+
+/**
+ * Extension of {@link WebManglerEmbed} with an identifier.
+ *
+ * @since v0.1.21
+ */
+export interface IdentifiableWebManglerEmbed extends WebManglerEmbed {
+  /**
+   * The identifier of the {@link WebManglerEmbed}.
+   *
+   * @since v0.1.21
+   */
+  readonly id: string;
+}
 
 /**
  * Compare the `startIndex` of two {@link WebManglerEmbed}s. Can be used to sort
@@ -19,30 +33,21 @@ function compareStartIndex(a: WebManglerEmbed, b: WebManglerEmbed): number {
 }
 
 /**
- * Generate a unique identifer for a _WebMangler_ run.
+ * Generate a unique string that does not appear in a larger string.
  *
- * @param files The {@link WebManglerFile}s in the run.
+ * @param s The string for which to generate a unique string.
+ * @returns A unique string that does not appear in `s`.
  */
-function generateRunIdentifier(files: Iterable<WebManglerFile>) {
-  const contents = Array.from(files).map((file) => file.content);
-  while (contents.some((content) => content.includes(runIdentifier))) {
-    runIdentifier = "";
+function generateUniqueString(s: string): string {
+  let id = "";
+  while (s.includes(id)) {
+    id = "";
     for (let i = 0; i < 64; i++) {
-      runIdentifier += Math.floor(Math.random() * 10).toString(16);
+      id += Math.floor(Math.random() * 10).toString(16);
     }
   }
-}
 
-/**
- * Get a unique(*) identifer for a given embed.
- *
- * (*): The identifer will be unique w.r.t. the file in which it appears.
- *
- * @param embed A {@link WebManglerEmbed}.
- * @returns A unique identifer for the `embed`.
- */
-function getEmbedId(embed: WebManglerEmbed) {
-  return `[${runIdentifier}-${embed.startIndex}-${embed.endIndex}]`;
+  return id;
 }
 
 /**
@@ -56,16 +61,17 @@ function getEmbedId(embed: WebManglerEmbed) {
 function getEmbedsInFile(
   file: WebManglerFile,
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
-): Iterable<WebManglerEmbed> {
-  const fileEmbeds: WebManglerEmbed[] = [];
+): Iterable<IdentifiableWebManglerEmbed> {
+  const fileUniqueString: string = generateUniqueString(file.content);
+  const fileEmbeds: IdentifiableWebManglerEmbed[] = [];
   for (const languagePlugin of languagePlugins) {
     const rawEmbeds = Array.from(languagePlugin.getEmbeds(file));
     const sortedEmbeds = rawEmbeds.sort(compareStartIndex);
 
     let offset = 0;
     for (const embed of sortedEmbeds) {
-      const embedId = getEmbedId(embed);
-      fileEmbeds.push(embed);
+      const embedId = `[${fileUniqueString}-${embed.startIndex}]`;
+      fileEmbeds.push({ ...embed, id: embedId });
 
       const pre = file.content.slice(0, embed.startIndex + offset);
       const post = file.content.slice(embed.endIndex + offset);
@@ -93,10 +99,8 @@ function getEmbedsInFile(
 export function getEmbeds(
   files: Iterable<WebManglerFile>,
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
-): Map<WebManglerFile, Iterable<WebManglerEmbed>> {
-  generateRunIdentifier(files);
-
-  const embeds: Map<WebManglerFile, Iterable<WebManglerEmbed>> = new Map();
+): EmbedsMap {
+  const embeds: EmbedsMap = new Map();
   for (const file of files) {
     const fileEmbeds = getEmbedsInFile(file, languagePlugins);
     embeds.set(file, fileEmbeds);
@@ -115,12 +119,11 @@ export function getEmbeds(
  * @param file The {@link WebManglerFile} to embed into.
  */
 export function reEmbed(
-  embeds: Iterable<WebManglerEmbed>,
+  embeds: Iterable<IdentifiableWebManglerEmbed>,
   file: WebManglerFile,
 ): void {
   for (const embed of embeds) {
-    const embedId = getEmbedId(embed);
     const newEmbedContent = embed.getRaw();
-    file.content = file.content.replace(embedId, newEmbedContent);
+    file.content = file.content.replace(embed.id, newEmbedContent);
   }
 }
