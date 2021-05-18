@@ -26,6 +26,8 @@ function newCssDeclarationPropertyExpression(
       (?<${GROUP_MAIN}>%s)
       (?=
         ${propertySuffix}
+        \\s*
+        (?:\\/\\*[^\\*\\/]*\\*\\/)?
         \\s*:
       )
     `,
@@ -41,7 +43,7 @@ function newCssDeclarationPropertyExpression(
  * @param options The {@link CssDeclarationPropertyOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.18
+ * @version v0.1.21
  */
 export default function cssDeclarationPropertyExpressionFactory(
   options: CssDeclarationPropertyOptions,

@@ -25,12 +25,12 @@ function newCssSelectorExpression(
         |
         (?<=
           ${selectorPrefix ? selectorPrefix :
-            `(?:${QUERY_SELECTOR_COMBINERS}|\\}|^)`}
+            `(?:${QUERY_SELECTOR_COMBINERS}|\\}|\\*\\/|^)`}
         )
         (?<${GROUP_MAIN}>%s)
         (?=
           ${selectorSuffix ? selectorSuffix :
-            `(?:${QUERY_SELECTOR_COMBINERS}|\\{|$)`}
+            `(?:${QUERY_SELECTOR_COMBINERS}|\\{|\\/\\*|$)`}
         )
       )
     `,
@@ -46,7 +46,7 @@ function newCssSelectorExpression(
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.20
+ * @version v0.1.21
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
