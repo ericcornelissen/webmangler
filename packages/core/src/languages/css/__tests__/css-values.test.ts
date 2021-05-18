@@ -85,6 +85,23 @@ suite("CSS - CSS Value Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "with comments",
+      cases: [
+        {
+          input: "div { color: red /* set the color */; }",
+          pattern: "[a-z]+",
+          expected: ["red"],
+          options: { },
+        },
+        {
+          input: "div { color: /* set the color */ red; }",
+          pattern: "[a-z]+",
+          expected: ["red"],
+          options: { },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

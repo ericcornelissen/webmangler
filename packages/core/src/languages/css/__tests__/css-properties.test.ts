@@ -44,7 +44,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       ],
     },
     {
-      name: "comments",
+      name: "with comments",
       cases: [
         {
           input: "div { /* set the color */ color: red; }",
@@ -56,6 +56,18 @@ suite("CSS - CSS Property Expression Factory", function() {
           input: "div { color: red; /* set the font */ font: serif; }",
           pattern: "[a-z]+",
           expected: ["color", "font"],
+          options: { },
+        },
+        {
+          input: "div { color /* set the color */: red; }",
+          pattern: "[a-z]+",
+          expected: ["color"],
+          options: { },
+        },
+        {
+          input: "div { font: /* set the font */ serif; }",
+          pattern: "[a-z]+",
+          expected: ["font"],
           options: { },
         },
       ],
