@@ -45,6 +45,7 @@ module.exports = {
     "node_modules/",
     "packages/**/*.bench.ts",
     "packages/**/*.test.ts",
+    "packages/**/build/",
     ...packagesExclusions,
   ],
 
