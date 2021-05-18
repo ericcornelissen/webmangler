@@ -1,9 +1,11 @@
-import type { ExpressionFactory } from "../utils";
+import type { EmbedsGetter, ExpressionFactory } from "../utils";
 
 import { SimpleLanguagePlugin } from "../utils";
 import attributeExpressionFactory from "./attributes";
 import cssDeclarationPropertyExpressionFactory from "./css-properties";
 import cssDeclarationValueExpressionFactory from "./css-values";
+import getEmbeddedCss from "./embeds/css";
+import getEmbeddedJs from "./embeds/js";
 import multiValueAttributeExpressionFactory from "./multi-value-attributes";
 import singleValueAttributeExpressionFactory from "./single-value-attributes";
 
@@ -79,6 +81,14 @@ export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
   ];
 
   /**
+   * The {@link EmbedsGetter}s used by the {@link HtmlLanguagePlugin}.
+   */
+  private static EMBEDS_GETTERS: EmbedsGetter[] = [
+    ...getEmbeddedCss,
+    ...getEmbeddedJs,
+  ];
+
+  /**
    * The {@link ExpressionFactory}s provided by the {@link HtmlLanguagePlugin}.
    */
   private static EXPRESSION_FACTORIES: Map<string, ExpressionFactory> = map;
@@ -94,6 +104,7 @@ export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
     super(
       HtmlLanguagePlugin.getLanguages(options.htmlExtensions),
       HtmlLanguagePlugin.EXPRESSION_FACTORIES,
+      HtmlLanguagePlugin.EMBEDS_GETTERS,
     );
   }
 
