@@ -40,6 +40,7 @@ function scriptTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
  * console.log(embeds[0]);  //  "console.log(42);"
  * @param file A {@link WebManglerFile}.
  * @returns Zero or more {@link WebManglerEmbed}s.
+ * @since v0.1.21
  */
 export function getScriptTagsAsEmbeds(
   file: WebManglerFile,

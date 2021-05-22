@@ -40,6 +40,7 @@ function styleTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
  * console.log(embeds[0]);  // ".foo{ color:red; }"
  * @param file A {@link WebManglerFile}.
  * @returns Zero or more {@link WebManglerEmbed}s.
+ * @since v0.1.21
  */
 export function getStyleTagsAsEmbeds(
   file: WebManglerFile,
