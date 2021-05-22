@@ -25,14 +25,15 @@ function newCssDeclarationValueExpression(
         (?<=
           \\{
           [^\\}]+
-          :\\s*
-          ([^;]*\\s)?
+          :
+          [^;]*
+          (?<=:|\\s|\\*\\/)
           ${valuePrefix}
         )
         (?<${GROUP_MAIN}>%s)
         (?=
           ${valueSuffix}
-          (?:\\s|\\!|\\;|\\})
+          (?:\\s|\\!|\\/\\*|\\;|\\})
         )
       )
     `,
