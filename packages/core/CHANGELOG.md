@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Fix mangling CSS values when `!important` is used.
+- Fix mangling CSS properties, values, and selectors when comments are used.
 
 ## [0.1.20] - 2021-05-13
 

@@ -20,7 +20,6 @@ type RegExpMatchGroups = { [key: string]: string };
  * // matches "horse" & "battery" in "var pw = 'correct horse battery staple';"
  * // and for the replacements "horse->zebra" and "battery->cell" will change it
  * // into "var pw = 'correct zebra cell staple';"
- *
  * @since v0.1.12
  * @version v0.1.21
  */
@@ -132,7 +131,6 @@ export default class NestedGroupMangleExpression implements MangleExpression {
    *   const subStr = this.extractGroup(args);
    *   // ...
    * });
-   *
    * @param args The `String.prototype.replace` callback arguments.
    * @returns The value of the configured named group.
    */

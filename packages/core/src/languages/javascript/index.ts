@@ -44,7 +44,6 @@ export type JavaScriptLanguagePluginOptions = {
  *     new JavaScriptLanguagePlugin(),
  *   ],
  * });
- *
  * @example
  * webmangler({
  *   plugins: [
@@ -56,7 +55,6 @@ export type JavaScriptLanguagePluginOptions = {
  *     }),
  *   ],
  * });
- *
  * @since v0.1.0
  * @version v0.1.20
  */

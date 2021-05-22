@@ -44,7 +44,6 @@ export default abstract class SimpleLanguagePlugin
    *     super(["js", "cjs", "mjs"], expressions);
    *   }
    * }
-   *
    * @param languages Supported language, including aliases.
    * @param expressionFactories The {@link ExpressionFactory}s to use.
    * @since v0.1.15

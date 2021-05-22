@@ -19,17 +19,21 @@ function newCssDeclarationValueExpression(
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      (?<=
-        \\{
-        [^\\}]+
-        :\\s*
-        ([^;]*\\s)?
-        ${valuePrefix}
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        ${valueSuffix}
-        (?:\\s|\\!|\\;|\\})
+      (?:
+        (?:"[^"]*"|'[^']*'|\\/\\*[^\\*\\/]*\\*\\/)
+        |
+        (?<=
+          \\{
+          [^\\}]+
+          :\\s*
+          ([^;]*\\s)?
+          ${valuePrefix}
+        )
+        (?<${GROUP_MAIN}>%s)
+        (?=
+          ${valueSuffix}
+          (?:\\s|\\!|\\;|\\})
+        )
       )
     `,
     GROUP_MAIN,

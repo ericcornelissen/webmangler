@@ -105,7 +105,6 @@ interface MangleExpression {
  *     value: "foobar",
  *   },
  * };
- *
  * @since v0.1.14
  */
 interface MangleExpressionOptions<T> {

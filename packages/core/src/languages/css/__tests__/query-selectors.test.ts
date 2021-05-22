@@ -81,6 +81,56 @@ suite("CSS - Query Selector Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "with comments",
+      cases: [
+        {
+          input: "/* class selector */ .foobar { }",
+          pattern: "[a-z]+",
+          expected: ["foobar"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: "#foobar /* id selector */ { }",
+          pattern: "[a-z]+",
+          expected: ["foobar"],
+          options: {
+            prefix: "\\#",
+          },
+        },
+        {
+          input: ".foo, /* or */ .bar { }",
+          pattern: "[a-z]+",
+          expected: ["foo", "bar"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: ".foo /* child */ > .bar { }",
+          pattern: "[a-z]+",
+          expected: ["foo", "bar"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: "#foo/*bar*/ { }",
+          pattern: "[a-z]+",
+          expected: ["foo"],
+          options: {
+            prefix: "\\#",
+          },
+        },{
+          input: "/*foo*/bar { }",
+          pattern: "[a-z]+",
+          expected: ["bar"],
+          options: { },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

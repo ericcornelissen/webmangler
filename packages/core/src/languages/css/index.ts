@@ -50,7 +50,6 @@ export type CssLanguagePluginOptions = {
  *     new CssLanguagePlugin(),
  *   ],
  * });
- *
  * @example
  * webmangler({
  *   plugins: [
@@ -62,7 +61,6 @@ export type CssLanguagePluginOptions = {
  *     }),
  *   ],
  * });
- *
  * @since v0.1.0
  * @version v0.1.21
  */
