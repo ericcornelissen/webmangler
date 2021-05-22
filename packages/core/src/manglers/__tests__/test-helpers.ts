@@ -11,11 +11,9 @@ import { format as printf } from "util";
  * const original = { a: "foo", b: "bar" };
  * const clone = cloneObject(original);
  * // original !== clone
- *
  * @example
  * const clone = cloneObject({ a: "foo", b: "bar" }, { b: "baz" });
  * // clone.b === "baz"
- *
  * @param o The object to clone.
  * @param r The keys to replace.
  * @returns The cloned object with replaced values.
@@ -30,7 +28,6 @@ function cloneObject<T>(o: T, r?: unknown): T {
  *
  * @example
  * array.filter(duplicates);
- *
  * @param value The current value.
  * @param index The index of the value.
  * @param arr The full array being filtered.
@@ -69,7 +66,6 @@ function escapeRegex(s: string): string {
  * @example
  * const array = getArrayOfFormattedStrings(3, "-%s-");
  * // array === ["-0-", "-1-", "-2-"]
- *
  * @param n The desired length of the array.
  * @param template A string with a single "%s" where the index will be inserted.
  * @returns The generated array.
@@ -88,11 +84,9 @@ export function getArrayOfFormattedStrings(
  * @example
  * const isValid = isValidAttributeName("data-foo");
  * // isValid === true
- *
  * @example
  * const isValid = isValidIdName("spaces are not allowed in attribute names");
  * // isValid === false
- *
  * @param attrName The string of interest.
  * @returns `true` if `attrName` is a valid attribute name, `false` otherwise.
  */
@@ -106,11 +100,9 @@ export function isValidAttributeName(attrName: string): boolean {
  * @example
  * const isValid = isValidClassName("foo");
  * // isValid === true
- *
  * @example
  * const isValid = isValidClassName(".foo");
  * // isValid === false
- *
  * @param className The string of interest.
  * @returns `true` if `className` is a valid class name, `false` otherwise.
  */
@@ -124,11 +116,9 @@ export function isValidClassName(className: string): boolean {
  * @example
  * const isValid = isValidIdName("foo");
  * // isValid === true
- *
  * @example
  * const isValid = isValidIdName("#foo");
  * // isValid === false
- *
  * @param idName The string of interest.
  * @returns `true` if `idName` is a valid id name, `false` otherwise.
  */

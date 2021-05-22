@@ -7,7 +7,6 @@ import { performance } from "perf_hooks";
  * const [duration, output] = timeCall(() => slowFunction("foobar"));
  * console.log(duration);
  * // 3.14
- *
  * @param fn The function to time.
  * @returns A tuple of the duration and `fn`'s return value.
  */

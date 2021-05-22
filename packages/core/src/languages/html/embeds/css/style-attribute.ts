@@ -42,7 +42,6 @@ function styleAttributeMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
  * const file = { type: "html", content: "<div style=\"color:red;\"></div>" };
  * const embeds = getStyleAttributesAsEmbeds(file);
  * console.log(embeds[0]);  // ":root{color:red;}"
- *
  * @param file A {@link WebManglerFile}.
  * @returns Zero or more {@link WebManglerEmbed}s.
  */

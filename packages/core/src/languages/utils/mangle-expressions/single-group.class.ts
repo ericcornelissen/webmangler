@@ -18,7 +18,6 @@ type RegExpMatchGroups = { [key: string]: string };
  * );
  * // matches "bar" in "foo--bar--" and for the replacement "baz" will change it
  * // into "foo--baz--".
- *
  * @since v0.1.11
  * @version v0.1.21
  */

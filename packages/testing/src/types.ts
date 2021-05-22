@@ -12,7 +12,6 @@
  *     }
  *   });
  * }
- *
  * @since v0.1.0
  */
 export interface TestScenario<TestCase> {

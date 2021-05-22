@@ -48,7 +48,7 @@ function newStyleDeclarationPropertyExpressions(
     `,
     `
       (?<=
-        (^|;)\\s*
+        (^|;|\\*\\/)\\s*
         ${propertyPrefix}
       )
       (?<${GROUP_MAIN}>%s)

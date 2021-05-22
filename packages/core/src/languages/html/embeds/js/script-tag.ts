@@ -38,7 +38,6 @@ function scriptTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
  * const file = { type: "html", content: "<script>console.log(42);</script>" };
  * const embeds = getScriptTagsAsEmbeds(file);
  * console.log(embeds[0]);  //  "console.log(42);"
- *
  * @param file A {@link WebManglerFile}.
  * @returns Zero or more {@link WebManglerEmbed}s.
  */
