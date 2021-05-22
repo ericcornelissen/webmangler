@@ -34,7 +34,7 @@ import CssVariableMangler from "../css-variables";
 
 const builtInLanguages = new BuiltInLanguageSupport();
 
-const DEFAULT_PATTERN = "[a-z]+";
+const DEFAULT_PATTERN = "var-[a-z]+";
 
 suite("CSS Variable Mangler", function() {
   const varyImportantSpacing = varySpacing("!important");
@@ -75,29 +75,29 @@ suite("CSS Variable Mangler", function() {
           ...CSS_VALUES
             .flatMap((value: string): TestCase[] => [
               {
-                input: `:root{--foo:${value};}`,
+                input: `:root{--var-foo:${value};}`,
                 expected: `:root{--a:${value};}`,
               },
             ])
             .flatMap(varyDeclarationSpacing),
           {
-            input: ":root { background: purple; --foo: black; }",
+            input: ":root { background: purple; --var-foo: black; }",
             expected: ":root { background: purple; --a: black; }",
           },
           {
-            input: ":root { --foo: black; font-size: 12px; }",
+            input: ":root { --var-foo: black; font-size: 12px; }",
             expected: ":root { --a: black; font-size: 12px; }",
           },
           {
-            input: ":root { background: purple; --foo: black; font-size: 12px; }",
+            input: ":root { background: purple; --var-foo: black; font-size: 12px; }",
             expected: ":root { background: purple; --a: black; font-size: 12px; }",
           },
           {
-            input: ":root { --foo: black; --bar: yellow; }",
+            input: ":root { --var-foo: black; --var-bar: yellow; }",
             expected: ":root { --a: black; --b: yellow; }",
           },
           {
-            input: ".cls-1 { --foo: black; } .cls-2 { --bar: yellow; }",
+            input: ".cls-1 { --var-foo: black; } .cls-2 { --var-bar: yellow; }",
             expected: ".cls-1 { --a: black; } .cls-2 { --b: yellow; }",
           },
         ],
@@ -106,31 +106,31 @@ suite("CSS Variable Mangler", function() {
         name: "usage without fallback",
         cases: [
           ...varySpacing(["(", ")"], {
-            input: "div { color: var(--foo); }",
+            input: "div { color: var(--var-foo); }",
             expected: "div { color: var(--a); }",
           }),
           {
-            input: "div { background: purple; color: var(--foo); }",
+            input: "div { background: purple; color: var(--var-foo); }",
             expected: "div { background: purple; color: var(--a); }",
           },
           {
-            input: "div { color: var(--foo); font-size: 12px; }",
+            input: "div { color: var(--var-foo); font-size: 12px; }",
             expected: "div { color: var(--a); font-size: 12px; }",
           },
           {
-            input: "div { background: purple; color: var(--foo); font-size: 12px; }",
+            input: "div { background: purple; color: var(--var-foo); font-size: 12px; }",
             expected: "div { background: purple; color: var(--a); font-size: 12px; }",
           },
           {
-            input: "div { color: var(--foo); font: var(--bar); }",
+            input: "div { color: var(--var-foo); font: var(--var-bar); }",
             expected: "div { color: var(--a); font: var(--b); }",
           },
           {
-            input: "div { color: var(--foo); } p { font: var(--bar); }",
+            input: "div { color: var(--var-foo); } p { font: var(--var-bar); }",
             expected: "div { color: var(--a); } p { font: var(--b); }",
           },
           {
-            input: "div { margin: 0 var(--foo); }",
+            input: "div { margin: 0 var(--var-foo); }",
             expected: "div { margin: 0 var(--a); }",
           },
         ],
@@ -141,29 +141,29 @@ suite("CSS Variable Mangler", function() {
           ...CSS_VALUES
             .flatMap((value: string): TestCase[] => [
               {
-                input: `div { color: var(--foo,${value}); }`,
+                input: `div { color: var(--var-foo,${value}); }`,
                 expected: `div { color: var(--a,${value}); }`,
               },
             ])
             .flatMap(varyVariableUsageSpacing),
           {
-            input: "div { background: black; color: var(--foo, yellow); }",
+            input: "div { background: black; color: var(--var-foo, yellow); }",
             expected: "div { background: black; color: var(--a, yellow); }",
           },
           {
-            input: "div { color: var(--foo, purple); font-size: 12px; }",
+            input: "div { color: var(--var-foo, purple); font-size: 12px; }",
             expected: "div { color: var(--a, purple); font-size: 12px; }",
           },
           {
-            input: "div { background: black; color: var(--foo, yellow); font-size: 12px; }",
+            input: "div { background: black; color: var(--var-foo, yellow); font-size: 12px; }",
             expected: "div { background: black; color: var(--a, yellow); font-size: 12px; }",
           },
           {
-            input: "div { color: var(--foo, purple); font: var(--bar, serif); }",
+            input: "div { color: var(--var-foo, purple); font: var(--var-bar, serif); }",
             expected: "div { color: var(--a, purple); font: var(--b, serif); }",
           },
           {
-            input: "div { color: var(--foo, purple); } p { font: var(--bar, serif); }",
+            input: "div { color: var(--var-foo, purple); } p { font: var(--var-bar, serif); }",
             expected: "div { color: var(--a, purple); } p { font: var(--b, serif); }",
           },
         ],
@@ -172,35 +172,35 @@ suite("CSS Variable Mangler", function() {
         name: "declarations & usage",
         cases: [
           {
-            input: ":root { --foo: purple; } div { color: var(--foo); }",
+            input: ":root { --var-foo: purple; } div { color: var(--var-foo); }",
             expected: ":root { --a: purple; } div { color: var(--a); }",
           },
           {
-            input: ":root { --foo: purple; } div { color: var(--bar); }",
+            input: ":root { --var-foo: purple; } div { color: var(--var-bar); }",
             expected: ":root { --a: purple; } div { color: var(--b); }",
           },
           {
-            input: "div { --foo: purple; color: var(--foo); }",
+            input: "div { --var-foo: purple; color: var(--var-foo); }",
             expected: "div { --a: purple; color: var(--a); }",
           },
           {
-            input: "div { --foo: purple; color: var(--bar); }",
+            input: "div { --var-foo: purple; color: var(--var-bar); }",
             expected: "div { --a: purple; color: var(--b); }",
           },
           {
-            input: ":root { --foo: black; } div { color: var(--foo, yellow); }",
+            input: ":root { --var-foo: black; } div { color: var(--var-foo, yellow); }",
             expected: ":root { --a: black; } div { color: var(--a, yellow); }",
           },
           {
-            input: ":root { --foo: black; } div { color: var(--bar, yellow); }",
+            input: ":root { --var-foo: black; } div { color: var(--var-bar, yellow); }",
             expected: ":root { --a: black; } div { color: var(--b, yellow); }",
           },
           {
-            input: "div { --foo: black; color: var(--foo, yellow); }",
+            input: "div { --var-foo: black; color: var(--var-foo, yellow); }",
             expected: "div { --a: black; color: var(--a, yellow); }",
           },
           {
-            input: "div { --foo: black; color: var(--bar, yellow); }",
+            input: "div { --var-foo: black; color: var(--var-bar, yellow); }",
             expected: "div { --a: black; color: var(--b, yellow); }",
           },
         ],
@@ -209,7 +209,7 @@ suite("CSS Variable Mangler", function() {
         name: "selectors that match the pattern(s)",
         cases: [
           {
-            input: "#--foo { --foo: \"bar\"; }",
+            input: "#--foo { --var-foo: \"bar\"; }",
             expected: "#--foo { --a: \"bar\"; }",
           },
         ],
@@ -218,19 +218,19 @@ suite("CSS Variable Mangler", function() {
         name: "strings that match the pattern",
         cases: [
           ...varyCssQuotes({
-            input: "div { content: \"--foo\"; --foo: \"bar\"; }",
+            input: "div { content: \"--foo\"; --var-foo: \"bar\"; }",
             expected: "div { content: \"--foo\"; --a: \"bar\"; }",
           }),
           ...varyCssQuotes({
-            input: "div { content: \"--foo\"; color: var(--foo); }",
+            input: "div { content: \"--foo\"; color: var(--var-foo); }",
             expected: "div { content: \"--foo\"; color: var(--a); }",
           }),
           ...varyCssQuotes({
-            input: "div { content: \"var(--foo)\"; --foo: \"bar\"; }",
+            input: "div { content: \"var(--foo)\"; --var-foo: \"bar\"; }",
             expected: "div { content: \"var(--foo)\"; --a: \"bar\"; }",
           }),
           ...varyCssQuotes({
-            input: "div { content: \"var(--foo)\"; color: var(--foo); }",
+            input: "div { content: \"var(--foo)\"; color: var(--var-foo); }",
             expected: "div { content: \"var(--foo)\"; color: var(--a); }",
           }),
         ],
@@ -239,19 +239,19 @@ suite("CSS Variable Mangler", function() {
         name: "edge cases, declarations",
         cases: [
           {
-            input: ":root{--foo: \"bar\";}",
+            input: ":root{--var-foo: \"bar\";}",
             expected: ":root{--a: \"bar\";}",
             description: "lack of spacing around curly braces should not prevent mangling",
           },
           {
-            input: ":root { --foo: \"bar\" }",
+            input: ":root { --var-foo: \"bar\" }",
             expected: ":root { --a: \"bar\" }",
             description: "lack of semicolon should not prevent mangling",
           },
           ...["{", "}", ":"]
             .flatMap((unexpectedString: string): TestCase[] => [
               {
-                input: `:root { --foo: "${unexpectedString}" }`,
+                input: `:root { --var-foo: "${unexpectedString}" }`,
                 expected: `:root { --a: "${unexpectedString}" }`,
                 description: "unexpected string values should not prevent mangling",
               },
@@ -263,17 +263,17 @@ suite("CSS Variable Mangler", function() {
         name: "edge cases, usage",
         cases: [
           {
-            input: ":root{color: var(--foo);}",
+            input: ":root{color: var(--var-foo);}",
             expected: ":root{color: var(--a);}",
             description: "lack of spacing around curly braces should not prevent mangling",
           },
           {
-            input: ":root { color: var(--foo) }",
+            input: ":root { color: var(--var-foo) }",
             expected: ":root { color: var(--a) }",
             description: "lack of semicolon should not prevent mangling",
           },
           ...varyImportantSpacing({
-            input: ":root { color: var(--foo)!important; }",
+            input: ":root { color: var(--var-foo)!important; }",
             expected: ":root { color: var(--a)!important; }",
             description: "should still work with !important",
           }),
@@ -357,11 +357,11 @@ suite("CSS Variable Mangler", function() {
         name: "multi-value CSS declaration",
         cases: [
           {
-            input: "style=\"margin: 0 var(--foobar);\"",
+            input: "style=\"margin: 0 var(--var-foobar);\"",
             expected: "style=\"margin: 0 var(--a);\"",
           },
           {
-            input: "style=\"margin: 1em var(--foo) 1px var(--bar);\"",
+            input: "style=\"margin: 1em var(--var-foo) 1px var(--var-bar);\"",
             expected: "style=\"margin: 1em var(--a) 1px var(--b);\"",
           },
         ]
@@ -392,7 +392,7 @@ suite("CSS Variable Mangler", function() {
             expected: "<!--foo bar-->",
           },
           {
-            input: "<!--foo bar--><div style=\"--foo:red;\"></div>",
+            input: "<!--foo bar--><div style=\"--var-foo:red;\"></div>",
             expected: "<!--foo bar--><div style=\"--a:red;\"></div>",
           },
         ],
@@ -416,8 +416,8 @@ suite("CSS Variable Mangler", function() {
       const { name, factory } = instance;
 
       const PAIRS: [TestCase, TestCase][] = [
-        [factory("foo", "a"), factory("bar", "b")],
-        [factory("foobar", "a"), factory("foobar", "a")],
+        [factory("var-foo", "a"), factory("var-bar", "b")],
+        [factory("var-foobar", "a"), factory("var-foobar", "a")],
       ].flatMap(([testCasesA, testCasesB]): [TestCase, TestCase][] => {
         return R.zip(
           testCasesA.map(embedDeclarationsInStyle),
@@ -435,7 +435,7 @@ suite("CSS Variable Mangler", function() {
         },
         {
           name: `${name} by itself in a style attribute`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .map(embedDeclarationsInStyle)
             .flatMap(varyAttributeSpacing)
             .flatMap(varyHtmlQuotes)
@@ -443,14 +443,14 @@ suite("CSS Variable Mangler", function() {
         },
         {
           name: `${name}, vary spacing`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .map(embedDeclarationsInStyle)
             .flatMap(varyDeclarationSpacing)
             .flatMap(embedAttributesInTags),
         },
         {
           name: `${name} in an unquoted style attribute`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .map(embedDeclarationsInStyle)
             .flatMap((testCase: TestCase): TestCase[] => [
               {
@@ -467,14 +467,14 @@ suite("CSS Variable Mangler", function() {
         },
         {
           name: `${name} by itself in a style attribute with other attributes`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .map(embedDeclarationsInStyle)
             .flatMap(embedWithOtherAttributes)
             .flatMap(embedAttributesInTags),
         },
         {
           name: `${name} with other declarations in a style attribute`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .flatMap((testCase: TestCase): TestCase[] => [
               {
                 input: `color:red;${testCase.input}`,
@@ -502,7 +502,7 @@ suite("CSS Variable Mangler", function() {
         },
         {
           name: `${name} strings in HTML content`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .flatMap((testCase: TestCase): TestCase[] => [
               {
                 input: `<div>${testCase.input}</div>`,
@@ -537,7 +537,7 @@ suite("CSS Variable Mangler", function() {
         },
         {
           name: `${name} strings in non-style attribute`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .flatMap((testCase: TestCase): TestCase[] => [
               ...HTML_ATTRIBUTES
                 .filter((attribute: string) => !/^(style)$/.test(attribute))
@@ -596,7 +596,7 @@ suite("CSS Variable Mangler", function() {
         },
         {
           name: `${name} with non-closing ">"`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .flatMap((testCase: TestCase): TestCase[] => [
               {
                 input: `id=">" style="${testCase.input}"`,
@@ -625,7 +625,7 @@ suite("CSS Variable Mangler", function() {
                 input: `${testCaseA.input} ${testCaseB.input}`,
                 expected: `${testCaseA.expected} ${testCaseB.expected}`,
               })),
-            ...factory("foobar", "a")
+            ...factory("var-foobar", "a")
               .map((testCase: TestCase): TestCase => ({
                 input: `
                   style="${testCase.input}" style="${testCase.input}"
@@ -638,7 +638,7 @@ suite("CSS Variable Mangler", function() {
         },
         {
           name: `${name} with style as tag`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .flatMap((testCase: TestCase): TestCase[] => [
               {
                 input: `<style style="${testCase.input}"></style>`,
@@ -652,7 +652,7 @@ suite("CSS Variable Mangler", function() {
         },
         {
           name: `${name} with non-standard syntax`,
-          cases: factory("foobar", "a")
+          cases: factory("var-foobar", "a")
             .map((testCase: TestCase): TestCase => ({
               input: testCase.input.replace(";", ""),
               expected: testCase.expected.replace(";", ""),
@@ -664,7 +664,7 @@ suite("CSS Variable Mangler", function() {
         {
           name: `${name} with !important`,
           cases: [
-            ...factory("foobar", "a")
+            ...factory("var-foobar", "a")
               .map((testCase: TestCase): TestCase => ({
                 input: testCase.input.replace(";", "!important;"),
                 expected: testCase.expected.replace(";", "!important;"),
@@ -687,15 +687,15 @@ suite("CSS Variable Mangler", function() {
         name: "sample",
         cases: [
           ...varyJsQuotes({
-            input: "$el.style.getPropertyValue(\"--foobar\");",
+            input: "$el.style.getPropertyValue(\"--var-foobar\");",
             expected: "$el.style.getPropertyValue(\"--a\");",
           }),
           ...varySpacing("\"", {
-            input: "$el.style.removeProperty(\"--foobar\");",
+            input: "$el.style.removeProperty(\"--var-foobar\");",
             expected: "$el.style.removeProperty(\"--a\");",
           }),
           ...varyJsQuotes({
-            input: "var x = \"--foo\", setProperty(x, \"bar\");",
+            input: "var x = \"--var-foo\", setProperty(x, \"bar\");",
             expected: "var x = \"--a\", setProperty(x, \"bar\");",
           }),
         ],
