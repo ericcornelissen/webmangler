@@ -10,9 +10,9 @@ import JavaScriptLanguageSupport from "./javascript";
 /**
  * The configuration of the {@link BuiltInLanguagesPlugin}.
  *
- * @since v0.1.17
+ * @since v0.1.21
  */
-interface BuiltInLanguagesOptions extends
+export interface BuiltInLanguagesOptions extends
   CssLanguagePluginOptions,
   HtmlLanguagePluginOptions,
   JavaScriptLanguagePluginOptions { }
