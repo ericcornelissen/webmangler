@@ -1,8 +1,6 @@
 import type { WebManglerLanguagePlugin } from "../../types";
 import type {
   AttributeOptions,
-  CssDeclarationPropertyOptions,
-  CssDeclarationValueOptions,
   MultiValueAttributeOptions,
   SingleValueAttributeOptions,
 } from "../options";
@@ -31,20 +29,6 @@ suite("Built-in HTML Language Plugin", function() {
       const options: AttributeOptions = null;
 
       const result = plugin.getExpressions("attributes", options);
-      expect(result).to.have.length.above(0);
-    });
-
-    test("has support for mangling 'css-declaration-properties'", function() {
-      const options: CssDeclarationPropertyOptions = { };
-
-      const result = plugin.getExpressions("css-declaration-properties", options);
-      expect(result).to.have.length.above(0);
-    });
-
-    test("has support for mangling 'css-declaration-values'", function() {
-      const options: CssDeclarationValueOptions = { };
-
-      const result = plugin.getExpressions("css-declaration-values", options);
       expect(result).to.have.length.above(0);
     });
 

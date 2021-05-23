@@ -34,6 +34,36 @@ suite("HTML CSS Embeds - Style attribute", function() {
         {
           file: new WebManglerFileMock(
             "html",
+            "<div disabled style=\"color: blue;\"><div>",
+          ),
+          expected: [
+            {
+              content: prepareContent("color: blue;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 21,
+              endIndex: 33,
+              getRaw(): string { return "color: blue;"; },
+            },
+          ],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<div id=\"foobar\" style=\"color: blue;\"><div>",
+          ),
+          expected: [
+            {
+              content: prepareContent("color: blue;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 24,
+              endIndex: 36,
+              getRaw(): string { return "color: blue;"; },
+            },
+          ],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
             "<html>" +
             "<head>" +
             "<div style=\"color: red;\"></div>" +
@@ -61,11 +91,90 @@ suite("HTML CSS Embeds - Style attribute", function() {
       ],
     },
     {
+      name: "no quotes",
+      cases: [
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<div style=color:red;><div>",
+          ),
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 11,
+              endIndex: 21,
+              getRaw(): string { return "color:red;"; },
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: "edge cases",
       cases: [
         {
           file: new WebManglerFileMock("html", "<div>foobar</div>"),
           expected: [],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<div style=\"\">foobar</div>",
+          ),
+          expected: [],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<div style=\" \">foobar</div>",
+          ),
+          expected: [
+            {
+              content: prepareContent(" "),
+              type: EMBED_TYPE_CSS,
+              startIndex: 12,
+              endIndex: 13,
+              getRaw(): string { return " "; },
+            },
+          ],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<div style=\"color: red;\" style=\"font: serif;\"><div>",
+          ),
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 12,
+              endIndex: 23,
+              getRaw(): string { return "color: red;"; },
+            },
+            {
+              content: prepareContent("font: serif;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 32,
+              endIndex: 44,
+              getRaw(): string { return "font: serif;"; },
+            },
+          ],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<div data-value=\">\" style=\"color: red;\"><div>",
+          ),
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 27,
+              endIndex: 38,
+              getRaw(): string { return "color: red;"; },
+            },
+          ],
         },
       ],
     },

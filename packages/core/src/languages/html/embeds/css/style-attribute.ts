@@ -3,14 +3,20 @@ import type { WebManglerEmbed, WebManglerFile } from "../../../../types";
 import { EMBED_TYPE } from "./common";
 
 /**
- * A regular expression to find style attribute values in HTML.
+ * A regular expression to find style attribute with quoted values in HTML.
  */
 // eslint-disable-next-line security/detect-unsafe-regex
-const REGEXP_STYLE_DECLARATION = /(<[^>]*\sstyle\s*=\s*(?<q>"|'))([^"']*)(\k<q>)/gm;
+const REGEXP_QUOTED = /(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*(?<q>"|'))([^"']+)(?=\k<q>)/gm;
 
 /**
- * Convert a {@link REGEXP_STYLE_DECLARATION} match into a {@link
- * WebManglerEmbed}.
+ * A regular expression to find style attribute with unquoted values in HTML.
+ */
+// eslint-disable-next-line security/detect-unsafe-regex
+const REGEXP_UNQUOTED = /(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*)([^"'\s/>]+)/gm;
+
+/**
+ * Convert a {@link REGEXP_QUOTED} or {@link REGEXP_UNQUOTED} match into a
+ * {@link WebManglerEmbed}.
  *
  * @param match A {@link RegExpExecArray}.
  * @returns The {@link WebManglerEmbed}.
@@ -18,10 +24,9 @@ const REGEXP_STYLE_DECLARATION = /(<[^>]*\sstyle\s*=\s*(?<q>"|'))([^"']*)(\k<q>)
 function styleAttributeMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
   const SELECTOR = ":root";
 
-  const tag = match[1];
-  const declarations = match[3];
+  const declarations = match[0];
 
-  const startIndex = match.index + tag.length;
+  const startIndex = match.index;
   const endIndex = startIndex + declarations.length;
 
   return {
@@ -33,6 +38,29 @@ function styleAttributeMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
       return this.content.slice(SELECTOR.length + 1, -1);
     },
   };
+}
+
+/**
+ * Find all style attribute embeds in a file given a Regular Expression that
+ * matches style attributes.
+ *
+ * @param file A {@link WebManglerFile}.
+ * @param regExp A Regular Expression.
+ * @returns Zero or more {@link WebManglerEmbed}s.
+ */
+function matchAndGetEmbeds(
+  file: WebManglerFile,
+  regExp: RegExp,
+): Iterable<WebManglerEmbed> {
+  const result: WebManglerEmbed[] = [];
+
+  let match: RegExpExecArray | null = null;
+  while ((match = regExp.exec(file.content)) !== null) {
+    const embed = styleAttributeMatchToEmbed(match);
+    result.push(embed);
+  }
+
+  return result;
 }
 
 /**
@@ -49,13 +77,8 @@ function styleAttributeMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
 export function getStyleAttributesAsEmbeds(
   file: WebManglerFile,
 ): Iterable<WebManglerEmbed> {
-  const result: WebManglerEmbed[] = [];
-
-  let match: RegExpExecArray | null = null;
-  while ((match = REGEXP_STYLE_DECLARATION.exec(file.content)) !== null) {
-    const embed = styleAttributeMatchToEmbed(match);
-    result.push(embed);
-  }
-
-  return result;
+  return [
+    ...matchAndGetEmbeds(file, REGEXP_QUOTED),
+    ...matchAndGetEmbeds(file, REGEXP_UNQUOTED),
+  ];
 }
