@@ -48,6 +48,7 @@ suite("Embeds", function() {
                     type: "css",
                     startIndex: 7,
                     endIndex: 30,
+                    getRaw(): string { return this.content; },
                   },
                 ]),
               ),
@@ -59,7 +60,7 @@ suite("Embeds", function() {
                   type: "css",
                   startIndex: 7,
                   endIndex: 30,
-                  getRaw(): string { return ""; },
+                  getRaw(): string { return this.content; },
                 },
               ],
               files: [
@@ -87,6 +88,7 @@ suite("Embeds", function() {
                     type: "js",
                     startIndex: 8,
                     endIndex: 50,
+                    getRaw(): string { return this.content; },
                   },
                 ]),
               ),
@@ -98,7 +100,7 @@ suite("Embeds", function() {
                   type: "js",
                   startIndex: 8,
                   endIndex: 50,
-                  getRaw(): string { return ""; },
+                  getRaw(): string { return this.content; },
                 },
               ],
               files: [
@@ -127,12 +129,14 @@ suite("Embeds", function() {
                     type: "js",
                     startIndex: 44,
                     endIndex: 83,
+                    getRaw(): string { return this.content; },
                   },
                   {
                     content: ".foo { color: blue; }",
                     type: "css",
                     startIndex: 7,
                     endIndex: 28,
+                    getRaw(): string { return this.content; },
                   },
                 ]),
               ),
@@ -144,14 +148,14 @@ suite("Embeds", function() {
                   type: "css",
                   startIndex: 7,
                   endIndex: 28,
-                  getRaw(): string { return ""; },
+                  getRaw(): string { return this.content; },
                 },
                 {
                   content: "var x = document.getElementById(\"bar\");",
                   type: "js",
                   startIndex: 44,
                   endIndex: 83,
-                  getRaw(): string { return ""; },
+                  getRaw(): string { return this.content; },
                 },
               ],
               files: [
@@ -202,8 +206,8 @@ suite("Embeds", function() {
           const embedsMap = getEmbeds(files, plugins);
 
           const embeds: IdentifiableWebManglerEmbed[] = [];
-          for (const x of embedsMap.values()) {
-            embeds.push(...x);
+          for (const fileEmbeds of embedsMap.values()) {
+            embeds.push(...fileEmbeds);
           }
 
           for (const file of files) {
@@ -220,6 +224,7 @@ suite("Embeds", function() {
             expect(embed.type).to.equal(expectedEmbed.type);
             expect(embed.startIndex).to.equal(expectedEmbed.startIndex);
             expect(embed.endIndex).to.equal(expectedEmbed.endIndex);
+            expect(embed.getRaw()).to.equal(expectedEmbed.getRaw());
             expect(embed.id).to.be.a.string;
           }
 
