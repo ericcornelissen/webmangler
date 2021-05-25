@@ -1,6 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
 
-import type { TestCase } from "../../__test__/types";
+import type { TestCase } from "../../__tests__/types";
 
 import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
