@@ -65,6 +65,22 @@ suite("HTML CSS Embeds - <style> tag", function() {
           file: new WebManglerFileMock("html", "<div>foobar</div>"),
           expected: [],
         },
+        {
+          file: new WebManglerFileMock("html", "<style></style>"),
+          expected: [],
+        },
+        {
+          file: new WebManglerFileMock("html", "<style> </style>"),
+          expected: [
+            {
+              content: " ",
+              type: EMBED_TYPE_CSS,
+              startIndex: 7,
+              endIndex: 8,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
       ],
     },
   ];
@@ -75,7 +91,7 @@ suite("HTML CSS Embeds - <style> tag", function() {
         const { expected, file } = testCase;
 
         const embeds = getStyleTagsAsEmbeds(file);
-        expect(embeds).to.have.length(expected.length);
+        expect(embeds).to.have.length(expected.length, file.content);
 
         Array.from(embeds).forEach((embed, i) => {
           const expectedEmbed = expected[i];

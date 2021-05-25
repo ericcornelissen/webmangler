@@ -65,6 +65,22 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
           file: new WebManglerFileMock("html", "<div>foobar</div>"),
           expected: [],
         },
+        {
+          file: new WebManglerFileMock("html", "<script></script>"),
+          expected: [],
+        },
+        {
+          file: new WebManglerFileMock("html", "<script> </script>"),
+          expected: [
+            {
+              content: " ",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 9,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
       ],
     },
   ];

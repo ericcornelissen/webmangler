@@ -5,13 +5,11 @@ import { EMBED_TYPE } from "./common";
 /**
  * A regular expression to find style attribute with quoted values in HTML.
  */
-// eslint-disable-next-line security/detect-unsafe-regex
 const REGEXP_QUOTED = /(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*(?<q>"|'))([^"']+)(?=\k<q>)/gm;
 
 /**
  * A regular expression to find style attribute with unquoted values in HTML.
  */
-// eslint-disable-next-line security/detect-unsafe-regex
 const REGEXP_UNQUOTED = /(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*)([^"'\s/>]+)/gm;
 
 /**

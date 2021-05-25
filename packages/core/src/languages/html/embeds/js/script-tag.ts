@@ -5,7 +5,7 @@ import { EMBED_TYPE } from "./common";
 /**
  * A regular expression to find script tags in HTML.
  */
-const REGEXP_SCRIPT_TAG = /(<script(?:\s[^>]*>|>))([^<]*)<\/script>/gm;
+const REGEXP_SCRIPT_TAG = /(<script(?:>|\s[^>]*>))([^<]+)<\/script\s*>/gm;
 
 /**
  * Convert a {@link REGEXP_SCRIPT_TAG} match into a {@link WebManglerEmbed}.

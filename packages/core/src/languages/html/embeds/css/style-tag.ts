@@ -5,7 +5,7 @@ import { EMBED_TYPE } from "./common";
 /**
  * A regular expression to find style tags in HTML.
  */
-const REGEXP_STYLE_TAG = /(<style(?:\s[^>]*>|>))([^<]*)<\/style>/gm;
+const REGEXP_STYLE_TAG = /(<\s*style(?:\s[^>]*>|>))([^<]+)<\/style\s*>/gm;
 
 /**
  * Convert a {@link REGEXP_STYLE_TAG} match into a {@link WebManglerEmbed}.
