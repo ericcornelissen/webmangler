@@ -24,18 +24,22 @@ function newAttributeSelectorSingleValueExpression(
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      (?<=
-        \\[\\s*
-        (?:${attributesPattern})\\s*
-        (?:\\=|\\~=|\\|=|\\^=|\\$=|\\*=)\\s*
-        (?<${GROUP_QUOTE}>${QUOTES_PATTERN})\\s*
-        ${valuePrefix}
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        ${valueSuffix}
-        \\s*\\k<${GROUP_QUOTE}>
-        \\s*\\]
+      (?:
+        (?:\\{[^\\}]*\\}|\\/\\*[^\\*\\/]*\\*\\/)
+        |
+        (?<=
+          \\[\\s*
+          (?:${attributesPattern})\\s*
+          (?:\\=|\\~=|\\|=|\\^=|\\$=|\\*=)\\s*
+          (?<${GROUP_QUOTE}>${QUOTES_PATTERN})\\s*
+          ${valuePrefix}
+        )
+        (?<${GROUP_MAIN}>%s)
+        (?=
+          ${valueSuffix}
+          \\s*\\k<${GROUP_QUOTE}>
+          \\s*\\]
+        )
       )
     `,
     GROUP_MAIN,
@@ -50,7 +54,7 @@ function newAttributeSelectorSingleValueExpression(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.21
  */
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
