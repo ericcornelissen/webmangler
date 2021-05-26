@@ -60,6 +60,55 @@ suite("JavaScript - Query Selector Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "edge cases",
+      cases: [
+        {
+          input: `
+            // document.querySelectorAll(".foo");
+            document.querySelectorAll(".bar");
+          `,
+          pattern: "[a-z]+",
+          expected: ["bar"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: `
+            /* document.querySelectorAll(".foo"); */
+            document.querySelectorAll(".bar");
+          `,
+          pattern: "[a-z]+",
+          expected: ["bar"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: `
+            // document.getElementById("foo");
+            document.getElementById("bar");
+          `,
+          pattern: "[a-z]+",
+          expected: ["bar"],
+          options: {
+            prefix: "#",
+          },
+        },
+        {
+          input: `
+            /* document.getElementById("foo"); */
+            document.getElementById("bar");
+          `,
+          pattern: "[a-z]+",
+          expected: ["bar"],
+          options: {
+            prefix: "#",
+          },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {
