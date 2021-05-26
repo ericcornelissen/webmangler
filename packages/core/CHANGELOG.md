@@ -8,6 +8,8 @@ Versioning].
 
 ## [Unreleased]
 
+- Add support for mangling CSS embedded in HTML.
+- Add support for mangling JavaScript embedded in HTML.
 - Fix mangling CSS values when `!important` is used.
 - Fix mangling CSS properties, values, and selectors when comments are used.
 
