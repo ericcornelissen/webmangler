@@ -25,10 +25,14 @@ function newQuerySelectorExpressions(
 ): MangleExpression[] {
   return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
     `
-      (?<${GROUP_MAIN}>
-        ${quote}[^${quote}]*
-        %s
-        [^${quote}]*${quote}
+      (?:
+        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n)
+        |
+        (?<${GROUP_MAIN}>
+          ${quote}[^${quote}]*
+          %s
+          [^${quote}]*${quote}
+        )
       )
     `,
     `
@@ -55,14 +59,18 @@ function newQuerySelectorExpressions(
 function newSelectorAsStandaloneStringExpression(): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      (?<=
-        (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
-        \\s*
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        \\s*
-        \\k<${GROUP_QUOTE}>
+      (?:
+        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n)
+        |
+        (?<=
+          (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
+          \\s*
+        )
+        (?<${GROUP_MAIN}>%s)
+        (?=
+          \\s*
+          \\k<${GROUP_QUOTE}>
+        )
       )
     `,
     GROUP_MAIN,
@@ -78,7 +86,7 @@ function newSelectorAsStandaloneStringExpression(): MangleExpression {
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.20
+ * @version v0.1.21
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
