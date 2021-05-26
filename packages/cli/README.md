@@ -9,7 +9,7 @@ The CLI for [WebMangler].
 Install both `webmangler-cli` and `webmangler`, e.g.:
 
 ```shell
-$ npm install webmangler webmangler-cli --save-dev
+npm install webmangler webmangler-cli --save-dev
 ```
 
 Add a configuration file for _WebMangler_ to your project, e.g.:
@@ -47,7 +47,7 @@ Add a script to your project manifest to mangle a folder, e.g.:
 Mangle all the files matching the configured languages in that folder:
 
 ```shell
-$ npm run mangle
+npm run mangle
 ```
 
 [npm-url]: https://www.npmjs.com/package/webmangler-cli "NPM package"

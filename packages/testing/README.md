@@ -7,7 +7,7 @@ A collection of testing utilities for _WebMangler_ packages and plugins.
 Install `@webmangler/testing` and its peer-dependencies, e.g.:
 
 ```shell
-$ npm install @webmangler/testing sinon --save-dev
+npm install @webmangler/testing sinon --save-dev
 ```
 
 Import the testing utilities you want to use in you tests, e.g.:

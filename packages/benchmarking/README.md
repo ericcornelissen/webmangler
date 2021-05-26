@@ -9,7 +9,7 @@ A collection of benchmarking utilities for _WebMangler_ packages and plugins.
 Install `@webmangler/benchmarking`, e.g.:
 
 ```shell
-$ npm install @webmangler/benchmarking --save-dev
+npm install @webmangler/benchmarking --save-dev
 ```
 
 Import and use the benchmarking utilities in your benchmark, e.g.:
