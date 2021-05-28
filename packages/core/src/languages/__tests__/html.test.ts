@@ -72,17 +72,17 @@ suite("Built-in HTML Language Plugin", function() {
 
     test("get languages", function() {
       const plugin = new HtmlLanguagePlugin();
-      const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
+      const result = Array.from(plugin.getLanguages());
+      expect(result).to.include.members(DEFAULT_EXTENSIONS);
     });
 
     test("get configured languages", function() {
       const htmlExtensions = ["html5", "pug"];
 
       const plugin = new HtmlLanguagePlugin({ htmlExtensions });
-      const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
-      expect(result).to.include.keys(htmlExtensions);
+      const result = Array.from(plugin.getLanguages());
+      expect(result).to.include.members(DEFAULT_EXTENSIONS);
+      expect(result).to.include.members(htmlExtensions);
     });
   });
 });

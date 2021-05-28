@@ -1317,9 +1317,12 @@ suite("HTML Attribute Mangler", function() {
         const htmlAttributeMangler = new HtmlAttributeMangler({
           reservedAttrNames: reserved,
         });
+
         const result = htmlAttributeMangler.options();
         expect(result).to.have.property("reservedNames");
-        expect(result.reservedNames).to.include.members(reserved);
+
+        const reservedNames = Array.from(result.reservedNames as string[]);
+        expect(reservedNames).to.include.members(reserved);
       });
     });
 

@@ -986,9 +986,9 @@ suite("HTML ID Mangler", function() {
           const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
-          const attributeNames = options.attributeNames;
+          const attributeNames = Array.from(options.attributeNames);
           expect(attributeNames).not.to.be.undefined;
-          expect(attributeNames).to.include.keys(expected);
+          expect(attributeNames).to.include.members(expected);
 
           const valuePrefix = options.valuePrefix;
           expect(valuePrefix).to.be.undefined;
@@ -1037,9 +1037,9 @@ suite("HTML ID Mangler", function() {
           const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
-          const attributeNames = options.attributeNames;
+          const attributeNames = Array.from(options.attributeNames);
           expect(attributeNames).not.to.be.undefined;
-          expect(attributeNames).to.include.keys(expected);
+          expect(attributeNames).to.include.members(expected);
 
           const valuePrefix = options.valuePrefix as string;
           expect(valuePrefix).not.to.be.undefined;
