@@ -1,15 +1,12 @@
+import type BuiltInLanguagesPluginType from "../builtin";
+import type { BuiltInLanguagesOptions } from "../builtin";
 import type { WebManglerLanguagePlugin } from "../../types";
 
 import { WebManglerPluginLanguageMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
+import * as proxyquire from "proxyquire";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
-
-import * as CssLanguagePlugin from "../css";
-import * as HtmlLanguagePlugin from "../html";
-import * as JsLanguagePlugin from "../javascript";
-
-import BuiltInLanguagesPlugin from "../builtin";
 
 chaiUse(sinonChai);
 
@@ -22,18 +19,34 @@ suite("Built-in Language Supports", function() {
   let HtmlLanguagePluginModuleStub: sinon.SinonStub;
   let JsLanguagePluginModuleStub: sinon.SinonStub;
 
+  let BuiltInLanguagesPlugin: {
+    new(options?: BuiltInLanguagesOptions): BuiltInLanguagesPluginType,
+  };
+
   suiteSetup(function() {
     CssLanguagePluginMock = new WebManglerPluginLanguageMock();
-    CssLanguagePluginModuleStub = sinon.stub(CssLanguagePlugin, "default");
-    CssLanguagePluginModuleStub.returns(CssLanguagePluginMock);
-
     HtmlLanguagePluginMock = new WebManglerPluginLanguageMock();
-    HtmlLanguagePluginModuleStub = sinon.stub(HtmlLanguagePlugin, "default");
-    HtmlLanguagePluginModuleStub.returns(HtmlLanguagePluginMock);
-
     JsLanguagePluginMock = new WebManglerPluginLanguageMock();
-    JsLanguagePluginModuleStub = sinon.stub(JsLanguagePlugin, "default");
+
+    CssLanguagePluginModuleStub = sinon.stub();
+    CssLanguagePluginModuleStub.returns(CssLanguagePluginMock);
+    HtmlLanguagePluginModuleStub = sinon.stub();
+    HtmlLanguagePluginModuleStub.returns(HtmlLanguagePluginMock);
+    JsLanguagePluginModuleStub = sinon.stub();
     JsLanguagePluginModuleStub.returns(JsLanguagePluginMock);
+
+    const builtin = proxyquire("../builtin", {
+      "./css": {
+        default: CssLanguagePluginModuleStub,
+      },
+      "./html": {
+        default: HtmlLanguagePluginModuleStub,
+      },
+      "./javascript": {
+        default: JsLanguagePluginModuleStub,
+      },
+    });
+    BuiltInLanguagesPlugin = builtin.default;
   });
 
   suite("Options", function() {
@@ -93,11 +106,5 @@ suite("Built-in Language Supports", function() {
         Array.from(JsLanguagePluginMock.getLanguages()),
       );
     });
-  });
-
-  suiteTeardown(function() {
-    CssLanguagePluginModuleStub.restore();
-    HtmlLanguagePluginModuleStub.restore();
-    JsLanguagePluginModuleStub.restore();
   });
 });

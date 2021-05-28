@@ -74,7 +74,7 @@ suite("Built-in CSS Language Plugin", function() {
 
     test("get default languages", function() {
       const plugin = new CssLanguagePlugin();
-      const result = plugin.getLanguages();
+      const result = Array.from(plugin.getLanguages());
       expect(result).to.include.members(DEFAULT_EXTENSIONS);
     });
 
@@ -82,7 +82,7 @@ suite("Built-in CSS Language Plugin", function() {
       const cssExtensions = ["less", "sass"];
 
       const plugin = new CssLanguagePlugin({ cssExtensions });
-      const result = plugin.getLanguages();
+      const result = Array.from(plugin.getLanguages());
       expect(result).to.include.members(DEFAULT_EXTENSIONS);
       expect(result).to.include.members(cssExtensions);
     });

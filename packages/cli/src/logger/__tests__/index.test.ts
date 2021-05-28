@@ -1,11 +1,14 @@
-import { expect } from "chai";
+import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
+import * as sinonChai from "sinon-chai";
 
 import DefaultLogger from "../index";
 
-import MockWriter from "../__mocks__/writer.mock";
+chaiUse(sinonChai);
 
 suite("DefaultLogger", function() {
+  const MockWriter = sinon.fake();
+
   setup(function() {
     MockWriter.resetHistory();
   });
