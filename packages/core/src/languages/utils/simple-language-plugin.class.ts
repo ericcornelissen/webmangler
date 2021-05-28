@@ -40,7 +40,7 @@ export default abstract class SimpleLanguagePlugin
    * The languages, including aliases, that this {@link SimpleLanguagePlugin}
    * supports.
    */
-  private readonly languages: string[];
+  private readonly languages: Iterable<string>;
 
   /**
    * A map from {@link MangleExpression}-set names to a functions that produce
@@ -76,7 +76,7 @@ export default abstract class SimpleLanguagePlugin
   ) {
     this.embedsGetters = embedsGetters || [];
     this.expressionFactories = expressionFactories;
-    this.languages = Array.from(languages);
+    this.languages = languages;
   }
 
   /**
@@ -85,7 +85,7 @@ export default abstract class SimpleLanguagePlugin
    */
   getEmbeds(file: WebManglerFile): Iterable<WebManglerEmbed> {
     const result: WebManglerEmbed[] = [];
-    if (!this.languages.includes(file.type)) {
+    if (!this.supportsLanguage(file.type)) {
       return result;
     }
 
@@ -129,5 +129,21 @@ export default abstract class SimpleLanguagePlugin
    */
   getLanguages(): Iterable<string> {
     return this.languages;
+  }
+
+  /**
+   * Check if a language is supported by this {@link SimpleLanguagePlugin}.
+   *
+   * @param query THe language of interest.
+   * @returns `true` if the language is supported, `false` otherwise.
+   */
+  private supportsLanguage(query: string): boolean {
+    for (const language of this.languages) {
+      if (language === query) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

@@ -107,15 +107,18 @@ suite("SimpleLanguagePlugin", function() {
     ];
 
     for (const { name, cases } of scenarios) {
-      const factories: Map<string, ExpressionFactory> = new Map();
       test(name, function() {
         for (const testCase of cases) {
           const { embedsGetters, expectedEmbeds, languages } = testCase;
           const plugin = new ConcreteSimpleLanguagePlugin(
             languages,
-            factories,
+            new Map(),
             embedsGetters,
           );
+
+          const unsupportedFile = { content: "", type: "not a language" };
+          const noEmbeds = plugin.getEmbeds(unsupportedFile);
+          expect(noEmbeds).to.have.length(0);
 
           for (const [i, language] of languages.entries()) {
             const file = { content: "", type: language };
