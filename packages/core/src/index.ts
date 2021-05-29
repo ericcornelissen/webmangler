@@ -8,6 +8,7 @@ import type {
   WebManglerLanguagePlugin,
 } from "./types";
 
+import { getEmbeds, reEmbed } from "./embeds";
 import manglerEngine from "./engine";
 import { toArrayIfNeeded } from "./helpers";
 
@@ -63,12 +64,17 @@ function getExpressions(
  * @param options The options for the mangler.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.18
+ * @version v0.1.21
  */
 export default function webmangler<Files extends Iterable<WebManglerFile>>(
   files: Files,
   options: WebManglerOptions,
 ): Files {
+  const embedsMap = getEmbeds(files, options.languages);
+
+  const filesAndEmbeds = Array.from(files);
+  embedsMap.forEach((embeds) => filesAndEmbeds.push(...embeds));
+
   const configs = extractOptions(options.plugins);
   for (const config of configs) {
     const expressions = getExpressions(
@@ -76,9 +82,10 @@ export default function webmangler<Files extends Iterable<WebManglerFile>>(
       config.languageOptions,
     );
 
-    files = manglerEngine(files, expressions, config);
+    manglerEngine(filesAndEmbeds, expressions, config);
   }
 
+  embedsMap.forEach(reEmbed);
   return files;
 }
 

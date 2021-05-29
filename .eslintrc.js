@@ -92,6 +92,7 @@ module.exports = {
     // See: https://github.com/nodesecurity/eslint-plugin-security#rules
     "security/detect-object-injection": "off", // Too many false positives
     "security/detect-non-literal-regexp": "off", // Risk tolerated, DOS out-of-scope
+    "security/detect-unsafe-regex": "off", // Rely on CodeQL instead
   },
   settings: {
     jsdoc: {

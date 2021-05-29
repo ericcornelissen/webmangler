@@ -1,5 +1,9 @@
 import type { TestScenario } from "@webmangler/testing";
-import type { ExpressionFactory } from "../simple-language-plugin.class";
+import type {
+  EmbedsGetter,
+  ExpressionFactory,
+} from "../simple-language-plugin.class";
+import type { WebManglerEmbed } from "../../../types";
 
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
@@ -13,12 +17,123 @@ class ConcreteSimpleLanguagePlugin extends SimpleLanguagePlugin {
   constructor(
     languages: string[],
     expressionFactories: Map<string, ExpressionFactory>,
+    embedsGetters?: Iterable<EmbedsGetter>,
   ) {
-    super(languages, expressionFactories);
+    super(languages, expressionFactories, embedsGetters);
   }
 }
 
 suite("SimpleLanguagePlugin", function() {
+  suite("::getEmbeds", function() {
+    type TestCase = {
+      languages: string[];
+      embedsGetters: EmbedsGetter[],
+      expectedEmbeds: WebManglerEmbed[],
+    };
+
+    const embed1: WebManglerEmbed = {
+      content: ".foobar { color: red; }",
+      type: "css",
+      startIndex: 3,
+      endIndex: 14,
+      getRaw(): string {
+        return "color: red;";
+      },
+    };
+    const embed2: WebManglerEmbed = {
+      content: "var x = document.getElementById(\"bar\");",
+      type: "js",
+      startIndex: 36,
+      endIndex: 77,
+      getRaw(): string {
+        return "var x = document.getElementById(\"bar\");";
+      },
+    };
+    const embed3: WebManglerEmbed = {
+      content: "let foo = document.querySelector(\".bar\");",
+      type: "js",
+      startIndex: 42,
+      endIndex: 85,
+      getRaw(): string {
+        return "let foo = document.querySelector(\".bar\");";
+      },
+    };
+
+    const scenarios: TestScenario<TestCase>[] = [
+      {
+        name: "sample",
+        cases: [
+          {
+            languages: ["html"],
+            embedsGetters: [
+              sinon.stub().returns([embed1]),
+            ],
+            expectedEmbeds: [embed1],
+          },
+          {
+            languages: ["html"],
+            embedsGetters: [
+              sinon.stub().returns([embed1]),
+              sinon.stub().returns([embed2]),
+            ],
+            expectedEmbeds: [embed1, embed2],
+          },
+          {
+            languages: ["html", "xhtml"],
+            embedsGetters: [
+              sinon.stub().returns([embed3]),
+            ],
+            expectedEmbeds: [embed3],
+          },
+        ],
+      },
+      {
+        name: "edge cases",
+        cases: [
+          {
+            languages: ["css"],
+            embedsGetters: [],
+            expectedEmbeds: [],
+          },
+          {
+            languages: [],
+            embedsGetters: [
+              sinon.stub().returns([]),
+            ],
+            expectedEmbeds: [],
+          },
+        ],
+      },
+    ];
+
+    for (const { name, cases } of scenarios) {
+      test(name, function() {
+        for (const testCase of cases) {
+          const { embedsGetters, expectedEmbeds, languages } = testCase;
+          const plugin = new ConcreteSimpleLanguagePlugin(
+            languages,
+            new Map(),
+            embedsGetters,
+          );
+
+          const unsupportedFile = { content: "", type: "not a language" };
+          const noEmbeds = plugin.getEmbeds(unsupportedFile);
+          expect(noEmbeds).to.have.length(0);
+
+          for (const [i, language] of languages.entries()) {
+            const file = { content: "", type: language };
+            const embeds = plugin.getEmbeds(file);
+            expect(embeds).to.deep.equal(expectedEmbeds);
+
+            for (const embedsGetter of embedsGetters) {
+              expect(embedsGetter).to.have.callCount(i + 1);
+            }
+          }
+        }
+      });
+    }
+  });
+
   suite("::getExpressions", function() {
     type TestCase = {
       testGets: { expressionSetName: string, options: unknown }[],

@@ -17,6 +17,18 @@ suite("Built-in JavaScript Language Plugin", function() {
     expect(() => new JavaScriptLanguagePlugin({})).not.to.throw();
   });
 
+  suite("::getEmbeds", function() {
+    test("does not throw", function() {
+      const file = {
+        type: "css",
+        content: ".foo { color: red; }",
+      };
+
+      const plugin = new JavaScriptLanguagePlugin();
+      expect(() => plugin.getEmbeds(file)).not.to.throw();
+    });
+  });
+
   suite("::getExpressions", function() {
     let plugin: WebManglerLanguagePlugin;
 

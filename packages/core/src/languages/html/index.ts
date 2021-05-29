@@ -1,16 +1,14 @@
-import type { ExpressionFactory } from "../utils";
+import type { EmbedsGetter, ExpressionFactory } from "../utils";
 
 import { SimpleLanguagePlugin } from "../utils";
 import attributeExpressionFactory from "./attributes";
-import cssDeclarationPropertyExpressionFactory from "./css-properties";
-import cssDeclarationValueExpressionFactory from "./css-values";
+import embeddedCssFinders from "./embeds/css";
+import embeddedJsFinders from "./embeds/js";
 import multiValueAttributeExpressionFactory from "./multi-value-attributes";
 import singleValueAttributeExpressionFactory from "./single-value-attributes";
 
 const map: Map<string, ExpressionFactory> = new Map();
 map.set("attributes", attributeExpressionFactory);
-map.set("css-declaration-properties", cssDeclarationPropertyExpressionFactory);
-map.set("css-declaration-values", cssDeclarationValueExpressionFactory);
 map.set("multi-value-attributes", multiValueAttributeExpressionFactory);
 map.set("single-value-attributes", singleValueAttributeExpressionFactory);
 
@@ -77,6 +75,14 @@ export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
   ];
 
   /**
+   * The {@link EmbedsGetter}s used by the {@link HtmlLanguagePlugin}.
+   */
+  private static EMBEDS_GETTERS: EmbedsGetter[] = [
+    ...embeddedCssFinders,
+    ...embeddedJsFinders,
+  ];
+
+  /**
    * The {@link ExpressionFactory}s provided by the {@link HtmlLanguagePlugin}.
    */
   private static EXPRESSION_FACTORIES: Map<string, ExpressionFactory> = map;
@@ -92,6 +98,7 @@ export default class HtmlLanguagePlugin extends SimpleLanguagePlugin {
     super(
       HtmlLanguagePlugin.getLanguages(options.htmlExtensions),
       HtmlLanguagePlugin.EXPRESSION_FACTORIES,
+      HtmlLanguagePlugin.EMBEDS_GETTERS,
     );
   }
 
