@@ -26,6 +26,7 @@ export default class WebManglerPluginMock {
    *
    * @param [optionsStub] A {@link SinonStub} for the mock.
    * @since v0.1.1
+   * @deprecated Constructor will be replaced by one that accepts objects.
    */
   constructor(optionsStub?: SinonStub) {
     this.options = WebManglerPluginMock.getOptionsStub(optionsStub);

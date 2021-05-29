@@ -35,6 +35,7 @@ export default class MangleExpressionMock {
    * @param [findAllStub] A {@link SinonStub} for the mock.
    * @param [replaceAllStub] A {@link SinonStub} for the mock.
    * @since v0.1.1
+   * @deprecated Constructor will be replaced by one that accepts objects.
    */
   constructor(
     findAllStub?: SinonStub,

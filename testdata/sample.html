@@ -1,5 +1,19 @@
-<ul id="id-list" data-length="3">
-  <li class="cls-foo" data-index="1">foo</li>
-  <li class="cls-foo cls-bar" data-index="2">foobar</li>
-  <li class="cls-foo baz" data-index="3">foobaz</li>
-</ul>
+<html>
+  <head>
+    <style>
+      .cls-foo {
+        display: block;
+      }
+    </style>
+    <script>
+      var x = document.querySelectorAll(".cls-bar");
+    </script>
+  </head>
+  <body>
+    <ul id="id-list" style="--color: red;" data-length="3">
+      <li class="cls-foo" data-index="1">foo</li>
+      <li class="cls-foo cls-bar" data-index="2">foobar</li>
+      <li class="cls-foo baz" style="--color: blue;" data-index="3">foobaz</li>
+    </ul>
+  </body>
+</html>

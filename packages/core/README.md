@@ -11,7 +11,7 @@ plugins](#other-ways-to-use-webmangler).
 Install the `webmangler` core, e.g.:
 
 ```shell
-$ npm install webmangler --save-dev
+npm install webmangler --save-dev
 ```
 
 And use it programmatically, e.g.:

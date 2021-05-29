@@ -886,9 +886,12 @@ suite("CSS Class Mangler", function() {
         const cssClassMangler = new CssClassMangler({
           reservedClassNames: reserved,
         });
+
         const result = cssClassMangler.options();
         expect(result).to.have.property("reservedNames");
-        expect(result.reservedNames).to.include.members(reserved);
+
+        const reservedNames = Array.from(result.reservedNames as string[]);
+        expect(reservedNames).to.include.members(reserved);
       });
     });
 
@@ -950,9 +953,9 @@ suite("CSS Class Mangler", function() {
           const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
-          const attributeNames = options.attributeNames;
+          const attributeNames = Array.from(options.attributeNames);
           expect(attributeNames).not.to.be.undefined;
-          expect(attributeNames).to.include.keys(expected);
+          expect(attributeNames).to.include.members(expected);
         }
       });
     });

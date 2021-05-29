@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add `getEmbeds` to `WebManglerPluginLanguageMock`.
 
 ## [0.1.3] - 2021-05-12
 

@@ -11,9 +11,16 @@ let uniqueId = 0;
  * A simple mock for _WebMangler_'s {@link WebManglerPluginLanguage} interface.
  *
  * @since v0.1.1
- * @version v0.1.3
+ * @version v0.1.4
  */
 export default class WebManglerPluginLanguageMock {
+  /**
+   * The `getEmbeds` method of the mock.
+   *
+   * @since v0.1.4
+   */
+  public readonly getEmbeds: SinonStub;
+
   /**
    * The `getExpressions` method of the mock.
    *
@@ -34,16 +41,37 @@ export default class WebManglerPluginLanguageMock {
    *
    * @param [getExpressionsStub] A {@link SinonStub} for the mock.
    * @param [getLanguagesStub] A {@link SinonStub} for the mock.
+   * @param [getEmbedsStub] A {@link SinonStub} for the mock.
    * @since v0.1.1
+   * @version v0.1.4
+   * @deprecated Constructor will be replaced by one that accepts objects.
    */
   constructor(
     getExpressionsStub?: SinonStub,
     getLanguagesStub?: SinonStub,
+    getEmbedsStub?: SinonStub,
   ) {
+    this.getEmbeds =
+      WebManglerPluginLanguageMock.getGetEmbedsStub(getEmbedsStub);
     this.getExpressions =
       WebManglerPluginLanguageMock.getGetExpressionsStub(getExpressionsStub);
     this.getLanguages =
       WebManglerPluginLanguageMock.getGetLanguagesStub(getLanguagesStub);
+  }
+
+  /**
+   * Get the `getEmbeds` {@link SinonStub} for an {@link
+   * WebManglerPluginLanguageMock} instance.
+   *
+   * @param [providedStub] The provided {@link SinonStub}, if any.
+   * @returns A {@link SinonStub} for the `getEmbeds` method.
+   */
+  private static getGetEmbedsStub(providedStub?: SinonStub): SinonStub {
+    if (providedStub) {
+      return providedStub;
+    }
+
+    return sinon.stub().returns([uniqueId++]);
   }
 
   /**
