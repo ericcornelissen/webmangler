@@ -39,6 +39,115 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "comments",
+      cases: [
+        {
+          input: "<!--<div class=\"foo bar\"></div>-->",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+        {
+          input: "<!--<div class=foobar></div>-->",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+        {
+          input: `
+            <div class="foo bar"></div>
+            <!--<div class="foo baz"></div>-->
+          `,
+          pattern: "[a-z]+",
+          expected: ["foo", "bar"],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+        {
+          input: `
+            <!--<div class="foo baz"></div>-->
+            <div class="foo bar"></div>
+          `,
+          pattern: "[a-z]+",
+          expected: ["foo", "bar"],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+      ],
+    },
+    {
+      name: "HTML content",
+      cases: [
+        {
+          input: "<div>class=\"foo bar\"</div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+        {
+          input: "<div class=\"foo bar\">class=\"foo baz\"</div>",
+          pattern: "[a-z]+",
+          expected: ["foo", "bar"],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+        {
+          input: "<div>class=foobar</div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+        {
+          input: "<div class=foobar>class=foobaz</div>",
+          pattern: "[a-z]+",
+          expected: ["foobar", "foobar"],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+      ],
+    },
+    {
+      name: "attribute value",
+      cases: [
+        {
+          input: "<div id=\"class='foo bar'\"></div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+        {
+          input: "<div id='class=\"foo bar\"'></div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+        {
+          input: "<div id=\"class=foobar\"></div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["class"],
+          },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

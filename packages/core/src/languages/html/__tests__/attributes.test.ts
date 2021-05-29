@@ -45,6 +45,75 @@ suite("HTML - Attribute Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "comments",
+      cases: [
+        {
+          input: "<!--<div data-foobar></div>-->",
+          pattern: "[a-z\\-]+",
+          expected: [],
+          options: null,
+        },
+        {
+          input: "<!--<div data-foo=\"bar\"></div>-->",
+          pattern: "[a-z\\-]+",
+          expected: [],
+          options: null,
+        },
+        {
+          input: `
+            <div data-foo="bar"></div>
+            <!--<div data-foo="baz"></div>-->
+          `,
+          pattern: "[a-z\\-]+",
+          expected: ["data-foo", "data-foo"],
+          options: null,
+        },
+        {
+          input: `
+            <!--<div data-foo="bar"></div>-->
+            <div data-foo="baz"></div>
+          `,
+          pattern: "[a-z\\-]+",
+          expected: ["data-foo", "data-foo"],
+          options: null,
+        },
+      ],
+    },
+    {
+      name: "HTML content",
+      cases: [
+        {
+          input: "<div data-foo>data-bar</div>",
+          pattern: "[a-z\\-]+",
+          expected: ["data-foo", "data-foo"],
+          options: null,
+        },
+        {
+          input: "<div data-foo=\"bar\">data-baz</div>",
+          pattern: "[a-z\\-]+",
+          expected: ["data-foo", "data-foo"],
+          options: null,
+        },
+      ],
+    },
+    {
+      name: "attribute value",
+      cases: [
+        {
+          input: "<div id=\"data-foo\"></div>",
+          pattern: "data-[a-z]+",
+          expected: [],
+          options: null,
+        },
+        {
+          input: "<div id='data-foo'></div>",
+          pattern: "data-[a-z]+",
+          expected: [],
+          options: null,
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {
