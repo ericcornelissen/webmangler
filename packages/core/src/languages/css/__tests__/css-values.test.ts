@@ -1,98 +1,110 @@
 import type { CssDeclarationValueOptions } from "../../options";
-import type { CssDeclarationValuesMap } from "./types";
+import type { CssDeclarationBlockMap, TestCase } from "./types";
 
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
 import {
-  createDeclaration,
   createCssDeclarationBlock,
+  createCssDeclarations,
   generateValueObjects,
+  generateValueObjectsAll,
 } from "./common";
-import * as cssSampleValues from "./values";
+import { valuePresets } from "./values";
 
 import expressionsFactory from "../css-values";
 
 suite("CSS - CSS Value Expression Factory", function() {
-  type TestConfig = {
-    readonly expected: string[];
-    readonly factoryOptions: CssDeclarationValueOptions;
-    readonly pattern: string;
-  }
-
-  const valuesToTestConfig: Map<string, TestConfig[]> = new Map([
-    [
-      "red",
-      [
+  const scenarios: TestCase<CssDeclarationValueOptions>[] = [
+    {
+      name: "one declaration, no configuration",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["red"],
+      testValues: [
         {
-          pattern: "[a-z]+",
-          factoryOptions: { },
-          expected: ["red"],
+          property: valuePresets.property,
+          beforeValue: valuePresets.beforeValue,
+          value: ["red"],
+          afterValue: valuePresets.afterValue,
         },
       ],
-    ],
-    [
-      "42px",
-      [
+    },
+    {
+      name: "one declaration, prefix configured",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "[0-9]+",
+      },
+      expected: ["px"],
+      testValues: [
         {
-          pattern: "[0-9]+",
-          factoryOptions: { suffix: "px" },
-          expected: ["42"],
-        },
-        {
-          pattern: "[a-z]+",
-          factoryOptions: { prefix: "[0-9]+" },
-          expected: ["px"],
-        },
-      ],
-    ],
-    [
-      "0 3px 0 14px",
-      [
-        {
-          pattern: "[0-9]+",
-          factoryOptions: { suffix: "px" },
-          expected: ["3", "14"],
+          property: valuePresets.property,
+          beforeValue: valuePresets.beforeValue,
+          value: ["42px"],
+          afterValue: valuePresets.afterValue,
         },
       ],
-    ],
-  ]);
+    },
+    {
+      name: "one declaration, suffix configured",
+      pattern: "[0-9]+",
+      factoryOptions: {
+        suffix: "px",
+      },
+      expected: ["36"],
+      testValues: [
+        {
+          property: valuePresets.property,
+          beforeValue: valuePresets.beforeValue,
+          value: ["36px"],
+          afterValue: valuePresets.afterValue,
+        },
+      ],
+    },
+    {
+      name: "one declaration, multi-value",
+      pattern: "[0-9]+",
+      factoryOptions: {
+        suffix: "px",
+      },
+      expected: ["3", "14"],
+      testValues: [
+        {
+          property: valuePresets.property,
+          beforeValue: valuePresets.beforeValue,
+          value: ["0 3px 0 14px"],
+          afterValue: valuePresets.afterValue,
+        },
+      ],
+    },
+  ];
 
-  const declarationValueOptions: CssDeclarationValuesMap = {
-    property: [
-      ...cssSampleValues.propertyNames,
-    ],
-    beforeValue: [
-      ...cssSampleValues.whitespace,
-      ...cssSampleValues.comments,
-    ],
-    value: valuesToTestConfig.keys(),
-    afterValue: [
-      ...cssSampleValues.whitespace,
-      ...cssSampleValues.comments,
-      ...cssSampleValues.importantRule,
-    ],
-  };
+  for (const scenario of scenarios) {
+    const {
+      name,
+      pattern,
+      factoryOptions,
+      expected,
+      testValues,
+    } = scenario;
 
-  test("all generated", function() {
-    for (const testCase of generateValueObjects(declarationValueOptions)) {
-      const testCaseConfigs = valuesToTestConfig.get(testCase.value);
-      if (testCaseConfigs === undefined) {
-        expect.fail(`missing test config for value "${testCase.value}"`);
-      }
+    test(name, function() {
+      const cssBlockValues: CssDeclarationBlockMap = {
+        selector: ["div"],
+        declarations: function*(): IterableIterator<string> {
+          for (const decls of generateValueObjectsAll(testValues)) {
+            yield createCssDeclarations(decls);
+          }
+        }(),
+      };
 
-      for (const testCaseConfig of testCaseConfigs) {
-        const { expected, factoryOptions, pattern } = testCaseConfig;
-
-        const input = createCssDeclarationBlock({
-          selector: "div",
-          declarations: createDeclaration(testCase),
-        });
-
+      for (const testCase of generateValueObjects(cssBlockValues)) {
+        const input = createCssDeclarationBlock(testCase);
         const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
         expect(matches).to.deep.equal(expected, `in \`${input}\``);
       }
-    }
-  });
+    });
+  }
 });

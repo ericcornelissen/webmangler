@@ -6,7 +6,7 @@ import type { CssDeclarationValues, CssDeclarationBlockValues } from "./types";
  * @param values The values to construct a CSS declaration from.
  * @returns A CSS declaration.
  */
-export function createDeclaration(
+function createCssDeclaration(
   values: CssDeclarationValues,
 ): string {
   const {
@@ -27,6 +27,22 @@ export function createDeclaration(
     afterValue +
     ";";
 }
+
+/**
+ * Create a syntactically valid CSS declarations from a list of collections of
+ * values.
+ *
+ * @param declarationsValues One or more {@link CssDeclarationValues}.
+ * @returns CSS declarations.
+ */
+export function createCssDeclarations(
+  declarationsValues: Iterable<CssDeclarationValues>,
+): string {
+  return Array.from(declarationsValues).reduce((s, declarationValues) => {
+    return s + createCssDeclaration(declarationValues);
+  }, "");
+}
+
 /**
  * Create a syntactically valid CSS declarations block from a collection of
  * values.
@@ -55,19 +71,19 @@ export function createCssDeclarationBlock(
 /**
  * Generate key-value objects from a key-(many values) object.
  *
- * @param valuesMap The source of possible values.
- * @yields An object for eery possible combination of values in the `valuesMap`.
+ * @param valuesSource The source of possible values.
+ * @yields An object for all possible combinations of values in the input.
  */
 export function* generateValueObjects<T extends string>(
-  valuesMap: { [key in T]?: Iterable<string> },
+  valuesSource: { [key in T]?: Iterable<string> },
 ): IterableIterator<{ [key in T]: string }> {
-  const entry = Object.entries(valuesMap).pop();
+  const entry = Object.entries(valuesSource).pop();
   if (entry === undefined) {
     yield { } as { [key in T]: string };
   } else {
     const [key, values] = entry as [T, string[]];
 
-    const clone = Object.assign({ }, valuesMap);
+    const clone = Object.assign({ }, valuesSource);
     delete clone[key];
 
     for (const value of values) {
@@ -77,3 +93,27 @@ export function* generateValueObjects<T extends string>(
     }
   }
 }
+
+/**
+ * Generate arrays of key-value objects from arrays of key-(many values) object.
+ *
+ * @param valuesSources Any number of sources of possible values.
+ * @yields All possible combinations of objects for each entry in the input.
+ */
+export function* generateValueObjectsAll<T extends string>(
+  valuesSources: Iterable<{ [key in T]?: Iterable<string> }>,
+): IterableIterator<Iterable<{ [key in T]?: string }>> {
+  const clone = Array.from(valuesSources);
+  const current = clone.shift();
+  if (current === undefined) {
+    yield [];
+  } else {
+    for (const instance of generateValueObjects(current)) {
+      for (const otherInstances of generateValueObjectsAll(clone)) {
+        yield [instance, ...otherInstances];
+      }
+    }
+  }
+}
+
+

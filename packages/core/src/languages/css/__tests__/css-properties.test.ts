@@ -1,92 +1,178 @@
-import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "../../__tests__/test-types";
 import type { CssDeclarationPropertyOptions } from "../../options";
+import type { CssDeclarationBlockMap, TestCase } from "./types";
 
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
+import {
+  createCssDeclarationBlock,
+  createCssDeclarations,
+  generateValueObjects,
+  generateValueObjectsAll,
+} from "./common";
+import { valuePresets } from "./values";
 
-import cssDeclarationPropertyExpressionFactory from "../css-properties";
+import expressionsFactory from "../css-properties";
 
 suite("CSS - CSS Property Expression Factory", function() {
-  const scenarios: TestScenario<TestCase<CssDeclarationPropertyOptions>>[] = [
+  const scenarios: TestCase<CssDeclarationPropertyOptions>[] = [
     {
-      name: "sample",
-      cases: [
+      name: "one declaration, no configuration",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["color"],
+      testValues: [
         {
-          input: "div { color: red; }",
-          pattern: "[a-z]+",
-          expected: ["color"],
-          options: { },
-        },
-        {
-          input: "div { color: red; font: serif; }",
-          pattern: "[a-z]+",
-          expected: ["color", "font"],
-          options: { },
-        },
-        {
-          input: "div { color: red; font-size: 12px; }",
-          pattern: "[a-z]+",
-          expected: ["size"],
-          options: {
-            prefix: "font-",
-          },
-        },
-        {
-          input: "div { padding-left: 3px; margin-left: 14px; }",
-          pattern: "[a-z]+",
-          expected: ["padding", "margin"],
-          options: {
-            suffix: "-left",
-          },
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["color"],
+          afterProperty: valuePresets.afterProperty,
+          beforeValue: valuePresets.beforeValue,
+          value: valuePresets.value,
         },
       ],
     },
     {
-      name: "with comments",
-      cases: [
+      name: "one declaration, prefix configured",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "font-",
+      },
+      expected: ["family"],
+      testValues: [
         {
-          input: "div { /* set the color */ color: red; }",
-          pattern: "[a-z]+",
-          expected: ["color"],
-          options: { },
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["font-family"],
+          afterProperty: valuePresets.afterProperty,
+          beforeValue: valuePresets.beforeValue,
+          value: valuePresets.value,
+        },
+      ],
+    },
+    {
+      name: "one declaration, suffix configured",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        suffix: "-right",
+      },
+      expected: ["margin"],
+      testValues: [
+        {
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["margin-right"],
+          afterProperty: valuePresets.afterProperty,
+          beforeValue: valuePresets.beforeValue,
+          value: valuePresets.value,
+        },
+      ],
+    },
+    {
+      name: "one declaration, prefix & suffix configured",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "--",
+        suffix: "bar",
+      },
+      expected: ["foo"],
+      testValues: [
+        {
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["--foobar"],
+          afterProperty: valuePresets.afterProperty,
+          beforeValue: valuePresets.beforeValue,
+          value: valuePresets.value,
+        },
+      ],
+    },
+    {
+      name: "two declarations, no configuration",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["color", "font"],
+      testValues: [
+        {
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["color"],
+          afterProperty: valuePresets.afterProperty,
+          value: ["red"],
         },
         {
-          input: "div { color: red; /* set the font */ font: serif; }",
-          pattern: "[a-z]+",
-          expected: ["color", "font"],
-          options: { },
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["font"],
+          afterProperty: valuePresets.afterProperty,
+          value: ["serif"],
+        },
+      ],
+    },
+    {
+      name: "two declarations, prefix configured",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "margin-",
+      },
+      expected: ["left", "right"],
+      testValues: [
+        {
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["margin-left"],
+          afterProperty: valuePresets.afterProperty,
+          value: ["3px"],
         },
         {
-          input: "div { color /* set the color */: red; }",
-          pattern: "[a-z]+",
-          expected: ["color"],
-          options: { },
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["margin-right"],
+          afterProperty: valuePresets.afterProperty,
+          value: ["14px"],
+        },
+      ],
+    },
+    {
+      name: "two declarations, suffix configured",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        suffix: "-top",
+      },
+      expected: ["margin", "padding"],
+      testValues: [
+        {
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["margin-top"],
+          afterProperty: valuePresets.afterProperty,
+          value: ["3px"],
         },
         {
-          input: "div { font: /* set the font */ serif; }",
-          pattern: "[a-z]+",
-          expected: ["font"],
-          options: { },
+          beforeProperty: valuePresets.beforeProperty,
+          property: ["padding-top"],
+          afterProperty: valuePresets.afterProperty,
+          value: ["14px"],
         },
       ],
     },
   ];
 
-  for (const { name, cases } of scenarios) {
-    test(name, function() {
-      for (const testCase of cases) {
-        const {
-          input,
-          pattern,
-          expected,
-          options,
-        } = testCase;
+  for (const scenario of scenarios) {
+    const {
+      name,
+      pattern,
+      factoryOptions,
+      expected,
+      testValues,
+    } = scenario;
 
-        const expressions = cssDeclarationPropertyExpressionFactory(options);
+    test(name, function() {
+      const cssBlockValues: CssDeclarationBlockMap = {
+        selector: ["div"],
+        declarations: function*(): IterableIterator<string> {
+          for (const decls of generateValueObjectsAll(testValues)) {
+            yield createCssDeclarations(decls);
+          }
+        }(),
+      };
+
+      for (const testCase of generateValueObjects(cssBlockValues)) {
+        const input = createCssDeclarationBlock(testCase);
+        const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected);
+        expect(matches).to.deep.equal(expected, `in \`${input}\``);
       }
     });
   }
