@@ -48,7 +48,8 @@ export default class NestedGroupMangleExpression implements MangleExpression {
    * named group to match and replace.
    *
    * NOTE 1: whitespace is automatically removed from both templates.
-   * NOTE 2: the class assumes the provided group is present in both templates.
+   * NOTE 2: the class assumes the provided group is present in the template. If
+   * it is not this class will fail silently.
    *
    * @param patternTemplate The top-level template.
    * @param subPatternTemplate The sub template.
@@ -68,19 +69,22 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.20
+   * @version v0.1.21
    */
   public * findAll(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(this.patternTemplate, pattern);
     let match: RegExpExecArray | null = null;
     while ((match = regExp.exec(s)) !== null) {
       const groups = match.groups as RegExpMatchGroups;
-      const subStr = groups[this.groupName];
+      if (this.didMatch(groups)) {
+        const subStr = groups[this.groupName];
 
-      const regExpSub = this.newRegExp(this.subPatternTemplate, pattern);
-      let matchSub: RegExpExecArray | null = null;
-      while ((matchSub = regExpSub.exec(subStr)) !== null) {
-        const subGroups = matchSub.groups as RegExpMatchGroups;
-        yield subGroups[this.groupName];
+        const regExpSub = this.newRegExp(this.subPatternTemplate, pattern);
+        let matchSub: RegExpExecArray | null = null;
+        while ((matchSub = regExpSub.exec(subStr)) !== null) {
+          const subGroups = matchSub.groups as RegExpMatchGroups;
+          yield subGroups[this.groupName];
+        }
       }
     }
   }
@@ -88,6 +92,7 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.12
+   * @version v0.1.21
    */
   public replaceAll(
     str: string,
@@ -100,27 +105,29 @@ export default class NestedGroupMangleExpression implements MangleExpression {
     const pattern = Array.from(replacements.keys()).join("|");
     const regExp = this.newRegExp(this.patternTemplate, pattern);
     const regExpSub = this.newRegExp(this.subPatternTemplate, pattern);
-    return str.replace(regExp, (...args: unknown[]): string => {
-      const subStr = this.extractGroup(args);
-      return subStr.replace(regExpSub, (...subArgs: unknown[]): string => {
-        const original = this.extractGroup(subArgs);
-        const replacement = replacements.get(original);
-        return replacement as string;
-      });
+    return str.replace(regExp, (match: string, ...args: unknown[]): string => {
+      const groups = args[args.length - 1] as RegExpMatchGroups;
+      if (this.didMatch(groups)) {
+        const subStr = groups[this.groupName];
+        return subStr.replace(regExpSub, (...subArgs: unknown[]): string => {
+          const original = this.extractGroup(subArgs);
+          const replacement = replacements.get(original);
+          return replacement as string;
+        });
+      } else {
+        return match;
+      }
     });
   }
 
   /**
-   * Create a new {@link RegExp} from a given `patternTemplate` and a given
-   * string or pattern.
+   * Determine if the configured group matched.
    *
-   * @param template The regular expression template.
-   * @param pattern The string or pattern of interest.
-   * @returns A {@link RegExp} corresponding to the `template` and `pattern`.
+   * @param groups The {@link RegExpMatchGroups}.
+   * @returns `true` if the configured group matched, `false` otherwise.
    */
-  private newRegExp(template: string, pattern: string): RegExp {
-    const rawExpr = printf(template, `(?:${pattern})`);
-    return new RegExp(rawExpr, "gm");
+  private didMatch(groups: RegExpMatchGroups): boolean {
+    return groups[this.groupName] !== undefined;
   }
 
   /**
@@ -138,5 +145,18 @@ export default class NestedGroupMangleExpression implements MangleExpression {
     const groups = args[args.length - 1] as RegExpMatchGroups;
     const groupValue = groups[this.groupName];
     return groupValue;
+  }
+
+  /**
+   * Create a new {@link RegExp} from a given `patternTemplate` and a given
+   * string or pattern.
+   *
+   * @param template The regular expression template.
+   * @param pattern The string or pattern of interest.
+   * @returns A {@link RegExp} corresponding to the `template` and `pattern`.
+   */
+  private newRegExp(template: string, pattern: string): RegExp {
+    const rawExpr = printf(template, `(?:${pattern})`);
+    return new RegExp(rawExpr, "gm");
   }
 }
