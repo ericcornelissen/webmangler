@@ -44,7 +44,7 @@ export default class WebManglerPluginLanguageMock {
    * @param [getEmbedsStub] A {@link SinonStub} for the mock.
    * @since v0.1.1
    * @version v0.1.4
-   * @deprecated
+   * @deprecated Constructor will be replaced by one that accepts objects.
    */
   constructor(
     getExpressionsStub?: SinonStub,

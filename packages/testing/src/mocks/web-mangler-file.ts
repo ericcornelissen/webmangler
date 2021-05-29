@@ -2,6 +2,7 @@
  * A simple mock for _WebMangler_'s {@link WebManglerFile} interface.
  *
  * @since v0.1.1
+ * @deprecated Mock will be removed as it has no functionality.
  */
 export default class WebManglerFileMock {
   /**
