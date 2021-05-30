@@ -39,7 +39,7 @@ console.log(mangledFiles[0]);
 // Outputs:  { type: "css", content: "..." }
 ```
 
-Which will mangler CSS classes, CSS variables, and HTML data attributes in CSS,
+Which will mangle CSS classes, CSS variables, and HTML data attributes in CSS,
 HTML, and JavaScript.
 
 ## Other ways to use WebMangler

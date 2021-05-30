@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.21] - 2021-05-30
+
 - Add support for mangling CSS embedded in HTML.
 - Add support for mangling JavaScript embedded in HTML.
 - Fix mangling CSS values when `!important` is used.

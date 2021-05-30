@@ -149,8 +149,8 @@ const file = new MangleExpressionMock(filetype, content);
 #### `WebManglerPluginLanguageMock`
 
 A mocked implementation of the `WebManglerPluginLanguage` type. Can be
-instantiated with custom `getExpressions()` and `getLanguages()` behaviour if
-needed.
+instantiated with custom `getEmbeds()`,  `getExpressions()` and `getLanguages()`
+behaviour if needed.
 
 ##### Example
 
@@ -175,6 +175,7 @@ plugin = new WebManglerPluginLanguageMock(getExpressionsStub);
 | ---------------- | ------ | ------------------------------------- |
 | `getExpressions` | [Stub] | Implementation of `getExpressions()`. |
 | `getLanguages`   | [Stub] | Implementation of `getLanguages()`.   |
+| `getEmbeds`      | [Stub] | Implementation of `getEmbeds()`.      |
 
 #### `WebManglerPluginMock`
 
