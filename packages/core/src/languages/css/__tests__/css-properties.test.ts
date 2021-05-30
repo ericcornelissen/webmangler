@@ -72,6 +72,47 @@ suite("CSS - CSS Property Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "edge cases",
+      cases: [
+        {
+          input: "div { content: \"color: red;\"; }",
+          pattern: "[a-z]+",
+          expected: ["content"],
+          options: { },
+        },
+        {
+          input: "div { content: \"; color: red;\"; }",
+          pattern: "[a-z]+",
+          expected: ["content"],
+          options: { },
+        },
+        {
+          input: "div { content: 'color: red;'; }",
+          pattern: "[a-z]+",
+          expected: ["content"],
+          options: { },
+        },
+        {
+          input: "div { content: '; color: red;'; }",
+          pattern: "[a-z]+",
+          expected: ["content"],
+          options: { },
+        },
+        {
+          input: "div { color: red; /* font: serif; */ }",
+          pattern: "[a-z]+",
+          expected: ["color"],
+          options: { },
+        },
+        {
+          input: "div { color: red /*; font: serif; */ }",
+          pattern: "[a-z]+",
+          expected: ["color"],
+          options: { },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

@@ -51,6 +51,35 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "edge cases",
+      cases: [
+        {
+          input: ".foo { content: \"[data-foo='bar']\"; }",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["data-foo"],
+          },
+        },
+        {
+          input: ".foo { content: '[data-foo=\"bar\"]'; }",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["data-foo"],
+          },
+        },
+        {
+          input: "div/*[data-foo=\"bar\"]*/ { }",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["data-foo"],
+          },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

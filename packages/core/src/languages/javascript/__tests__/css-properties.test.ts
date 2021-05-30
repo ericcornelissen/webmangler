@@ -37,6 +37,29 @@ suite("JavaScript - CSS Property Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "edge cases",
+      cases: [
+        {
+          input: `
+            // $element.style.getPropertyValue("font");
+            $element.style.getPropertyValue("color");
+          `,
+          pattern: "[a-z]+",
+          expected: ["color"],
+          options: { },
+        },
+        {
+          input: `
+            /* $element.style.getPropertyValue("color"); */
+            $element.style.getPropertyValue("font");
+          `,
+          pattern: "[a-z]+",
+          expected: ["font"],
+          options: { },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

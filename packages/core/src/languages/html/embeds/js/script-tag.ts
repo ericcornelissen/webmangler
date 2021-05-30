@@ -5,7 +5,7 @@ import { EMBED_TYPE } from "./common";
 /**
  * A regular expression to find script tags in HTML.
  */
-const REGEXP_SCRIPT_TAG = /(<script(?:>|\s[^>]*>))([^<]+)<\/script\s*>/gm;
+const REGEXP_SCRIPT_TAG = /(?:<!--.*-->|(?<t><script(?:>|\s[^>]*>))(?<v>[^<]+)<\/script\s*>)/gm;
 
 /**
  * Convert a {@link REGEXP_SCRIPT_TAG} match into a {@link WebManglerEmbed}.
@@ -13,9 +13,13 @@ const REGEXP_SCRIPT_TAG = /(<script(?:>|\s[^>]*>))([^<]+)<\/script\s*>/gm;
  * @param match A {@link RegExpExecArray}.
  * @returns The {@link WebManglerEmbed}.
  */
-function scriptTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
-  const tag = match[1];
-  const script = match[2];
+function scriptTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed | null {
+  const groups = match.groups as { [key: string]: string; };
+  const tag = groups.t;
+  const script = groups.v;
+  if (script === undefined) {
+    return null;
+  }
 
   const startIndex = match.index + tag.length;
   const endIndex = startIndex + script.length;
@@ -50,7 +54,9 @@ export function getScriptTagsAsEmbeds(
   let match: RegExpExecArray | null = null;
   while ((match = REGEXP_SCRIPT_TAG.exec(file.content)) !== null) {
     const embed = scriptTagMatchToEmbed(match);
-    result.push(embed);
+    if (embed !== null) {
+      result.push(embed);
+    }
   }
 
   return result;

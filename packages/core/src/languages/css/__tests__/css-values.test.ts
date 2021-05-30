@@ -102,6 +102,47 @@ suite("CSS - CSS Value Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "edge cases",
+      cases: [
+        {
+          input: "div { content: \"color: red;\"; color: blue; }",
+          pattern: "[a-z]+",
+          expected: ["blue"],
+          options: { },
+        },
+        {
+          input: "div { content: \"; color: red;\"; color: blue; }",
+          pattern: "[a-z]+",
+          expected: ["blue"],
+          options: { },
+        },
+        {
+          input: "div { content: 'color: red;'; color: blue; }",
+          pattern: "[a-z]+",
+          expected: ["blue"],
+          options: { },
+        },
+        {
+          input: "div { content: '; color: red;'; color: blue; }",
+          pattern: "[a-z]+",
+          expected: ["blue"],
+          options: { },
+        },
+        {
+          input: "div { color: red; /* font: serif; */ }",
+          pattern: "[a-z]+",
+          expected: ["red"],
+          options: { },
+        },
+        {
+          input: "div { color: red /*; font: serif; */ }",
+          pattern: "[a-z]+",
+          expected: ["red"],
+          options: { },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

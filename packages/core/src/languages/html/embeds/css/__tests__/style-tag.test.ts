@@ -59,6 +59,50 @@ suite("HTML CSS Embeds - <style> tag", function() {
       ],
     },
     {
+      name: "comments",
+      cases: [
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<!--<style>.foobar { color: red; }</style>-->",
+          ),
+          expected: [],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<!--<style>.foobar { color: red; }</style>-->" +
+            "<style>.foobar { color: blue; }</style>",
+          ),
+          expected: [
+            {
+              content: ".foobar { color: blue; }",
+              type: EMBED_TYPE_CSS,
+              startIndex: 52,
+              endIndex: 76,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<style>.foobar { color: red; }</style>" +
+            "<!--<style>.foobar { color: blue; }</style>-->",
+          ),
+          expected: [
+            {
+              content: ".foobar { color: red; }",
+              type: EMBED_TYPE_CSS,
+              startIndex: 7,
+              endIndex: 30,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: "edge cases",
       cases: [
         {

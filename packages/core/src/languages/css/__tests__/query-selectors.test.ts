@@ -131,6 +131,59 @@ suite("CSS - Query Selector Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "edge cases",
+      cases: [
+        {
+          input: ".foo { content: \".bar { }\"; }",
+          pattern: "[a-z]+",
+          expected: ["foo"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: ".praise[data-the=\".sun { }\"] { }",
+          pattern: "[a-z]+",
+          expected: ["praise"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: ".foo { content: '.bar { }'; }",
+          pattern: "[a-z]+",
+          expected: ["foo"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: ".praise[data-the='.sun { }'] { }",
+          pattern: "[a-z]+",
+          expected: ["praise"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: ".foo/*, .bar */ { }",
+          pattern: "[a-z]+",
+          expected: ["foo"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+        {
+          input: ".foo { } /* .bar { } */ ",
+          pattern: "[a-z]+",
+          expected: ["foo"],
+          options: {
+            prefix: "\\.",
+          },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

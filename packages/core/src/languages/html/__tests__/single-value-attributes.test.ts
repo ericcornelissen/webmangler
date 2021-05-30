@@ -73,6 +73,115 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "comments",
+      cases: [
+        {
+          input: "<!--<div id=\"foobar\"></div>-->",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: "<!--<div id=foobar></div>-->",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: `
+            <div id="foobar"></div>
+            <!--<div id="foobaz"></div>-->
+          `,
+          pattern: "[a-z]+",
+          expected: ["foobar", "foobar"],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: `
+            <!--<div id="foobaz"></div>-->
+            <div id="foobar"></div>
+          `,
+          pattern: "[a-z]+",
+          expected: ["foobar", "foobar"],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+      ],
+    },
+    {
+      name: "HTML content",
+      cases: [
+        {
+          input: "<div>id=\"foobar\"</div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: "<div id=\"foobar\">id=\"foobaz\"</div>",
+          pattern: "[a-z]+",
+          expected: ["foobar", "foobar"],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: "<div>id=foobar</div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: "<div id=foobar>id=foobaz</div>",
+          pattern: "[a-z]+",
+          expected: ["foobar"],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+      ],
+    },
+    {
+      name: "attribute value",
+      cases: [
+        {
+          input: "<div data-foo=\"id='bar'\"></div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: "<div data-foo='id=\"bar\"'></div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+        {
+          input: "<div data-foo=\"id=bar\"></div>",
+          pattern: "[a-z]+",
+          expected: [],
+          options: {
+            attributeNames: ["id"],
+          },
+        },
+      ],
+    },
   ];
 
   for (const { name, cases } of scenarios) {

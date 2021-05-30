@@ -5,12 +5,12 @@ import { EMBED_TYPE } from "./common";
 /**
  * A regular expression to find style attribute with quoted values in HTML.
  */
-const REGEXP_QUOTED = /(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*(?<q>"|'))([^"']+)(?=\k<q>)/gm;
+const REGEXP_QUOTED = /(?:<!--.*-->|(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*(?<q>"|'))(?<v>[^"']+)(?=\k<q>))/gm;
 
 /**
  * A regular expression to find style attribute with unquoted values in HTML.
  */
-const REGEXP_UNQUOTED = /(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*)([^"'\s/>]+)/gm;
+const REGEXP_UNQUOTED = /(?:<!--.*-->|(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*)(?<v>[^"'\s/>]+))/gm;
 
 /**
  * Convert a {@link REGEXP_QUOTED} or {@link REGEXP_UNQUOTED} match into a
@@ -19,10 +19,16 @@ const REGEXP_UNQUOTED = /(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"
  * @param match A {@link RegExpExecArray}.
  * @returns The {@link WebManglerEmbed}.
  */
-function styleAttributeMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
+function styleAttributeMatchToEmbed(
+  match: RegExpExecArray,
+): WebManglerEmbed | null {
   const SELECTOR = ":root";
 
-  const declarations = match[0];
+  const groups = match.groups as { [key: string]: string; };
+  const declarations = groups.v;
+  if (declarations === undefined) {
+    return null;
+  }
 
   const startIndex = match.index;
   const endIndex = startIndex + declarations.length;
@@ -55,7 +61,9 @@ function matchAndGetEmbeds(
   let match: RegExpExecArray | null = null;
   while ((match = regExp.exec(file.content)) !== null) {
     const embed = styleAttributeMatchToEmbed(match);
-    result.push(embed);
+    if (embed !== null) {
+      result.push(embed);
+    }
   }
 
   return result;

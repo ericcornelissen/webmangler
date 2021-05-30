@@ -5,7 +5,7 @@ import { EMBED_TYPE } from "./common";
 /**
  * A regular expression to find style tags in HTML.
  */
-const REGEXP_STYLE_TAG = /(<\s*style(?:\s[^>]*>|>))([^<]+)<\/style\s*>/gm;
+const REGEXP_STYLE_TAG = /(?:<!--.*-->|(?<t><\s*style(?:\s[^>]*>|>))(?<v>[^<]+)<\/style\s*>)/gm;
 
 /**
  * Convert a {@link REGEXP_STYLE_TAG} match into a {@link WebManglerEmbed}.
@@ -13,9 +13,13 @@ const REGEXP_STYLE_TAG = /(<\s*style(?:\s[^>]*>|>))([^<]+)<\/style\s*>/gm;
  * @param match A {@link RegExpExecArray}.
  * @returns The {@link WebManglerEmbed}.
  */
-function styleTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed {
-  const tag = match[1];
-  const stylesheet = match[2];
+function styleTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed | null {
+  const groups = match.groups as { [key: string]: string; };
+  const tag = groups.t;
+  const stylesheet = groups.v;
+  if (stylesheet === undefined) {
+    return null;
+  }
 
   const startIndex = match.index + tag.length;
   const endIndex = startIndex + stylesheet.length;
@@ -50,7 +54,9 @@ export function getStyleTagsAsEmbeds(
   let match: RegExpExecArray | null = null;
   while ((match = REGEXP_STYLE_TAG.exec(file.content)) !== null) {
     const embed = styleTagMatchToEmbed(match);
-    result.push(embed);
+    if (embed !== null) {
+      result.push(embed);
+    }
   }
 
   return result;

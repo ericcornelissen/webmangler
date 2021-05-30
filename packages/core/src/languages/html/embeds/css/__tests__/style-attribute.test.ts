@@ -111,6 +111,57 @@ suite("HTML CSS Embeds - Style attribute", function() {
       ],
     },
     {
+      name: "comments",
+      cases: [
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<!--<div style=\"color: red;\"><div>-->",
+          ),
+          expected: [],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<!--<div style=color:red;><div>-->",
+          ),
+          expected: [],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<!--<div style=\"color: red;\"><div>-->" +
+            "<div style=\"color: red;\"><div>",
+          ),
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 49,
+              endIndex: 60,
+              getRaw(): string { return "color: red;"; },
+            },
+          ],
+        },
+        {
+          file: new WebManglerFileMock(
+            "html",
+            "<div style=\"color: red;\"><div>" +
+            "<!--<div style=\"color: red;\"><div>-->",
+          ),
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 12,
+              endIndex: 23,
+              getRaw(): string { return "color: red;"; },
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: "edge cases",
       cases: [
         {
