@@ -26,7 +26,7 @@
     "postpublish": "npm run clean"
   },
   "devDependencies": {
-    "typescript": "4.2.4"
+    "typescript": "4.3.2"
   },
   "engines": {
     "node": ">=12.16.0"
