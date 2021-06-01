@@ -7,7 +7,6 @@ import type {
   TestCase,
 } from "./types";
 
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
 import {
@@ -975,7 +974,7 @@ suite("CSS Class Mangler", function() {
     });
 
     test("without extra reserved", function() {
-      const files = [new WebManglerFileMock("css", content)];
+      const files = [{ type: "css", content: content }];
 
       const cssClassMangler = new CssClassMangler({
         classNamePattern: "cls-[0-9]+",
@@ -994,7 +993,7 @@ suite("CSS Class Mangler", function() {
     });
 
     test("with extra reserved", function() {
-      const files = [new WebManglerFileMock("css", content)];
+      const files = [{ type: "css", content: content }];
 
       const cssClassMangler = new CssClassMangler({
         classNamePattern: "cls-[0-9]+",
@@ -1033,7 +1032,7 @@ function run(language: string, scenarios: TestScenario<TestCase>[]): void {
           description: failureMessage,
         } = testCase;
 
-        const files = [new WebManglerFileMock(language, input)];
+        const files = [{ type: language, content: input }];
 
         const cssClassMangler = new CssClassMangler({
           classNamePattern: classNamePattern || DEFAULT_PATTERN,

@@ -11,7 +11,7 @@ let uniqueId = 0;
  * A simple mock for _WebMangler_'s {@link WebManglerPluginLanguage} interface.
  *
  * @since v0.1.1
- * @version v0.1.4
+ * @version v0.1.5
  */
 export default class WebManglerPluginLanguageMock {
   /**
@@ -39,24 +39,23 @@ export default class WebManglerPluginLanguageMock {
    * Create a new {@link WebManglerPluginLanguageMock}. Optionally with specific
    * behaviour.
    *
-   * @param [getExpressionsStub] A {@link SinonStub} for the mock.
-   * @param [getLanguagesStub] A {@link SinonStub} for the mock.
-   * @param [getEmbedsStub] A {@link SinonStub} for the mock.
-   * @since v0.1.1
-   * @version v0.1.4
-   * @deprecated Constructor will be replaced by one that accepts objects.
+   * @param [stubs] The stubs for this mock.
+   * @param [stubs.getEmbeds] A {@link SinonStub} for `getEmbeds`.
+   * @param [stubs.getExpressions] A {@link SinonStub} for `getExpressions`.
+   * @param [stubs.getLanguages] A {@link SinonStub} for `getLanguages`.
+   * @since v0.1.5
    */
-  constructor(
-    getExpressionsStub?: SinonStub,
-    getLanguagesStub?: SinonStub,
-    getEmbedsStub?: SinonStub,
-  ) {
+  constructor(stubs?: {
+    getEmbeds?: SinonStub,
+    getExpressions?: SinonStub,
+    getLanguages?: SinonStub,
+  }) {
     this.getEmbeds =
-      WebManglerPluginLanguageMock.getGetEmbedsStub(getEmbedsStub);
+      WebManglerPluginLanguageMock.getGetEmbedsStub(stubs?.getEmbeds);
     this.getExpressions =
-      WebManglerPluginLanguageMock.getGetExpressionsStub(getExpressionsStub);
+      WebManglerPluginLanguageMock.getGetExpressionsStub(stubs?.getExpressions);
     this.getLanguages =
-      WebManglerPluginLanguageMock.getGetLanguagesStub(getLanguagesStub);
+      WebManglerPluginLanguageMock.getGetLanguagesStub(stubs?.getLanguages);
   }
 
   /**

@@ -11,7 +11,7 @@ let uniqueId = 0;
  * A simple mock for _WebMangler_'s {@link MangleExpression} interface.
  *
  * @since v0.1.1
- * @version v0.1.4
+ * @version v0.1.5
  */
 export default class MangleExpressionMock {
   /**
@@ -32,19 +32,19 @@ export default class MangleExpressionMock {
    * Create a new {@link MangleExpressionMock}. Optionally with specific
    * behaviour.
    *
-   * @param [findAllStub] A {@link SinonStub} for the mock.
-   * @param [replaceAllStub] A {@link SinonStub} for the mock.
-   * @since v0.1.1
-   * @deprecated Constructor will be replaced by one that accepts objects.
+   * @param [stubs] The stubs for this mock.
+   * @param [stubs.findAll] A {@link SinonStub} for `findAll`.
+   * @param [stubs.replaceAll] A {@link SinonStub} for `replaceAll`.
+   * @since v0.1.5
    */
-  constructor(
-    findAllStub?: SinonStub,
-    replaceAllStub?: SinonStub,
-  ) {
+  constructor(stubs?: {
+    findAll?: SinonStub,
+    replaceAll?: SinonStub,
+  }) {
     this.findAll =
-      MangleExpressionMock.getFindAllStub(findAllStub);
+      MangleExpressionMock.getFindAllStub(stubs?.findAll);
     this.replaceAll =
-      MangleExpressionMock.getReplaceAllStub(replaceAllStub);
+      MangleExpressionMock.getReplaceAllStub(stubs?.replaceAll);
   }
 
   /**

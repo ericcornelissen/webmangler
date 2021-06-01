@@ -19,7 +19,9 @@ suite("WebManglerPluginMock", function() {
     test("custom stub", function() {
       const optionsStub: SinonStub = sinon.stub();
 
-      const pluginMock = new WebManglerPluginMock(optionsStub);
+      const pluginMock = new WebManglerPluginMock({
+        options: optionsStub,
+      });
       expect(pluginMock.options).not.to.throw();
       expect(optionsStub).to.have.callCount(1);
     });

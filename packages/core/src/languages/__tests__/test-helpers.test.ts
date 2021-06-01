@@ -37,9 +37,9 @@ suite("Language Plugins Test Helpers", function() {
         cases: [
           {
             expressions: [
-              new MangleExpressionMock(
-                sinon.stub().returns(["the", "sun"]),
-              ),
+              new MangleExpressionMock({
+                findAll: sinon.stub().returns(["the", "sun"]),
+              }),
             ],
             input: "praise the sun",
             pattern: "[a-z]",
@@ -47,12 +47,12 @@ suite("Language Plugins Test Helpers", function() {
           },
           {
             expressions: [
-              new MangleExpressionMock(
-                sinon.stub().returns(["the", "sun"]),
-              ),
-              new MangleExpressionMock(
-                sinon.stub().returns(["ise", "the"]),
-              ),
+              new MangleExpressionMock({
+                findAll: sinon.stub().returns(["the", "sun"]),
+              }),
+              new MangleExpressionMock({
+                findAll: sinon.stub().returns(["ise", "the"]),
+              }),
             ],
             input: "praise the sun",
             pattern: "[a-z]",

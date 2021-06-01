@@ -1,7 +1,6 @@
 import type { WebManglerEmbed, WebManglerFile } from "../../../../../types";
 
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
 import {
@@ -39,7 +38,7 @@ suite("CSS - Embeds - Find <style> Tag Embeds", function() {
     let file: WebManglerFile;
     let embeds: Iterable<WebManglerEmbed> = [];
     const result = benchmarkFn({
-      setup: () => file = new WebManglerFileMock("html", fileContent),
+      setup: () => file = { type: "html", content: fileContent },
       fn: () => embeds = getStyleTagsAsEmbeds(file),
     });
 
@@ -56,7 +55,7 @@ suite("CSS - Embeds - Find <style> Tag Embeds", function() {
     let file: WebManglerFile;
     let embeds: Iterable<WebManglerEmbed> = [];
     const result = benchmarkFn({
-      setup: () => file = new WebManglerFileMock("html", fileContent),
+      setup: () => file = { type: "html", content: fileContent },
       fn: () => embeds = getStyleTagsAsEmbeds(file),
     });
 
@@ -73,7 +72,7 @@ suite("CSS - Embeds - Find <style> Tag Embeds", function() {
     let file: WebManglerFile;
     let embeds: Iterable<WebManglerEmbed> = [];
     const result = benchmarkFn({
-      setup: () => file = new WebManglerFileMock("html", fileContent),
+      setup: () => file = { type: "html", content: fileContent },
       fn: () => embeds = getStyleTagsAsEmbeds(file),
     });
 

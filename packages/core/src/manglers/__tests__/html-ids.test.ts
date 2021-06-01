@@ -7,7 +7,6 @@ import type {
   TestCase,
 } from "./types";
 
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as R from "ramda";
 
@@ -1072,7 +1071,7 @@ function run(language: string, scenarios: TestScenario<TestCase>[]): void {
           description: failureMessage,
         } = testCase;
 
-        const files = [new WebManglerFileMock(language, input)];
+        const files = [{ type: language, content: input }];
 
         const htmlIdMangler = new HtmlIdMangler({
           idNamePattern: idNamePattern || DEFAULT_PATTERN,

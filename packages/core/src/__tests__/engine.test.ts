@@ -2,7 +2,7 @@ import type { TestScenario } from "@webmangler/testing";
 import type { CharSet } from "../characters";
 import type { MangleExpression, WebManglerFile } from "../types";
 
-import { MangleExpressionMock, WebManglerFileMock } from "@webmangler/testing";
+import { MangleExpressionMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
@@ -26,32 +26,44 @@ suite("ManglerEngine", function() {
       name: "one file",
       cases: [
         {
-          files: [new WebManglerFileMock("css", ".foo { } #bar { }")],
-          expected: [new WebManglerFileMock("css", ".a { } #bar { }")],
+          files: [{
+            type: "css",
+            content: ".foo { } #bar { }",
+          }],
+          expected: [{
+            type: "css",
+            content: ".a { } #bar { }",
+          }],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo { } #bar { }", "[a-z]+")
                 .returns(["foo"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo { } #bar { }", new Map([["foo", "a"]]))
                 .returns(".a { } #bar { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
-          files: [new WebManglerFileMock("css", ".foo { } .cls-bar { }")],
-          expected: [new WebManglerFileMock("css", ".foo { } .a { }")],
+          files: [{
+            type: "css",
+            content: ".foo { } .cls-bar { }",
+          }],
+          expected: [{
+            type: "css",
+            content: ".foo { } .a { }",
+          }],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo { } .cls-bar { }", "cls-[a-z]+")
                 .returns(["cls-bar"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo { } .cls-bar { }", new Map([["cls-bar", "a"]]))
                 .returns(".foo { } .a { }"),
-            )]],
+            })]],
           ]),
           patterns: "cls-[a-z]+",
         },
@@ -62,16 +74,28 @@ suite("ManglerEngine", function() {
       cases: [
         {
           files: [
-            new WebManglerFileMock("css", ".foo { }"),
-            new WebManglerFileMock("css", "#bar { }"),
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+            {
+              type: "css",
+              content: "#bar { }",
+            },
           ],
           expected: [
-            new WebManglerFileMock("css", ".a { }"),
-            new WebManglerFileMock("css", "#bar { }"),
+            {
+              type: "css",
+              content: ".a { }",
+            },
+            {
+              type: "css",
+              content: "#bar { }",
+            },
           ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .callsFake((content) => {
                   if (content === ".foo { }") {
                     return ["foo"];
@@ -79,7 +103,7 @@ suite("ManglerEngine", function() {
 
                   return [];
                 }),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content) => {
                   if (content === ".foo { }") {
                     return ".a { }";
@@ -89,22 +113,34 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
           files: [
-            new WebManglerFileMock("css", ".foo { }"),
-            new WebManglerFileMock("css", ".bar { }"),
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+            {
+              type: "css",
+              content: ".bar { }",
+            },
           ],
           expected: [
-            new WebManglerFileMock("css", ".a { }"),
-            new WebManglerFileMock("css", ".b { }"),
+            {
+              type: "css",
+              content: ".a { }",
+            },
+            {
+              type: "css",
+              content: ".b { }",
+            },
           ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .callsFake((content) => {
                   if (content === ".foo { }") {
                     return ["foo"];
@@ -112,7 +148,7 @@ suite("ManglerEngine", function() {
                     return ["bar"];
                   }
                 }),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content) => {
                   if (content === ".foo { }") {
                     return ".a { }";
@@ -122,22 +158,34 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
           files: [
-            new WebManglerFileMock("css", ".foo { }"),
-            new WebManglerFileMock("css", ".foo { } .bar { }"),
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+            {
+              type: "css",
+              content: ".foo { } .bar { }",
+            },
           ],
           expected: [
-            new WebManglerFileMock("css", ".a { }"),
-            new WebManglerFileMock("css", ".a { } .b { }"),
+            {
+              type: "css",
+              content: ".a { }",
+            },
+            {
+              type: "css",
+              content: ".a { } .b { }",
+            },
           ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .callsFake((content) => {
                   if (content === ".foo { }") {
                     return ["foo"];
@@ -145,7 +193,7 @@ suite("ManglerEngine", function() {
                     return ["foo", "bar"];
                   }
                 }),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content) => {
                   if (content === ".foo { }") {
                     return ".a { }";
@@ -155,36 +203,48 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
           files: [
-            new WebManglerFileMock("css", ".foo { }"),
-            new WebManglerFileMock("html", "<div class=\"cls-foo cls-bar\">"),
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+            {
+              type: "html",
+              content: "<div class=\"cls-foo cls-bar\">",
+            },
           ],
           expected: [
-            new WebManglerFileMock("css", ".a { }"),
-            new WebManglerFileMock("html", "<div class=\"b c\">"),
+            {
+              type: "css",
+              content: ".a { }",
+            },
+            {
+              type: "html",
+              content: "<div class=\"b c\">",
+            },
           ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo { }", "[a-z]+")
                 .returns(["foo"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo { }", sinon.match.map)
                 .returns(".a { }"),
-            )]],
-            ["html", [new MangleExpressionMock(
-              sinon.stub()
+            })]],
+            ["html", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs("<div class=\"cls-foo cls-bar\">", "[a-z]+")
                 .returns(["cls-foo", "cls-bar"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs("<div class=\"cls-foo cls-bar\">", sinon.match.map)
                 .returns("<div class=\"b c\">"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
@@ -194,14 +254,24 @@ suite("ManglerEngine", function() {
       name: "custom character set",
       cases: [
         {
-          files: [new WebManglerFileMock("css", ".another, .one, .bites, .de_dust { }")],
-          expected: [new WebManglerFileMock("css", ".a, .b, .c, .aa { }")],
+          files: [
+            {
+              type: "css",
+              content: ".another, .one, .bites, .de_dust { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .b, .c, .aa { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".another, .one, .bites, .de_dust { }", "[a-z_]+")
                 .returns(["another", "one", "bites", "de_dust"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".another, .one, .bites, .de_dust { }", new Map([
                   ["another", "a"],
                   ["one", "b"],
@@ -209,20 +279,30 @@ suite("ManglerEngine", function() {
                   ["de_dust", "aa"],
                 ]))
                 .returns(".a, .b, .c, .aa { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z_]+",
           charSet: ["a", "b", "c"],
         },
         {
-          files: [new WebManglerFileMock("css", ".another, .one, .bites, .de_dust { }")],
-          expected: [new WebManglerFileMock("css", ".c, .b, .a, .cc { }")],
+          files: [
+            {
+              type: "css",
+              content: ".another, .one, .bites, .de_dust { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".c, .b, .a, .cc { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".another, .one, .bites, .de_dust { }", "[a-z_]+")
                 .returns(["another", "one", "bites", "de_dust"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".another, .one, .bites, .de_dust { }", new Map([
                   ["another", "c"],
                   ["one", "b"],
@@ -230,26 +310,36 @@ suite("ManglerEngine", function() {
                   ["de_dust", "cc"],
                 ]))
                 .returns(".c, .b, .a, .cc { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z_]+",
           charSet: ["c", "b", "a"],
         },
         {
-          files: [new WebManglerFileMock("css", ".foo { } .bar { }")],
-          expected: [new WebManglerFileMock("css", ".x { } .xx { }")],
+          files: [
+            {
+              type: "css",
+              content: ".foo { } .bar { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".x { } .xx { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo { } .bar { }", "[a-z_]+")
                 .returns(["foo", "bar"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo { } .bar { }", new Map([
                   ["foo", "x"],
                   ["bar", "xx"],
                 ]))
                 .returns(".x { } .xx { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
           charSet: ["x"],
@@ -260,36 +350,56 @@ suite("ManglerEngine", function() {
       name: "reserved names",
       cases: [
         {
-          files: [new WebManglerFileMock("css", ".foo { } .bar { }")],
-          expected: [new WebManglerFileMock("css", ".a { } .c { }")],
+          files: [
+            {
+              type: "css",
+              content: ".foo { } .bar { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a { } .c { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo { } .bar { }", "[a-z]+")
                 .returns(["foo", "bar"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo { } .bar { }", new Map([
                   ["foo", "a"],
                   ["bar", "c"],
                 ]))
                 .returns(".a { } .c { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
           reservedNames: ["b"],
         },
         {
-          files: [new WebManglerFileMock("css", ".foo { }")],
-          expected: [new WebManglerFileMock("css", ".c { }")],
+          files: [
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".c { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo { }", "[a-z]+")
                 .returns(["foo"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo { }", new Map([["foo", "c"]]))
                 .returns(".c { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
           reservedNames: ["a", "b"],
@@ -300,20 +410,30 @@ suite("ManglerEngine", function() {
       name: "mangling prefix",
       cases: [
         {
-          files: [new WebManglerFileMock("css", ".foo { } .bar { }")],
-          expected: [new WebManglerFileMock("css", ".cls-a { } .cls-b { }")],
+          files: [
+            {
+              type: "css",
+              content: ".foo { } .bar { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".cls-a { } .cls-b { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo { } .bar { }", "[a-z]+")
                 .returns(["foo", "bar"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo { } .bar { }", new Map([
                   ["foo", "cls-a"],
                   ["bar", "cls-b"],
                 ]))
                 .returns(".cls-a { } .cls-b { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
           manglePrefix: "cls-",
@@ -324,20 +444,30 @@ suite("ManglerEngine", function() {
       name: "reserved names & mangling prefix",
       cases: [
         {
-          files: [new WebManglerFileMock("css", ".foo { } .bar { }")],
-          expected: [new WebManglerFileMock("css", ".cls-b { } .cls-c { }")],
+          files: [
+            {
+              type: "css",
+              content: ".foo { } .bar { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".cls-b { } .cls-c { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo { } .bar { }", "[a-z]+")
                 .returns(["foo", "bar"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo { } .bar { }", new Map([
                   ["foo", "cls-b"],
                   ["bar", "cls-c"],
                 ]))
                 .returns(".cls-b { } .cls-c { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
           reservedNames: ["a"],
@@ -349,42 +479,76 @@ suite("ManglerEngine", function() {
       name: "input files not supported",
       cases: [
         {
-          files: [new WebManglerFileMock("css", ".foo { }")],
-          expected: [new WebManglerFileMock("css", ".foo { }")],
+          files: [
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+          ],
           expressions: new Map(),
           patterns: "",
         },
         {
           files: [
-            new WebManglerFileMock("css", ".foo { }"),
-            new WebManglerFileMock("html", "<p>Hello world!</p>"),
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+            {
+              type: "html",
+              content: "<p>Hello world!</p>",
+            },
           ],
           expected: [
-            new WebManglerFileMock("css", ".a { }"),
-            new WebManglerFileMock("html", "<p>Hello world!</p>"),
+            {
+              type: "css",
+              content: ".a { }",
+            },
+            {
+              type: "html",
+              content: "<p>Hello world!</p>",
+            },
           ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo { }", "[a-z]+")
                 .returns(["foo"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo { }", new Map([
                   ["foo", "a"],
                 ]))
                 .returns(".a { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
           files: [
-            new WebManglerFileMock("css", ".foo { }"),
-            new WebManglerFileMock("html", "<p>Hello world!</p>"),
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+            {
+              type: "html",
+              content: "<p>Hello world!</p>",
+            },
           ],
           expected: [
-            new WebManglerFileMock("css", ".foo { }"),
-            new WebManglerFileMock("html", "<p>Hello world!</p>"),
+            {
+              type: "css",
+              content: ".foo { }",
+            },
+            {
+              type: "html",
+              content: "<p>Hello world!</p>",
+            },
           ],
           expressions: new Map([
             ["html", []],
@@ -397,20 +561,30 @@ suite("ManglerEngine", function() {
       name: "mangles based on frequency",
       cases: [
         {
-          files: [new WebManglerFileMock("css", ".foo, .bar { } .bar { }")],
-          expected: [new WebManglerFileMock("css", ".b, .a { } .a { }")],
+          files: [
+            {
+              type: "css",
+              content: ".foo, .bar { } .bar { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".b, .a { } .a { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".foo, .bar { } .bar { }", "[a-z]+")
                 .returns(["foo", "bar", "bar"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .withArgs(".foo, .bar { } .bar { }", new Map([
                   ["foo", "b"],
                   ["bar", "a"],
                 ]))
                 .returns(".b, .a { } .a { }"),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
@@ -420,14 +594,24 @@ suite("ManglerEngine", function() {
       name: "strings to mangle intersect with mangled string",
       cases: [
         {
-          files: [new WebManglerFileMock("css", ".c, .a { }")],
-          expected: [new WebManglerFileMock("css", ".a, .b { }")],
+          files: [
+            {
+              type: "css",
+              content: ".c, .a { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .b { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".c, .a { }", "[a-z]+")
                 .returns(["c", "a"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -436,19 +620,29 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
-          files: [new WebManglerFileMock("css", ".b { } .a { }")],
-          expected: [new WebManglerFileMock("css", ".a { } .b { }")],
+          files: [
+            {
+              type: "css",
+              content: ".b { } .a { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a { } .b { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".b { } .a { }", "[a-z]+")
                 .returns(["b", "a"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -457,20 +651,30 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
           description: "mangled source may be re-mangled",
         },
         {
-          files: [new WebManglerFileMock("css", ".b, .a, .z { } .a.b { }")],
-          expected: [new WebManglerFileMock("css", ".a, .b, .c { } .b.a { }")],
+          files: [
+            {
+              type: "css",
+              content: ".b, .a, .z { } .a.b { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .b, .c { } .b.a { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".b, .a, .z { } .a.b { }", "[a-z]+")
                 .returns(["b", "a", "z", "a", "b"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -479,19 +683,29 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
-          files: [new WebManglerFileMock("css", ".b, .z, .a { } .a.b { }")],
-          expected: [new WebManglerFileMock("css", ".a, .c, .b { } .b.a { }")],
+          files: [
+            {
+              type: "css",
+              content: ".b, .z, .a { } .a.b { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .c, .b { } .b.a { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".b, .z, .a { } .a.b { }", "[a-z]+")
                 .returns(["b", "z", "a", "a", "b"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -500,19 +714,29 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
-          files: [new WebManglerFileMock("css", ".z, .b, .a { } .a.b { }")],
-          expected: [new WebManglerFileMock("css", ".c, .a, .b { } .b.a { }")],
+          files: [
+            {
+              type: "css",
+              content: ".z, .b, .a { } .a.b { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".c, .a, .b { } .b.a { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".z, .b, .a { } .a.b { }", "[a-z]+")
                 .returns(["z", "b", "a", "a", "b"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -521,19 +745,29 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
-          files: [new WebManglerFileMock("css", ".b, .a, .x, .y { }")],
-          expected: [new WebManglerFileMock("css", ".a, .b, .c, .d { }")],
+          files: [
+            {
+              type: "css",
+              content: ".b, .a, .x, .y { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .b, .c, .d { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".b, .a, .x, .y { }", "[a-z]+")
                 .returns(["b", "a", "x", "y"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -542,19 +776,29 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
-          files: [new WebManglerFileMock("css", ".b, .a, .c, .d { }")],
-          expected: [new WebManglerFileMock("css", ".a, .b, .c, .d { }")],
+          files: [
+            {
+              type: "css",
+              content: ".b, .a, .c, .d { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .b, .c, .d { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".b, .a, .c, .d { }", "[a-z]+")
                 .returns(["b", "a", "c", "d"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -563,19 +807,29 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
-          files: [new WebManglerFileMock("css", ".d, .c, .b, .a { }")],
-          expected: [new WebManglerFileMock("css", ".a, .b, .c, .d { }")],
+          files: [
+            {
+              type: "css",
+              content: ".d, .c, .b, .a { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .b, .c, .d { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".d, .c, .b, .a { }", "[a-z]+")
                 .returns(["d", "c", "b", "a"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -584,19 +838,29 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
-          files: [new WebManglerFileMock("css", ".c, .d, .b, .a { }")],
-          expected: [new WebManglerFileMock("css", ".a, .b, .c, .d { }")],
+          files: [
+            {
+              type: "css",
+              content: ".c, .d, .b, .a { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .b, .c, .d { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".c, .d, .b, .a { }", "[a-z]+")
                 .returns(["c", "d", "b", "a"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -605,19 +869,29 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
         {
-          files: [new WebManglerFileMock("css", ".x, .a, .b { }")],
-          expected: [new WebManglerFileMock("css", ".a, .b, .c { }")],
+          files: [
+            {
+              type: "css",
+              content: ".x, .a, .b { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .b, .c { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".x, .a, .b { }", "[a-z]+")
                 .returns(["x", "a", "b"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   map.forEach((value: string, key: string) => {
                     const expr = new RegExp(key, "g");
@@ -626,7 +900,7 @@ suite("ManglerEngine", function() {
 
                   return content;
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },
@@ -636,39 +910,59 @@ suite("ManglerEngine", function() {
       name: "already mangled",
       cases: [
         {
-          files: [new WebManglerFileMock("css", ".a { }")],
-          expected: [new WebManglerFileMock("css", ".a { }")],
+          files: [
+            {
+              type: "css",
+              content: ".a { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".a { }", "[a-z]+")
                 .returns(["a"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   if (map.size === 0) {
                     return content;
                   }
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
           description: "no changes expected if source is already mangled",
         },
         {
-          files: [new WebManglerFileMock("css", ".a, .b { }")],
-          expected: [new WebManglerFileMock("css", ".a, .b { }")],
+          files: [
+            {
+              type: "css",
+              content: ".a, .b { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a, .b { }",
+            },
+          ],
           expressions: new Map([
-            ["css", [new MangleExpressionMock(
-              sinon.stub()
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
                 .withArgs(".a, .b { }", "[a-z]+")
                 .returns(["a", "b"]),
-              sinon.stub()
+              replaceAll: sinon.stub()
                 .callsFake((content, map) => {
                   if (map.size === 0) {
                     return content;
                   }
                 }),
-            )]],
+            })]],
           ]),
           patterns: "[a-z]+",
         },

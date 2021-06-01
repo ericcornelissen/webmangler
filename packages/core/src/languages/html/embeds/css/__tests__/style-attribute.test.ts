@@ -2,7 +2,6 @@ import type { TestScenario } from "@webmangler/testing";
 
 import type { TestCase } from "../../__tests__/types";
 
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getStyleAttributesAsEmbeds } from "../style-attribute";
@@ -17,10 +16,10 @@ suite("HTML CSS Embeds - Style attribute", function() {
       name: "sample",
       cases: [
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<div style=\"color: red;\"><div>",
-          ),
+          file: {
+            type: "html",
+            content: "<div style=\"color: red;\"><div>",
+          },
           expected: [
             {
               content: prepareContent("color: red;"),
@@ -32,10 +31,10 @@ suite("HTML CSS Embeds - Style attribute", function() {
           ],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<div disabled style=\"color: blue;\"><div>",
-          ),
+          file: {
+            type: "html",
+            content: "<div disabled style=\"color: blue;\"><div>",
+          },
           expected: [
             {
               content: prepareContent("color: blue;"),
@@ -47,10 +46,10 @@ suite("HTML CSS Embeds - Style attribute", function() {
           ],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<div id=\"foobar\" style=\"color: blue;\"><div>",
-          ),
+          file: {
+            type: "html",
+            content: "<div id=\"foobar\" style=\"color: blue;\"><div>",
+          },
           expected: [
             {
               content: prepareContent("color: blue;"),
@@ -62,15 +61,15 @@ suite("HTML CSS Embeds - Style attribute", function() {
           ],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<html>" +
-            "<head>" +
-            "<div style=\"color: red;\"></div>" +
-            "<p style=\"font: serif;\"></p>" +
-            "</head>" +
-            "</html>",
-          ),
+          file: {
+            type: "html",
+            content: "<html>" +
+              "<head>" +
+              "<div style=\"color: red;\"></div>" +
+              "<p style=\"font: serif;\"></p>" +
+              "</head>" +
+              "</html>",
+          },
           expected: [
             {
               content: prepareContent("color: red;"),
@@ -94,10 +93,10 @@ suite("HTML CSS Embeds - Style attribute", function() {
       name: "no quotes",
       cases: [
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<div style=color:red;><div>",
-          ),
+          file: {
+            type: "html",
+            content: "<div style=color:red;><div>",
+          },
           expected: [
             {
               content: prepareContent("color:red;"),
@@ -114,25 +113,25 @@ suite("HTML CSS Embeds - Style attribute", function() {
       name: "comments",
       cases: [
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<!--<div style=\"color: red;\"><div>-->",
-          ),
+          file: {
+            type: "html",
+            content: "<!--<div style=\"color: red;\"><div>-->",
+          },
           expected: [],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<!--<div style=color:red;><div>-->",
-          ),
+          file: {
+            type: "html",
+            content: "<!--<div style=color:red;><div>-->",
+          },
           expected: [],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<!--<div style=\"color: red;\"><div>-->" +
-            "<div style=\"color: red;\"><div>",
-          ),
+          file: {
+            type: "html",
+            content: "<!--<div style=\"color: red;\"><div>-->" +
+              "<div style=\"color: red;\"><div>",
+          },
           expected: [
             {
               content: prepareContent("color: red;"),
@@ -144,11 +143,11 @@ suite("HTML CSS Embeds - Style attribute", function() {
           ],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<div style=\"color: red;\"><div>" +
-            "<!--<div style=\"color: red;\"><div>-->",
-          ),
+          file: {
+            type: "html",
+            content: "<div style=\"color: red;\"><div>" +
+              "<!--<div style=\"color: red;\"><div>-->",
+          },
           expected: [
             {
               content: prepareContent("color: red;"),
@@ -165,21 +164,24 @@ suite("HTML CSS Embeds - Style attribute", function() {
       name: "edge cases",
       cases: [
         {
-          file: new WebManglerFileMock("html", "<div>foobar</div>"),
+          file: {
+            type: "html",
+            content: "<div>foobar</div>",
+          },
           expected: [],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<div style=\"\">foobar</div>",
-          ),
+          file: {
+            type: "html",
+            content: "<div style=\"\">foobar</div>",
+          },
           expected: [],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<div style=\" \">foobar</div>",
-          ),
+          file: {
+            type: "html",
+            content: "<div style=\" \">foobar</div>",
+          },
           expected: [
             {
               content: prepareContent(" "),
@@ -191,10 +193,10 @@ suite("HTML CSS Embeds - Style attribute", function() {
           ],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<div style=\"color: red;\" style=\"font: serif;\"><div>",
-          ),
+          file: {
+            type: "html",
+            content: "<div style=\"color: red;\" style=\"font: serif;\"><div>",
+          },
           expected: [
             {
               content: prepareContent("color: red;"),
@@ -213,10 +215,10 @@ suite("HTML CSS Embeds - Style attribute", function() {
           ],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<div data-value=\">\" style=\"color: red;\"><div>",
-          ),
+          file: {
+            type: "html",
+            content: "<div data-value=\">\" style=\"color: red;\"><div>",
+          },
           expected: [
             {
               content: prepareContent("color: red;"),

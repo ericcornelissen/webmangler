@@ -1,7 +1,6 @@
 import type { WebManglerFile } from "../../../types";
 
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { embedContentInContext } from "./benchmark-helpers";
@@ -45,7 +44,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
 
     let files: WebManglerFile[] = [];
     const result = benchmarkFn({
-      setup: () => files = [new WebManglerFileMock("js", fileContent)],
+      setup: () => files = [{ type: "js", content: fileContent }],
       fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 
@@ -61,7 +60,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
 
     let files: WebManglerFile[] = [];
     const result = benchmarkFn({
-      setup: () => files = [new WebManglerFileMock("js", fileContent)],
+      setup: () => files = [{ type: "js", content: fileContent }],
       fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 
@@ -77,7 +76,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
 
     let files: WebManglerFile[] = [];
     const result = benchmarkFn({
-      setup: () => files = [new WebManglerFileMock("js", fileContent)],
+      setup: () => files = [{ type: "js", content: fileContent }],
       fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 

@@ -19,7 +19,9 @@ suite("MangleExpressionMock", function() {
     test("custom stub", function() {
       const findAllStub: SinonStub = sinon.stub();
 
-      const pluginMock = new MangleExpressionMock(findAllStub);
+      const pluginMock = new MangleExpressionMock({
+        findAll: findAllStub,
+      });
       expect(pluginMock.findAll).not.to.throw();
       expect(findAllStub).to.have.callCount(1);
     });
@@ -35,7 +37,9 @@ suite("MangleExpressionMock", function() {
     test("custom stub", function() {
       const replaceAllStub: SinonStub = sinon.stub();
 
-      const pluginMock = new MangleExpressionMock(undefined, replaceAllStub);
+      const pluginMock = new MangleExpressionMock({
+        replaceAll: replaceAllStub,
+      });
       expect(pluginMock.replaceAll).not.to.throw();
       expect(replaceAllStub).to.have.callCount(1);
     });

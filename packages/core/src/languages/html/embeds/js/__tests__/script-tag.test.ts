@@ -2,7 +2,6 @@ import type { TestScenario } from "@webmangler/testing";
 
 import type { TestCase } from "../../__tests__/types";
 
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getScriptTagsAsEmbeds } from "../script-tag";
@@ -15,10 +14,10 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
       name: "sample",
       cases: [
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<script>var foo = \"bar\";</script>",
-          ),
+          file: {
+            type: "html",
+            content: "<script>var foo = \"bar\";</script>",
+          },
           expected: [
             {
               content: "var foo = \"bar\";",
@@ -30,15 +29,15 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
           ],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<html>" +
-            "<head>" +
-            "<script>var foo = \"bar\";</script>" +
-            "<script>var hello = \"world\";</script>" +
-            "</head>" +
-            "</html>",
-          ),
+          file: {
+            type: "html",
+            content: "<html>" +
+              "<head>" +
+              "<script>var foo = \"bar\";</script>" +
+              "<script>var hello = \"world\";</script>" +
+              "</head>" +
+              "</html>",
+          },
           expected: [
             {
               content: "var foo = \"bar\";",
@@ -62,15 +61,24 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
       name: "edge cases",
       cases: [
         {
-          file: new WebManglerFileMock("html", "<div>foobar</div>"),
+          file: {
+            type: "html",
+            content: "<div>foobar</div>",
+          },
           expected: [],
         },
         {
-          file: new WebManglerFileMock("html", "<script></script>"),
+          file: {
+            type: "html",
+            content: "<script></script>",
+          },
           expected: [],
         },
         {
-          file: new WebManglerFileMock("html", "<script> </script>"),
+          file: {
+            type: "html",
+            content: "<script> </script>",
+          },
           expected: [
             {
               content: " ",

@@ -17,7 +17,7 @@ Import the testing utilities you want to use in you tests, e.g.:
 
 import type { TestScenario } from "@webmangler/testing";
 
-import { WebManglerFileMock } from "@webmangler/testing";
+import { WebManglerPluginMock } from "@webmangler/testing";
 
 suite("My test suite", function() {
   // ...
@@ -91,7 +91,6 @@ _WebMangler_ core. You can use these mocks when your tests need to integrate
 with the _WebMangler_ core. The following mocks are available:
 
 - [MangleExpressionMock](#mangleexpressionmock)
-- [WebManglerFileMock](#webmanglerfilemock)
 - [WebManglerPluginLanguageMock](#webmanglerpluginlanguagemock)
 - [WebManglerPluginMock](#webmanglerpluginmock)
 
@@ -113,38 +112,16 @@ mangleExpression = new MangleExpressionMock();
 
 // With custom implementation of the `findAll` method.
 const matches = ["foo", "bar"];
-const findAllStub = sinon.stub().returns(matches);
-mangleExpression = new MangleExpressionMock(findAllStub);
+const stub = sinon.stub().returns(matches);
+mangleExpression = new MangleExpressionMock({ findAll: stub });
 ```
 
 ##### Arguments
 
-| Input        | Type   | Description                       |
-| ------------ | ------ | --------------------------------- |
-| `findAll`    | [Stub] | Implementation of `findAll()`.    |
-| `replaceAll` | [Stub] | Implementation of `replaceAll()`. |
-
-#### `WebManglerFileMock`
-
-A mocked implementation of the `WebManglerFile` type, needs to be instantiated
-with a type and some content.
-
-##### Example
-
-```ts
-import { WebManglerFileMock } from "@webmangler/testing";
-
-const filetype = "css";
-const content = ".foo { }\n.bar { }";
-const file = new MangleExpressionMock(filetype, content);
-```
-
-##### Arguments
-
-| Input     | Type     | Description              |
-| --------- | -------- | ------------------------ |
-| `type`    | `string` | The type of the file.    |
-| `content` | `string` | The content of the file. |
+| Input              | Type   | Description                       |
+| ------------------ | ------ | --------------------------------- |
+| `stubs.findAll`    | [Stub] | Implementation of `findAll()`.    |
+| `stubs.replaceAll` | [Stub] | Implementation of `replaceAll()`. |
 
 #### `WebManglerPluginLanguageMock`
 
@@ -165,17 +142,17 @@ plugin = new WebManglerPluginLanguageMock();
 
 // With custom implementation of the `getExpressions` method.
 const expressions = new Map();
-const getExpressionsStub = sinon.stub().returns(expressions);
-plugin = new WebManglerPluginLanguageMock(getExpressionsStub);
+const stub = sinon.stub().returns(expressions);
+plugin = new WebManglerPluginLanguageMock({ getExpressions: stub });
 ```
 
 ##### Arguments
 
-| Input            | Type   | Description                           |
-| ---------------- | ------ | ------------------------------------- |
-| `getExpressions` | [Stub] | Implementation of `getExpressions()`. |
-| `getLanguages`   | [Stub] | Implementation of `getLanguages()`.   |
-| `getEmbeds`      | [Stub] | Implementation of `getEmbeds()`.      |
+| Input                  | Type   | Description                           |
+| ---------------------- | ------ | ------------------------------------- |
+| `stubs.getEmbeds`      | [Stub] | Implementation of `getEmbeds()`.      |
+| `stubs.getExpressions` | [Stub] | Implementation of `getExpressions()`. |
+| `stubs.getLanguages`   | [Stub] | Implementation of `getLanguages()`.   |
 
 #### `WebManglerPluginMock`
 
@@ -195,15 +172,15 @@ plugin = new WebManglerPluginMock();
 
 // With custom implementation of the `options` method.
 const options = { patterns: "foo(bar|baz)" };
-const optionsStub = sinon.stub().returns(options);
-plugin = new WebManglerPluginMock(optionsStub);
+const stub = sinon.stub().returns(options);
+plugin = new WebManglerPluginMock({ options: stub });
 ```
 
 ##### Arguments
 
-| Input     | Type   | Description                    |
-| --------- | ------ | ------------------------------ |
-| `options` | [Stub] | Implementation of `options()`. |
+| Input           | Type   | Description                    |
+| --------------- | ------ | ------------------------------ |
+| `stubs.options` | [Stub] | Implementation of `options()`. |
 
 [mocha]: https://mochajs.org/ "Mocha"
 [sinon.js]: https://sinonjs.org/ "Sinon.JS"

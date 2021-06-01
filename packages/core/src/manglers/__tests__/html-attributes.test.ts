@@ -5,7 +5,6 @@ import type {
   TestCase,
 } from "./types";
 
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as R from "ramda";
 import { format as printf } from "util";
@@ -1364,7 +1363,7 @@ suite("HTML Attribute Mangler", function() {
     });
 
     test("without extra reserved", function() {
-      const files = [new WebManglerFileMock("html", content)];
+      const files = [{ type: "html", content: content }];
 
       const htmlAttributeMangler = new HtmlAttributeMangler({
         attrNamePattern: "data-[0-9]+",
@@ -1384,7 +1383,7 @@ suite("HTML Attribute Mangler", function() {
     });
 
     test("with extra reserved", function() {
-      const files = [new WebManglerFileMock("html", content)];
+      const files = [{ type: "html", content: content }];
 
       const htmlAttributeMangler = new HtmlAttributeMangler({
         attrNamePattern: "data-[0-9]+",
@@ -1425,7 +1424,7 @@ function run(language: string, scenarios: TestScenario<TestCase>[]): void {
           description: failureMessage,
         } = testCase;
 
-        const files = [new WebManglerFileMock(language, input)];
+        const files = [{ type: language, content: input }];
 
         const htmlAttributeMangler = new HtmlAttributeMangler({
           attrNamePattern: attrNamePattern || DEFAULT_PATTERN,

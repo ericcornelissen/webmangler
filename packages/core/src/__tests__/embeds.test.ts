@@ -7,10 +7,7 @@ import type {
   WebManglerLanguagePlugin,
 } from "../types";
 
-import {
-  WebManglerFileMock,
-  WebManglerPluginLanguageMock,
-} from "@webmangler/testing";
+import { WebManglerPluginLanguageMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
@@ -33,16 +30,14 @@ suite("Embeds", function() {
         cases: [
           {
             files: [
-              new WebManglerFileMock(
-                "html",
-                "<style>.foobar { color: red; }</style>",
-              ),
+              {
+                type: "html",
+                content: "<style>.foobar { color: red; }</style>",
+              },
             ],
             plugins: [
-              new WebManglerPluginLanguageMock(
-                undefined,
-                undefined,
-                sinon.stub().returns([
+              new WebManglerPluginLanguageMock({
+                getEmbeds: sinon.stub().returns([
                   {
                     content: ".foobar { color: red; }",
                     type: "css",
@@ -51,7 +46,7 @@ suite("Embeds", function() {
                     getRaw(): string { return this.content; },
                   },
                 ]),
-              ),
+              }),
             ],
             expected: {
               embeds: [
@@ -64,25 +59,23 @@ suite("Embeds", function() {
                 },
               ],
               files: [
-                new WebManglerFileMock(
-                  "html",
-                  "<style>\\[.+\\]</style>",
-                ),
+                {
+                  type: "html",
+                  content: "<style>\\[.+\\]</style>",
+                },
               ],
             },
           },
           {
             files: [
-              new WebManglerFileMock(
-                "html",
-                "<script>var x = document.getElementById(\"foobar\");</script>",
-              ),
+              {
+                type: "html",
+                content: "<script>var x = document.getElementById(\"foobar\");</script>",
+              },
             ],
             plugins: [
-              new WebManglerPluginLanguageMock(
-                undefined,
-                undefined,
-                sinon.stub().returns([
+              new WebManglerPluginLanguageMock({
+                getEmbeds: sinon.stub().returns([
                   {
                     content: "var x = document.getElementById(\"foobar\");",
                     type: "js",
@@ -91,7 +84,7 @@ suite("Embeds", function() {
                     getRaw(): string { return this.content; },
                   },
                 ]),
-              ),
+              }),
             ],
             expected: {
               embeds: [
@@ -104,26 +97,24 @@ suite("Embeds", function() {
                 },
               ],
               files: [
-                new WebManglerFileMock(
-                  "html",
-                  "<script>\\[.+\\]</script>",
-                ),
+                {
+                  type: "html",
+                  content: "<script>\\[.+\\]</script>",
+                },
               ],
             },
           },
           {
             files: [
-              new WebManglerFileMock(
-                "html",
-                "<style>.foo { color: blue; }</style>" +
-                "<script>var x = document.getElementById(\"bar\");</script>",
-              ),
+              {
+                type: "html",
+                content: "<style>.foo { color: blue; }</style>" +
+                  "<script>var x = document.getElementById(\"bar\");</script>",
+              },
             ],
             plugins: [
-              new WebManglerPluginLanguageMock(
-                undefined,
-                undefined,
-                sinon.stub().returns([
+              new WebManglerPluginLanguageMock({
+                getEmbeds: sinon.stub().returns([
                   {
                     content: "var x = document.getElementById(\"bar\");",
                     type: "js",
@@ -139,7 +130,7 @@ suite("Embeds", function() {
                     getRaw(): string { return this.content; },
                   },
                 ]),
-              ),
+              }),
             ],
             expected: {
               embeds: [
@@ -159,11 +150,11 @@ suite("Embeds", function() {
                 },
               ],
               files: [
-                new WebManglerFileMock(
-                  "html",
-                  "<style>\\[.+\\]</style>" +
-                  "<script>\\[.+\\]</script>",
-                ),
+                {
+                  type: "html",
+                  content: "<style>\\[.+\\]</style>" +
+                    "<script>\\[.+\\]</script>",
+                },
               ],
             },
           },
@@ -184,13 +175,13 @@ suite("Embeds", function() {
           },
           {
             files: [
-              new WebManglerFileMock("type", "content"),
+              { type: "type", content: "content" },
             ],
             plugins: [],
             expected: {
               embeds: [],
               files: [
-                new WebManglerFileMock("type", "content"),
+                { type: "type", content: "content" },
               ],
             },
           },
@@ -262,10 +253,10 @@ suite("Embeds", function() {
                 id: "[1234567890]",
               },
             ],
-            file: new WebManglerFileMock(
-              "html",
-              "<script>[1234567890]</script>",
-            ),
+            file: {
+              type: "html",
+              content: "<script>[1234567890]</script>",
+            },
             expected: "<script>var foo = \"bar\";</script>",
           },
           {
@@ -279,10 +270,10 @@ suite("Embeds", function() {
                 id: "[0987654321]",
               },
             ],
-            file: new WebManglerFileMock(
-              "html",
-              "<div style=\"[0987654321]\"></div>",
-            ),
+            file: {
+              type: "html",
+              content: "<div style=\"[0987654321]\"></div>",
+            },
             expected: "<div style=\"color: red;\"></div>",
           },
           {
@@ -304,11 +295,11 @@ suite("Embeds", function() {
                 id: "[67890]",
               },
             ],
-            file: new WebManglerFileMock(
-              "html",
-              "<style>[12345]</style>" +
-              "<script>[67890]</script>",
-            ),
+            file: {
+              type: "html",
+              content: "<style>[12345]</style>" +
+                "<script>[67890]</script>",
+            },
             expected: "<style>.foo { font: serif; }</style>" +
               "<script>var foo = \"bar\";</script>",
           },
@@ -319,7 +310,10 @@ suite("Embeds", function() {
         cases: [
           {
             embeds: [],
-            file: new WebManglerFileMock("html", "<div>foobar</div>"),
+            file: {
+              type: "html",
+              content: "<div>foobar</div>",
+            },
             expected: "<div>foobar</div>",
           },
         ],

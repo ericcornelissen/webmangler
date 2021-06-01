@@ -2,7 +2,6 @@ import type { TestScenario } from "@webmangler/testing";
 
 import type { TestCase } from "../../__tests__/types";
 
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getStyleTagsAsEmbeds } from "../style-tag";
@@ -15,10 +14,10 @@ suite("HTML CSS Embeds - <style> tag", function() {
       name: "sample",
       cases: [
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<style>.foobar { color: red; }</style>",
-          ),
+          file: {
+            type: "html",
+            content: "<style>.foobar { color: red; }</style>",
+          },
           expected: [
             {
               content: ".foobar { color: red; }",
@@ -30,15 +29,15 @@ suite("HTML CSS Embeds - <style> tag", function() {
           ],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<html>" +
-            "<head>" +
-            "<style>.foo { color: red; }</style>" +
-            "<style>.bar { font: serif; }</style>" +
-            "</head>" +
-            "</html>",
-          ),
+          file: {
+            type: "html",
+            content: "<html>" +
+              "<head>" +
+              "<style>.foo { color: red; }</style>" +
+              "<style>.bar { font: serif; }</style>" +
+              "</head>" +
+              "</html>",
+          },
           expected: [
             {
               content: ".foo { color: red; }",
@@ -62,18 +61,18 @@ suite("HTML CSS Embeds - <style> tag", function() {
       name: "comments",
       cases: [
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<!--<style>.foobar { color: red; }</style>-->",
-          ),
+          file: {
+            type: "html",
+            content: "<!--<style>.foobar { color: red; }</style>-->",
+          },
           expected: [],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<!--<style>.foobar { color: red; }</style>-->" +
-            "<style>.foobar { color: blue; }</style>",
-          ),
+          file: {
+            type: "html",
+            content: "<!--<style>.foobar { color: red; }</style>-->" +
+              "<style>.foobar { color: blue; }</style>",
+          },
           expected: [
             {
               content: ".foobar { color: blue; }",
@@ -85,11 +84,11 @@ suite("HTML CSS Embeds - <style> tag", function() {
           ],
         },
         {
-          file: new WebManglerFileMock(
-            "html",
-            "<style>.foobar { color: red; }</style>" +
-            "<!--<style>.foobar { color: blue; }</style>-->",
-          ),
+          file: {
+            type: "html",
+            content: "<style>.foobar { color: red; }</style>" +
+             "<!--<style>.foobar { color: blue; }</style>-->",
+          },
           expected: [
             {
               content: ".foobar { color: red; }",
@@ -106,15 +105,24 @@ suite("HTML CSS Embeds - <style> tag", function() {
       name: "edge cases",
       cases: [
         {
-          file: new WebManglerFileMock("html", "<div>foobar</div>"),
+          file: {
+            type: "html",
+            content: "<div>foobar</div>",
+          },
           expected: [],
         },
         {
-          file: new WebManglerFileMock("html", "<style></style>"),
+          file: {
+            type: "html",
+            content: "<style></style>",
+          },
           expected: [],
         },
         {
-          file: new WebManglerFileMock("html", "<style> </style>"),
+          file: {
+            type: "html",
+            content: "<style> </style>",
+          },
           expected: [
             {
               content: " ",
