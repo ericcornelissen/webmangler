@@ -28,25 +28,29 @@ function newQuotedValueExpression(
 ): MangleExpression[] {
   return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
     `
-      (?<=
-        \\<\\s*[a-zA-Z0-9]+\\s+
-        (?:
-          [^>\\s=]+
-          (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
-          \\s+
-        )*
-        ${QUOTED_ATTRIBUTE_PATTERN(
-          attributesPattern,
-          `(?<${GROUP_QUOTE}>${QUOTES_PATTERN})`,
-        )}
-        ${valuePrefix}
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        ${valueSuffix}
-        \\s*\\k<${GROUP_QUOTE}>
-        [^>]*
-        >
+      (?:
+        (?:<!--.*-->)
+        |
+        (?<=
+          \\<\\s*[a-zA-Z0-9]+\\s+
+          (?:
+            [^>\\s=]+
+            (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+            \\s+
+          )*
+          ${QUOTED_ATTRIBUTE_PATTERN(
+            attributesPattern,
+            `(?<${GROUP_QUOTE}>${QUOTES_PATTERN})`,
+          )}
+          ${valuePrefix}
+        )
+        (?<${GROUP_MAIN}>%s)
+        (?=
+          ${valueSuffix}
+          \\s*\\k<${GROUP_QUOTE}>
+          [^>]*
+          >
+        )
       )
     `,
     GROUP_MAIN,
@@ -70,14 +74,18 @@ function newUnquotedValueExpression(
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      (?<=
-        \\s(?:${attributesPattern})\\s*=\\s*
-        ${valuePrefix}
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        ${valueSuffix}
-        (?:\\s|\\/|\\>)
+      (?:
+        (?:<!--.*-->)
+        |
+        (?<=
+          \\s(?:${attributesPattern})\\s*=\\s*
+          ${valuePrefix}
+        )
+        (?<${GROUP_MAIN}>%s)
+        (?=
+          ${valueSuffix}
+          (?:\\s|\\/|\\>)
+        )
       )
     `,
     GROUP_MAIN,
@@ -93,7 +101,7 @@ function newUnquotedValueExpression(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.19
+ * @version v0.1.21
  */
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,

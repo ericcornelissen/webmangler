@@ -1,8 +1,6 @@
 import type { WebManglerLanguagePlugin } from "../../types";
 import type {
   AttributeOptions,
-  CssDeclarationPropertyOptions,
-  CssDeclarationValueOptions,
   MultiValueAttributeOptions,
   SingleValueAttributeOptions,
 } from "../options";
@@ -20,6 +18,44 @@ suite("Built-in HTML Language Plugin", function() {
     expect(() => new HtmlLanguagePlugin({})).not.to.throw();
   });
 
+  suite("::getEmbeds", function() {
+    let plugin: WebManglerLanguagePlugin;
+
+    setup(function() {
+      plugin = new HtmlLanguagePlugin();
+    });
+
+    test("can detect <script>s", function() {
+      const file = {
+        type: "html",
+        content: "<script>var foo = \"bar\";</script>",
+      };
+
+      const result = plugin.getEmbeds(file);
+      expect(result).to.have.length(1);
+    });
+
+    test("can detect <style>s", function() {
+      const file = {
+        type: "html",
+        content: "<style>.foo { color: red; }</style>",
+      };
+
+      const result = plugin.getEmbeds(file);
+      expect(result).to.have.length(1);
+    });
+
+    test("can detect style attributes", function() {
+      const file = {
+        type: "html",
+        content: "<div style=\"font: serif\"></div>",
+      };
+
+      const result = plugin.getEmbeds(file);
+      expect(result).to.have.length(1);
+    });
+  });
+
   suite("::getExpressions", function() {
     let plugin: WebManglerLanguagePlugin;
 
@@ -31,20 +67,6 @@ suite("Built-in HTML Language Plugin", function() {
       const options: AttributeOptions = null;
 
       const result = plugin.getExpressions("attributes", options);
-      expect(result).to.have.length.above(0);
-    });
-
-    test("has support for mangling 'css-declaration-properties'", function() {
-      const options: CssDeclarationPropertyOptions = { };
-
-      const result = plugin.getExpressions("css-declaration-properties", options);
-      expect(result).to.have.length.above(0);
-    });
-
-    test("has support for mangling 'css-declaration-values'", function() {
-      const options: CssDeclarationValueOptions = { };
-
-      const result = plugin.getExpressions("css-declaration-values", options);
       expect(result).to.have.length.above(0);
     });
 
@@ -72,17 +94,17 @@ suite("Built-in HTML Language Plugin", function() {
 
     test("get languages", function() {
       const plugin = new HtmlLanguagePlugin();
-      const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
+      const result = Array.from(plugin.getLanguages());
+      expect(result).to.include.members(DEFAULT_EXTENSIONS);
     });
 
     test("get configured languages", function() {
       const htmlExtensions = ["html5", "pug"];
 
       const plugin = new HtmlLanguagePlugin({ htmlExtensions });
-      const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
-      expect(result).to.include.keys(htmlExtensions);
+      const result = Array.from(plugin.getLanguages());
+      expect(result).to.include.members(DEFAULT_EXTENSIONS);
+      expect(result).to.include.members(htmlExtensions);
     });
   });
 });

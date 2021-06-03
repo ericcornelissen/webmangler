@@ -124,6 +124,41 @@ interface MangleExpressionOptions<T> {
 }
 
 /**
+ * Type representing an embedded snippet of code. E.g. a piece of CSS embedded
+ * in HTML.
+ *
+ * The `content` field of an embed may differ from the embed as it appears in
+ * its file - this may be needed if the raw embed is not itself a valid file.
+ * _WebMangler_ will always retrieve the (mangled) embed through the `getRaw`
+ * method.
+ *
+ * @since v0.1.21
+ */
+interface WebManglerEmbed extends WebManglerFile {
+  /**
+   * The 0-based index at which the embed starts in the origin file.
+   *
+   * @since v0.1.21
+   */
+  readonly startIndex: number;
+
+  /**
+   * The 0-based index at which the embed ends in the origin file.
+   *
+   * @since v0.1.21
+   */
+  readonly endIndex: number;
+
+  /**
+   * Get the raw embed as it would appear in the origin file. This may return
+   * the {@link WebManglerEmbed}'s `content`, or a value derived from it.
+   *
+   * @since v0.1.21
+   */
+  getRaw(): string;
+}
+
+/**
  * Type defining the information required by _WebMangler_ about files.
  *
  * NOTE: The _WebMangler_ core **will not** read or write files for you.
@@ -192,9 +227,18 @@ interface WebManglerPlugin {
  * The interface that every language plugin for _WebMangler_ must implement.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.21
  */
 interface WebManglerLanguagePlugin {
+  /**
+   * Get all embedded pieces of code in a {@link WebManglerFile}.
+   *
+   * @param file A {@link WebManglerFile}.
+   * @returns The {@link WebManglerEmbed}s in `file`.
+   * @since v0.1.21
+   */
+  getEmbeds(file: WebManglerFile): Iterable<WebManglerEmbed>;
+
   /**
    * Get a named set of {@link MangleExpression}s in accordance with an object
    * of options for the set.
@@ -224,6 +268,7 @@ export type {
   MangleEngineOptions,
   MangleExpression,
   MangleExpressionOptions,
+  WebManglerEmbed,
   WebManglerFile,
   WebManglerOptions,
   WebManglerPlugin,

@@ -147,6 +147,58 @@ suite("CSS - CSS Property Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "declaration-like strings",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["content", "font"],
+      testValues: [
+        {
+          property: ["content"],
+          value: [
+            "\"color: violet;\"",
+            "\"; color: purple;\"",
+            "'color: green;'",
+            "'; color: mint;'",
+          ],
+        },
+        {
+          property: ["font"],
+          value: valuePresets.value,
+        },
+      ],
+    },
+    {
+      name: "declaration-like comments",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["content", "font"],
+      testValues: [
+        {
+          beforeProperty: [
+            "",
+            "/* color: violet; */",
+            "/* ; color: purple; */",
+          ],
+          property: ["content"],
+          value: valuePresets.value,
+          afterValue: [
+            "",
+            "/* color: blue; */",
+            "/* ; color: teal; */",
+          ],
+        },
+        {
+          beforeProperty: [
+            "",
+            "/* color: orange; */",
+            "/* ; color: amber; */",
+          ],
+          property: ["font"],
+          value: valuePresets.value,
+        },
+      ],
+    },
   ];
 
   for (const scenario of scenarios) {

@@ -1,7 +1,6 @@
 import type { WebManglerFile } from "../../../types";
 
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { embedContentInBody, embedContentInContext } from "./benchmark-helpers";
@@ -43,7 +42,7 @@ suite("HTML - Attribute Expression Factory", function() {
 
     let files: WebManglerFile[] = [];
     const result = benchmarkFn({
-      setup: () => files = [new WebManglerFileMock("html", fileContent)],
+      setup: () => files = [{ type: "html", content: fileContent }],
       fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 
@@ -60,7 +59,7 @@ suite("HTML - Attribute Expression Factory", function() {
 
     let files: WebManglerFile[] = [];
     const result = benchmarkFn({
-      setup: () => files = [new WebManglerFileMock("html", fileContent)],
+      setup: () => files = [{ type: "html", content: fileContent }],
       fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 
@@ -77,7 +76,7 @@ suite("HTML - Attribute Expression Factory", function() {
 
     let files: WebManglerFile[] = [];
     const result = benchmarkFn({
-      setup: () => files = [new WebManglerFileMock("html", fileContent)],
+      setup: () => files = [{ type: "html", content: fileContent }],
       fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
     });
 

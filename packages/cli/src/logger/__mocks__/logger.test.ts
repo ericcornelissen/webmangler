@@ -1,6 +1,9 @@
-import { expect } from "chai";
+import { expect, use as chaiUse } from "chai";
+import * as sinonChai from "sinon-chai";
 
 import LoggerMock from "./logger.mock";
+
+chaiUse(sinonChai);
 
 suite("LoggerMock", function() {
   suite("::resetHistory", function() {

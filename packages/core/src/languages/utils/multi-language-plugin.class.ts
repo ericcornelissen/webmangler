@@ -1,4 +1,9 @@
-import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
+import type {
+  MangleExpression,
+  WebManglerEmbed,
+  WebManglerFile,
+  WebManglerLanguagePlugin,
+} from "../../types";
 
 /**
  * The {@link MultiLanguagePlugin} class is a utility to create a {@link
@@ -8,7 +13,7 @@ import type { MangleExpression, WebManglerLanguagePlugin } from "../../types";
  * BuiltInLanguagesPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.21
  */
 export default abstract class MultiLanguagePlugin
     implements WebManglerLanguagePlugin {
@@ -37,6 +42,20 @@ export default abstract class MultiLanguagePlugin
     for (const plugin of plugins) {
       this.languages.push(...plugin.getLanguages());
     }
+  }
+
+  /**
+   * @inheritDoc
+   * @version v0.1.21
+   */
+  getEmbeds(file: WebManglerFile): Iterable<WebManglerEmbed> {
+    const result: WebManglerEmbed[] = [];
+    for (const plugin of this.plugins) {
+      const pluginEmbeds = plugin.getEmbeds(file);
+      result.push(...pluginEmbeds);
+    }
+
+    return result;
   }
 
   /**

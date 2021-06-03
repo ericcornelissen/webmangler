@@ -1,18 +1,12 @@
+import type BuiltInManglersType from "../builtin";
 import type { BuiltInManglersOptions } from "../builtin";
 
 import { WebManglerPluginMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
-import * as sinon from "sinon";
+import * as proxyquire from "proxyquire";
 import * as sinonChai from "sinon-chai";
 
 import {  permuteObjects } from "./test-helpers";
-
-import * as CssClassMangler from "../css-classes";
-import * as CssVarMangler from "../css-variables";
-import * as HtmlAttrMangler from "../html-attributes";
-import * as HtmlIdMangler from "../html-ids";
-
-import BuiltInManglers from "../builtin";
 
 chaiUse(sinonChai);
 
@@ -33,10 +27,9 @@ suite("Built-in Manglers", function() {
   let HtmlAttrManglerMock: WebManglerPluginMock;
   let HtmlIdManglerMock: WebManglerPluginMock;
 
-  let CssClassManglerStub: sinon.SinonStub;
-  let CssVarManglerStub: sinon.SinonStub;
-  let HtmlAttrManglerStub: sinon.SinonStub;
-  let HtmlIdManglerStub: sinon.SinonStub;
+  let BuiltInManglers: {
+    new(options?: BuiltInManglersOptions): BuiltInManglersType,
+  };
 
   suiteSetup(function() {
     CssClassManglerMock = new WebManglerPluginMock();
@@ -44,10 +37,21 @@ suite("Built-in Manglers", function() {
     HtmlAttrManglerMock = new WebManglerPluginMock();
     HtmlIdManglerMock = new WebManglerPluginMock();
 
-    CssClassManglerStub = sinon.stub(CssClassMangler, "default").returns(CssClassManglerMock);
-    CssVarManglerStub = sinon.stub(CssVarMangler, "default").returns(CssVarManglerMock);
-    HtmlAttrManglerStub = sinon.stub(HtmlAttrMangler, "default").returns(HtmlAttrManglerMock);
-    HtmlIdManglerStub = sinon.stub(HtmlIdMangler, "default").returns(HtmlIdManglerMock);
+    const builtin = proxyquire("../builtin", {
+      "./css-classes": {
+        default: function() { return CssClassManglerMock; },
+      },
+      "./css-variables": {
+        default: function() { return CssVarManglerMock; },
+      },
+      "./html-attributes": {
+        default: function() { return HtmlAttrManglerMock; },
+      },
+      "./html-ids": {
+        default: function() { return HtmlIdManglerMock; },
+      },
+    });
+    BuiltInManglers = builtin.default;
   });
 
   suite("CSS class mangler", function() {
@@ -272,12 +276,5 @@ suite("Built-in Manglers", function() {
 
   test("no configuration", function() {
     expect(() => new BuiltInManglers()).not.to.throw();
-  });
-
-  suiteTeardown(function() {
-    CssClassManglerStub.restore();
-    CssVarManglerStub.restore();
-    HtmlAttrManglerStub.restore();
-    HtmlIdManglerStub.restore();
   });
 });

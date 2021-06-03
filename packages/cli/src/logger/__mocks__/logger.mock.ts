@@ -5,10 +5,17 @@ import type { Logger, Writer } from "../types";
 import * as sinon from "sinon";
 
 export default class LoggerMock implements Logger {
-  readonly debug: Writer = sinon.fake();
-  readonly info: Writer = sinon.fake();
-  readonly print: Writer = sinon.fake();
-  readonly warn: Writer = sinon.fake();
+  readonly debug: Writer;
+  readonly info: Writer;
+  readonly print: Writer;
+  readonly warn: Writer;
+
+  constructor() {
+    this.debug = sinon.fake();
+    this.info = sinon.fake();
+    this.print = sinon.fake();
+    this.warn = sinon.fake();
+  }
 
   resetHistory(): void {
     (this.debug as SinonSpy).resetHistory();

@@ -1,17 +1,12 @@
+import type RecommendedManglersType from "../recommended";
 import type { RecommendedManglersOptions } from "../recommended";
 
 import { WebManglerPluginMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
-import * as sinon from "sinon";
+import * as proxyquire from "proxyquire";
 import * as sinonChai from "sinon-chai";
 
 import { permuteObjects } from "./test-helpers";
-
-import * as CssClassMangler from "../css-classes";
-import * as CssVarMangler from "../css-variables";
-import * as HtmlAttrMangler from "../html-attributes";
-
-import RecommendedManglers from "../recommended";
 
 chaiUse(sinonChai);
 
@@ -29,18 +24,27 @@ suite("Recommended Manglers", function() {
   let CssVarManglerMock: WebManglerPluginMock;
   let HtmlAttrManglerMock: WebManglerPluginMock;
 
-  let CssClassManglerStub: sinon.SinonStub;
-  let CssVarManglerStub: sinon.SinonStub;
-  let HtmlAttrManglerStub: sinon.SinonStub;
+  let RecommendedManglers: {
+    new(options?: RecommendedManglersOptions): RecommendedManglersType,
+  };
 
   suiteSetup(function() {
     CssClassManglerMock = new WebManglerPluginMock();
     CssVarManglerMock = new WebManglerPluginMock();
     HtmlAttrManglerMock = new WebManglerPluginMock();
 
-    CssClassManglerStub = sinon.stub(CssClassMangler, "default").returns(CssClassManglerMock);
-    CssVarManglerStub = sinon.stub(CssVarMangler, "default").returns(CssVarManglerMock);
-    HtmlAttrManglerStub = sinon.stub(HtmlAttrMangler, "default").returns(HtmlAttrManglerMock);
+    const recommended = proxyquire("../recommended", {
+      "./css-classes": {
+        default: function() { return CssClassManglerMock; },
+      },
+      "./css-variables": {
+        default: function() { return CssVarManglerMock; },
+      },
+      "./html-attributes": {
+        default: function() { return HtmlAttrManglerMock; },
+      },
+    });
+    RecommendedManglers = recommended.default;
   });
 
   suite("CSS class mangler", function() {
@@ -210,11 +214,5 @@ suite("Recommended Manglers", function() {
 
   test("no configuration", function() {
     expect(() => new RecommendedManglers()).not.to.throw();
-  });
-
-  suiteTeardown(function() {
-    CssClassManglerStub.restore();
-    CssVarManglerStub.restore();
-    HtmlAttrManglerStub.restore();
   });
 });

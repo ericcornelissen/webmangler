@@ -21,16 +21,20 @@ function newPropertyAsStandaloneStringExpression(
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      (?<=
-        (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
-        \\s*
-        ${propertyPrefix}
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        ${propertySuffix}
-        \\s*
-        \\k<${GROUP_QUOTE}>
+      (?:
+        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n)
+        |
+        (?<=
+          (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
+          \\s*
+          ${propertyPrefix}
+        )
+        (?<${GROUP_MAIN}>%s)
+        (?=
+          ${propertySuffix}
+          \\s*
+          \\k<${GROUP_QUOTE}>
+        )
       )
     `,
     GROUP_MAIN,
@@ -45,7 +49,7 @@ function newPropertyAsStandaloneStringExpression(
  * @param options The {@link CssDeclarationPropertyOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.21
  */
 export default function cssDeclarationPropertyExpressionFactory(
   options: CssDeclarationPropertyOptions,

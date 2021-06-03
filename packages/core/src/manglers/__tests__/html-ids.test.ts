@@ -7,7 +7,6 @@ import type {
   TestCase,
 } from "./types";
 
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as R from "ramda";
 
@@ -986,9 +985,9 @@ suite("HTML ID Mangler", function() {
           const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
-          const attributeNames = options.attributeNames;
+          const attributeNames = Array.from(options.attributeNames);
           expect(attributeNames).not.to.be.undefined;
-          expect(attributeNames).to.include.keys(expected);
+          expect(attributeNames).to.include.members(expected);
 
           const valuePrefix = options.valuePrefix;
           expect(valuePrefix).to.be.undefined;
@@ -1037,9 +1036,9 @@ suite("HTML ID Mangler", function() {
           const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
-          const attributeNames = options.attributeNames;
+          const attributeNames = Array.from(options.attributeNames);
           expect(attributeNames).not.to.be.undefined;
-          expect(attributeNames).to.include.keys(expected);
+          expect(attributeNames).to.include.members(expected);
 
           const valuePrefix = options.valuePrefix as string;
           expect(valuePrefix).not.to.be.undefined;
@@ -1072,7 +1071,7 @@ function run(language: string, scenarios: TestScenario<TestCase>[]): void {
           description: failureMessage,
         } = testCase;
 
-        const files = [new WebManglerFileMock(language, input)];
+        const files = [{ type: language, content: input }];
 
         const htmlIdMangler = new HtmlIdMangler({
           idNamePattern: idNamePattern || DEFAULT_PATTERN,

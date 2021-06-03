@@ -11,9 +11,16 @@ let uniqueId = 0;
  * A simple mock for _WebMangler_'s {@link WebManglerPluginLanguage} interface.
  *
  * @since v0.1.1
- * @version v0.1.3
+ * @version v0.1.5
  */
 export default class WebManglerPluginLanguageMock {
+  /**
+   * The `getEmbeds` method of the mock.
+   *
+   * @since v0.1.4
+   */
+  public readonly getEmbeds: SinonStub;
+
   /**
    * The `getExpressions` method of the mock.
    *
@@ -32,18 +39,38 @@ export default class WebManglerPluginLanguageMock {
    * Create a new {@link WebManglerPluginLanguageMock}. Optionally with specific
    * behaviour.
    *
-   * @param [getExpressionsStub] A {@link SinonStub} for the mock.
-   * @param [getLanguagesStub] A {@link SinonStub} for the mock.
-   * @since v0.1.1
+   * @param [stubs] The stubs for this mock.
+   * @param [stubs.getEmbeds] A {@link SinonStub} for `getEmbeds`.
+   * @param [stubs.getExpressions] A {@link SinonStub} for `getExpressions`.
+   * @param [stubs.getLanguages] A {@link SinonStub} for `getLanguages`.
+   * @since v0.1.5
    */
-  constructor(
-    getExpressionsStub?: SinonStub,
-    getLanguagesStub?: SinonStub,
-  ) {
+  constructor(stubs?: {
+    getEmbeds?: SinonStub,
+    getExpressions?: SinonStub,
+    getLanguages?: SinonStub,
+  }) {
+    this.getEmbeds =
+      WebManglerPluginLanguageMock.getGetEmbedsStub(stubs?.getEmbeds);
     this.getExpressions =
-      WebManglerPluginLanguageMock.getGetExpressionsStub(getExpressionsStub);
+      WebManglerPluginLanguageMock.getGetExpressionsStub(stubs?.getExpressions);
     this.getLanguages =
-      WebManglerPluginLanguageMock.getGetLanguagesStub(getLanguagesStub);
+      WebManglerPluginLanguageMock.getGetLanguagesStub(stubs?.getLanguages);
+  }
+
+  /**
+   * Get the `getEmbeds` {@link SinonStub} for an {@link
+   * WebManglerPluginLanguageMock} instance.
+   *
+   * @param [providedStub] The provided {@link SinonStub}, if any.
+   * @returns A {@link SinonStub} for the `getEmbeds` method.
+   */
+  private static getGetEmbedsStub(providedStub?: SinonStub): SinonStub {
+    if (providedStub) {
+      return providedStub;
+    }
+
+    return sinon.stub().returns([uniqueId++]);
   }
 
   /**

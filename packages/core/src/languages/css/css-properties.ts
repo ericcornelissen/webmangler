@@ -19,16 +19,20 @@ function newCssDeclarationPropertyExpression(
 ): MangleExpression {
   return new SingleGroupMangleExpression(
     `
-      (?<=
-        (?:\\;|\\{|\\*\\/)\\s*
-        ${propertyPrefix}
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        ${propertySuffix}
-        \\s*
-        (?:\\/\\*[^\\*\\/]*\\*\\/)?
-        \\s*:
+      (?:
+        (?:"[^"]*"|'[^']*'|\\/\\*[^\\*\\/]*\\*\\/)
+        |
+        (?<=
+          (?:\\;|\\{|\\*\\/)\\s*
+          ${propertyPrefix}
+        )
+        (?<${GROUP_MAIN}>%s)
+        (?=
+          ${propertySuffix}
+          \\s*
+          (?:\\/\\*[^\\*\\/]*\\*\\/)?
+          \\s*:
+        )
       )
     `,
     GROUP_MAIN,

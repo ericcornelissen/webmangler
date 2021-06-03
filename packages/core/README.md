@@ -11,7 +11,7 @@ plugins](#other-ways-to-use-webmangler).
 Install the `webmangler` core, e.g.:
 
 ```shell
-$ npm install webmangler --save-dev
+npm install webmangler --save-dev
 ```
 
 And use it programmatically, e.g.:
@@ -39,7 +39,7 @@ console.log(mangledFiles[0]);
 // Outputs:  { type: "css", content: "..." }
 ```
 
-Which will mangler CSS classes, CSS variables, and HTML data attributes in CSS,
+Which will mangle CSS classes, CSS variables, and HTML data attributes in CSS,
 HTML, and JavaScript.
 
 ## Other ways to use WebMangler

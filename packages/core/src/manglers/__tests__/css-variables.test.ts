@@ -1,7 +1,6 @@
 import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
-import { WebManglerFileMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as R from "ramda";
 
@@ -749,9 +748,12 @@ suite("CSS Variable Mangler", function() {
         const cssVariableMangler = new CssVariableMangler({
           reservedCssVarNames: reserved,
         });
+
         const result = cssVariableMangler.options();
         expect(result).to.have.property("reservedNames");
-        expect(result.reservedNames).to.include.members(reserved);
+
+        const reservedNames = Array.from(result.reservedNames as string[]);
+        expect(reservedNames).to.include.members(reserved);
       });
     });
 
@@ -791,7 +793,7 @@ suite("CSS Variable Mangler", function() {
     });
 
     test("without extra reserved", function() {
-      const files = [new WebManglerFileMock("css", content)];
+      const files = [{ type: "css", content: content }];
 
       const cssVariableMangler = new CssVariableMangler({
         cssVarNamePattern: "[0-9]+",
@@ -810,7 +812,7 @@ suite("CSS Variable Mangler", function() {
     });
 
     test("with extra reserved", function() {
-      const files = [new WebManglerFileMock("css", content)];
+      const files = [{ type: "css", content: content }];
 
       const cssVariableMangler = new CssVariableMangler({
         cssVarNamePattern: "[0-9]+",
@@ -850,7 +852,7 @@ function run(language: string, scenarios: TestScenario<TestCase>[]): void {
           description: failureMessage,
         } = testCase;
 
-        const files = [new WebManglerFileMock(language, input)];
+        const files = [{ type: language, content: input }];
 
         const cssVariableMangler = new CssVariableMangler({
           cssVarNamePattern: cssVarNamePattern || DEFAULT_PATTERN,

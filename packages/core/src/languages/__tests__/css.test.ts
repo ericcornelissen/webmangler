@@ -19,6 +19,18 @@ suite("Built-in CSS Language Plugin", function() {
     expect(() => new CssLanguagePlugin({})).not.to.throw();
   });
 
+  suite("::getEmbeds", function() {
+    test("does not throw", function() {
+      const file = {
+        type: "css",
+        content: ".foo { color: red; }",
+      };
+
+      const plugin = new CssLanguagePlugin();
+      expect(() => plugin.getEmbeds(file)).not.to.throw();
+    });
+  });
+
   suite("::getExpressions", function() {
     let plugin: WebManglerLanguagePlugin;
 
@@ -62,17 +74,17 @@ suite("Built-in CSS Language Plugin", function() {
 
     test("get default languages", function() {
       const plugin = new CssLanguagePlugin();
-      const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
+      const result = Array.from(plugin.getLanguages());
+      expect(result).to.include.members(DEFAULT_EXTENSIONS);
     });
 
     test("get configured languages", function() {
       const cssExtensions = ["less", "sass"];
 
       const plugin = new CssLanguagePlugin({ cssExtensions });
-      const result = plugin.getLanguages();
-      expect(result).to.include.keys(DEFAULT_EXTENSIONS);
-      expect(result).to.include.keys(cssExtensions);
+      const result = Array.from(plugin.getLanguages());
+      expect(result).to.include.members(DEFAULT_EXTENSIONS);
+      expect(result).to.include.members(cssExtensions);
     });
   });
 });

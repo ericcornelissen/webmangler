@@ -78,6 +78,63 @@ suite("CSS - CSS Value Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "declaration-like strings",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["red"],
+      testValues: [
+        {
+          property: "content",
+          value: [
+            "\"color: blue;\"",
+            "\"; color: teal;\"",
+            "'color: yellow;'",
+            "'; color: orange;'",
+          ],
+        },
+        {
+          property: valuePresets.property,
+          value: ["red"],
+        },
+      ],
+    },
+    {
+      name: "declaration-like comments",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["red"],
+      testValues: [
+        {
+          beforeProperty: [
+            "",
+            "/* color: green; */",
+            "/* ; color: mint; */",
+          ],
+          property: "padding",
+          afterProperty: [
+            "",
+            "/* color: black; */",
+            "/* ; color: yellow; */",
+          ],
+          beforeValue: [
+            "",
+            "/* color: blue; */",
+            "/* ; color: teal; */",
+          ],
+          value: ["42px"],
+          afterValue: [
+            "",
+            "/* color: yellow; */",
+            "/* ; color: orange; */",
+          ],
+        },
+        {
+          property: valuePresets.property,
+          value: ["red"],
+        },
+      ],
+    },
   ];
 
   for (const scenario of scenarios) {

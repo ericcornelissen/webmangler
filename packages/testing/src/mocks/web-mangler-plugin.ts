@@ -11,6 +11,7 @@ let uniqueId = 0;
  * A simple mock for _WebMangler_'s {@link WebManglerPlugin} interface.
  *
  * @since v0.1.1
+ * @version v0.1.5
  */
 export default class WebManglerPluginMock {
   /**
@@ -24,11 +25,14 @@ export default class WebManglerPluginMock {
    * Create a new {@link WebManglerPluginMock}. Optionally with specific
    * behaviour.
    *
-   * @param [optionsStub] A {@link SinonStub} for the mock.
-   * @since v0.1.1
+   * @param [stubs] The stubs for this mock.
+   * @param [stubs.options] A {@link SinonStub} for `options`.
+   * @since v0.1.5
    */
-  constructor(optionsStub?: SinonStub) {
-    this.options = WebManglerPluginMock.getOptionsStub(optionsStub);
+  constructor(stubs?: {
+    options?: SinonStub,
+  }) {
+    this.options = WebManglerPluginMock.getOptionsStub(stubs?.options);
   }
 
   /**

@@ -21,24 +21,28 @@ function newElementAttributeMultiValueExpressions(
 ): MangleExpression[] {
   return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
     `
-      (?<=
-        \\<\\s*[a-zA-Z0-9]+\\s+
-        (?:
-          [^>\\s=]+
-          (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
-          \\s+
-        )*
-        ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)}
-      )
-      (?<${GROUP_MAIN}>
-        (?:[^${quote}]+\\s)?
-        %s
-        (?:\\s[^${quote}]+)?
-      )
-      (?=
-        \\s*${quote}
-        [^>]*
-        >
+      (?:
+        (?:<!--.*-->)
+        |
+        (?<=
+          \\<\\s*[a-zA-Z0-9]+\\s+
+          (?:
+            [^>\\s=]+
+            (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+            \\s+
+          )*
+          ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)}
+        )
+        (?<${GROUP_MAIN}>
+          (?:[^${quote}]+\\s)?
+          %s
+          (?:\\s[^${quote}]+)?
+        )
+        (?=
+          \\s*${quote}
+          [^>]*
+          >
+        )
       )
     `,
     `
@@ -62,18 +66,22 @@ function newUnquotedAttributeValueExpression(
 ): MangleExpression[] {
   return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
     `
-      (?<=
-        \\<\\s*[a-zA-Z0-9]+\\s+
-        (?:
-          [^>\\s=]+
-          (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
-          \\s+
-        )*
-        (?:${attributesPattern})\\s*=\\s*
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        (?:\\s|\\/|\\>)
+      (?:
+        (?:<!--.*-->)
+        |
+        (?<=
+          \\<\\s*[a-zA-Z0-9]+\\s+
+          (?:
+            [^>\\s=]+
+            (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+            \\s+
+          )*
+          (?:${attributesPattern})\\s*=\\s*
+        )
+        (?<${GROUP_MAIN}>%s)
+        (?=
+          (?:\\s|\\/|\\>)
+        )
       )
     `,
     GROUP_MAIN,
@@ -88,7 +96,7 @@ function newUnquotedAttributeValueExpression(
  * @param options The {@link MultiValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.19
+ * @version v0.1.21
  */
 export default function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,
