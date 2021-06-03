@@ -40,14 +40,3 @@ export type CssDeclarationBlockMap = {
 export type CssDeclarationBlockValues = {
   [key in CssDeclarationsBlockKey]?: string;
 }
-
-/**
- * Type representing a test case for a CSS language plugin expression factory.
- */
-export type TestCase<T> = {
-  readonly name: string;
-  readonly pattern: string;
-  readonly factoryOptions: T;
-  readonly expected: string[];
-  readonly testValues: CssDeclarationValuesMap[];
-}

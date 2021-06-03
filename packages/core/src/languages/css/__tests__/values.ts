@@ -8,6 +8,16 @@ const comments: Iterable<string> = [
 ];
 
 /**
+ * A collection of strings of one or more valid CSS declarations.
+ */
+const declarations: Iterable<string> = [
+  "color: red;",
+  "margin: 3px 14px;",
+  "font-family: serif; font-weight: bold;",
+  "box-sizing: border-box !important;",
+];
+
+/**
  * A collection of the `!important` rule with various whitespace.
  */
 const importantRule: Iterable<string> = [
@@ -49,8 +59,9 @@ const whitespace: Iterable<string> = [
 /**
  * A collection of sample values for testing the CSS language plugin.
  */
-export const sampleValues: { [key: string]: Iterable<string> } = {
+export const sampleValues = {
   comments,
+  declarations,
   importantRule,
   propertyNames,
   values,
@@ -60,7 +71,20 @@ export const sampleValues: { [key: string]: Iterable<string> } = {
 /**
  * A collection of preset values for testing the CSS language plugin.
  */
-export const valuePresets: { [key: string]: Iterable<string> } = {
+export const valuePresets = {
+  beforeSelector: new Set([
+    ...comments,
+    ...whitespace,
+  ]),
+  afterSelector: new Set([
+    ...comments,
+    ...whitespace,
+  ]),
+  declarations: new Set([
+    ...comments,
+    ...declarations,
+    ...whitespace,
+  ]),
   beforeProperty: new Set([
     ...comments,
     ...whitespace,

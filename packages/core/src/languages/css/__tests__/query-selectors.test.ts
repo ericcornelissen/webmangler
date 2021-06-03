@@ -1,204 +1,195 @@
-import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "../../__tests__/test-types";
 import type { QuerySelectorOptions } from "../../options";
+import type { CssDeclarationBlockMap } from "./types";
 
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
+import { createCssDeclarationBlocks, generateValueObjectsAll } from "./common";
+import { valuePresets } from "./values";
 
-import querySelectorExpressionFactory from "../query-selectors";
+import expressionsFactory from "../query-selectors";
 
 suite("CSS - Query Selector Expression Factory", function() {
-  const scenarios: TestScenario<TestCase<QuerySelectorOptions>>[] = [
+  type TestScenario = {
+    readonly name: string;
+    readonly pattern: string;
+    readonly factoryOptions: QuerySelectorOptions;
+    readonly expected: string[];
+    readonly testValues: CssDeclarationBlockMap[];
+  }
+
+  const scenarios: TestScenario[] = [
     {
-      name: "sample",
-      cases: [
+      name: "one selector, no configuration",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["div"],
+      testValues: [
         {
-          input: "div { }",
-          pattern: "[a-z]+",
-          expected: ["div"],
-          options: { },
-        },
-        {
-          input: "bar, foobar, baz { }",
-          pattern: "ba(r|z)",
-          expected: ["bar", "baz"],
-          options: { },
-        },
-        {
-          input: ".foobar { }",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: "#foobar { }",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: "#foobar { }",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            prefix: "#",
-          },
-        },
-        {
-          input: "header, footer { }",
-          pattern: "[a-z]+",
-          expected: ["head", "foot"],
-          options: {
-            suffix: "er",
-          },
-        },
-        {
-          input: "[foobar] { }",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            prefix: "\\[",
-            suffix: "\\]",
-          },
+          beforeSelector: valuePresets.beforeSelector,
+          selector: ["div"],
+          afterSelector: valuePresets.afterSelector,
+          declarations: valuePresets.declarations,
         },
       ],
     },
     {
-      name: "nested",
-      cases: [
+      name: "one selector, prefix configured",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: ["foobar"],
+      testValues: [
         {
-          input: "@media (max-width: 420px) { .foobar { } }",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            prefix: "\\.",
-          },
+          beforeSelector: valuePresets.beforeSelector,
+          selector: [".foobar"],
+          afterSelector: valuePresets.afterSelector,
+          declarations: valuePresets.declarations,
         },
       ],
     },
     {
-      name: "with comments",
-      cases: [
+      name: "one selector, prefix & suffix configured",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "\\#",
+        suffix: "er",
+      },
+      expected: ["head"],
+      testValues: [
         {
-          input: "/* class selector */ .foobar { }",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: "#foobar /* id selector */ { }",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            prefix: "\\#",
-          },
-        },
-        {
-          input: ".foo, /* or */ .bar { }",
-          pattern: "[a-z]+",
-          expected: ["foo", "bar"],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: ".foo /* child */ > .bar { }",
-          pattern: "[a-z]+",
-          expected: ["foo", "bar"],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: "#foo/*bar*/ { }",
-          pattern: "[a-z]+",
-          expected: ["foo"],
-          options: {
-            prefix: "\\#",
-          },
-        },{
-          input: "/*foo*/bar { }",
-          pattern: "[a-z]+",
-          expected: ["bar"],
-          options: { },
+          beforeSelector: valuePresets.beforeSelector,
+          selector: ["#header"],
+          afterSelector: valuePresets.afterSelector,
+          declarations: valuePresets.declarations,
         },
       ],
     },
     {
-      name: "edge cases",
-      cases: [
+      // TODO: find better approach for testing nested selectors
+      name: "nested selectors",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: ["foo"],
+      testValues: [
         {
-          input: ".foo { content: \".bar { }\"; }",
-          pattern: "[a-z]+",
-          expected: ["foo"],
-          options: {
-            prefix: "\\.",
-          },
+          beforeSelector: valuePresets.beforeSelector,
+          selector: [
+            "@media only screen",
+            "@media (max-width: 420px)",
+          ],
+          afterSelector: valuePresets.afterSelector,
+          declarations: [".foo { }"],
+        },
+      ],
+    },
+    {
+      name: "multiple selectors in one block",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: ["foo", "bar"],
+      testValues: [
+        {
+          beforeSelector: valuePresets.beforeSelector,
+          selector: [
+            ".foo.bar",
+            ".foo .bar",
+            ".foo, .bar",
+            ".foo > .bar",
+            ".foo ~ .bar",
+            ".foo + .bar",
+          ],
+          afterSelector: valuePresets.afterSelector,
+          declarations: valuePresets.declarations,
+        },
+      ],
+    },
+    {
+      name: "multiple selectors in separate blocks",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "\\#",
+      },
+      expected: ["foo", "bar"],
+      testValues: [
+        {
+          selector: ["#foo"],
+          declarations: valuePresets.declarations,
         },
         {
-          input: ".praise[data-the=\".sun { }\"] { }",
-          pattern: "[a-z]+",
-          expected: ["praise"],
-          options: {
-            prefix: "\\.",
-          },
+          selector: ["#bar"],
+          declarations: valuePresets.declarations,
+        },
+      ],
+    },
+    {
+      name: "selector-like strings",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["div"],
+      testValues: [
+        {
+          selector: ["div"],
+          declarations: [
+            "content: \"span { }\";",
+            "content: \"} main {\";",
+          ],
         },
         {
-          input: ".foo { content: '.bar { }'; }",
-          pattern: "[a-z]+",
-          expected: ["foo"],
-          options: {
-            prefix: "\\.",
-          },
+          selector: [
+            "[data-foo=\"bar\"]",
+            "[data-hello=\"world { }\"]",
+            "[data-value=\"} header {\"]",
+          ],
         },
+      ],
+    },
+    {
+      name: "selector-like comments",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["div"],
+      testValues: [
         {
-          input: ".praise[data-the='.sun { }'] { }",
-          pattern: "[a-z]+",
-          expected: ["praise"],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: ".foo/*, .bar */ { }",
-          pattern: "[a-z]+",
-          expected: ["foo"],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: ".foo { } /* .bar { } */ ",
-          pattern: "[a-z]+",
-          expected: ["foo"],
-          options: {
-            prefix: "\\.",
-          },
+          beforeSelector: [
+            "",
+            "/* header { } */",
+            "/* } footer { } */",
+            "/* main, */",
+            "/* } aside > */",
+          ],
+          selector: ["div"],
+          afterSelector: [
+            "",
+            "/*, span */",
+            "/* { } img */",
+          ],
+          declarations: valuePresets.declarations,
         },
       ],
     },
   ];
 
-  for (const { name, cases } of scenarios) {
-    test(name, function() {
-      for (const testCase of cases) {
-        const {
-          input,
-          pattern,
-          expected,
-          options,
-        } = testCase;
+  for (const scenario of scenarios) {
+    const {
+      name,
+      pattern,
+      factoryOptions,
+      expected,
+      testValues,
+    } = scenario;
 
-        const expressions = querySelectorExpressionFactory(options);
+    test(name, function() {
+      for (const testCase of generateValueObjectsAll(testValues)) {
+        const input = createCssDeclarationBlocks(testCase);
+        const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected);
+        expect(matches).to.deep.equal(expected, `in \`${input}\``);
       }
     });
   }

@@ -1,5 +1,5 @@
 import type { CssDeclarationPropertyOptions } from "../../options";
-import type { CssDeclarationBlockMap, TestCase } from "./types";
+import type { CssDeclarationValuesMap } from "./types";
 
 import { expect } from "chai";
 
@@ -7,7 +7,6 @@ import { getAllMatches } from "../../__tests__/test-helpers";
 import {
   createCssDeclarationBlock,
   createCssDeclarations,
-  generateValueObjects,
   generateValueObjectsAll,
 } from "./common";
 import { valuePresets } from "./values";
@@ -15,7 +14,15 @@ import { valuePresets } from "./values";
 import expressionsFactory from "../css-properties";
 
 suite("CSS - CSS Property Expression Factory", function() {
-  const scenarios: TestCase<CssDeclarationPropertyOptions>[] = [
+  type TestScenario = {
+    readonly name: string;
+    readonly pattern: string;
+    readonly factoryOptions: CssDeclarationPropertyOptions;
+    readonly expected: string[];
+    readonly testValues: CssDeclarationValuesMap[];
+  }
+
+  const scenarios: TestScenario[] = [
     {
       name: "one declaration, no configuration",
       pattern: "[a-z]+",
@@ -211,17 +218,12 @@ suite("CSS - CSS Property Expression Factory", function() {
     } = scenario;
 
     test(name, function() {
-      const cssBlockValues: CssDeclarationBlockMap = {
-        selector: ["div"],
-        declarations: function*(): IterableIterator<string> {
-          for (const decls of generateValueObjectsAll(testValues)) {
-            yield createCssDeclarations(decls);
-          }
-        }(),
-      };
+      for (const testCase of generateValueObjectsAll(testValues)) {
+        const input = createCssDeclarationBlock({
+          selector: "div",
+          declarations: createCssDeclarations(testCase),
+        });
 
-      for (const testCase of generateValueObjects(cssBlockValues)) {
-        const input = createCssDeclarationBlock(testCase);
         const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
         expect(matches).to.deep.equal(expected, `in \`${input}\``);

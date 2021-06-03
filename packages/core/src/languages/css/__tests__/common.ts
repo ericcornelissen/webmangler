@@ -69,6 +69,20 @@ export function createCssDeclarationBlock(
 }
 
 /**
+ * Create a syntactically valid CSS blocks from a list of collections of values.
+ *
+ * @param blocksValues Zero or more {@link CssDeclarationBlockValues}.
+ * @returns A string of CSS blocks.
+ */
+export function createCssDeclarationBlocks(
+  blocksValues: Iterable<CssDeclarationBlockValues>,
+): string {
+  return Array.from(blocksValues).reduce((s, blockValues) => {
+    return s + createCssDeclarationBlock(blockValues);
+  }, "");
+}
+
+/**
  * Generate key-value objects from a key-(many values) object.
  *
  * @param valuesSource The source of possible values.
