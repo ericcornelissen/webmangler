@@ -1,6 +1,6 @@
 import type { SinonStub } from "sinon";
 
-import * as sinon from "sinon";
+import { getStubOrDefault } from "./common";
 
 /**
  * A counter used to make the return value of automatic stubs unique.
@@ -50,59 +50,11 @@ export default class WebManglerPluginLanguageMock {
     getExpressions?: SinonStub,
     getLanguages?: SinonStub,
   }) {
-    this.getEmbeds =
-      WebManglerPluginLanguageMock.getGetEmbedsStub(stubs?.getEmbeds);
-    this.getExpressions =
-      WebManglerPluginLanguageMock.getGetExpressionsStub(stubs?.getExpressions);
-    this.getLanguages =
-      WebManglerPluginLanguageMock.getGetLanguagesStub(stubs?.getLanguages);
-  }
-
-  /**
-   * Get the `getEmbeds` {@link SinonStub} for an {@link
-   * WebManglerPluginLanguageMock} instance.
-   *
-   * @param [providedStub] The provided {@link SinonStub}, if any.
-   * @returns A {@link SinonStub} for the `getEmbeds` method.
-   */
-  private static getGetEmbedsStub(providedStub?: SinonStub): SinonStub {
-    if (providedStub) {
-      return providedStub;
-    }
-
-    return sinon.stub().returns([uniqueId++]);
-  }
-
-  /**
-   * Get the `getExpressions` {@link SinonStub} for an {@link
-   * WebManglerPluginLanguageMock} instance.
-   *
-   * @param [providedStub] The provided {@link SinonStub}, if any.
-   * @returns A {@link SinonStub} for the `getExpressions` method.
-   */
-  private static getGetExpressionsStub(providedStub?: SinonStub): SinonStub {
-    if (providedStub) {
-      return providedStub;
-    }
-
-    const map = new Map();
-    map.set(uniqueId++, uniqueId++);
-
-    return sinon.stub().returns(map);
-  }
-
-  /**
-   * Get the `getLanguages` {@link SinonStub} for an {@link
-   * WebManglerPluginLanguageMock} instance.
-   *
-   * @param [providedStub] The provided {@link SinonStub}, if any.
-   * @returns A {@link SinonStub} for the `getLanguages` method.
-   */
-  private static getGetLanguagesStub(providedStub?: SinonStub): SinonStub {
-    if (providedStub) {
-      return providedStub;
-    }
-
-    return sinon.stub().returns([uniqueId++]);
+    this.getEmbeds = getStubOrDefault([uniqueId++], stubs?.getEmbeds);
+    this.getExpressions = getStubOrDefault(
+      new Map([[uniqueId++, uniqueId++]]),
+      stubs?.getExpressions,
+    );
+    this.getLanguages = getStubOrDefault([uniqueId++], stubs?.getLanguages);
   }
 }
