@@ -1,16 +1,37 @@
 /**
- * A collection of valid CSS comments.
+ * A list of valid CSS attribute selectors.
  */
-const comments: Iterable<string> = [
+const attributeSelectors: string[] = [
+  "[href]",
+  "[target=\"_blank\"]",
+  "[rel='noopener']",
+];
+
+/**
+ * A list of valid CSS class selectors.
+ *
+ * Every selector name is prefixed with a `_` so that a test scenario for class
+ * selectors can avoid matching these selectors by requiring the first character
+ * of the class name to not be a `_`.
+ */
+const classSelectors: string[] = [
+  "._foo",
+  "._bar",
+];
+
+/**
+ * A list of valid CSS comments.
+ */
+const comments: string[] = [
   "/**/",
   "/* */",
   "/* foo */",
 ];
 
 /**
- * A collection of strings of one or more valid CSS declarations.
+ * A list of strings of one or more valid CSS declarations.
  */
-const declarations: Iterable<string> = [
+const declarations: string[] = [
   "color: red;",
   "margin: 3px 14px;",
   "font-family: serif; font-weight: bold;",
@@ -18,9 +39,21 @@ const declarations: Iterable<string> = [
 ];
 
 /**
- * A collection of the `!important` rule with various whitespace.
+ * A list of valid CSS id selectors.
+ *
+ * Every selector name is prefixed with a `_` so that a test scenario for id
+ * selectors can avoid matching these selectors by requiring the first character
+ * of the id name to not be a `_`.
  */
-const importantRule: Iterable<string> = [
+const idSelectors: string[] = [
+  "#_foo",
+  "#_bar",
+];
+
+/**
+ * A list of the `!important` rule with various whitespace.
+ */
+const importantRule: string[] = [
   "!important",
   "!important ",
   " !important",
@@ -28,27 +61,55 @@ const importantRule: Iterable<string> = [
 ];
 
 /**
- * A collection of valid CSS property names.
+ * A list of valid CSS property names.
  */
-const propertyNames: Iterable<string> = [
+const propertyNames: string[] = [
   "color",
   "font",
   "--var",
 ];
 
 /**
- * A collection of valid CSS values.
+ * A list of standard CSS pseudo selectors and pseudo element selectors.
  */
-const values: Iterable<string> = [
+const pseudoElementSelectors: string[] = [
+  "::after",
+  "::before",
+  "::placeholder",
+  "::selection",
+];
+
+/**
+ * A list of standard CSS pseudo selectors and pseudo element selectors.
+ */
+const pseudoSelectors: string[] = [
+  ":active",
+  ":first-of-type",
+  ":hover",
+  ":valid",
+];
+
+/**
+ * A list of CSS type selectors for standard HTML elements.
+ */
+const typeSelectors: string[] = [
+  "div",
+  "span",
+];
+
+/**
+ * A list of valid CSS values.
+ */
+const values: string[] = [
   "red",
   "3px 14px",
   "var(--foobar)",
 ];
 
 /**
- * A collection of valid whitespace.
+ * A list of valid whitespace.
  */
-const whitespace: Iterable<string> = [
+const whitespace: string[] = [
   "",
   " ",
   "\t",
@@ -57,13 +118,55 @@ const whitespace: Iterable<string> = [
 ];
 
 /**
+ * The full list of CSS attribute selector operators.
+ */
+export const attributeSelectorOperators: string[] = [
+  "=",
+  "~=",
+  "|=",
+  "^=",
+  "$=",
+  "*=",
+];
+
+/**
+ * The full list of CSS selector combinators.
+ */
+export const selectorCombinators: string[] = [
+  ...whitespace.filter((s) => s !== ""),
+  ",",
+  ">",
+  "+",
+  "~",
+  " ,",
+  " >",
+  " +",
+  " ~",
+  ", ",
+  "> ",
+  "+ ",
+  "~ ",
+  " , ",
+  " > ",
+  " + ",
+  " ~ ",
+];
+
+
+/**
  * A collection of sample values for testing the CSS language plugin.
  */
 export const sampleValues = {
+  attributeSelectors,
+  classSelectors,
   comments,
   declarations,
   importantRule,
+  idSelectors,
   propertyNames,
+  pseudoElementSelectors,
+  pseudoSelectors,
+  typeSelectors,
   values,
   whitespace,
 };
@@ -75,9 +178,21 @@ export const valuePresets = {
   beforeSelector: new Set([
     ...comments,
     ...whitespace,
+    ...selectorCombinators.map((combinator) => `._foobar${combinator}`),
+  ]),
+  selectors: new Set([
+    ...attributeSelectors,
+    ...classSelectors,
+    ...idSelectors,
+    ...typeSelectors,
   ]),
   afterSelector: new Set([
+    ...classSelectors,
     ...comments,
+    ...idSelectors,
+    ...pseudoElementSelectors,
+    ...pseudoSelectors,
+    ...selectorCombinators.map((combinator) => `${combinator}._foobar`),
     ...whitespace,
   ]),
   declarations: new Set([

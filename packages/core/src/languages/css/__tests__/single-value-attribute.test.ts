@@ -1,101 +1,209 @@
-import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "../../__tests__/test-types";
 import type { SingleValueAttributeOptions } from "../../options";
+import type { CssDeclarationBlockMap } from "./types";
 
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
+import { createCssDeclarationBlocks, generateValueObjectsAll } from "./common";
+import {
+  attributeSelectorOperators,
+  valuePresets,
+  selectorCombinators,
+} from "./values";
 
-import singleValueAttributeExpressionFactory from "../single-value-attributes";
+import expressionsFactory from "../single-value-attributes";
 
 suite("CSS - Single Value Attribute Expression Factory", function() {
-  const scenarios: TestScenario<TestCase<SingleValueAttributeOptions>>[] = [
+  type TestScenario = {
+    readonly name: string;
+    readonly pattern: string;
+    readonly factoryOptions: SingleValueAttributeOptions;
+    readonly expected: string[];
+    readonly testValues: CssDeclarationBlockMap[];
+  }
+
+  const scenarios: TestScenario[] = [
     {
-      name: "sample",
-      cases: [
+      name: "one selector, no prefix or suffix",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-foo"],
+      },
+      expected: ["bar"],
+      testValues: [
         {
-          input: "[data-foo=\"bar\"] { }",
-          pattern: "[a-z]+",
-          expected: ["bar"],
-          options: {
-            attributeNames: ["data-foo"],
-          },
-        },
-        {
-          input: "[class=\"foobar\"] { }",
-          pattern: "[a-z]+",
-          expected: ["bar"],
-          options: {
-            attributeNames: ["class"],
-            valuePrefix: "foo",
-          },
-        },
-        {
-          input: "[class=\"foobar\"] { }",
-          pattern: "[a-z]+",
-          expected: ["foo"],
-          options: {
-            attributeNames: ["class"],
-            valueSuffix: "bar",
-          },
-        },
-        {
-          input: "[class=\"praise the sun\"] { }",
-          pattern: "[a-z]+",
-          expected: ["the"],
-          options: {
-            attributeNames: ["class"],
-            valuePrefix: "praise\\s*",
-            valueSuffix: "\\s*sun",
-          },
+          beforeSelector: [
+            ...valuePresets.beforeSelector,
+            ...valuePresets.selectors,
+          ],
+          selector: generateAttributeSelectors("data-foo", "bar"),
+          afterSelector: valuePresets.afterSelector,
+          declarations: valuePresets.declarations,
         },
       ],
     },
     {
-      name: "edge cases",
-      cases: [
+      name: "one selector, with prefix",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-value"],
+        valuePrefix: "foo",
+      },
+      expected: ["bar"],
+      testValues: [
         {
-          input: ".foo { content: \"[data-foo='bar']\"; }",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["data-foo"],
-          },
+          beforeSelector: [
+            ...valuePresets.beforeSelector,
+            ...valuePresets.selectors,
+          ],
+          selector: generateAttributeSelectors("data-value", "foobar"),
+          afterSelector: valuePresets.afterSelector,
+          declarations: valuePresets.declarations,
+        },
+      ],
+    },
+    {
+      name: "one selector, with suffix",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-value"],
+        valueSuffix: "bar",
+      },
+      expected: ["foo"],
+      testValues: [
+        {
+          beforeSelector: [
+            ...valuePresets.beforeSelector,
+            ...valuePresets.selectors,
+          ],
+          selector: generateAttributeSelectors("data-value", "foobar"),
+          afterSelector: valuePresets.afterSelector,
+          declarations: valuePresets.declarations,
+        },
+      ],
+    },
+    {
+      name: "multiple selectors in one block",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-foo", "data-hello"],
+      },
+      expected: ["bar", "world"],
+      testValues: [
+        {
+          selector: [
+            ...Array.from(generateAttributeSelectors("data-foo", "bar"))
+              .flatMap((selector1) => [
+                ...Array.from(generateAttributeSelectors("data-hello", "world"))
+                  .flatMap((selector2) => [
+                    `${selector1}${selector2}`,
+                    ...selectorCombinators.map(
+                      (combinator) => `${selector1}${combinator}${selector2}`,
+                    ),
+                  ]),
+              ]),
+          ],
+          declarations: valuePresets.declarations,
+        },
+      ],
+    },
+    {
+      name: "multiple selectors in separate blocks",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-foo", "data-hello"],
+      },
+      expected: ["bar", "world"],
+      testValues: [
+        {
+          selector: generateAttributeSelectors("data-foo", "bar"),
+          declarations: valuePresets.declarations,
         },
         {
-          input: ".foo { content: '[data-foo=\"bar\"]'; }",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["data-foo"],
-          },
+          selector: generateAttributeSelectors("data-hello", "world"),
+          declarations: valuePresets.declarations,
         },
+      ],
+    },
+    {
+      name: "attribute selector-like strings",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-foo"],
+      },
+      expected: [],
+      testValues: [
         {
-          input: "div/*[data-foo=\"bar\"]*/ { }",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["data-foo"],
-          },
+          selector: valuePresets.selectors,
+          declarations: [
+            "content: \"[data-foo='bar']\";",
+            "content: '[data-foo=\"bar\"]';",
+          ],
+        },
+      ],
+    },
+    {
+      name: "attribute selector-like comments",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-foo"],
+      },
+      expected: [],
+      testValues: [
+        {
+          beforeSelector: [
+            "",
+            "/* [data-foo=\"bar\"] */",
+          ],
+          selector: valuePresets.selectors,
+          afterSelector: [
+            "",
+            "/* [data-foo=\"bar\"] */",
+          ],
+          declarations: [
+            "",
+            "/* [data-foo=\"bar\"] */",
+          ],
         },
       ],
     },
   ];
 
-  for (const { name, cases } of scenarios) {
-    test(name, function() {
-      for (const testCase of cases) {
-        const {
-          input,
-          pattern,
-          expected,
-          options,
-        } = testCase;
+  for (const scenario of scenarios) {
+    const {
+      name,
+      pattern,
+      factoryOptions,
+      expected,
+      testValues,
+    } = scenario;
 
-        const expressions = singleValueAttributeExpressionFactory(options);
+    test(name, function() {
+      for (const testCase of generateValueObjectsAll(testValues)) {
+        const input = createCssDeclarationBlocks(testCase);
+        const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected);
+        expect(matches).to.deep.equal(expected, `in \`${input}\``);
       }
     });
   }
 });
+
+
+/**
+ * Generate valid attribute value selectors for a given attribute and value.
+ *
+ * @param attributeName The attribute name to use.
+ * @param attributeValue The value to use.
+ * @yields Attribute value selectors.
+ */
+function* generateAttributeSelectors(
+  attributeName: string,
+  attributeValue: string,
+): IterableIterator<string> {
+  for (const operator of attributeSelectorOperators) {
+    for (const q of ["\"", "'"]) {
+      yield `[${attributeName}${operator}${q}${attributeValue}${q}]`;
+    }
+  }
+}

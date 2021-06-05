@@ -5,7 +5,7 @@ import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
 import { createCssDeclarationBlocks, generateValueObjectsAll } from "./common";
-import { valuePresets } from "./values";
+import { selectorCombinators, valuePresets } from "./values";
 
 import expressionsFactory from "../query-selectors";
 
@@ -95,16 +95,10 @@ suite("CSS - Query Selector Expression Factory", function() {
       expected: ["foo", "bar"],
       testValues: [
         {
-          beforeSelector: valuePresets.beforeSelector,
           selector: [
             ".foo.bar",
-            ".foo .bar",
-            ".foo, .bar",
-            ".foo > .bar",
-            ".foo ~ .bar",
-            ".foo + .bar",
+            ...selectorCombinators.map((combinator) => `.foo${combinator}.bar`),
           ],
-          afterSelector: valuePresets.afterSelector,
           declarations: valuePresets.declarations,
         },
       ],
@@ -136,12 +130,14 @@ suite("CSS - Query Selector Expression Factory", function() {
         {
           selector: ["div"],
           declarations: [
+            "",
             "content: \"span { }\";",
             "content: \"} main {\";",
           ],
         },
         {
           selector: [
+            ":root",
             "[data-foo=\"bar\"]",
             "[data-hello=\"world { }\"]",
             "[data-value=\"} header {\"]",
