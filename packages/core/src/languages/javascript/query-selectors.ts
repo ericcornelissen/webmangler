@@ -1,7 +1,10 @@
 import type { MangleExpression } from "../../types";
 import type { QuerySelectorOptions } from "../options";
 
-import { QUERY_SELECTOR_COMBINERS } from "../common";
+import {
+  QUERY_SELECTOR_ALLOWED_AFTER,
+  QUERY_SELECTOR_ALLOWED_BEFORE,
+} from "../common";
 import {
   NestedGroupMangleExpression,
   SingleGroupMangleExpression,
@@ -38,12 +41,12 @@ function newQuerySelectorExpressions(
     `
       (?<=
         ${selectorPrefix ? selectorPrefix :
-          `(?:${quote}|${QUERY_SELECTOR_COMBINERS})`}
+          `(?:${quote}|${QUERY_SELECTOR_ALLOWED_BEFORE})`}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
         ${selectorSuffix ? selectorSuffix :
-          `(?:${quote}|${QUERY_SELECTOR_COMBINERS})`}
+          `(?:${quote}|${QUERY_SELECTOR_ALLOWED_AFTER})`}
       )
     `,
     GROUP_MAIN,
@@ -86,7 +89,7 @@ function newSelectorAsStandaloneStringExpression(): MangleExpression {
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.21
+ * @version v0.1.22
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,

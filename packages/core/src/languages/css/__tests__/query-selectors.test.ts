@@ -66,6 +66,12 @@ suite("CSS - Query Selector Expression Factory", function() {
             suffix: "\\]",
           },
         },
+        {
+          input: ".foobar, div { }",
+          pattern: "[a-z]+",
+          expected: ["div"],
+          options: { },
+        },
       ],
     },
     {

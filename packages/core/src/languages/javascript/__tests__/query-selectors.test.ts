@@ -58,6 +58,12 @@ suite("JavaScript - Query Selector Expression Factory", function() {
             suffix: "\\]",
           },
         },
+        {
+          input: "document.querySelectorAll(\".foobar > div\");",
+          pattern: "[a-z]+",
+          expected: ["div"],
+          options: { },
+        },
       ],
     },
     {

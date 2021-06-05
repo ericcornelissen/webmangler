@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix matching of query selectors without prefix.
 
 ## [0.1.21] - 2021-05-30
 
