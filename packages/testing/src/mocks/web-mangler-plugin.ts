@@ -1,6 +1,6 @@
 import type { SinonStub } from "sinon";
 
-import * as sinon from "sinon";
+import { getStubOrDefault } from "./common";
 
 /**
  * A counter used to make the return value of automatic stubs unique.
@@ -32,21 +32,6 @@ export default class WebManglerPluginMock {
   constructor(stubs?: {
     options?: SinonStub,
   }) {
-    this.options = WebManglerPluginMock.getOptionsStub(stubs?.options);
-  }
-
-  /**
-   * Get the `options` {@link SinonStub} for an {@link WebManglerPluginMock}
-   * instance.
-   *
-   * @param [providedStub] The provided {@link SinonStub}, if any.
-   * @returns A {@link SinonStub} for the `options` method.
-   */
-  private static getOptionsStub(providedStub?: SinonStub): SinonStub {
-    if (providedStub) {
-      return providedStub;
-    }
-
-    return sinon.stub().returns({ id: uniqueId++ });
+    this.options = getStubOrDefault({ id: uniqueId++ }, stubs?.options);
   }
 }

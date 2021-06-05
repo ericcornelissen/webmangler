@@ -1,6 +1,6 @@
 import type { SinonStub } from "sinon";
 
-import * as sinon from "sinon";
+import { getStubOrDefault } from "./common";
 
 /**
  * A counter used to make the return value of automatic stubs unique.
@@ -41,39 +41,7 @@ export default class MangleExpressionMock {
     findAll?: SinonStub,
     replaceAll?: SinonStub,
   }) {
-    this.findAll =
-      MangleExpressionMock.getFindAllStub(stubs?.findAll);
-    this.replaceAll =
-      MangleExpressionMock.getReplaceAllStub(stubs?.replaceAll);
-  }
-
-  /**
-   * Get the `findAll` {@link SinonStub} for an {@link MangleExpressionMock}
-   * instance.
-   *
-   * @param [providedStub] The provided {@link SinonStub}, if any.
-   * @returns A {@link SinonStub} for the `findAll` method.
-   */
-  private static getFindAllStub(providedStub?: SinonStub): SinonStub {
-    if (providedStub) {
-      return providedStub;
-    }
-
-    return sinon.stub().returns([uniqueId++]);
-  }
-
-  /**
-   * Get the `replaceAll` {@link SinonStub} for an {@link MangleExpressionMock}
-   * instance.
-   *
-   * @param [providedStub] The provided {@link SinonStub}, if any.
-   * @returns A {@link SinonStub} for the `replaceAll` method.
-   */
-  private static getReplaceAllStub(providedStub?: SinonStub): SinonStub {
-    if (providedStub) {
-      return providedStub;
-    }
-
-    return sinon.stub().returns(uniqueId++);
+    this.findAll = getStubOrDefault([uniqueId++], stubs?.findAll);
+    this.replaceAll = getStubOrDefault(uniqueId++, stubs?.replaceAll);
   }
 }
