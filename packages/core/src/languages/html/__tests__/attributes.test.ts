@@ -1,133 +1,168 @@
-import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "../../__tests__/test-types";
-import type { AttributeOptions } from "../../options";
+import type { HtmlElementValuesSets } from "./types";
 
+import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
+import { buildHtmlElements } from "./builders";
+import { valuePresets } from "./values";
 
-import attributeExpressionFactory from "../attributes";
+import expressionsFactory from "../attributes";
 
 suite("HTML - Attribute Expression Factory", function() {
-  const scenarios: TestScenario<TestCase<AttributeOptions>>[] = [
+  type TestScenario = {
+    readonly name: string;
+    readonly pattern: string;
+    readonly expected: string[];
+    readonly valuesSets: HtmlElementValuesSets[];
+  }
+
+  const scenarios: TestScenario[] = [
     {
-      name: "sample",
-      cases: [
+      name: "one element, one attribute",
+      pattern: "[a-z\\-]+",
+      expected: ["id"],
+      valuesSets: [
         {
-          input: "<div data-foobar></div>",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foobar"],
-          options: null,
-        },
-        {
-          input: "<div data-foo=\"bar\"></div>",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
-        },
-        {
-          input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-bar"],
-          options: null,
-        },
-        {
-          input: "<div data-hello='world'></div>",
-          pattern: "[a-z\\-]+",
-          expected: ["data-hello"],
-          options: null,
-        },
-        {
-          input: "<div data-foo='baz' data-baz='foo'></div>",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-baz"],
-          options: null,
+          beforeOpeningTag: valuePresets.beforeOpeningTag,
+          tag: valuePresets.tag,
+          attributes: [
+            "id",
+            "id=foobar",
+            "id=\"foobar\"",
+            "id='foobar'",
+          ],
+          afterOpeningTag: valuePresets.afterOpeningTag,
+          content: valuePresets.content,
         },
       ],
     },
     {
-      name: "comments",
-      cases: [
+      name: "one element, multiple attribute",
+      pattern: "[a-z\\-]+",
+      expected: ["data-foo", "data-hello"],
+      valuesSets: [
         {
-          input: "<!--<div data-foobar></div>-->",
-          pattern: "[a-z\\-]+",
-          expected: [],
-          options: null,
-        },
-        {
-          input: "<!--<div data-foo=\"bar\"></div>-->",
-          pattern: "[a-z\\-]+",
-          expected: [],
-          options: null,
-        },
-        {
-          input: `
-            <div data-foo="bar"></div>
-            <!--<div data-foo="baz"></div>-->
-          `,
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
-        },
-        {
-          input: `
-            <!--<div data-foo="bar"></div>-->
-            <div data-foo="baz"></div>
-          `,
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
+          tag: valuePresets.tag,
+          attributes: [
+            "data-foo data-hello",
+            "data-foo=bar data-hello",
+            "data-foo=\"bar\" data-hello",
+            "data-foo='bar' data-hello",
+            "data-foo data-hello=world",
+            "data-foo=bar data-hello=world",
+            "data-foo=\"bar\" data-hello=world",
+            "data-foo='bar' data-hello=world",
+            "data-foo data-hello=\"world\"",
+            "data-foo=bar data-hello=\"world\"",
+            "data-foo=\"bar\" data-hello=\"world\"",
+            "data-foo='bar' data-hello=\"world\"",
+            "data-foo data-hello='world'",
+            "data-foo=bar data-hello='world'",
+            "data-foo=\"bar\" data-hello='world'",
+            "data-foo='bar' data-hello='world'",
+          ],
+          content: valuePresets.content,
         },
       ],
     },
     {
-      name: "HTML content",
-      cases: [
+      name: "multiple elements, one attribute",
+      pattern: "[a-z\\-]+",
+      expected: ["data-foo", "data-hello"],
+      valuesSets: [
         {
-          input: "<div data-foo>data-bar</div>",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
+          tag: valuePresets.tag,
+          attributes: [
+            "data-foo",
+            "data-foo=bar",
+            "data-foo=\"bar\"",
+            "data-foo='bar'",
+          ],
+          content: valuePresets.content,
         },
         {
-          input: "<div data-foo=\"bar\">data-baz</div>",
-          pattern: "[a-z\\-]+",
-          expected: ["data-foo"],
-          options: null,
+          tag: valuePresets.tag,
+          attributes: [
+            "data-hello",
+            "data-hello=world",
+            "data-hello=\"world\"",
+            "data-hello='world'",
+          ],
+          content: valuePresets.content,
         },
       ],
     },
     {
-      name: "attribute value",
-      cases: [
+      name: "attribute-like content",
+      pattern: "data-foo",
+      expected: [],
+      valuesSets: [
         {
-          input: "<div id=\"data-foo\"></div>",
-          pattern: "data-[a-z]+",
-          expected: [],
-          options: null,
+          tag: valuePresets.tag,
+          attributes: valuePresets.attributes,
+          afterOpeningTag: valuePresets.afterOpeningTag,
+          content: [
+            "data-foo",
+            "data-foo=bar",
+            "data-foo=\"bar\"",
+            "data-foo='bar'",
+          ],
+          beforeClosingTag: valuePresets.beforeClosingTag,
         },
+      ],
+    },
+    {
+      name: "attribute-like comments",
+      pattern: "data-foo",
+      expected: [],
+      valuesSets: [
         {
-          input: "<div id='data-foo'></div>",
-          pattern: "data-[a-z]+",
-          expected: [],
-          options: null,
+          beforeOpeningTag: [
+            "",
+            "<!-- data-foo=\"bar\" -->",
+            "<!-- <div data-foo=\"bar\"> -->",
+          ],
+          tag: valuePresets.tag,
+          attributes: valuePresets.attributes,
+          content: [
+            "",
+            "<!-- data-foo=\"bar\" -->",
+            "<!-- <div data-foo=\"bar\"> -->",
+          ],
+          afterClosingTag: [
+            "",
+            "<!-- data-foo=\"bar\" -->",
+            "<!-- <div data-foo=\"bar\"> -->",
+          ],
+        },
+      ],
+    },
+    {
+      name: "attribute-like attribute values",
+      pattern: "data-[a-z\\-]+",
+      expected: [],
+      valuesSets: [
+        {
+          tag: valuePresets.tag,
+          attributes: [
+            "id=\"data-praise\"",
+            "id='data-the'",
+          ],
+          content: valuePresets.content,
         },
       ],
     },
   ];
 
-  for (const { name, cases } of scenarios) {
+  for (const scenario of scenarios) {
+    const { name, pattern, expected, valuesSets } = scenario;
     test(name, function() {
-      for (const testCase of cases) {
-        const {
-          input,
-          pattern,
-          expected,
-        } = testCase;
-
-        const expressions = attributeExpressionFactory();
+      for (const testCase of generateValueObjectsAll(valuesSets)) {
+        const input = buildHtmlElements(testCase);
+        const expressions = expressionsFactory();
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected);
+        expect(matches).to.deep.equal(expected, `in \`${input}\``);
       }
     });
   }
