@@ -42,15 +42,12 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    *
    * @param patternTemplate The generic pattern (only one "%s" allowed).
    * @param groupName The name of a group in `patternTemplate`.
-   * @param [ignoreStrings] Ignored, will be removed in a future version.
    * @since v0.1.11
    * @version v0.1.21
-   * @deprecated
    */
   constructor(
     patternTemplate: string,
     groupName: string,
-    ignoreStrings = false, // eslint-disable-line @typescript-eslint/no-unused-vars
   ) {
     this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.groupName = groupName;

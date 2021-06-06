@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix counting errors of attributes in HTML to improve compression.
 - Fix matching of query selectors without prefix.
 
 ## [0.1.21] - 2021-05-30

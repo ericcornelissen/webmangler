@@ -16,31 +16,31 @@ suite("HTML - Attribute Expression Factory", function() {
         {
           input: "<div data-foobar></div>",
           pattern: "[a-z\\-]+",
-          expected: ["data-foobar", "data-foobar"],
+          expected: ["data-foobar"],
           options: null,
         },
         {
           input: "<div data-foo=\"bar\"></div>",
           pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-foo"],
+          expected: ["data-foo"],
           options: null,
         },
         {
           input: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
           pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-bar", "data-foo"],
+          expected: ["data-foo", "data-bar"],
           options: null,
         },
         {
           input: "<div data-hello='world'></div>",
           pattern: "[a-z\\-]+",
-          expected: ["data-hello", "data-hello"],
+          expected: ["data-hello"],
           options: null,
         },
         {
           input: "<div data-foo='baz' data-baz='foo'></div>",
           pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-foo", "data-baz"],
+          expected: ["data-foo", "data-baz"],
           options: null,
         },
       ],
@@ -66,7 +66,7 @@ suite("HTML - Attribute Expression Factory", function() {
             <!--<div data-foo="baz"></div>-->
           `,
           pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-foo"],
+          expected: ["data-foo"],
           options: null,
         },
         {
@@ -75,7 +75,7 @@ suite("HTML - Attribute Expression Factory", function() {
             <div data-foo="baz"></div>
           `,
           pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-foo"],
+          expected: ["data-foo"],
           options: null,
         },
       ],
@@ -86,13 +86,13 @@ suite("HTML - Attribute Expression Factory", function() {
         {
           input: "<div data-foo>data-bar</div>",
           pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-foo"],
+          expected: ["data-foo"],
           options: null,
         },
         {
           input: "<div data-foo=\"bar\">data-baz</div>",
           pattern: "[a-z\\-]+",
-          expected: ["data-foo", "data-foo"],
+          expected: ["data-foo"],
           options: null,
         },
       ],
