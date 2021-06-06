@@ -1,0 +1,1 @@
+export { generateValueObjectsAll } from "./generate";

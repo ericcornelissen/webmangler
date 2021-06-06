@@ -1,42 +1,48 @@
-type CssDeclarationKey = "beforeProperty"
-  | "property"
-  | "afterProperty"
-  | "beforeValue"
-  | "value"
-  | "afterValue";
+import type {
+  TestValues,
+  TestValuesPresets,
+  TestValuesSets,
+} from "@webmangler/testing";
 
-type CssDeclarationsBlockKey = "beforeSelector"
-  | "selector"
-  | "afterSelector"
-  | "declarations";
+type CssDeclarationKey =
+  "beforeProperty" |
+  "property" |
+  "afterProperty" |
+  "beforeValue" |
+  "value" |
+  "afterValue";
+
+type CssRulesetKey =
+  "beforeSelector" |
+  "selector" |
+  "afterSelector" |
+  "declarations";
+
+/**
+ * Type representing the values for the different parts of a CSS declaration.
+ */
+export type CssDeclarationValues = TestValues<CssDeclarationKey>;
 
 /**
  * Type representing a collection of possible values for the different parts of
  * a CSS declaration.
  */
-export type CssDeclarationValuesMap = {
-  [key in CssDeclarationKey]?: Iterable<string>;
-}
+export type CssDeclarationValuesSets = TestValuesSets<CssDeclarationKey>;
 
 /**
- * Type representing the values for the different parts of a CSS declaration.
+ * Type representing the values for the different parts of a CSS ruleset.
  */
-export type CssDeclarationValues = {
-  [key in CssDeclarationKey]?: string;
-}
+export type CssRulesetValues = TestValues<CssRulesetKey>;
 
 /**
  * Type representing a collection of possible values for the different parts of
- * a CSS declarations block.
+ * a CSS ruleset.
  */
-export type CssDeclarationBlockMap = {
-  [key in CssDeclarationsBlockKey]?: Iterable<string>;
-}
+export type CssRulesetValuesSets = TestValuesSets<CssRulesetKey>;
 
 /**
- * Type representing the values for the different parts of a CSS declarations
- * block.
+ * Type representing a preset of values for the different parts of a CSS
+ * document.
  */
-export type CssDeclarationBlockValues = {
-  [key in CssDeclarationsBlockKey]?: string;
-}
+export type CssValuesPresets =
+  TestValuesPresets<CssDeclarationKey | CssRulesetKey>;

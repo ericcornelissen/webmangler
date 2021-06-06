@@ -1,14 +1,11 @@
 import type { CssDeclarationValueOptions } from "../../options";
-import type { CssDeclarationValuesMap } from "./types";
+import type { CssDeclarationValuesSets } from "./types";
 
+import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
-import {
-  createCssDeclarationBlock,
-  createCssDeclarations,
-  generateValueObjectsAll,
-} from "./common";
+import { buildCssDeclarations, buildCssRuleset } from "./builders";
 import { valuePresets } from "./values";
 
 import expressionsFactory from "../css-values";
@@ -19,7 +16,7 @@ suite("CSS - CSS Value Expression Factory", function() {
     readonly pattern: string;
     readonly factoryOptions: CssDeclarationValueOptions;
     readonly expected: string[];
-    readonly testValues: CssDeclarationValuesMap[];
+    readonly valuesSets: CssDeclarationValuesSets[];
   }
 
   const scenarios: TestScenario[] = [
@@ -28,7 +25,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["red"],
-      testValues: [
+      valuesSets: [
         {
           property: valuePresets.property,
           beforeValue: valuePresets.beforeValue,
@@ -44,7 +41,7 @@ suite("CSS - CSS Value Expression Factory", function() {
         prefix: "[0-9]+",
       },
       expected: ["px"],
-      testValues: [
+      valuesSets: [
         {
           property: valuePresets.property,
           beforeValue: valuePresets.beforeValue,
@@ -60,7 +57,7 @@ suite("CSS - CSS Value Expression Factory", function() {
         suffix: "px",
       },
       expected: ["36"],
-      testValues: [
+      valuesSets: [
         {
           property: valuePresets.property,
           beforeValue: valuePresets.beforeValue,
@@ -76,7 +73,7 @@ suite("CSS - CSS Value Expression Factory", function() {
         suffix: "px",
       },
       expected: ["3", "14"],
-      testValues: [
+      valuesSets: [
         {
           property: valuePresets.property,
           beforeValue: valuePresets.beforeValue,
@@ -90,7 +87,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["red"],
-      testValues: [
+      valuesSets: [
         {
           property: "content",
           value: [
@@ -111,7 +108,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["red"],
-      testValues: [
+      valuesSets: [
         {
           beforeProperty: [
             "",
@@ -145,19 +142,12 @@ suite("CSS - CSS Value Expression Factory", function() {
   ];
 
   for (const scenario of scenarios) {
-    const {
-      name,
-      pattern,
-      factoryOptions,
-      expected,
-      testValues,
-    } = scenario;
-
+    const { name, pattern, factoryOptions, expected, valuesSets } = scenario;
     test(name, function() {
-      for (const testCase of generateValueObjectsAll(testValues)) {
-        const input = createCssDeclarationBlock({
+      for (const testCase of generateValueObjectsAll(valuesSets)) {
+        const input = buildCssRuleset({
           selector: "div",
-          declarations: createCssDeclarations(testCase),
+          declarations: buildCssDeclarations(testCase),
         });
 
         const expressions = expressionsFactory(factoryOptions);

@@ -1,10 +1,11 @@
 import type { QuerySelectorOptions } from "../../options";
-import type { CssDeclarationBlockMap } from "./types";
+import type { CssRulesetValuesSets } from "./types";
 
+import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
-import { createCssDeclarationBlocks, generateValueObjectsAll } from "./common";
+import { buildCssRulesets } from "./builders";
 import { selectorCombinators, valuePresets } from "./values";
 
 import expressionsFactory from "../query-selectors";
@@ -15,7 +16,7 @@ suite("CSS - Query Selector Expression Factory", function() {
     readonly pattern: string;
     readonly factoryOptions: QuerySelectorOptions;
     readonly expected: string[];
-    readonly testValues: CssDeclarationBlockMap[];
+    readonly valuesSets: CssRulesetValuesSets[];
   }
 
   const scenarios: TestScenario[] = [
@@ -24,7 +25,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["div"],
-      testValues: [
+      valuesSets: [
         {
           beforeSelector: valuePresets.beforeSelector,
           selector: ["div"],
@@ -40,7 +41,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         prefix: "\\.",
       },
       expected: ["foobar"],
-      testValues: [
+      valuesSets: [
         {
           beforeSelector: valuePresets.beforeSelector,
           selector: [".foobar"],
@@ -57,7 +58,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         suffix: "er",
       },
       expected: ["head"],
-      testValues: [
+      valuesSets: [
         {
           beforeSelector: valuePresets.beforeSelector,
           selector: ["#header"],
@@ -74,7 +75,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         prefix: "\\.",
       },
       expected: ["foo"],
-      testValues: [
+      valuesSets: [
         {
           beforeSelector: valuePresets.beforeSelector,
           selector: [
@@ -93,7 +94,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         prefix: "\\.",
       },
       expected: ["foo", "bar"],
-      testValues: [
+      valuesSets: [
         {
           selector: [
             ".foo.bar",
@@ -110,7 +111,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         prefix: "\\#",
       },
       expected: ["foo", "bar"],
-      testValues: [
+      valuesSets: [
         {
           selector: ["#foo"],
           declarations: valuePresets.declarations,
@@ -126,7 +127,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["div"],
-      testValues: [
+      valuesSets: [
         {
           selector: ["div"],
           declarations: [
@@ -150,7 +151,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["div"],
-      testValues: [
+      valuesSets: [
         {
           beforeSelector: [
             "",
@@ -172,17 +173,10 @@ suite("CSS - Query Selector Expression Factory", function() {
   ];
 
   for (const scenario of scenarios) {
-    const {
-      name,
-      pattern,
-      factoryOptions,
-      expected,
-      testValues,
-    } = scenario;
-
+    const { name, pattern, factoryOptions, expected, valuesSets } = scenario;
     test(name, function() {
-      for (const testCase of generateValueObjectsAll(testValues)) {
-        const input = createCssDeclarationBlocks(testCase);
+      for (const testCase of generateValueObjectsAll(valuesSets)) {
+        const input = buildCssRulesets(testCase);
         const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
         expect(matches).to.deep.equal(expected, `in \`${input}\``);

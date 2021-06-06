@@ -30,3 +30,61 @@ export interface TestScenario<TestCase> {
    */
   readonly cases: TestCase[];
 }
+
+/**
+ * A {@link TestValues} instance is a collection of values that represent the
+ * components of a document.
+ *
+ * @example
+ * type HtmlKeyName = "tagname" | "attributes" | "content";
+ * type HtmlValues = TestValues<HtmlKeyName>;
+ * const htmlValues: HtmlValues = {
+ *   tagname: "div",
+ *   attributes: "id=\"foobar\" class=\"foo bar\"",
+ *   content: "Lorem ipsum dolor",
+ * };
+ * @since v0.1.5
+ */
+export type TestValues<KeyName extends string> = {
+  [key in KeyName]?: string;
+}
+
+/**
+ * A {@link TestValuesPresets} instance is a collection of collections of sample
+ * values that can be used for {@link TestValuesSets}.
+ *
+ * Note, the difference with {@link TestValuesSets} is that all fields are
+ * required as it is intended to provide a sample of values for every possible
+ * field of {@link TestValuesSets} instances.
+ *
+ * @example
+ * type HtmlKeyName = "tagname" | "attributes" | "content";
+ * type HtmlValuesPresets = TestValuesPresets<HtmlKeyName>;
+ * const htmlValuesPresets: HtmlValuesPresets = {
+ *   tagname: ["div", "span"],
+ *   attributes: ["id=\"foobar\"", "class=\"foo bar\""],
+ *   content: ["Hello world!", "Goodbye cruel world!"],
+ * };
+ * @since v0.1.5
+ */
+export type TestValuesPresets<KeyName extends string> = {
+  [key in KeyName]: Iterable<string>;
+}
+
+/**
+ * A {@link TestValuesSets} instance is a collection of collections of test
+ * values that can be used to build a document.
+ *
+ * @example
+ * type HtmlKeyName = "tagname" | "attributes" | "content";
+ * type HtmlValuesSets = TestValuesSets<HtmlKeyName>;
+ * const htmlValuesSets: HtmlValuesSets = {
+ *   tagname: ["div", "span"],
+ *   attributes: ["id=\"foobar\"", "class=\"foo bar\""],
+ *   content: ["Hello world!", "Goodbye cruel world!"],
+ * };
+ * @since v0.1.5
+ */
+export type TestValuesSets<KeyName extends string> = {
+  [key in KeyName]?: Iterable<string>;
+}

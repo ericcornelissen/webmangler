@@ -1,14 +1,11 @@
 import type { CssDeclarationPropertyOptions } from "../../options";
-import type { CssDeclarationValuesMap } from "./types";
+import type { CssDeclarationValuesSets } from "./types";
 
+import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
-import {
-  createCssDeclarationBlock,
-  createCssDeclarations,
-  generateValueObjectsAll,
-} from "./common";
+import { buildCssDeclarations, buildCssRuleset } from "./builders";
 import { valuePresets } from "./values";
 
 import expressionsFactory from "../css-properties";
@@ -19,7 +16,7 @@ suite("CSS - CSS Property Expression Factory", function() {
     readonly pattern: string;
     readonly factoryOptions: CssDeclarationPropertyOptions;
     readonly expected: string[];
-    readonly testValues: CssDeclarationValuesMap[];
+    readonly valuesSets: CssDeclarationValuesSets[];
   }
 
   const scenarios: TestScenario[] = [
@@ -28,7 +25,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["color"],
-      testValues: [
+      valuesSets: [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["color"],
@@ -45,7 +42,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         prefix: "font-",
       },
       expected: ["family"],
-      testValues: [
+      valuesSets: [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["font-family"],
@@ -62,7 +59,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         suffix: "-right",
       },
       expected: ["margin"],
-      testValues: [
+      valuesSets: [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["margin-right"],
@@ -80,7 +77,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         suffix: "bar",
       },
       expected: ["foo"],
-      testValues: [
+      valuesSets: [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["--foobar"],
@@ -95,7 +92,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["color", "font"],
-      testValues: [
+      valuesSets: [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["color"],
@@ -117,7 +114,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         prefix: "margin-",
       },
       expected: ["left", "right"],
-      testValues: [
+      valuesSets: [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["margin-left"],
@@ -139,7 +136,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         suffix: "-top",
       },
       expected: ["margin", "padding"],
-      testValues: [
+      valuesSets: [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["margin-top"],
@@ -159,7 +156,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["content", "font"],
-      testValues: [
+      valuesSets: [
         {
           property: ["content"],
           value: [
@@ -180,7 +177,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["content", "font"],
-      testValues: [
+      valuesSets: [
         {
           beforeProperty: [
             "",
@@ -209,19 +206,12 @@ suite("CSS - CSS Property Expression Factory", function() {
   ];
 
   for (const scenario of scenarios) {
-    const {
-      name,
-      pattern,
-      factoryOptions,
-      expected,
-      testValues,
-    } = scenario;
-
+    const { name, pattern, factoryOptions, expected, valuesSets } = scenario;
     test(name, function() {
-      for (const testCase of generateValueObjectsAll(testValues)) {
-        const input = createCssDeclarationBlock({
+      for (const testCase of generateValueObjectsAll(valuesSets)) {
+        const input = buildCssRuleset({
           selector: "div",
-          declarations: createCssDeclarations(testCase),
+          declarations: buildCssDeclarations(testCase),
         });
 
         const expressions = expressionsFactory(factoryOptions);

@@ -1,10 +1,11 @@
 import type { SingleValueAttributeOptions } from "../../options";
-import type { CssDeclarationBlockMap } from "./types";
+import type { CssRulesetValuesSets } from "./types";
 
+import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
-import { createCssDeclarationBlocks, generateValueObjectsAll } from "./common";
+import { buildCssRulesets } from "./builders";
 import {
   attributeSelectorOperators,
   valuePresets,
@@ -19,7 +20,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
     readonly pattern: string;
     readonly factoryOptions: SingleValueAttributeOptions;
     readonly expected: string[];
-    readonly testValues: CssDeclarationBlockMap[];
+    readonly valuesSets: CssRulesetValuesSets[];
   }
 
   const scenarios: TestScenario[] = [
@@ -30,11 +31,11 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo"],
       },
       expected: ["bar"],
-      testValues: [
+      valuesSets: [
         {
           beforeSelector: [
             ...valuePresets.beforeSelector,
-            ...valuePresets.selectors,
+            ...valuePresets.selector,
           ],
           selector: generateAttributeSelectors("data-foo", "bar"),
           afterSelector: valuePresets.afterSelector,
@@ -50,11 +51,11 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         valuePrefix: "foo",
       },
       expected: ["bar"],
-      testValues: [
+      valuesSets: [
         {
           beforeSelector: [
             ...valuePresets.beforeSelector,
-            ...valuePresets.selectors,
+            ...valuePresets.selector,
           ],
           selector: generateAttributeSelectors("data-value", "foobar"),
           afterSelector: valuePresets.afterSelector,
@@ -70,11 +71,11 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         valueSuffix: "bar",
       },
       expected: ["foo"],
-      testValues: [
+      valuesSets: [
         {
           beforeSelector: [
             ...valuePresets.beforeSelector,
-            ...valuePresets.selectors,
+            ...valuePresets.selector,
           ],
           selector: generateAttributeSelectors("data-value", "foobar"),
           afterSelector: valuePresets.afterSelector,
@@ -89,7 +90,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo", "data-hello"],
       },
       expected: ["bar", "world"],
-      testValues: [
+      valuesSets: [
         {
           selector: [
             ...Array.from(generateAttributeSelectors("data-foo", "bar"))
@@ -114,7 +115,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo", "data-hello"],
       },
       expected: ["bar", "world"],
-      testValues: [
+      valuesSets: [
         {
           selector: generateAttributeSelectors("data-foo", "bar"),
           declarations: valuePresets.declarations,
@@ -132,9 +133,9 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo"],
       },
       expected: [],
-      testValues: [
+      valuesSets: [
         {
-          selector: valuePresets.selectors,
+          selector: valuePresets.selector,
           declarations: [
             "content: \"[data-foo='bar']\";",
             "content: '[data-foo=\"bar\"]';",
@@ -149,13 +150,13 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo"],
       },
       expected: [],
-      testValues: [
+      valuesSets: [
         {
           beforeSelector: [
             "",
             "/* [data-foo=\"bar\"] */",
           ],
-          selector: valuePresets.selectors,
+          selector: valuePresets.selector,
           afterSelector: [
             "",
             "/* [data-foo=\"bar\"] */",
@@ -170,17 +171,10 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
   ];
 
   for (const scenario of scenarios) {
-    const {
-      name,
-      pattern,
-      factoryOptions,
-      expected,
-      testValues,
-    } = scenario;
-
+    const { name, pattern, factoryOptions, expected, valuesSets } = scenario;
     test(name, function() {
-      for (const testCase of generateValueObjectsAll(testValues)) {
-        const input = createCssDeclarationBlocks(testCase);
+      for (const testCase of generateValueObjectsAll(valuesSets)) {
+        const input = buildCssRulesets(testCase);
         const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
         expect(matches).to.deep.equal(expected, `in \`${input}\``);
@@ -188,7 +182,6 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
     });
   }
 });
-
 
 /**
  * Generate valid attribute value selectors for a given attribute and value.

@@ -1,3 +1,5 @@
+import type { CssValuesPresets } from "./types";
+
 /**
  * A list of valid CSS attribute selectors.
  */
@@ -25,7 +27,7 @@ const classSelectors: string[] = [
 const comments: string[] = [
   "/**/",
   "/* */",
-  "/* foo */",
+  "/* foobar */",
 ];
 
 /**
@@ -152,7 +154,6 @@ export const selectorCombinators: string[] = [
   " ~ ",
 ];
 
-
 /**
  * A collection of sample values for testing the CSS language plugin.
  */
@@ -174,13 +175,13 @@ export const sampleValues = {
 /**
  * A collection of preset values for testing the CSS language plugin.
  */
-export const valuePresets = {
+export const valuePresets: CssValuesPresets = {
   beforeSelector: new Set([
     ...comments,
     ...whitespace,
     ...selectorCombinators.map((combinator) => `._foobar${combinator}`),
   ]),
-  selectors: new Set([
+  selector: new Set([
     ...attributeSelectors,
     ...classSelectors,
     ...idSelectors,
