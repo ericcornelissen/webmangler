@@ -1,7 +1,6 @@
 import type { MangleExpression } from "../../types";
 
 import { NestedGroupMangleExpression } from "../utils/mangle-expressions";
-import { QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -11,8 +10,8 @@ const GROUP_MAIN = "main";
  *
  * @returns The {@link MangleExpression}s to match element attributes in HTML.
  */
-function newElementAttributeExpressions(): MangleExpression[] {
-  return QUOTES_ARRAY.map((quote: string) => new NestedGroupMangleExpression(
+function newElementAttributeExpressions(): MangleExpression {
+  return new NestedGroupMangleExpression(
     `
       (?:
         (?:<!--.*-->)
@@ -21,7 +20,7 @@ function newElementAttributeExpressions(): MangleExpression[] {
         (?<${GROUP_MAIN}>
           (?:
             [^>\\s=]+
-            (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+            (?:\\s*=\\s*('[^']*'|"[^"]*"))?
             \\s+
           )*
           %s
@@ -35,7 +34,7 @@ function newElementAttributeExpressions(): MangleExpression[] {
       (?=\\=|\\s|\\/|\\>|$)
     `,
     GROUP_MAIN,
-  ));
+  );
 }
 
 /**
@@ -45,11 +44,11 @@ function newElementAttributeExpressions(): MangleExpression[] {
  *
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.21
+ * @version v0.1.22
  */
 export default function attributeExpressionFactory():
     Iterable<MangleExpression> {
   return [
-    ...newElementAttributeExpressions(),
+    newElementAttributeExpressions(),
   ];
 }
