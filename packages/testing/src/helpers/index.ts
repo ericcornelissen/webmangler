@@ -1,1 +1,1 @@
-export { generateValueObjectsAll } from "./generate";
+export { generateValueObjects, generateValueObjectsAll } from "./generate";

@@ -5,6 +5,7 @@ import type { TestValues, TestValuesSets } from "../types";
  *
  * @param valuesSource The source of possible values.
  * @yields An object for all possible combinations of values in the input.
+ * @since v0.1.5
  */
 export function* generateValueObjects<KeyName extends string>(
   valuesSource: TestValuesSets<KeyName>,
