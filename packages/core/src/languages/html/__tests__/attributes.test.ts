@@ -1,10 +1,18 @@
 import type { HtmlElementValuesSets } from "./types";
 
-import { generateValueObjectsAll } from "@webmangler/testing";
+import {
+  generateValueObjects,
+  generateValueObjectsAll,
+} from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
-import { buildHtmlElements } from "./builders";
+import {
+  buildHtmlAttributes,
+  buildHtmlComment,
+  buildHtmlElements,
+  buildHtmlElement,
+} from "./builders";
 import { valuePresets } from "./values";
 
 import expressionsFactory from "../attributes";
@@ -14,7 +22,7 @@ suite("HTML - Attribute Expression Factory", function() {
     readonly name: string;
     readonly pattern: string;
     readonly expected: string[];
-    readonly valuesSets: HtmlElementValuesSets[];
+    getValuesSets(): HtmlElementValuesSets[];
   }
 
   const scenarios: TestScenario[] = [
@@ -22,18 +30,16 @@ suite("HTML - Attribute Expression Factory", function() {
       name: "one element, one attribute",
       pattern: "[a-z\\-]+",
       expected: ["id"],
-      valuesSets: [
+      getValuesSets: () => [
         {
-          beforeOpeningTag: valuePresets.beforeOpeningTag,
-          tag: valuePresets.tag,
+          beforeOpeningTag: valuePresets.elements.beforeOpeningTag,
+          tag: valuePresets.elements.tag,
           attributes: [
-            "id",
-            "id=foobar",
-            "id=\"foobar\"",
-            "id='foobar'",
+            ...buildHtmlAttributes({ name: "id" }),
+            ...buildHtmlAttributes({ name: "id", value: "foobar" }),
           ],
-          afterOpeningTag: valuePresets.afterOpeningTag,
-          content: valuePresets.content,
+          afterOpeningTag: valuePresets.elements.afterOpeningTag,
+          content: valuePresets.elements.content,
         },
       ],
     },
@@ -41,9 +47,9 @@ suite("HTML - Attribute Expression Factory", function() {
       name: "one element, multiple attribute",
       pattern: "[a-z\\-]+",
       expected: ["data-foo", "data-hello"],
-      valuesSets: [
+      getValuesSets: () => [
         {
-          tag: valuePresets.tag,
+          tag: valuePresets.elements.tag,
           attributes: [
             "data-foo data-hello",
             "data-foo=bar data-hello",
@@ -62,7 +68,7 @@ suite("HTML - Attribute Expression Factory", function() {
             "data-foo=\"bar\" data-hello='world'",
             "data-foo='bar' data-hello='world'",
           ],
-          content: valuePresets.content,
+          content: valuePresets.elements.content,
         },
       ],
     },
@@ -70,45 +76,22 @@ suite("HTML - Attribute Expression Factory", function() {
       name: "multiple elements, one attribute",
       pattern: "[a-z\\-]+",
       expected: ["data-foo", "data-hello"],
-      valuesSets: [
+      getValuesSets: () => [
         {
-          tag: valuePresets.tag,
+          tag: valuePresets.elements.tag,
           attributes: [
-            "data-foo",
-            "data-foo=bar",
-            "data-foo=\"bar\"",
-            "data-foo='bar'",
+            ...buildHtmlAttributes({ name: "data-foo" }),
+            ...buildHtmlAttributes({ name: "data-foo", value: "bar" }),
           ],
-          content: valuePresets.content,
+          content: valuePresets.elements.content,
         },
         {
-          tag: valuePresets.tag,
+          tag: valuePresets.elements.tag,
           attributes: [
-            "data-hello",
-            "data-hello=world",
-            "data-hello=\"world\"",
-            "data-hello='world'",
+            ...buildHtmlAttributes({ name: "data-hello" }),
+            ...buildHtmlAttributes({ name: "data-hello", value: "world" }),
           ],
-          content: valuePresets.content,
-        },
-      ],
-    },
-    {
-      name: "attribute-like content",
-      pattern: "data-foo",
-      expected: [],
-      valuesSets: [
-        {
-          tag: valuePresets.tag,
-          attributes: valuePresets.attributes,
-          afterOpeningTag: valuePresets.afterOpeningTag,
-          content: [
-            "data-foo",
-            "data-foo=bar",
-            "data-foo=\"bar\"",
-            "data-foo='bar'",
-          ],
-          beforeClosingTag: valuePresets.beforeClosingTag,
+          content: valuePresets.elements.content,
         },
       ],
     },
@@ -116,25 +99,44 @@ suite("HTML - Attribute Expression Factory", function() {
       name: "attribute-like comments",
       pattern: "data-foo",
       expected: [],
-      valuesSets: [
+      getValuesSets: () => {
+        const commentWithElementWithAttribute = Array
+          .from(generateValueObjects({
+            tag: ["div"],
+            attributes: [
+              ...buildHtmlAttributes({ name: "data-foo" }),
+              ...buildHtmlAttributes({ name: "data-foo", value: "bar" }),
+            ],
+            content: [undefined, ""],
+          }))
+          .map(buildHtmlElement)
+          .map(buildHtmlComment);
+
+        return [
+          {
+            beforeOpeningTag: ["", ...commentWithElementWithAttribute],
+            tag: valuePresets.elements.tag,
+            attributes: valuePresets.elements.attributes,
+            content: ["", ...commentWithElementWithAttribute],
+            afterClosingTag: ["", ...commentWithElementWithAttribute],
+          },
+        ];
+      },
+    },
+    {
+      name: "attribute-like content",
+      pattern: "data-foo",
+      expected: [],
+      getValuesSets: () => [
         {
-          beforeOpeningTag: [
-            "",
-            "<!-- data-foo=\"bar\" -->",
-            "<!-- <div data-foo=\"bar\"> -->",
-          ],
-          tag: valuePresets.tag,
-          attributes: valuePresets.attributes,
+          tag: valuePresets.elements.tag,
+          attributes: valuePresets.elements.attributes,
+          afterOpeningTag: valuePresets.elements.afterOpeningTag,
           content: [
-            "",
-            "<!-- data-foo=\"bar\" -->",
-            "<!-- <div data-foo=\"bar\"> -->",
+            ...buildHtmlAttributes({ name: "data-foo" }),
+            ...buildHtmlAttributes({ name: "data-foo", value: "bar" }),
           ],
-          afterClosingTag: [
-            "",
-            "<!-- data-foo=\"bar\" -->",
-            "<!-- <div data-foo=\"bar\"> -->",
-          ],
+          beforeClosingTag: valuePresets.elements.beforeClosingTag,
         },
       ],
     },
@@ -142,27 +144,28 @@ suite("HTML - Attribute Expression Factory", function() {
       name: "attribute-like attribute values",
       pattern: "data-[a-z\\-]+",
       expected: [],
-      valuesSets: [
+      getValuesSets: () => [
         {
-          tag: valuePresets.tag,
+          tag: valuePresets.elements.tag,
           attributes: [
             "id=\"data-praise\"",
             "id='data-the'",
           ],
-          content: valuePresets.content,
+          content: valuePresets.elements.content,
         },
       ],
     },
   ];
 
   for (const scenario of scenarios) {
-    const { name, pattern, expected, valuesSets } = scenario;
+    const { name, pattern, expected, getValuesSets } = scenario;
     test(name, function() {
+      const valuesSets = getValuesSets();
       for (const testCase of generateValueObjectsAll(valuesSets)) {
         const input = buildHtmlElements(testCase);
         const expressions = expressionsFactory();
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected, `in \`${input}\``);
+        expect(matches).to.have.members(expected, `in \`${input}\``);
       }
     });
   }

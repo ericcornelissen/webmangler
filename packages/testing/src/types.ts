@@ -68,7 +68,7 @@ export type TestValues<KeyName extends string> = {
  * @since v0.1.5
  */
 export type TestValuesPresets<KeyName extends string> = {
-  [key in KeyName]: Iterable<string>;
+  [key in KeyName]: Iterable<string | undefined>;
 }
 
 /**
@@ -86,5 +86,5 @@ export type TestValuesPresets<KeyName extends string> = {
  * @since v0.1.5
  */
 export type TestValuesSets<KeyName extends string> = {
-  [key in KeyName]?: Iterable<string>;
+  [key in KeyName]?: Iterable<string | undefined>;
 }

@@ -1,10 +1,64 @@
-import type { HtmlElementValues } from "./types";
+import type { HtmlAttributeValues, HtmlElementValues } from "./types";
+
+/**
+ * Build HTML attributes from a name-value pair.
+ *
+ * If no `name` is provided the name will be "alt". If no `value` is provided
+ * this function will produce valueless attributes (and ignore `beforeValue` and
+ * `afterValue`). For all other values the default is an empty string.
+ *
+ * @param attributeValues The values to construct a HTML attribute from.
+ * @returns A list of attribute-value strings.
+ */
+export function buildHtmlAttributes(
+  attributeValues: HtmlAttributeValues,
+): string[] {
+  const {
+    beforeName = "",
+    name = "alt",
+    afterName = "",
+    beforeValue = "",
+    value,
+    afterValue = "",
+  } = attributeValues;
+
+  if (value === undefined) {
+    return [
+      `${beforeName}${name}${afterName}`,
+    ];
+  } else {
+    const result = [
+      `${beforeName}${name}${afterName}=${beforeValue}"${value}"${afterValue}`,
+      `${beforeName}${name}${afterName}=${beforeValue}'${value}'${afterValue}`,
+    ];
+
+    if (!/\s/.test(value)) {
+      result.push(
+        `${beforeName}${name}${afterName}=${beforeValue}${value}${afterValue}`,
+      );
+    }
+
+    return result;
+  }
+}
+
+/**
+ * Build a HTML comment from a string.
+ *
+ * @param commentText The comment text.
+ * @returns The text as a HTML comment.
+ */
+export function buildHtmlComment(commentText: string): string {
+  return `<!--${commentText}-->`;
+}
 
 /**
  * Build a syntactically valid HTML element from a collection of values.
  *
- * If no `tags` is provided the tag will be "div". For all other values the
- * default is an empty string.
+ * If no `tag` is provided the tag will be "div". If no `content` is provided
+ * this function will produce a self-closing tag (and ignore the `beforeClosing
+ * Tag` and `afterClosingTag` values). For all other values the default is an
+ * empty string.
  *
  * @param elementValues The values to construct a HTML element from.
  * @returns A HTML element as a string.
@@ -17,14 +71,14 @@ export function buildHtmlElement(
     tag = "div",
     attributes = "",
     afterOpeningTag = "",
-    content = "",
+    content,
     beforeClosingTag = "",
     afterClosingTag = "",
   } = elementValues;
 
   const _attributes = attributes ? ` ${attributes}` : "";
 
-  if (content === "") {
+  if (content === undefined) {
     return beforeOpeningTag +
       "<" +
       tag +
