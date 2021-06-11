@@ -15,7 +15,7 @@ module.exports = {
   reporter: "dot",
   timeout: 5000,
   ui: "tdd",
-  spec: `packages/${specPackage}/**/*.${specSuffix}.ts`,
+  spec: `packages/${specPackage}/**/__tests__/*.${specSuffix}.ts`,
   require: [
     "ts-node/register",
     "tsconfig-paths/register",
