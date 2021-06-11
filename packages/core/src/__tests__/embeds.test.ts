@@ -7,7 +7,7 @@ import type {
   WebManglerLanguagePlugin,
 } from "../types";
 
-import { WebManglerPluginLanguageMock } from "@webmangler/testing";
+import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
@@ -36,7 +36,7 @@ suite("Embeds", function() {
               },
             ],
             plugins: [
-              new WebManglerPluginLanguageMock({
+              new WebManglerLanguagePluginMock({
                 getEmbeds: sinon.stub().returns([
                   {
                     content: ".foobar { color: red; }",
@@ -74,7 +74,7 @@ suite("Embeds", function() {
               },
             ],
             plugins: [
-              new WebManglerPluginLanguageMock({
+              new WebManglerLanguagePluginMock({
                 getEmbeds: sinon.stub().returns([
                   {
                     content: "var x = document.getElementById(\"foobar\");",
@@ -113,7 +113,7 @@ suite("Embeds", function() {
               },
             ],
             plugins: [
-              new WebManglerPluginLanguageMock({
+              new WebManglerLanguagePluginMock({
                 getEmbeds: sinon.stub().returns([
                   {
                     content: "var x = document.getElementById(\"bar\");",
@@ -166,7 +166,7 @@ suite("Embeds", function() {
           {
             files: [],
             plugins: [
-              new WebManglerPluginLanguageMock(),
+              new WebManglerLanguagePluginMock(),
             ],
             expected: {
               embeds: [],

@@ -12,8 +12,9 @@ let uniqueId = 0;
  *
  * @since v0.1.1
  * @version v0.1.5
+ * @deprecated Make sure you import this as "WebManglerLanguagePluginMock".
  */
-export default class WebManglerPluginLanguageMock {
+export default class WebManglerLanguagePluginMock {
   /**
    * The `getEmbeds` method of the mock.
    *
@@ -36,7 +37,7 @@ export default class WebManglerPluginLanguageMock {
   public readonly getLanguages: SinonStub;
 
   /**
-   * Create a new {@link WebManglerPluginLanguageMock}. Optionally with specific
+   * Create a new {@link WebManglerLanguagePluginMock}. Optionally with specific
    * behaviour.
    *
    * @param [stubs] The stubs for this mock.
