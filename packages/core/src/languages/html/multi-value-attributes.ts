@@ -22,13 +22,13 @@ function newElementAttributeMultiValueExpressions(
   return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
     `
       (?:
-        (?:<!--.*-->)
+        (?:<!--.*?-->)
         |
         (?<=
           \\<\\s*[a-zA-Z0-9]+\\s+
           (?:
             [^>\\s=]+
-            (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s]*))?
             \\s+
           )*
           ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)}
@@ -63,17 +63,17 @@ function newElementAttributeMultiValueExpressions(
  */
 function newUnquotedAttributeValueExpression(
   attributesPattern: string,
-): MangleExpression[] {
-  return QUOTES_ARRAY.map((quote) => new SingleGroupMangleExpression(
+): MangleExpression {
+  return new SingleGroupMangleExpression(
     `
       (?:
-        (?:<!--.*-->)
+        (?:<!--.*?-->)
         |
         (?<=
           \\<\\s*[a-zA-Z0-9]+\\s+
           (?:
             [^>\\s=]+
-            (?:\\s*=\\s*${quote}[^${quote}]*${quote})?
+            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s]*))?
             \\s+
           )*
           (?:${attributesPattern})\\s*=\\s*
@@ -85,7 +85,7 @@ function newUnquotedAttributeValueExpression(
       )
     `,
     GROUP_MAIN,
-  ));
+  );
 }
 
 /**
@@ -105,6 +105,6 @@ export default function multiValueAttributeExpressionFactory(
 
   return [
     ...newElementAttributeMultiValueExpressions(attributesPattern),
-    ...newUnquotedAttributeValueExpression(attributesPattern),
+    newUnquotedAttributeValueExpression(attributesPattern),
   ];
 }
