@@ -125,13 +125,13 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
     },
     {
       name: "attribute-like comments",
-      pattern: "[a-z\\-]+",
+      pattern: "[a-z]+",
       factoryOptions: {
         attributeNames: ["data-foo"],
       },
       expected: [],
       getValuesSets: () => {
-        const commentWithElementWithAttribute = Array
+        const commentOfElementWithAttribute = Array
           .from(generateValueObjects({
             tag: ["div"],
             attributes: buildHtmlAttributes({ name: "data-foo", value: "bar" }),
@@ -142,18 +142,18 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
 
         return [
           {
-            beforeOpeningTag: ["", ...commentWithElementWithAttribute],
+            beforeOpeningTag: ["", ...commentOfElementWithAttribute],
             tag: valuePresets.elements.tag,
             attributes: valuePresets.elements.attributes,
-            content: ["", ...commentWithElementWithAttribute],
-            afterClosingTag: ["", ...commentWithElementWithAttribute],
+            content: ["", ...commentOfElementWithAttribute],
+            afterClosingTag: ["", ...commentOfElementWithAttribute],
           },
         ];
       },
     },
     {
       name: "attribute-like content",
-      pattern: "[a-z\\-]+",
+      pattern: "[a-z]+",
       factoryOptions: {
         attributeNames: ["data-foo"],
       },
@@ -170,7 +170,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
     },
     {
       name: "attribute-like attribute values",
-      pattern: "data-[a-z\\-]+",
+      pattern: "[a-z]+",
       factoryOptions: {
         attributeNames: ["data-foo"],
       },
