@@ -123,6 +123,9 @@ module.exports = {
         // See: https://eslint.org/docs/rules/
         "no-console": "off",
 
+        // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
+        "jsdoc/require-jsdoc": "off",
+
         // See: https://github.com/nodesecurity/eslint-plugin-security#rules
         "security/detect-child-process": "off",
         "security/detect-non-literal-fs-filename": "off",

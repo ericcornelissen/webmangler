@@ -16,27 +16,54 @@ const COVERAGE_FLAG = "--coverage";
 const WATCH_FLAG = "--watch";
 
 const projectRoot = path.resolve(__dirname, "..");
+const packagesRoot = path.resolve(projectRoot, "packages");
 const binDir = path.resolve(projectRoot, "node_modules", ".bin");
 const nycBin = path.resolve(binDir, "nyc");
 const mochaBin = path.resolve(binDir, "mocha");
 
 const argv = process.argv.slice(2);
 
-spawnSync(getSpawnCmd(argv), getSpawnArgs(argv), {
-  env: Object.assign({ }, process.env, {
-    TEST_PACKAGES: getPackagesToRun(argv),
-    TEST_TYPE: getTestType(argv),
-  }),
-  stdio: ["inherit", "inherit", "inherit"],
-});
+const cmd = getCliCommand(argv);
+const cmdArgs = getCommandArgs(argv);
+const packages = getPackagesToRun(argv);
+const testType = getTestType(argv);
 
-/**
- * Get the arguments to run.
- *
- * @param args The arguments vector.
- * @returns The argument to run.
- */
-function getSpawnCmd(args) {
+compilePackages(packages);
+runTests(cmd, cmdArgs, packages, testType);
+
+function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
+  console.log("Running test...");
+  spawnSync(spawnCmd, spawnArgs, {
+    env: Object.assign({ }, process.env, {
+      TEST_PACKAGES,
+      TEST_TYPE,
+    }),
+    stdio: ["inherit", "inherit", "inherit"],
+  });
+}
+
+function compilePackages(packagesStr) {
+  log("Compiling packages...\n");
+
+  let packageList;
+  if (packagesStr !== undefined) {
+    packageList = packagesStr.split(",");
+  } else {
+    packageList = fs.readdirSync(packagesRoot);
+  }
+
+  for (const packageName of packageList) {
+    log(`  Compiling packages/${packageName}...`);
+    spawnSync("npm", ["run", "compile"], {
+      cwd: path.resolve(packagesRoot, packageName),
+    });
+    log(`  Compiled packages/${packageName}.\n`, { overwrite: true });
+  }
+
+  log("\n");
+}
+
+function getCliCommand(args) {
   if (args.includes(COVERAGE_FLAG)) {
     return nycBin;
   }
@@ -44,31 +71,19 @@ function getSpawnCmd(args) {
   return mochaBin;
 }
 
-/**
- * Get the arguments for the command to run.
- *
- * @param args The arguments vector.
- * @returns An array of arguments.
- */
-function getSpawnArgs(args) {
-  const result = [];
+function getCommandArgs(args) {
+  const cliArgs = [];
   if (args.includes(COVERAGE_FLAG)) {
-    result.push(mochaBin);
+    cliArgs.push(mochaBin);
   }
 
   if (args.includes(WATCH_FLAG)) {
-    result.push("--watch", "--reporter", "min");
+    cliArgs.push("--watch", "--reporter", "min");
   }
 
-  return result;
+  return cliArgs;
 }
 
-/**
- * Get the packages for which to run tests.
- *
- * @param args The arguments vector.
- * @returns Either `undefined` or a glob of the packages to run tests for.
- */
 function getPackagesToRun(args) {
   const packageArgs = args.filter((arg) => !arg.startsWith("-"));
   if (packageArgs.length === 0) {
@@ -88,12 +103,6 @@ function getPackagesToRun(args) {
   return packagesExpr;
 }
 
-/**
- * Get the type of tests to be run.
- *
- * @param args The arguments vector.
- * @returns One of `undefined` or `"benchmark"`.
- */
 function getTestType(args) {
   for (const arg of args) {
     switch (arg) {
@@ -102,5 +111,17 @@ function getTestType(args) {
     }
   }
 
-  return;
+  return "test";
+}
+
+function log(s, opts={}) {
+  const emptyLine = " ".repeat(process.stdout.columns);
+
+  if (opts.overwrite) {
+    process.stdout.write("\r");
+    process.stdout.write(emptyLine);
+    process.stdout.write("\r");
+  }
+
+  process.stdout.write(s);
 }
