@@ -29,7 +29,7 @@ function newQuerySelectorExpressions(
   return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
     `
       (?:
-        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n)
+        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n?)
         |
         (?<${GROUP_MAIN}>
           ${quote}[^${quote}]*
@@ -63,7 +63,7 @@ function newSelectorAsStandaloneStringExpression(): MangleExpression {
   return new SingleGroupMangleExpression(
     `
       (?:
-        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n)
+        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n?)
         |
         (?<=
           (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
