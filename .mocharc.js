@@ -1,5 +1,10 @@
 "use strict";
 
+const {
+  TEST_TYPE_BENCHMARK,
+  TEST_TYPE_TEST,
+} = require("./scripts/constants");
+
 let packagesExpr = "*";
 let packagesList = [packagesExpr];
 if(process.env.TEST_PACKAGES !== undefined) {
@@ -11,9 +16,14 @@ if(process.env.TEST_PACKAGES !== undefined) {
   }
 }
 
-let specSuffix = "test";
-if (process.env.TEST_TYPE === "benchmark") {
-  specSuffix = "bench";
+let specSuffix;
+switch (process.env.TEST_TYPE) {
+  case TEST_TYPE_BENCHMARK:
+    specSuffix = "bench";
+    break;
+  case TEST_TYPE_TEST:
+  default:
+    specSuffix = "test";
 }
 
 module.exports = {

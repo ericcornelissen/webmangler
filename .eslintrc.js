@@ -174,6 +174,10 @@ module.exports = {
       parserOptions: {
         ecmaVersion: 2015,
       },
+      rules: {
+        // Disable any lingering TypeScript issues
+        "@typescript-eslint/no-var-requires": "off",
+      },
       globals: JS_GLOBALS,
     },
     { // Configuration files (JSON)

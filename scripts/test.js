@@ -11,6 +11,11 @@ const { spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
+const {
+  TEST_TYPE_BENCHMARK,
+  TEST_TYPE_TEST,
+} = require("./constants");
+
 const BENCHMARK_FLAG = "--benchmark";
 const COVERAGE_FLAG = "--coverage";
 const WATCH_FLAG = "--watch";
@@ -107,11 +112,11 @@ function getTestType(args) {
   for (const arg of args) {
     switch (arg) {
       case BENCHMARK_FLAG:
-        return "benchmark";
+        return TEST_TYPE_BENCHMARK;
     }
   }
 
-  return "test";
+  return TEST_TYPE_TEST;
 }
 
 function log(s, opts={}) {
