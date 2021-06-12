@@ -1,136 +1,197 @@
-import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "../../__tests__/test-types";
 import type { QuerySelectorOptions } from "../../options";
+import type { JsStatementValuesSets } from "./types";
 
+import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
+import {
+  buildJsFunctionCall,
+  buildJsStatements,
+  buildJsInlineComment,
+  buildJsLineComment,
+  buildJsStrings,
+} from "./builders";
+import { valuePresets } from "./values";
 
-import querySelectorExpressionFactory from "../query-selectors";
+import expressionsFactory from "../query-selectors";
 
 suite("JavaScript - Query Selector Expression Factory", function() {
-  const scenarios: TestScenario<TestCase<QuerySelectorOptions>>[] = [
+  type TestScenario = {
+    readonly name: string;
+    readonly pattern: string;
+    readonly factoryOptions: QuerySelectorOptions;
+    readonly expected: string[];
+    getValuesSets(): JsStatementValuesSets[];
+  }
+
+  const scenarios: TestScenario[] = [
     {
-      name: "sample",
-      cases: [
+      name: "without configuration",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["div"],
+      getValuesSets: () => [
         {
-          input: "document.querySelectorAll(\"div\");",
-          pattern: "[a-z]+",
-          expected: ["div"],
-          options: { },
-        },
-        {
-          input: "document.querySelectorAll(\"bar > foobar > baz\");",
-          pattern: "ba(r|z)",
-          expected: ["bar", "baz"],
-          options: { },
-        },
-        {
-          input: "document.querySelectorAll(\".foobar\");",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: "document.querySelectorAll(\".foobar\");",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            prefix: "#",
-          },
-        },
-        {
-          input: "document.querySelectorAll(\"#foobar\");",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            prefix: "#",
-          },
-        },
-        {
-          input: "document.querySelectorAll(\"[foobar]\");",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            prefix: "\\[",
-            suffix: "\\]",
-          },
-        },
-        {
-          input: "document.querySelectorAll(\".foobar > div\");",
-          pattern: "[a-z]+",
-          expected: ["div"],
-          options: { },
+          leftHand: valuePresets.leftHand,
+          afterLeftHand: valuePresets.afterLeftHand,
+          beforeRightHand: valuePresets.beforeRightHand,
+          rightHand: [
+            ...buildJsStrings("div"),
+            ...buildJsStrings("div")
+              .map(asQuerySelectorAll),
+          ],
+          afterRightHand: valuePresets.afterRightHand,
         },
       ],
     },
     {
-      name: "edge cases",
-      cases: [
+      name: "with prefix, as CSS selector",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: ["foobar"],
+      getValuesSets: () => [
         {
-          input: `
-            // document.querySelectorAll(".foo");
-            document.querySelectorAll(".bar");
-          `,
-          pattern: "[a-z]+",
-          expected: ["bar"],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: `
-            /* document.querySelectorAll(".foo"); */
-            document.querySelectorAll(".bar");
-          `,
-          pattern: "[a-z]+",
-          expected: ["bar"],
-          options: {
-            prefix: "\\.",
-          },
-        },
-        {
-          input: `
-            // document.getElementById("foo");
-            document.getElementById("bar");
-          `,
-          pattern: "[a-z]+",
-          expected: ["bar"],
-          options: {
-            prefix: "#",
-          },
-        },
-        {
-          input: `
-            /* document.getElementById("foo"); */
-            document.getElementById("bar");
-          `,
-          pattern: "[a-z]+",
-          expected: ["bar"],
-          options: {
-            prefix: "#",
-          },
+          leftHand: valuePresets.leftHand,
+          afterLeftHand: valuePresets.afterLeftHand,
+          beforeRightHand: valuePresets.beforeRightHand,
+          rightHand: [
+            ...buildJsStrings(".foobar"),
+            ...buildJsStrings(".foobar")
+              .map(asQuerySelectorAll),
+          ],
+          afterRightHand: valuePresets.afterRightHand,
         },
       ],
+    },
+    {
+      name: "with prefix, as standalone string",
+      pattern: "[a-z0-9]+",
+      factoryOptions: {
+        prefix: "\\#",
+      },
+      expected: ["r2d2"],
+      getValuesSets: () => [
+        {
+          leftHand: valuePresets.leftHand,
+          afterLeftHand: valuePresets.afterLeftHand,
+          beforeRightHand: valuePresets.beforeRightHand,
+          rightHand: [
+            ...buildJsStrings("r2d2"),
+            ...buildJsStrings("r2d2")
+              .map(asQuerySelectorAll),
+          ],
+          afterRightHand: valuePresets.afterRightHand,
+        },
+      ],
+    },
+    {
+      name: "without configuration, in comments",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: [],
+      getValuesSets: () => {
+        const inlineCommentOfSelectorString = buildJsStrings("div")
+          .map(asQuerySelectorAll)
+          .map(buildJsInlineComment);
+
+        return [
+          {
+            beforeLeftHand: [
+              "",
+              ...inlineCommentOfSelectorString,
+            ],
+            afterLeftHand: [
+              "",
+              ...inlineCommentOfSelectorString,
+            ],
+            beforeRightHand: [
+              "",
+              ...inlineCommentOfSelectorString,
+            ],
+            afterRightHand: [
+              "",
+              ...inlineCommentOfSelectorString,
+            ],
+            afterStatement: [
+              "",
+              ...inlineCommentOfSelectorString,
+              ...buildJsStrings("div")
+                .map(asQuerySelectorAll)
+                .map(buildJsLineComment),
+            ],
+          },
+        ];
+      },
+    },
+    {
+      name: "with prefix, in comments",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: [],
+      getValuesSets: () => {
+        const inlineCommentOfSelectorString = buildJsStrings(".foo")
+          .map(asQuerySelectorAll)
+          .map(buildJsInlineComment);
+
+        return [
+          {
+            beforeLeftHand: [
+              "",
+              ...inlineCommentOfSelectorString,
+            ],
+            afterLeftHand: [
+              "",
+              ...inlineCommentOfSelectorString,
+            ],
+            beforeRightHand: [
+              "",
+              ...inlineCommentOfSelectorString,
+            ],
+            afterRightHand: [
+              "",
+              ...inlineCommentOfSelectorString,
+            ],
+            afterStatement: [
+              "",
+              ...inlineCommentOfSelectorString,
+              ...buildJsStrings(".bar")
+                .map(asQuerySelectorAll)
+                .map(buildJsLineComment),
+            ],
+          },
+        ];
+      },
     },
   ];
 
-  for (const { name, cases } of scenarios) {
+  for (const scenario of scenarios) {
+    const { name, pattern, factoryOptions, expected, getValuesSets } = scenario;
     test(name, function() {
-      for (const testCase of cases) {
-        const {
-          input,
-          pattern,
-          expected,
-          options,
-        } = testCase;
-
-        const expressions = querySelectorExpressionFactory(options);
+      const valueSets = getValuesSets();
+      for (const testCase of generateValueObjectsAll(valueSets)) {
+        const input = buildJsStatements(testCase);
+        const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected);
+        expect(matches).to.have.members(expected, `in \`${input}\``);
       }
     });
   }
 });
+
+/**
+ * Convert a query selector string into a call to `document.querySelectorAll`.
+ *
+ * @param selectorStr The query selector string.
+ * @returns A call to `document.querySelectorAll` as a string.
+ */
+function asQuerySelectorAll(selectorStr: string) {
+  return buildJsFunctionCall({
+    name: "document.querySelectorAll",
+    args: selectorStr,
+  });
+}
