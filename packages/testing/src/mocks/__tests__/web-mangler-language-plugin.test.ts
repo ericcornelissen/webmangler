@@ -4,14 +4,14 @@ import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import WebManglerPluginLanguageMock from "../web-mangler-language-plugin";
+import WebManglerLanguagePluginMock from "../web-mangler-language-plugin";
 
 chaiUse(sinonChai);
 
-suite("WebManglerPluginLanguageMock", function() {
+suite("WebManglerLanguagePluginMock", function() {
   suite("::getEmbeds", function() {
     test("default stub", function() {
-      const pluginMock = new WebManglerPluginLanguageMock();
+      const pluginMock = new WebManglerLanguagePluginMock();
       expect(pluginMock.getEmbeds).not.to.throw();
       expect(pluginMock.getEmbeds()).not.to.be.undefined;
     });
@@ -19,7 +19,7 @@ suite("WebManglerPluginLanguageMock", function() {
     test("custom stub", function() {
       const getEmbedsStub: SinonStub = sinon.stub();
 
-      const pluginMock = new WebManglerPluginLanguageMock({
+      const pluginMock = new WebManglerLanguagePluginMock({
         getEmbeds: getEmbedsStub,
       });
       expect(pluginMock.getEmbeds).not.to.throw();
@@ -29,7 +29,7 @@ suite("WebManglerPluginLanguageMock", function() {
 
   suite("::getExpressions", function() {
     test("default stub", function() {
-      const pluginMock = new WebManglerPluginLanguageMock();
+      const pluginMock = new WebManglerLanguagePluginMock();
       expect(pluginMock.getExpressions).not.to.throw();
       expect(pluginMock.getExpressions()).not.to.be.undefined;
     });
@@ -37,7 +37,7 @@ suite("WebManglerPluginLanguageMock", function() {
     test("custom stub", function() {
       const getExpressionsStub: SinonStub = sinon.stub();
 
-      const pluginMock = new WebManglerPluginLanguageMock({
+      const pluginMock = new WebManglerLanguagePluginMock({
         getExpressions: getExpressionsStub,
       });
       expect(pluginMock.getExpressions).not.to.throw();
@@ -47,7 +47,7 @@ suite("WebManglerPluginLanguageMock", function() {
 
   suite("::getLanguages", function() {
     test("default stub", function() {
-      const pluginMock = new WebManglerPluginLanguageMock();
+      const pluginMock = new WebManglerLanguagePluginMock();
       expect(pluginMock.getLanguages).not.to.throw();
       expect(pluginMock.getLanguages()).not.to.be.undefined;
     });
@@ -55,7 +55,7 @@ suite("WebManglerPluginLanguageMock", function() {
     test("custom stub", function() {
       const getLanguagesStub: SinonStub = sinon.stub();
 
-      const pluginMock = new WebManglerPluginLanguageMock({
+      const pluginMock = new WebManglerLanguagePluginMock({
         getLanguages: getLanguagesStub,
       });
       expect(pluginMock.getLanguages).not.to.throw();

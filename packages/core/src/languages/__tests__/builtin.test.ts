@@ -2,7 +2,7 @@ import type BuiltInLanguagesPluginType from "../builtin";
 import type { BuiltInLanguagesOptions } from "../builtin";
 import type { WebManglerLanguagePlugin } from "../../types";
 
-import { WebManglerPluginLanguageMock } from "@webmangler/testing";
+import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
 import * as proxyquire from "proxyquire";
 import * as sinon from "sinon";
@@ -24,9 +24,9 @@ suite("Built-in Language Supports", function() {
   };
 
   suiteSetup(function() {
-    CssLanguagePluginMock = new WebManglerPluginLanguageMock();
-    HtmlLanguagePluginMock = new WebManglerPluginLanguageMock();
-    JsLanguagePluginMock = new WebManglerPluginLanguageMock();
+    CssLanguagePluginMock = new WebManglerLanguagePluginMock();
+    HtmlLanguagePluginMock = new WebManglerLanguagePluginMock();
+    JsLanguagePluginMock = new WebManglerLanguagePluginMock();
 
     CssLanguagePluginModuleStub = sinon.stub();
     CssLanguagePluginModuleStub.returns(CssLanguagePluginMock);

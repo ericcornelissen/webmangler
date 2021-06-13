@@ -91,7 +91,7 @@ _WebMangler_ core. You can use these mocks when your tests need to integrate
 with the _WebMangler_ core. The following mocks are available:
 
 - [MangleExpressionMock](#mangleexpressionmock)
-- [WebManglerPluginLanguageMock](#webmanglerpluginlanguagemock)
+- [WebManglerLanguagePluginMock](#webmanglerlanguagepluginmock)
 - [WebManglerPluginMock](#webmanglerpluginmock)
 
 #### `MangleExpressionMock`
@@ -123,7 +123,7 @@ mangleExpression = new MangleExpressionMock({ findAll: stub });
 | `stubs.findAll`    | [Stub] | Implementation of `findAll()`.    |
 | `stubs.replaceAll` | [Stub] | Implementation of `replaceAll()`. |
 
-#### `WebManglerPluginLanguageMock`
+#### `WebManglerLanguagePluginMock`
 
 A mocked implementation of the `WebManglerPluginLanguage` type. Can be
 instantiated with custom `getEmbeds()`,  `getExpressions()` and `getLanguages()`
@@ -132,18 +132,18 @@ behaviour if needed.
 ##### Example
 
 ```ts
-import { WebManglerPluginLanguageMock } from "@webmangler/testing";
+import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import * as sinon from "sinon";
 
 let plugin;
 
 // With default implementations of all methods.
-plugin = new WebManglerPluginLanguageMock();
+plugin = new WebManglerLanguagePluginMock();
 
 // With custom implementation of the `getExpressions` method.
 const expressions = new Map();
 const stub = sinon.stub().returns(expressions);
-plugin = new WebManglerPluginLanguageMock({ getExpressions: stub });
+plugin = new WebManglerLanguagePluginMock({ getExpressions: stub });
 ```
 
 ##### Arguments
