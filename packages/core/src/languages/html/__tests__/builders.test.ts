@@ -11,6 +11,8 @@ import {
 
 suite("HTML expression factory test suite string builders", function() {
   suite("::buildHtmlAttributes", function() {
+    const DEFAULT_ATTRIBUTE_NAME = "alt";
+
     type TestCase = {
       expected: string[];
       input: HtmlAttributeValues;
@@ -21,7 +23,7 @@ suite("HTML expression factory test suite string builders", function() {
       {
         name: "no value",
         input: { },
-        expected: ["alt"],
+        expected: [DEFAULT_ATTRIBUTE_NAME],
       },
       {
         name: "only a name",

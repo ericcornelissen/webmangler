@@ -13,6 +13,8 @@ import {
 
 suite("JS expression factory test suite string builders", function() {
   suite("::buildJsFunctionCall", function() {
+    const DEFAULT_FUNCTION_NAME = "fn";
+
     type TestCase = {
       expected: string;
       input: JsFunctionValues;
@@ -23,7 +25,7 @@ suite("JS expression factory test suite string builders", function() {
       {
         name: "no values",
         input: { },
-        expected: "fn()",
+        expected: `${DEFAULT_FUNCTION_NAME}()`,
       },
       {
         name: "only a name",
@@ -37,7 +39,7 @@ suite("JS expression factory test suite string builders", function() {
         input: {
           args: "foo, bar",
         },
-        expected: "fn(foo, bar)",
+        expected: `${DEFAULT_FUNCTION_NAME}(foo, bar)`,
       },
       {
         name: "a name and args",
@@ -130,6 +132,8 @@ suite("JS expression factory test suite string builders", function() {
   });
 
   suite("::buildJsStatement", function() {
+    const DEFAULT_LEFT_HAND = "var x";
+
     type TestCase = {
       expected: string;
       input: JsStatementValues;
@@ -140,14 +144,14 @@ suite("JS expression factory test suite string builders", function() {
       {
         name: "no input",
         input: { },
-        expected: "var x;",
+        expected: `${DEFAULT_LEFT_HAND};`,
       },
       {
         name: "only a right-hand side",
         input: {
           rightHand: "fn()",
         },
-        expected: "var x=fn();",
+        expected: `${DEFAULT_LEFT_HAND}=fn();`,
       },
       {
         name: "a left-hand and right-hand side",

@@ -72,7 +72,7 @@ const propertyNames: string[] = [
 ];
 
 /**
- * A list of standard CSS pseudo selectors and pseudo element selectors.
+ * A list of standard CSS pseudo element selectors.
  */
 const pseudoElementSelectors: string[] = [
   "::after",
@@ -82,7 +82,7 @@ const pseudoElementSelectors: string[] = [
 ];
 
 /**
- * A list of standard CSS pseudo selectors and pseudo element selectors.
+ * A list of standard CSS pseudo selectors.
  */
 const pseudoSelectors: string[] = [
   ":active",

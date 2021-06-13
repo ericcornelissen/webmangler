@@ -114,11 +114,20 @@ suite("HTML - Attribute Expression Factory", function() {
 
         return [
           {
-            beforeOpeningTag: ["", ...commentWithElementWithAttribute],
+            beforeOpeningTag: [
+              "",
+              ...commentWithElementWithAttribute,
+            ],
             tag: valuePresets.elements.tag,
             attributes: valuePresets.elements.attributes,
-            content: ["", ...commentWithElementWithAttribute],
-            afterClosingTag: ["", ...commentWithElementWithAttribute],
+            content: [
+              "",
+              ...commentWithElementWithAttribute,
+            ],
+            afterClosingTag: [
+              "",
+              ...commentWithElementWithAttribute,
+            ],
           },
         ];
       },

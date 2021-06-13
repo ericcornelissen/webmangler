@@ -1,5 +1,8 @@
 import type { HtmlAttributeValues, HtmlElementValues } from "./types";
 
+const DEFAULT_ATTRIBUTE_NAME = "alt";
+const DEFAULT_ELEMENT_TAG = "div";
+
 /**
  * Build HTML attributes from a name-value pair.
  *
@@ -15,7 +18,7 @@ export function buildHtmlAttributes(
 ): string[] {
   const {
     beforeName = "",
-    name = "alt",
+    name = DEFAULT_ATTRIBUTE_NAME,
     afterName = "",
     beforeValue = "",
     value,
@@ -68,7 +71,7 @@ export function buildHtmlElement(
 ): string {
   const {
     beforeOpeningTag = "",
-    tag = "div",
+    tag = DEFAULT_ELEMENT_TAG,
     attributes = "",
     afterOpeningTag = "",
     content,

@@ -1,5 +1,8 @@
 import type { JsFunctionValues, JsStatementValues } from "./types";
 
+const DEFAULT_FUNCTION_NAME = "fn";
+const DEFAULT_LEFT_HAND = "var x";
+
 /**
  * Build a syntactically valid JavaScript function call.
  *
@@ -12,7 +15,7 @@ import type { JsFunctionValues, JsStatementValues } from "./types";
 export function buildJsFunctionCall(functionValues: JsFunctionValues): string {
   const {
     beforeName = "",
-    name = "fn",
+    name = DEFAULT_FUNCTION_NAME,
     afterName = "",
     beforeArgs = "",
     args = "",
@@ -73,7 +76,7 @@ export function buildJsStatement(
 ): string {
   const {
     beforeLeftHand = "",
-    leftHand = "var x",
+    leftHand = DEFAULT_LEFT_HAND,
     afterLeftHand = "",
     beforeRightHand = "",
     rightHand,

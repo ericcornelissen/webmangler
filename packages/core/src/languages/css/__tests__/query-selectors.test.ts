@@ -16,7 +16,7 @@ suite("CSS - Query Selector Expression Factory", function() {
     readonly pattern: string;
     readonly factoryOptions: QuerySelectorOptions;
     readonly expected: string[];
-    readonly valuesSets: CssRulesetValuesSets[];
+    getValuesSets(): CssRulesetValuesSets[];
   }
 
   const scenarios: TestScenario[] = [
@@ -25,7 +25,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["div"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeSelector: valuePresets.beforeSelector,
           selector: ["div"],
@@ -41,7 +41,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         prefix: "\\.",
       },
       expected: ["foobar"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeSelector: valuePresets.beforeSelector,
           selector: [".foobar"],
@@ -58,7 +58,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         suffix: "er",
       },
       expected: ["head"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeSelector: valuePresets.beforeSelector,
           selector: ["#header"],
@@ -75,7 +75,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         prefix: "\\.",
       },
       expected: ["foo"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeSelector: valuePresets.beforeSelector,
           selector: [
@@ -94,7 +94,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         prefix: "\\.",
       },
       expected: ["foo", "bar"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           selector: [
             ".foo.bar",
@@ -111,7 +111,7 @@ suite("CSS - Query Selector Expression Factory", function() {
         prefix: "\\#",
       },
       expected: ["foo", "bar"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           selector: ["#foo"],
           declarations: valuePresets.declarations,
@@ -127,7 +127,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["div"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           selector: ["div"],
           declarations: [
@@ -151,35 +151,41 @@ suite("CSS - Query Selector Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["div"],
-      valuesSets: [
-        {
-          beforeSelector: [
-            "",
-            "/* header { } */",
-            "/* } footer { } */",
-            "/* main, */",
-            "/* } aside > */",
-          ],
-          selector: ["div"],
-          afterSelector: [
-            "",
-            "/*, span */",
-            "/* { } img */",
-          ],
-          declarations: valuePresets.declarations,
-        },
-      ],
+      getValuesSets: () => {
+        const commentWithSelector = [
+              "/* header { } */",
+              "/* } footer { } */",
+              "/* main, */",
+              "/* } aside > */",
+        ];
+
+        return [
+          {
+            beforeSelector: [
+              "",
+              ...commentWithSelector,
+            ],
+            selector: ["div"],
+            afterSelector: [
+              "",
+              ...commentWithSelector,
+            ],
+            declarations: valuePresets.declarations,
+          },
+        ];
+      },
     },
   ];
 
   for (const scenario of scenarios) {
-    const { name, pattern, factoryOptions, expected, valuesSets } = scenario;
+    const { name, pattern, factoryOptions, expected, getValuesSets } = scenario;
     test(name, function() {
+      const valuesSets = getValuesSets();
       for (const testCase of generateValueObjectsAll(valuesSets)) {
         const input = buildCssRulesets(testCase);
         const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected, `in \`${input}\``);
+        expect(matches).to.have.members(expected, `in \`${input}\``);
       }
     });
   }

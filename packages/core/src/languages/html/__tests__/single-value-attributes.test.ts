@@ -142,11 +142,20 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
 
         return [
           {
-            beforeOpeningTag: ["", ...commentOfElementWithAttribute],
+            beforeOpeningTag: [
+              "",
+              ...commentOfElementWithAttribute,
+            ],
             tag: valuePresets.elements.tag,
             attributes: valuePresets.elements.attributes,
-            content: ["", ...commentOfElementWithAttribute],
-            afterClosingTag: ["", ...commentOfElementWithAttribute],
+            content: [
+              "",
+              ...commentOfElementWithAttribute,
+            ],
+            afterClosingTag: [
+              "",
+              ...commentOfElementWithAttribute,
+            ],
           },
         ];
       },
@@ -180,6 +189,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
           tag: valuePresets.elements.tag,
           attributes: [
             "alt=\"data-foo=bar\"",
+            "alt='data-foo=bar'",
             "alt=\"data-foo='bar'\"",
             "alt='data-foo=\"bar\"'",
           ],

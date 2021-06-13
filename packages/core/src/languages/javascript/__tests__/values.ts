@@ -63,8 +63,11 @@ const whitespace: string[] = [
  * A collection of sample values for testing the JavaScript language plugin.
  */
 export const sampleValues = {
+  functionCalls,
   inlineComments,
   lineComments,
+  literals,
+  variableDeclarations,
   whitespace,
 };
 

@@ -20,7 +20,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
     readonly pattern: string;
     readonly factoryOptions: SingleValueAttributeOptions;
     readonly expected: string[];
-    readonly valuesSets: CssRulesetValuesSets[];
+    getValuesSets(): CssRulesetValuesSets[];
   }
 
   const scenarios: TestScenario[] = [
@@ -31,7 +31,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo"],
       },
       expected: ["bar"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeSelector: [
             ...valuePresets.beforeSelector,
@@ -51,7 +51,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         valuePrefix: "foo",
       },
       expected: ["bar"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeSelector: [
             ...valuePresets.beforeSelector,
@@ -71,7 +71,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         valueSuffix: "bar",
       },
       expected: ["foo"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeSelector: [
             ...valuePresets.beforeSelector,
@@ -90,7 +90,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo", "data-hello"],
       },
       expected: ["bar", "world"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           selector: [
             ...Array.from(generateAttributeSelectors("data-foo", "bar"))
@@ -115,7 +115,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo", "data-hello"],
       },
       expected: ["bar", "world"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           selector: generateAttributeSelectors("data-foo", "bar"),
           declarations: valuePresets.declarations,
@@ -133,7 +133,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo"],
       },
       expected: [],
-      valuesSets: [
+      getValuesSets: () => [
         {
           selector: valuePresets.selector,
           declarations: [
@@ -150,34 +150,42 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         attributeNames: ["data-foo"],
       },
       expected: [],
-      valuesSets: [
-        {
-          beforeSelector: [
-            "",
-            "/* [data-foo=\"bar\"] */",
-          ],
-          selector: valuePresets.selector,
-          afterSelector: [
-            "",
-            "/* [data-foo=\"bar\"] */",
-          ],
-          declarations: [
-            "",
-            "/* [data-foo=\"bar\"] */",
-          ],
-        },
-      ],
+      getValuesSets: () => {
+        const commentWithAttributeSelector = [
+          "/* [data-foo=\"bar\"] */",
+          "/* [data-foo='bar'] */",
+        ];
+
+        return [
+          {
+            beforeSelector: [
+              "",
+              ...commentWithAttributeSelector,
+            ],
+            selector: valuePresets.selector,
+            afterSelector: [
+              "",
+              ...commentWithAttributeSelector,
+            ],
+            declarations: [
+              "",
+              ...commentWithAttributeSelector,
+            ],
+          },
+        ];
+      },
     },
   ];
 
   for (const scenario of scenarios) {
-    const { name, pattern, factoryOptions, expected, valuesSets } = scenario;
+    const { name, pattern, factoryOptions, expected, getValuesSets } = scenario;
     test(name, function() {
+      const valuesSets = getValuesSets();
       for (const testCase of generateValueObjectsAll(valuesSets)) {
         const input = buildCssRulesets(testCase);
         const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected, `in \`${input}\``);
+        expect(matches).to.have.members(expected, `in \`${input}\``);
       }
     });
   }

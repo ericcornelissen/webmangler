@@ -146,11 +146,20 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
 
         return [
           {
-            beforeOpeningTag: ["", ...commentOfElementWithAttribute],
+            beforeOpeningTag: [
+              "",
+              ...commentOfElementWithAttribute,
+            ],
             tag: valuePresets.elements.tag,
             attributes: valuePresets.elements.attributes,
-            content: ["", ...commentOfElementWithAttribute],
-            afterClosingTag: ["", ...commentOfElementWithAttribute],
+            content: [
+              "",
+              ...commentOfElementWithAttribute,
+            ],
+            afterClosingTag: [
+              "",
+              ...commentOfElementWithAttribute,
+            ],
           },
         ];
       },

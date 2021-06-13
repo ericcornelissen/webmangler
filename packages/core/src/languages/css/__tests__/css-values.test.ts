@@ -16,7 +16,7 @@ suite("CSS - CSS Value Expression Factory", function() {
     readonly pattern: string;
     readonly factoryOptions: CssDeclarationValueOptions;
     readonly expected: string[];
-    readonly valuesSets: CssDeclarationValuesSets[];
+    getValuesSets(): CssDeclarationValuesSets[];
   }
 
   const scenarios: TestScenario[] = [
@@ -25,7 +25,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["red"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           property: valuePresets.property,
           beforeValue: valuePresets.beforeValue,
@@ -41,7 +41,7 @@ suite("CSS - CSS Value Expression Factory", function() {
         prefix: "[0-9]+",
       },
       expected: ["px"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           property: valuePresets.property,
           beforeValue: valuePresets.beforeValue,
@@ -57,7 +57,7 @@ suite("CSS - CSS Value Expression Factory", function() {
         suffix: "px",
       },
       expected: ["36"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           property: valuePresets.property,
           beforeValue: valuePresets.beforeValue,
@@ -73,7 +73,7 @@ suite("CSS - CSS Value Expression Factory", function() {
         suffix: "px",
       },
       expected: ["3", "14"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           property: valuePresets.property,
           beforeValue: valuePresets.beforeValue,
@@ -87,7 +87,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["red"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           property: "content",
           value: [
@@ -108,42 +108,46 @@ suite("CSS - CSS Value Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["red"],
-      valuesSets: [
-        {
-          beforeProperty: [
-            "",
-            "/* color: green; */",
-            "/* ; color: mint; */",
-          ],
-          property: "padding",
-          afterProperty: [
-            "",
-            "/* color: black; */",
-            "/* ; color: yellow; */",
-          ],
-          beforeValue: [
-            "",
-            "/* color: blue; */",
-            "/* ; color: teal; */",
-          ],
-          value: ["42px"],
-          afterValue: [
-            "",
-            "/* color: yellow; */",
-            "/* ; color: orange; */",
-          ],
-        },
-        {
-          property: valuePresets.property,
-          value: ["red"],
-        },
-      ],
+      getValuesSets: () => {
+        const commentWithDeclarations = [
+          "/* color: green; */",
+          "/* ; color: mint; */",
+        ];
+
+        return [
+          {
+            beforeProperty: [
+              "",
+              ...commentWithDeclarations,
+            ],
+            property: "padding",
+            afterProperty: [
+              "",
+              ...commentWithDeclarations,
+            ],
+            beforeValue: [
+              "",
+              ...commentWithDeclarations,
+            ],
+            value: ["42px"],
+            afterValue: [
+              "",
+              ...commentWithDeclarations,
+            ],
+          },
+          {
+            property: valuePresets.property,
+            value: ["red"],
+          },
+        ];
+      },
     },
   ];
 
   for (const scenario of scenarios) {
-    const { name, pattern, factoryOptions, expected, valuesSets } = scenario;
+    const { name, pattern, factoryOptions, expected, getValuesSets } = scenario;
     test(name, function() {
+      const valuesSets = getValuesSets();
       for (const testCase of generateValueObjectsAll(valuesSets)) {
         const input = buildCssRuleset({
           selector: "div",
@@ -152,7 +156,7 @@ suite("CSS - CSS Value Expression Factory", function() {
 
         const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected, `in \`${input}\``);
+        expect(matches).to.have.members(expected, `in \`${input}\``);
       }
     });
   }

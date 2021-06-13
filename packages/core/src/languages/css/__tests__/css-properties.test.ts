@@ -16,7 +16,7 @@ suite("CSS - CSS Property Expression Factory", function() {
     readonly pattern: string;
     readonly factoryOptions: CssDeclarationPropertyOptions;
     readonly expected: string[];
-    readonly valuesSets: CssDeclarationValuesSets[];
+    getValuesSets(): CssDeclarationValuesSets[];
   }
 
   const scenarios: TestScenario[] = [
@@ -25,7 +25,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["color"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["color"],
@@ -42,7 +42,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         prefix: "font-",
       },
       expected: ["family"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["font-family"],
@@ -59,7 +59,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         suffix: "-right",
       },
       expected: ["margin"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["margin-right"],
@@ -77,7 +77,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         suffix: "bar",
       },
       expected: ["foo"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["--foobar"],
@@ -92,7 +92,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["color", "font"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["color"],
@@ -114,7 +114,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         prefix: "margin-",
       },
       expected: ["left", "right"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["margin-left"],
@@ -136,7 +136,7 @@ suite("CSS - CSS Property Expression Factory", function() {
         suffix: "-top",
       },
       expected: ["margin", "padding"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           beforeProperty: valuePresets.beforeProperty,
           property: ["margin-top"],
@@ -156,7 +156,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["content", "font"],
-      valuesSets: [
+      getValuesSets: () => [
         {
           property: ["content"],
           value: [
@@ -177,37 +177,42 @@ suite("CSS - CSS Property Expression Factory", function() {
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: ["content", "font"],
-      valuesSets: [
-        {
-          beforeProperty: [
-            "",
-            "/* color: violet; */",
-            "/* ; color: purple; */",
-          ],
-          property: ["content"],
-          value: valuePresets.value,
-          afterValue: [
-            "",
-            "/* color: blue; */",
-            "/* ; color: teal; */",
-          ],
-        },
-        {
-          beforeProperty: [
-            "",
-            "/* color: orange; */",
-            "/* ; color: amber; */",
-          ],
-          property: ["font"],
-          value: valuePresets.value,
-        },
-      ],
+      getValuesSets: () => {
+        const commentWithDeclarations = [
+          "/* color: violet; */",
+          "/* ; color: purple; */",
+        ];
+
+        return [
+          {
+            beforeProperty: [
+              "",
+              ...commentWithDeclarations,
+            ],
+            property: ["content"],
+            value: valuePresets.value,
+            afterValue: [
+              "",
+              ...commentWithDeclarations,
+            ],
+          },
+          {
+            beforeProperty: [
+              "",
+              ...commentWithDeclarations,
+            ],
+            property: ["font"],
+            value: valuePresets.value,
+          },
+        ];
+      },
     },
   ];
 
   for (const scenario of scenarios) {
-    const { name, pattern, factoryOptions, expected, valuesSets } = scenario;
+    const { name, pattern, factoryOptions, expected, getValuesSets } = scenario;
     test(name, function() {
+      const valuesSets = getValuesSets();
       for (const testCase of generateValueObjectsAll(valuesSets)) {
         const input = buildCssRuleset({
           selector: "div",
@@ -216,7 +221,7 @@ suite("CSS - CSS Property Expression Factory", function() {
 
         const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected, `in \`${input}\``);
+        expect(matches).to.have.members(expected, `in \`${input}\``);
       }
     });
   }
