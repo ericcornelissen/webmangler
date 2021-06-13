@@ -88,7 +88,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       ],
     },
     {
-      name: "without configuration, in comments",
+      name: "selector-like string in comments, no configuration",
       pattern: "[a-z]+",
       factoryOptions: { },
       expected: [],
@@ -127,7 +127,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       },
     },
     {
-      name: "with prefix, in comments",
+      name: "selector-like string in comments, with prefix",
       pattern: "[a-z]+",
       factoryOptions: {
         prefix: "\\.",
