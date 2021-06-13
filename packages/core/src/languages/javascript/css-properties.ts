@@ -22,7 +22,7 @@ function newPropertyAsStandaloneStringExpression(
   return new SingleGroupMangleExpression(
     `
       (?:
-        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n)
+        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n?)
         |
         (?<=
           (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
