@@ -46,6 +46,27 @@ suite("NestedGroupMangleExpression", function() {
         ],
       },
       {
+        name: "missing group",
+        cases: [
+          {
+            patternTemplate: "(?<g1>foo%s)",
+            subPatternTemplate: "(?<g2>%s)",
+            group: "g1",
+            pattern: "[a-z]+",
+            s: "foobar",
+            expected: [],
+          },
+          {
+            patternTemplate: "(?<g1>hello%s)",
+            subPatternTemplate: "(?<g2>%s)",
+            group: "g2",
+            pattern: "\\s[a-z]+",
+            s: "hello world",
+            expected: [],
+          },
+        ],
+      },
+      {
         name: "corner cases",
         cases: [
           {
@@ -92,7 +113,7 @@ suite("NestedGroupMangleExpression", function() {
             i++;
           }
 
-          expect(i).to.equal(expected.length);
+          expect(i).to.equal(expected.length, `in ${s}`);
         }
       });
     }
@@ -146,6 +167,31 @@ suite("NestedGroupMangleExpression", function() {
             ]),
             s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
             expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
+          },
+        ],
+      },
+      {
+        name: "missing group",
+        cases: [
+          {
+            patternTemplate: "(?<g1>foo%s)",
+            subPatternTemplate: "(?<g2>%s)",
+            group: "g1",
+            replacements: new Map([
+              ["bar", "baz"],
+            ]),
+            s: "foobar",
+            expected: "foobar",
+          },
+          {
+            patternTemplate: "(?<g1>hello%s)",
+            subPatternTemplate: "(?<g2>%s)",
+            group: "g2",
+            replacements: new Map([
+              [" world", " planet"],
+            ]),
+            s: "hello world",
+            expected: "hello world",
           },
         ],
       },

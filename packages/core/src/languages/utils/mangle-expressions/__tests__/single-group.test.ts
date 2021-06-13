@@ -42,6 +42,18 @@ suite("SingleGroupMangleExpression", function() {
         ],
       },
       {
+        name: "missing group",
+        cases: [
+          {
+            patternTemplate: "(?<g>foo%s)",
+            group: "f",
+            pattern: "[a-z]+",
+            s: "foobar",
+            expected: [],
+          },
+        ],
+      },
+      {
         name: "corner cases",
         cases: [
           {
@@ -131,6 +143,20 @@ suite("SingleGroupMangleExpression", function() {
             ]),
             s: "Hello world! Hey planet!",
             expected: "Hello mundo! Hey planeta!",
+          },
+        ],
+      },
+      {
+        name: "missing group",
+        cases: [
+          {
+            patternTemplate: "(?<g>%s)",
+            group: "f",
+            replacements: new Map([
+              ["foobar", "foobaz"],
+            ]),
+            s: "foobar",
+            expected: "foobar",
           },
         ],
       },

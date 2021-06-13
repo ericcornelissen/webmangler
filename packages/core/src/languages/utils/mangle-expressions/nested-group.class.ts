@@ -21,7 +21,7 @@ type RegExpMatchGroups = { [key: string]: string };
  * // and for the replacements "horse->zebra" and "battery->cell" will change it
  * // into "var pw = 'correct zebra cell staple';"
  * @since v0.1.12
- * @version v0.1.21
+ * @version v0.1.22
  */
 export default class NestedGroupMangleExpression implements MangleExpression {
   /**
@@ -69,7 +69,7 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.20
-   * @version v0.1.21
+   * @version v0.1.22
    */
   public * findAll(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(this.patternTemplate, pattern);
@@ -83,7 +83,9 @@ export default class NestedGroupMangleExpression implements MangleExpression {
         let matchSub: RegExpExecArray | null = null;
         while ((matchSub = regExpSub.exec(subStr)) !== null) {
           const subGroups = matchSub.groups as RegExpMatchGroups;
-          yield subGroups[this.groupName];
+          if (this.didMatch(subGroups)) {
+            yield subGroups[this.groupName];
+          }
         }
       }
     }
@@ -92,7 +94,7 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.12
-   * @version v0.1.21
+   * @version v0.1.22
    */
   public replaceAll(
     str: string,
@@ -109,10 +111,18 @@ export default class NestedGroupMangleExpression implements MangleExpression {
       const groups = args[args.length - 1] as RegExpMatchGroups;
       if (this.didMatch(groups)) {
         const subStr = groups[this.groupName];
-        return subStr.replace(regExpSub, (...subArgs: unknown[]): string => {
-          const original = this.extractGroup(subArgs);
-          const replacement = replacements.get(original);
-          return replacement as string;
+        return subStr.replace(regExpSub, (
+          subMatch: string,
+          ...subArgs: unknown[]
+        ): string => {
+          const subGroups = subArgs[subArgs.length - 1] as RegExpMatchGroups;
+          if (this.didMatch(subGroups)) {
+            const original = this.extractGroup(subArgs);
+            const replacement = replacements.get(original);
+            return replacement as string;
+          } else {
+            return subMatch;
+          }
         });
       } else {
         return match;
