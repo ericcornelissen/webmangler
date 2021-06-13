@@ -96,7 +96,7 @@ function newUnquotedAttributeValueExpression(
  * @param options The {@link MultiValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.21
+ * @version v0.1.22
  */
 export default function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,

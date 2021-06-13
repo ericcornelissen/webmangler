@@ -49,7 +49,7 @@ function newCssDeclarationValueExpression(
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.21
+ * @version v0.1.22
  */
 export default function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,
