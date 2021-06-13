@@ -14,23 +14,14 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "benchmark": "TEST_ENV=benchmark mocha",
-    "benchmark:core": "TEST_PKG=core npm run benchmark",
+    "benchmark": "node scripts/test.js --benchmark",
     "clean": "node scripts/clean.js",
-    "coverage": "nyc mocha",
-    "coverage:benchmarking": "TEST_PKG=benchmarking npm run coverage",
-    "coverage:cli": "TEST_PKG=cli npm run coverage",
-    "coverage:core": "TEST_PKG=core npm run coverage",
-    "coverage:testing": "TEST_PKG=testing npm run coverage",
+    "coverage": "node scripts/test.js --coverage",
     "format": "npm run lint -- --fix",
     "lint": "eslint . --ext .js,.json,.md,.ts,.yml",
     "postinstall": "husky install scripts/hooks",
-    "test": "mocha",
-    "test:benchmarking": "TEST_PKG=benchmarking npm run test",
-    "test:cli": "TEST_PKG=cli npm run test",
-    "test:core": "TEST_PKG=core npm run test",
-    "test:testing": "TEST_PKG=testing npm run test",
-    "test:watch": "mocha --watch --reporter min"
+    "test": "node scripts/test.js",
+    "test:watch": "node scripts/test.js --watch"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "12.1.4",

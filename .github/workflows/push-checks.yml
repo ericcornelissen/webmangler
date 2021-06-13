@@ -34,13 +34,9 @@ jobs:
         working-directory: ./packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
         run: npm ci
-      - name: Compile packages/${{ matrix.package }}
-        working-directory: ./packages/${{ matrix.package }}
-        if: steps.changes.outputs.changed == 'true'
-        run: npm run compile
       - name: Run benchmarks for packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
-        run: npm run benchmark:${{ matrix.package }}
+        run: npm run benchmark -- ${{ matrix.package }}
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -126,13 +122,9 @@ jobs:
         working-directory: ./packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
         run: npm ci
-      - name: Compile packages/${{ matrix.package }}
-        working-directory: ./packages/${{ matrix.package }}
-        if: steps.changes.outputs.changed == 'true'
-        run: npm run compile
       - name: Run test suite for packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
-        run: npm run coverage:${{ matrix.package }}
+        run: npm run coverage -- ${{ matrix.package }}
       - name: Upload coverage to Codecov
         if: steps.changes.outputs.changed == 'true'
         uses: codecov/codecov-action@v1
