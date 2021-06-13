@@ -10,6 +10,7 @@ import { toArrayIfNeeded } from "./helpers";
 import NameGenerator from "./name-generator.class";
 
 const DEFAULT_CHAR_SET = ALL_LOWERCASE_CHARS;
+const DEFAULT_IGNORE_PATTERNS: string[] = [];
 const DEFAULT_MANGLE_PREFIX = "";
 const DEFAULT_RESERVED_NAMES: string[] = [];
 
@@ -55,6 +56,32 @@ function countInstances(
   }
 
   return countMap;
+}
+
+/**
+ * Remove keys from a map based on any number of patterns.
+ *
+ * @param originalMap The map to remove keys from.
+ * @param removePatterns The patterns of keys to remove.
+ * @returns A pruned version of `originalMap` with keys removed.
+ */
+function removeIgnoredKeys(
+  originalMap: Map<string, number>,
+  removePatterns: Iterable<string>,
+): Map<string, number> {
+  const prunedMap: Map<string, number> = new Map();
+  originalMap.forEach((value, key) => {
+    for (const removePattern of removePatterns) {
+      const ignoreExpr = new RegExp(removePattern);
+      if (ignoreExpr.test(key)) {
+        return;
+      }
+    }
+
+    prunedMap.set(key, value);
+  });
+
+  return prunedMap;
 }
 
 /**
@@ -166,12 +193,15 @@ function doMangle<Files extends Iterable<WebManglerFile>>(
  */
 function parseOptions(options: MangleEngineOptions): {
   patterns: Iterable<string>,
+  ignorePatterns: Iterable<string>,
   charSet: CharSet,
   manglePrefix: string,
   reservedNames: Iterable<string>,
 } {
   return {
     patterns: toArrayIfNeeded(options.patterns),
+    ignorePatterns: options.ignorePatterns ?
+      toArrayIfNeeded(options.ignorePatterns) : DEFAULT_IGNORE_PATTERNS,
     charSet: options.charSet || DEFAULT_CHAR_SET,
     manglePrefix: options.manglePrefix || DEFAULT_MANGLE_PREFIX,
     reservedNames: options.reservedNames || DEFAULT_RESERVED_NAMES,
@@ -193,7 +223,7 @@ function parseOptions(options: MangleEngineOptions): {
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.21
+ * @version v0.1.22
  */
 export default function mangle<Files extends Iterable<WebManglerFile>>(
   files: Files,
@@ -202,12 +232,15 @@ export default function mangle<Files extends Iterable<WebManglerFile>>(
 ): Files {
   const {
     patterns,
+    ignorePatterns,
     manglePrefix,
     reservedNames,
     charSet,
   } = parseOptions(options);
 
-  const instancesCount = countInstances(files, expressions, patterns);
+  let instancesCount = countInstances(files, expressions, patterns);
+  instancesCount = removeIgnoredKeys(instancesCount, ignorePatterns);
+
   const mangleMap = getMangleMap(
     instancesCount,
     manglePrefix,

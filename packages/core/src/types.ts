@@ -24,7 +24,7 @@ interface MangleOptions extends MangleEngineOptions {
  * A set of generic options used by the {@link MangleEngine} for mangling.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.22
  */
 interface MangleEngineOptions {
   /**
@@ -34,6 +34,14 @@ interface MangleEngineOptions {
    * @version v0.1.17
    */
   readonly patterns: string | Iterable<string>;
+
+  /**
+   * The pattern(s) that should **never** to be mangled.
+   *
+   * @default `[]`
+   * @since v0.1.22
+   */
+  readonly ignorePatterns?: string | Iterable<string>;
 
   /**
    * The character set for mangled strings.
