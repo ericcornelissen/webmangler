@@ -10,7 +10,11 @@ Versioning].
 
 - Fix counting errors of attributes in HTML to improve compression.
 - Fix incorrect handling of missing groups in `NestedGroupMangleExpression`.
-- Fix matching of query selectors without prefix.
+- Fix mangling of query selectors without prefix.
+- Fix mangling in HTML after valueless attributes.
+- Fix unintentional mangling in HTML content.
+- Fix unintentional mangling in JavaScript line comments.
+- Fix various bugs due to comments in all language plugins.
 
 ## [0.1.21] - 2021-05-30
 

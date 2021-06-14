@@ -1,202 +1,213 @@
-import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "../../__tests__/test-types";
 import type { SingleValueAttributeOptions } from "../../options";
+import type { HtmlElementValuesSets } from "./types";
 
+import {
+  generateValueObjects,
+  generateValueObjectsAll,
+} from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
+import {
+  buildHtmlAttributes,
+  buildHtmlComment,
+  buildHtmlElements,
+  buildHtmlElement,
+} from "./builders";
+import { valuePresets } from "./values";
 
-import singleValueAttributeExpressionFactory from "../single-value-attributes";
+import expressionsFactory from "../single-value-attributes";
 
 suite("HTML - Single Value Attribute Expression Factory", function() {
-  const scenarios: TestScenario<TestCase<SingleValueAttributeOptions>>[] = [
+  type TestScenario = {
+    readonly name: string;
+    readonly pattern: string;
+    readonly factoryOptions: SingleValueAttributeOptions;
+    readonly expected: string[];
+    getValuesSets(): HtmlElementValuesSets[];
+  }
+
+  const scenarios: TestScenario[] = [
     {
-      name: "sample",
-      cases: [
+      name: "one element, no configuration",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["id"],
+      },
+      expected: ["foobar"],
+      getValuesSets: () => [
         {
-          input: "<div id=\"foobar\"></div>",
-          pattern: "[a-z]+",
-          expected: ["foobar", "foobar"],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: "<div id=\"foo\"><div id=\"bar\"></div></div>",
-          pattern: "[a-z]+",
-          expected: ["foo", "bar", "foo", "bar"],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: "<div id=\"foobar\"></div>",
-          pattern: "[a-z]+",
-          expected: ["bar", "bar"],
-          options: {
-            attributeNames: ["id"],
-            valuePrefix: "foo",
-          },
-        },
-        {
-          input: "<div id=\"foobar\"></div>",
-          pattern: "[a-z]+",
-          expected: ["foo", "foo"],
-          options: {
-            attributeNames: ["id"],
-            valueSuffix: "bar",
-          },
-        },
-        {
-          input: "<div id=foobar></div>",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: "<div id=foo class=\"bar\"></div>",
-          pattern: "[a-z]+",
-          expected: ["foo"],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: "<img id=foobar/>",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            attributeNames: ["id"],
-          },
+          beforeOpeningTag: valuePresets.elements.beforeOpeningTag,
+          tag: valuePresets.elements.tag,
+          attributes: buildHtmlAttributes({ name: "id", value: "foobar" }),
+          afterOpeningTag: valuePresets.elements.afterOpeningTag,
+          content: valuePresets.elements.content,
         },
       ],
     },
     {
-      name: "comments",
-      cases: [
+      name: "one element, with prefix no suffix",
+      pattern: "[a-z\\-]+",
+      factoryOptions: {
+        attributeNames: ["href"],
+        valuePrefix: "\\#",
+      },
+      expected: ["foobar"],
+      getValuesSets: () => [
         {
-          input: "<!--<div id=\"foobar\"></div>-->",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: "<!--<div id=foobar></div>-->",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: `
-            <div id="foobar"></div>
-            <!--<div id="foobaz"></div>-->
-          `,
-          pattern: "[a-z]+",
-          expected: ["foobar", "foobar"],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: `
-            <!--<div id="foobaz"></div>-->
-            <div id="foobar"></div>
-          `,
-          pattern: "[a-z]+",
-          expected: ["foobar", "foobar"],
-          options: {
-            attributeNames: ["id"],
-          },
+          beforeOpeningTag: valuePresets.elements.beforeOpeningTag,
+          tag: valuePresets.elements.tag,
+          attributes: buildHtmlAttributes({ name: "href", value: "#foobar" }),
+          afterOpeningTag: valuePresets.elements.afterOpeningTag,
+          content: valuePresets.elements.content,
         },
       ],
     },
     {
-      name: "HTML content",
-      cases: [
+      name: "one element, with suffix no prefix",
+      pattern: "[a-z\\_]+",
+      factoryOptions: {
+        attributeNames: ["target"],
+        valueSuffix: "blank",
+      },
+      expected: ["_"],
+      getValuesSets: () => [
         {
-          input: "<div>id=\"foobar\"</div>",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: "<div id=\"foobar\">id=\"foobaz\"</div>",
-          pattern: "[a-z]+",
-          expected: ["foobar", "foobar"],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: "<div>id=foobar</div>",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["id"],
-          },
-        },
-        {
-          input: "<div id=foobar>id=foobaz</div>",
-          pattern: "[a-z]+",
-          expected: ["foobar"],
-          options: {
-            attributeNames: ["id"],
-          },
+          beforeOpeningTag: valuePresets.elements.beforeOpeningTag,
+          tag: valuePresets.elements.tag,
+          attributes: buildHtmlAttributes({ name: "target", value: "_blank" }),
+          afterOpeningTag: valuePresets.elements.afterOpeningTag,
+          content: valuePresets.elements.content,
         },
       ],
     },
     {
-      name: "attribute value",
-      cases: [
+      name: "multiple elements, adjacent, one attribute",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["id"],
+      },
+      expected: ["foo", "bar"],
+      getValuesSets: () => [
         {
-          input: "<div data-foo=\"id='bar'\"></div>",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["id"],
-          },
+          tag: valuePresets.elements.tag,
+          attributes: buildHtmlAttributes({ name: "id", value: "foo" }),
+          content: valuePresets.elements.content,
         },
         {
-          input: "<div data-foo='id=\"bar\"'></div>",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["id"],
-          },
+          tag: valuePresets.elements.tag,
+          attributes: buildHtmlAttributes({ name: "id", value: "bar" }),
+          content: valuePresets.elements.content,
         },
+      ],
+    },
+    {
+      name: "multiple elements, nested, one attribute",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["id"],
+      },
+      expected: ["foo", "bar"],
+      getValuesSets: () => [
         {
-          input: "<div data-foo=\"id=bar\"></div>",
-          pattern: "[a-z]+",
-          expected: [],
-          options: {
-            attributeNames: ["id"],
+          tag: valuePresets.elements.tag,
+          attributes: buildHtmlAttributes({ name: "id", value: "foo" }),
+          afterOpeningTag: valuePresets.elements.afterOpeningTag,
+          content: Array
+            .from(generateValueObjects({
+              tag: valuePresets.elements.tag,
+              attributes: buildHtmlAttributes({ name: "id", value: "bar" }),
+              content: valuePresets.elements.content,
+            }))
+            .map(buildHtmlElement),
+        },
+      ],
+    },
+    {
+      name: "attribute-like comments",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-foo"],
+      },
+      expected: [],
+      getValuesSets: () => {
+        const commentOfElementWithAttribute = Array
+          .from(generateValueObjects({
+            tag: ["div"],
+            attributes: buildHtmlAttributes({ name: "data-foo", value: "bar" }),
+            content: [undefined, ""],
+          }))
+          .map(buildHtmlElement)
+          .map(buildHtmlComment);
+
+        return [
+          {
+            beforeOpeningTag: [
+              "",
+              ...commentOfElementWithAttribute,
+            ],
+            tag: valuePresets.elements.tag,
+            attributes: valuePresets.elements.attributes,
+            content: [
+              "",
+              ...commentOfElementWithAttribute,
+            ],
+            afterClosingTag: [
+              "",
+              ...commentOfElementWithAttribute,
+            ],
           },
+        ];
+      },
+    },
+    {
+      name: "attribute-like content",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-foo"],
+      },
+      expected: [],
+      getValuesSets: () => [
+        {
+          tag: valuePresets.elements.tag,
+          attributes: valuePresets.elements.attributes,
+          afterOpeningTag: valuePresets.elements.afterOpeningTag,
+          content: buildHtmlAttributes({ name: "data-foo", value: "bar" }),
+          beforeClosingTag: valuePresets.elements.beforeClosingTag,
+        },
+      ],
+    },
+    {
+      name: "attribute-like attribute values",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-foo"],
+      },
+      expected: [],
+      getValuesSets: () => [
+        {
+          tag: valuePresets.elements.tag,
+          attributes: [
+            "alt=\"data-foo=bar\"",
+            "alt='data-foo=bar'",
+            "alt=\"data-foo='bar'\"",
+            "alt='data-foo=\"bar\"'",
+          ],
+          content: valuePresets.elements.content,
         },
       ],
     },
   ];
 
-  for (const { name, cases } of scenarios) {
+  for (const scenario of scenarios) {
+    const { name, pattern, factoryOptions, expected, getValuesSets } = scenario;
     test(name, function() {
-      for (const testCase of cases) {
-        const {
-          input,
-          pattern,
-          expected,
-          options,
-        } = testCase;
-
-        const expressions = singleValueAttributeExpressionFactory(options);
+      const valueSets = getValuesSets();
+      for (const testCase of generateValueObjectsAll(valueSets)) {
+        const input = buildHtmlElements(testCase);
+        const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected);
+        expect(matches).to.have.members(expected, `in \`${input}\``);
       }
     });
   }

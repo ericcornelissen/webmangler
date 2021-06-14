@@ -22,7 +22,7 @@ function newPropertyAsStandaloneStringExpression(
   return new SingleGroupMangleExpression(
     `
       (?:
-        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n)
+        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n?)
         |
         (?<=
           (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
@@ -49,7 +49,7 @@ function newPropertyAsStandaloneStringExpression(
  * @param options The {@link CssDeclarationPropertyOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.21
+ * @version v0.1.22
  */
 export default function cssDeclarationPropertyExpressionFactory(
   options: CssDeclarationPropertyOptions,

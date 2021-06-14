@@ -1,163 +1,162 @@
-import type { TestScenario } from "@webmangler/testing";
-import type { TestCase } from "../../__tests__/test-types";
 import type { CssDeclarationValueOptions } from "../../options";
+import type { CssDeclarationValuesSets } from "./types";
 
+import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import { getAllMatches } from "../../__tests__/test-helpers";
+import { buildCssDeclarations, buildCssRuleset } from "./builders";
+import { valuePresets } from "./values";
 
-import cssDeclarationValueExpressionFactory from "../css-values";
+import expressionsFactory from "../css-values";
 
 suite("CSS - CSS Value Expression Factory", function() {
-  const scenarios: TestScenario<TestCase<CssDeclarationValueOptions>>[] = [
+  type TestScenario = {
+    readonly name: string;
+    readonly pattern: string;
+    readonly factoryOptions: CssDeclarationValueOptions;
+    readonly expected: string[];
+    getValuesSets(): CssDeclarationValuesSets[];
+  }
+
+  const scenarios: TestScenario[] = [
     {
-      name: "sample",
-      cases: [
+      name: "one declaration, no configuration",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["red"],
+      getValuesSets: () => [
         {
-          input: "div { color: red; }",
-          pattern: "[a-z]+",
-          expected: ["red"],
-          options: { },
-        },
-        {
-          input: "div { color: red; font: serif; }",
-          pattern: "[a-z]+",
-          expected: ["red", "serif"],
-          options: { },
-        },
-        {
-          input: "div { color: red; font-size: 12px; }",
-          pattern: "[a-z]+",
-          expected: ["px"],
-          options: {
-            prefix: "[0-9]+",
-          },
-        },
-        {
-          input: "div { padding-left: 3px; margin-left: 14px; }",
-          pattern: "[0-9]+",
-          expected: ["3", "14"],
-          options: {
-            suffix: "px",
-          },
+          property: valuePresets.property,
+          beforeValue: valuePresets.beforeValue,
+          value: ["red"],
+          afterValue: valuePresets.afterValue,
         },
       ],
     },
     {
-      name: "multi-value",
-      cases: [
+      name: "one declaration, prefix configured",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "[0-9]+",
+      },
+      expected: ["px"],
+      getValuesSets: () => [
         {
-          input: "div { margin: 0 42px; }",
-          pattern: "[0-9]+",
-          expected: ["42"],
-          options: {
-            suffix: "px",
-          },
-        },
-        {
-          input: "div { padding: 0 3px 0 14px; }",
-          pattern: "[0-9]+",
-          expected: ["3", "14"],
-          options: {
-            suffix: "px",
-          },
+          property: valuePresets.property,
+          beforeValue: valuePresets.beforeValue,
+          value: ["42px"],
+          afterValue: valuePresets.afterValue,
         },
       ],
     },
     {
-      name: "with !important",
-      cases: [
+      name: "one declaration, suffix configured",
+      pattern: "[0-9]+",
+      factoryOptions: {
+        suffix: "px",
+      },
+      expected: ["36"],
+      getValuesSets: () => [
         {
-          input: "div { margin: 42px !important; }",
-          pattern: "[0-9]+",
-          expected: ["42"],
-          options: {
-            suffix: "px",
-          },
-        },
-        {
-          input: "div { padding: 0 3px 0 14px!important; }",
-          pattern: "[0-9]+",
-          expected: ["3", "14"],
-          options: {
-            suffix: "px",
-          },
+          property: valuePresets.property,
+          beforeValue: valuePresets.beforeValue,
+          value: ["36px"],
+          afterValue: valuePresets.afterValue,
         },
       ],
     },
     {
-      name: "with comments",
-      cases: [
+      name: "one declaration, multi-value",
+      pattern: "[0-9]+",
+      factoryOptions: {
+        suffix: "px",
+      },
+      expected: ["3", "14"],
+      getValuesSets: () => [
         {
-          input: "div { color: red /* set the color */; }",
-          pattern: "[a-z]+",
-          expected: ["red"],
-          options: { },
-        },
-        {
-          input: "div { color: /* set the color */ red; }",
-          pattern: "[a-z]+",
-          expected: ["red"],
-          options: { },
+          property: valuePresets.property,
+          beforeValue: valuePresets.beforeValue,
+          value: ["0 3px 0 14px"],
+          afterValue: valuePresets.afterValue,
         },
       ],
     },
     {
-      name: "edge cases",
-      cases: [
+      name: "declaration-like strings",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["red"],
+      getValuesSets: () => [
         {
-          input: "div { content: \"color: red;\"; color: blue; }",
-          pattern: "[a-z]+",
-          expected: ["blue"],
-          options: { },
+          property: "content",
+          value: [
+            "\"color: blue;\"",
+            "\"; color: teal;\"",
+            "'color: yellow;'",
+            "'; color: orange;'",
+          ],
         },
         {
-          input: "div { content: \"; color: red;\"; color: blue; }",
-          pattern: "[a-z]+",
-          expected: ["blue"],
-          options: { },
-        },
-        {
-          input: "div { content: 'color: red;'; color: blue; }",
-          pattern: "[a-z]+",
-          expected: ["blue"],
-          options: { },
-        },
-        {
-          input: "div { content: '; color: red;'; color: blue; }",
-          pattern: "[a-z]+",
-          expected: ["blue"],
-          options: { },
-        },
-        {
-          input: "div { color: red; /* font: serif; */ }",
-          pattern: "[a-z]+",
-          expected: ["red"],
-          options: { },
-        },
-        {
-          input: "div { color: red /*; font: serif; */ }",
-          pattern: "[a-z]+",
-          expected: ["red"],
-          options: { },
+          property: valuePresets.property,
+          value: ["red"],
         },
       ],
+    },
+    {
+      name: "declaration-like comments",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["red"],
+      getValuesSets: () => {
+        const commentWithDeclarations = [
+          "/* color: green; */",
+          "/* ; color: mint; */",
+        ];
+
+        return [
+          {
+            beforeProperty: [
+              "",
+              ...commentWithDeclarations,
+            ],
+            property: "padding",
+            afterProperty: [
+              "",
+              ...commentWithDeclarations,
+            ],
+            beforeValue: [
+              "",
+              ...commentWithDeclarations,
+            ],
+            value: ["42px"],
+            afterValue: [
+              "",
+              ...commentWithDeclarations,
+            ],
+          },
+          {
+            property: valuePresets.property,
+            value: ["red"],
+          },
+        ];
+      },
     },
   ];
 
-  for (const { name, cases } of scenarios) {
+  for (const scenario of scenarios) {
+    const { name, pattern, factoryOptions, expected, getValuesSets } = scenario;
     test(name, function() {
-      for (const testCase of cases) {
-        const {
-          input,
-          pattern,
-          expected,
-          options,
-        } = testCase;
+      const valuesSets = getValuesSets();
+      for (const testCase of generateValueObjectsAll(valuesSets)) {
+        const input = buildCssRuleset({
+          selector: "div",
+          declarations: buildCssDeclarations(testCase),
+        });
 
-        const expressions = cssDeclarationValueExpressionFactory(options);
+        const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
-        expect(matches).to.deep.equal(expected);
+        expect(matches).to.have.members(expected, `in \`${input}\``);
       }
     });
   }

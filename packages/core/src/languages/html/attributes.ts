@@ -14,13 +14,13 @@ function newElementAttributeExpressions(): MangleExpression {
   return new NestedGroupMangleExpression(
     `
       (?:
-        (?:<!--.*-->)
+        (?:<!--.*?-->)
         |
         (?<=\\<\\s*[a-zA-Z0-9]+\\s+)
         (?<${GROUP_MAIN}>
           (?:
             [^>\\s=]+
-            (?:\\s*=\\s*('[^']*'|"[^"]*"))?
+            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s]*))?
             \\s+
           )*
           %s
