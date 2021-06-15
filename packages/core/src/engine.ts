@@ -223,7 +223,7 @@ function parseOptions(options: MangleEngineOptions): {
  * @param options The configuration for mangling.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.22
+ * @version v0.1.23
  */
 export default function mangle<Files extends Iterable<WebManglerFile>>(
   files: Files,

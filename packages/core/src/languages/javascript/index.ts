@@ -1,8 +1,10 @@
 import type { ExpressionFactory } from "../utils";
 
 import { SimpleLanguagePlugin } from "../utils";
-import cssDeclarationPropertyExpressionFactory from "./css-properties";
-import querySelectorExpressionFactory from "./query-selectors";
+import {
+  cssDeclarationPropertyExpressionFactory,
+  querySelectorExpressionFactory,
+} from "./expressions";
 
 const map: Map<string, ExpressionFactory> = new Map();
 map.set("css-declaration-properties", cssDeclarationPropertyExpressionFactory);

@@ -1,6 +1,6 @@
 {
   "name": "@webmangler/testing",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "WebMangler testing utilities",
   "license": "Unlicense",
   "main": "./build/index.js",
@@ -20,7 +20,6 @@
   },
   "scripts": {
     "clean": "rm -rf build/ *.tsbuildinfo",
-    "precompile": "npm run clean",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"

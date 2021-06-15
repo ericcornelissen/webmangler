@@ -9,7 +9,7 @@ import type {
  * Interface defining the configuration of a {@link SimpleLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.22
+ * @version v0.1.23
  */
 export interface SimpleManglerOptions {
   /**
@@ -22,7 +22,7 @@ export interface SimpleManglerOptions {
   /**
    * One or more patterns that should **never** be mangled.
    *
-   * @since v0.1.22
+   * @since v0.1.23
    */
   ignorePatterns: string | Iterable<string>;
 
@@ -66,7 +66,7 @@ export interface SimpleManglerOptions {
  * depending on your needs - if you're implementing a {@link WebManglerPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.22
+ * @version v0.1.23
  */
 export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
@@ -104,7 +104,7 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
    *
    * @param options The {@link SimpleManglerOptions} (previously `id`).
    * @since v0.1.0
-   * @version v0.1.22
+   * @version v0.1.23
    */
   constructor(options: SimpleManglerOptions) {
     this.charSet = options.charSet;
@@ -118,7 +118,7 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
    * @inheritDoc
    * @since v0.1.14
-   * @version v0.1.22
+   * @version v0.1.23
    */
   options(): MangleOptions {
     return {

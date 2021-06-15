@@ -1,11 +1,15 @@
 import type { EmbedsGetter, ExpressionFactory } from "../utils";
 
 import { SimpleLanguagePlugin } from "../utils";
-import attributeExpressionFactory from "./attributes";
-import embeddedCssFinders from "./embeds/css";
-import embeddedJsFinders from "./embeds/js";
-import multiValueAttributeExpressionFactory from "./multi-value-attributes";
-import singleValueAttributeExpressionFactory from "./single-value-attributes";
+import {
+  embeddedCssFinders,
+  embeddedJsFinders,
+} from "./embeds";
+import {
+  attributeExpressionFactory,
+  multiValueAttributeExpressionFactory,
+  singleValueAttributeExpressionFactory,
+} from "./expressions";
 
 const map: Map<string, ExpressionFactory> = new Map();
 map.set("attributes", attributeExpressionFactory);

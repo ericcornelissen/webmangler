@@ -2,7 +2,15 @@ import { expect } from "chai";
 
 import * as testing from "../index";
 
-suite("Standard mocks", function() {
+suite("Package exports", function() {
+  test("has generateValueObjects", function() {
+    expect(testing).to.haveOwnProperty("generateValueObjects");
+  });
+
+  test("has generateValueObjectsAll", function() {
+    expect(testing).to.haveOwnProperty("generateValueObjectsAll");
+  });
+
   test("has MangleExpressionMock", function() {
     expect(testing).to.haveOwnProperty("MangleExpressionMock");
   });
