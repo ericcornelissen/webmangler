@@ -10,6 +10,11 @@ Versioning].
 
 - _No changes yet_
 
+## [0.1.5] - 2021-06-15
+
+- Add utilities for generating test cases.
+- Update the constructor interfaces of all mocks.
+
 ## [0.1.4] - 2021-05-30
 
 - Add `getEmbeds` to `WebManglerPluginLanguageMock`.
