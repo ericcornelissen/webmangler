@@ -216,6 +216,7 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
     super({
       charSet: HtmlAttributeMangler.CHARACTER_SET,
       patterns: HtmlAttributeMangler.getPatterns(options.attrNamePattern),
+      ignorePatterns: [],
       reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
       languageOptions: [

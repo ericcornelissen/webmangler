@@ -212,6 +212,7 @@ export default class CssClassMangler extends SimpleManglerPlugin {
     super({
       charSet: CssClassMangler.CHARACTER_SET,
       patterns: CssClassMangler.getPatterns(options.classNamePattern),
+      ignorePatterns: [],
       reserved: CssClassMangler.getReserved(options.reservedClassNames),
       prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
       languageOptions: [

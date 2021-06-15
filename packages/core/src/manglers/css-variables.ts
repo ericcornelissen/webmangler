@@ -201,6 +201,7 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
     super({
       charSet: CssVariableMangler.CHARACTER_SET,
       patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
+      ignorePatterns: [],
       reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
       prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),
       languageOptions: [

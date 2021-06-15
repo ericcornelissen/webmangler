@@ -9,7 +9,7 @@ import type {
  * Interface defining the configuration of a {@link SimpleLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.18
+ * @version v0.1.22
  */
 export interface SimpleManglerOptions {
   /**
@@ -18,6 +18,13 @@ export interface SimpleManglerOptions {
    * @since v0.1.7
    */
   charSet: CharSet;
+
+  /**
+   * One or more patterns that should **never** be mangled.
+   *
+   * @since v0.1.22
+   */
+  ignorePatterns: string | Iterable<string>;
 
   /**
    * The configuration for the {@link WebManglerLanguagePlugin}s.
@@ -59,13 +66,18 @@ export interface SimpleManglerOptions {
  * depending on your needs - if you're implementing a {@link WebManglerPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.22
  */
 export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
    * The character set to use when mangling.
    */
   private readonly charSet: CharSet;
+
+  /**
+   * The pattern(s) that should **never** be mangled.
+   */
+  private readonly ignorePatterns: string | Iterable<string>;
 
   /**
    * The configuration for the {@link WebManglerLanguagePlugin}s.
@@ -92,10 +104,11 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
    *
    * @param options The {@link SimpleManglerOptions} (previously `id`).
    * @since v0.1.0
-   * @version v0.1.18
+   * @version v0.1.22
    */
   constructor(options: SimpleManglerOptions) {
     this.charSet = options.charSet;
+    this.ignorePatterns = options.ignorePatterns;
     this.languageOptions = options.languageOptions;
     this.patterns = options.patterns;
     this.prefix = options.prefix;
@@ -105,11 +118,12 @@ export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
   /**
    * @inheritDoc
    * @since v0.1.14
-   * @version v0.1.17
+   * @version v0.1.22
    */
   options(): MangleOptions {
     return {
       charSet: this.charSet,
+      ignorePatterns: this.ignorePatterns,
       languageOptions: this.languageOptions,
       manglePrefix: this.prefix,
       patterns: this.patterns,

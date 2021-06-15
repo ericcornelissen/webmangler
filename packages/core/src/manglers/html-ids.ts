@@ -225,6 +225,7 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
     super({
       charSet: HtmlIdMangler.CHARACTER_SET,
       patterns: HtmlIdMangler.getPatterns(options.idNamePattern),
+      ignorePatterns: [],
       reserved: HtmlIdMangler.getReserved(options.reservedIds),
       prefix: HtmlIdMangler.getPrefix(options.keepIdPrefix),
       languageOptions: [

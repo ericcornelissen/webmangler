@@ -15,6 +15,7 @@ class ConcreteSimpleManglerPlugin extends SimpleManglerPlugin {
 suite("SimpleManglerPlugin", function() {
   const defaultOptions: SimpleManglerOptions = {
     charSet: ["f", "o", "o", "b", "a", "r"],
+    ignorePatterns: [],
     languageOptions: [],
     patterns: "[foo][bar]",
     reserved: ["foo", "bar"],
@@ -34,6 +35,21 @@ suite("SimpleManglerPlugin", function() {
       const plugin = new ConcreteSimpleManglerPlugin(options);
       const result = plugin.options();
       expect(result.charSet).to.equal(charSet);
+    }
+  });
+
+  test("ignorePatterns", function() {
+    const testCases: (string | string[])[] = [
+      "fo+bar",
+      ["fo+", "bar"],
+    ];
+
+    for (const ignorePatterns of testCases) {
+      const options = Object.assign({}, defaultOptions, { ignorePatterns });
+
+      const plugin = new ConcreteSimpleManglerPlugin(options);
+      const result = plugin.options();
+      expect(result.ignorePatterns).to.equal(ignorePatterns);
     }
   });
 
