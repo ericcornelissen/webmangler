@@ -20,7 +20,7 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
  * The options for _WebMangler_'s built-in CSS class mangler.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.23
  */
 export type CssClassManglerOptions = {
   /**
@@ -31,6 +31,14 @@ export type CssClassManglerOptions = {
    * @version v0.1.17
    */
   classNamePattern?: string | Iterable<string>;
+
+  /**
+   * One or more patterns for CSS classes that should **never** be mangled.
+   *
+   * @default `[]`
+   * @version v0.1.23
+   */
+  ignoreClassNamePattern?: string | Iterable<string>;
 
   /**
    * A list of strings and patterns of CSS class names that should not be used.
@@ -162,7 +170,7 @@ export type CssClassManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.23
  */
 export default class CssClassMangler extends SimpleManglerPlugin {
   /**
@@ -179,6 +187,11 @@ export default class CssClassMangler extends SimpleManglerPlugin {
     ...ALL_NUMBER_CHARS,
     "-", "_",
   ];
+
+  /**
+   * The default ignore patterns used by a {@link CssClassMangler}.
+   */
+  private static readonly DEFAULT_IGNORE_PATTERNS: string[] = [];
 
   /**
    * The default patterns used by a {@link CssClassMangler}.
@@ -206,13 +219,15 @@ export default class CssClassMangler extends SimpleManglerPlugin {
    *
    * @param options The {@link CssClassManglerOptions}.
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.23
    */
   constructor(options: CssClassManglerOptions={}) {
     super({
       charSet: CssClassMangler.CHARACTER_SET,
       patterns: CssClassMangler.getPatterns(options.classNamePattern),
-      ignorePatterns: [],
+      ignorePatterns: CssClassMangler.getIgnorePatterns(
+        options.ignoreClassNamePattern,
+      ),
       reserved: CssClassMangler.getReserved(options.reservedClassNames),
       prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
       languageOptions: [
@@ -238,6 +253,22 @@ export default class CssClassMangler extends SimpleManglerPlugin {
     }
 
     return classNamePattern;
+  }
+
+  /**
+   * Get either the configured patterns or the default patterns.
+   *
+   * @param ignoreClassNamePattern The configured ignore patterns.
+   * @returns The ignore patterns to be used.
+   */
+  private static getIgnorePatterns(
+    ignoreClassNamePattern?: string | Iterable<string>,
+  ): string | Iterable<string> {
+    if (ignoreClassNamePattern === undefined) {
+      return CssClassMangler.DEFAULT_IGNORE_PATTERNS;
+    }
+
+    return ignoreClassNamePattern;
   }
 
   /**
