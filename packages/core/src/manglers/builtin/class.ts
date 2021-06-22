@@ -1,9 +1,7 @@
 import type { WebManglerPlugin } from "../../types";
-import type { BuiltInManglersOptions } from "./types";
+import type { BuiltInManglersOptions, WebManglerPluginClass } from "./types";
 
 import { MultiManglerPlugin } from "../utils";
-
-type WebManglerPluginClass = { new(options?: unknown): WebManglerPlugin };
 
 let CssClassMangler: WebManglerPluginClass;
 let CssVariableMangler: WebManglerPluginClass;
