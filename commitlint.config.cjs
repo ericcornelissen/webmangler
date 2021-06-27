@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
   extends: ["@commitlint/config-conventional"],
   rules: {
@@ -19,8 +21,8 @@ module.exports = {
         "cli",
         "core",
         "deps",
-        "hook",
-        "script",
+        "hooks",
+        "scripts",
         "testing",
       ],
     ],
