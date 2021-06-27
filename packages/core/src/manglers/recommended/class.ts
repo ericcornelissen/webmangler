@@ -43,6 +43,7 @@ export function injectDependencies(
  * instead.
  *
  * @since v0.1.0
+ * @version v0.1.23
  */
 export default class RecommendedManglers extends MultiManglerPlugin {
   /**
@@ -50,32 +51,24 @@ export default class RecommendedManglers extends MultiManglerPlugin {
    *
    * @param options The {@link RecommendedManglersOptions}.
    * @since v0.1.0
+   * @version v0.1.23
    */
   constructor(options: RecommendedManglersOptions={}) {
     const plugins: WebManglerPlugin[] = [];
 
     if (!options.disableCssClassMangling) {
-      plugins.push(new CssClassMangler({
-        classNamePattern: options.classNamePattern,
-        reservedClassNames: options.reservedClassNames,
-        keepClassNamePrefix: options.keepClassNamePrefix,
-      }));
+      const cssClassMangler = new CssClassMangler(options);
+      plugins.push(cssClassMangler);
     }
 
     if (!options.disableCssVarMangling) {
-      plugins.push(new CssVariableMangler({
-        cssVarNamePattern: options.cssVarNamePattern,
-        reservedCssVarNames: options.reservedCssVarNames,
-        keepCssVarPrefix: options.keepCssVarPrefix,
-      }));
+      const cssVariableMangler = new CssVariableMangler(options);
+      plugins.push(cssVariableMangler);
     }
 
     if (!options.disableHtmlAttrMangling) {
-      plugins.push(new HtmlAttributeMangler({
-        attrNamePattern: options.attrNamePattern,
-        reservedAttrNames: options.reservedAttrNames,
-        keepAttrPrefix: options.keepAttrPrefix,
-      }));
+      const htmlAttributeMangler = new HtmlAttributeMangler(options);
+      plugins.push(htmlAttributeMangler);
     }
 
     super(plugins);

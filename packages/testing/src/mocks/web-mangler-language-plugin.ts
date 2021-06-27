@@ -10,9 +10,7 @@ let uniqueId = 0;
 /**
  * A simple mock for _WebMangler_'s {@link WebManglerPluginLanguage} interface.
  *
- * @since v0.1.1
- * @version v0.1.5
- * @deprecated Make sure you import this as "WebManglerLanguagePluginMock".
+ * @since v0.1.5
  */
 export default class WebManglerLanguagePluginMock {
   /**

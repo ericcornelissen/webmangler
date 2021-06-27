@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix ignored options in `BuiltInManglers` and `RecommendedManglers`.
+
+## [0.1.22] - 2021-06-15
+
 - Fix counting errors of attributes in HTML to improve compression.
 - Fix incorrect handling of missing groups in `NestedGroupMangleExpression`.
 - Fix mangling of query selectors without prefix.
