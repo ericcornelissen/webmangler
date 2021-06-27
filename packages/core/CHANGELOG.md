@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix ignored options in `BuiltInManglers` and `RecommendedManglers`.
 
 ## [0.1.22] - 2021-06-15
 
