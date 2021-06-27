@@ -20,7 +20,7 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
  * The options for _WebMangler_'s built-in HTML IDs mangler.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.23
  */
 export type HtmlIdManglerOptions = {
   /**
@@ -31,6 +31,14 @@ export type HtmlIdManglerOptions = {
    * @version v0.1.17
    */
   idNamePattern?: string | Iterable<string>;
+
+  /**
+   * One or more patterns for CSS classes that should **never** be mangled.
+   *
+   * @default `[]`
+   * @version v0.1.23
+   */
+  ignoreIdNamePattern?: string | Iterable<string>;
 
   /**
    * A list of strings and patterns of IDs that should not be used.
@@ -177,7 +185,7 @@ export type HtmlIdManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.23
  */
 export default class HtmlIdMangler extends SimpleManglerPlugin {
   /**
@@ -188,6 +196,11 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
     ...ALL_NUMBER_CHARS,
     "-", "_",
   ];
+
+  /**
+   * The default ignore patterns used by a {@link HtmlIdMangler}.
+   */
+  private static readonly DEFAULT_IGNORE_PATTERNS: string[] = [];
 
   /**
    * The default patterns used by a {@link HtmlIdMangler}.
@@ -219,13 +232,15 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
    *
    * @param options The {@link HtmlIdManglerOptions}.
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.23
    */
   constructor(options: HtmlIdManglerOptions={}) {
     super({
       charSet: HtmlIdMangler.CHARACTER_SET,
       patterns: HtmlIdMangler.getPatterns(options.idNamePattern),
-      ignorePatterns: [],
+      ignorePatterns: HtmlIdMangler.getIgnorePatterns(
+        options.ignoreIdNamePattern,
+      ),
       reserved: HtmlIdMangler.getReserved(options.reservedIds),
       prefix: HtmlIdMangler.getPrefix(options.keepIdPrefix),
       languageOptions: [
@@ -250,6 +265,22 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
     }
 
     return idNamePattern;
+  }
+
+  /**
+   * Get either the configured patterns or the default patterns.
+   *
+   * @param ignoreIdNamePattern The configured ignore patterns.
+   * @returns The ignore patterns to be used.
+   */
+  private static getIgnorePatterns(
+    ignoreIdNamePattern?: string | Iterable<string>,
+  ): string | Iterable<string> {
+    if (ignoreIdNamePattern === undefined) {
+      return HtmlIdMangler.DEFAULT_IGNORE_PATTERNS;
+    }
+
+    return ignoreIdNamePattern;
   }
 
   /**

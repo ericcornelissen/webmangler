@@ -29,7 +29,7 @@ const CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS:
  * The options for _WebMangler_'s built-in CSS variables mangler.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.23
  */
 export type CssVariableManglerOptions = {
   /**
@@ -40,6 +40,14 @@ export type CssVariableManglerOptions = {
    * @version v0.1.17
    */
   cssVarNamePattern?: string | Iterable<string>;
+
+  /**
+   * One or more patterns for CSS variables that should **never** be mangled.
+   *
+   * @default `[]`
+   * @version v0.1.23
+   */
+  ignoreCssVarNamePattern?: string | Iterable<string>;
 
   /**
    * A list of strings and patterns of CSS variable names that should not be
@@ -157,7 +165,7 @@ export type CssVariableManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.23
  */
 export default class CssVariableMangler extends SimpleManglerPlugin {
   /**
@@ -174,6 +182,11 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
     ...ALL_NUMBER_CHARS,
     "-", "_",
   ];
+
+  /**
+   * The default ignore patterns used by a {@link CssVariableMangler}.
+   */
+  private static readonly DEFAULT_IGNORE_PATTERNS: string[] = [];
 
   /**
    * The default patterns used by a {@link CssVariableMangler}.
@@ -195,13 +208,15 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
    *
    * @param options The {@link CssVariableManglerOptions}.
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.23
    */
   constructor(options: CssVariableManglerOptions={}) {
     super({
       charSet: CssVariableMangler.CHARACTER_SET,
       patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
-      ignorePatterns: [],
+      ignorePatterns: CssVariableMangler.getIgnorePatterns(
+        options.ignoreCssVarNamePattern,
+      ),
       reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
       prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),
       languageOptions: [
@@ -225,6 +240,22 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
     }
 
     return cssVarNamePattern;
+  }
+
+  /**
+   * Get either the configured patterns or the default patterns.
+   *
+   * @param ignoreCssVarNamePattern The configured ignore patterns.
+   * @returns The ignore patterns to be used.
+   */
+  private static getIgnorePatterns(
+    ignoreCssVarNamePattern?: string | Iterable<string>,
+  ): string | Iterable<string> {
+    if (ignoreCssVarNamePattern === undefined) {
+      return CssVariableMangler.DEFAULT_IGNORE_PATTERNS;
+    }
+
+    return ignoreCssVarNamePattern;
   }
 
   /**

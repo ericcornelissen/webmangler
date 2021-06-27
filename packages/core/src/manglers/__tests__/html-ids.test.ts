@@ -912,6 +912,36 @@ suite("HTML ID Mangler", function() {
       });
     });
 
+    suite("::ignoreIdNamePattern", function() {
+      const DEFAULT_PATTERNS: string[] = [];
+
+      test("default patterns", function() {
+        const htmlIdMangler = new HtmlIdMangler();
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: DEFAULT_PATTERNS });
+      });
+
+      test("one custom pattern", function() {
+        const ignorePatterns = "foo(bar|baz)-[a-z]+";
+
+        const htmlIdMangler = new HtmlIdMangler({
+          ignoreIdNamePattern: ignorePatterns,
+        });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+      });
+
+      test("multiple custom patterns", function() {
+        const ignorePatterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+
+        const htmlIdMangler = new HtmlIdMangler({
+          ignoreIdNamePattern: ignorePatterns,
+        });
+        const result = htmlIdMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+      });
+    });
+
     suite("::reservedIds", function() {
       test("default reserved", function() {
 
