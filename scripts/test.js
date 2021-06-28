@@ -5,11 +5,12 @@
  * as well as which packages to run tests for.
  */
 
-import * as cp from "child_process";
 import fs from "fs";
 import * as path from "path";
 
 import mocharc from "../.mocharc.cjs";
+import execSync from "./utilities/exec.js";
+import log from "./utilities/log.js";
 import * as paths from "./paths.js";
 
 const BENCHMARK_FLAG = "--benchmark";
@@ -35,7 +36,7 @@ compilePackages(packages);
 runTests(cmd, cmdArgs, packages, testType);
 
 function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
-  console.log("Running test...");
+  log.println("Running test...");
   execSync(spawnCmd, spawnArgs, {
     env: Object.assign({ }, process.env, {
       TEST_PACKAGES,
@@ -46,7 +47,7 @@ function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
 }
 
 function compilePackages(packagesStr) {
-  log("Compiling packages...\n");
+  log.println("Compiling packages...");
 
   let packagesList;
   if (packagesStr !== undefined) {
@@ -56,14 +57,14 @@ function compilePackages(packagesStr) {
   }
 
   for (const packageName of packagesList) {
-    log(`  Compiling packages/${packageName}...`);
+    log.print(`  Compiling packages/${packageName}...`);
     execSync("npm", ["run", "compile"], {
       cwd: path.resolve(paths.packagesDir, packageName),
     });
-    log(`  Compiled packages/${packageName}.\n`, { overwrite: true });
+    log.reprintln(`  Compiled packages/${packageName}.`);
   }
 
-  log("\n");
+  log.newline();
 }
 
 function getCliCommand(args) {
@@ -115,24 +116,4 @@ function getTestType(args) {
   }
 
   return TEST_TYPE_TEST;
-}
-
-function execSync(command, args, options) {
-  try {
-    cp.execFileSync(command, args, options);
-  } catch (_) {
-    process.exit(1);
-  }
-}
-
-function log(s, opts={}) {
-  const emptyLine = " ".repeat(process.stdout.columns);
-
-  if (opts.overwrite) {
-    process.stdout.write("\r");
-    process.stdout.write(emptyLine);
-    process.stdout.write("\r");
-  }
-
-  process.stdout.write(s);
 }

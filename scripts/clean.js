@@ -4,28 +4,36 @@
  * Restore the repository to a clean state, removing all generated files.
  */
 
-import { execFileSync } from "child_process";
+import * as path from "path";
 
+import execSync from "./utilities/exec.js";
+import log from "./utilities/log.js";
 import * as paths from "./paths.js";
 
-const FILES_AND_FOLDERS_TO_DELETE = [
+const FILES_AND_FOLDERS_TO_REMOVE = [
   ".temp/",
   "_reports/",
   ".eslintcache",
   "npm-debug.log",
 ].map(paths.resolve.fromRoot);
 
-const PACKAGES_TO_CLEAN = [
-  "packages/benchmarking",
-  "packages/cli",
-  "packages/core",
-  "packages/testing",
-].map(paths.resolve.fromRoot);
+resetTestData();
+removeFilesAndFolders(FILES_AND_FOLDERS_TO_REMOVE);
+cleanPackages();
+log.println("Repository cleaned!");
 
-execFileSync("git", ["checkout", "HEAD", "--", "./testdata"]);
-execFileSync("rm", ["-rf", ...FILES_AND_FOLDERS_TO_DELETE]);
-PACKAGES_TO_CLEAN.forEach((packageDir) => {
-  execFileSync("npm", ["run", "clean"], { cwd: packageDir });
-});
+function resetTestData() {
+  execSync("git", ["checkout", "HEAD", "--", "./testdata"]);
+}
 
-console.info("Repository cleaned!");
+function removeFilesAndFolders(filesAndFoldersToRemove) {
+  execSync("rm", ["-rf", ...filesAndFoldersToRemove]);
+}
+
+function cleanPackages() {
+  const packages = paths.getPackages();
+  for (const packageName of packages) {
+    const packagePath = path.resolve(paths.packagesDir, packageName);
+    execSync("npm", ["run", "clean"], { cwd: packagePath });
+  }
+}
