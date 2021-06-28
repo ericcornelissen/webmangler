@@ -872,6 +872,36 @@ suite("CSS Class Mangler", function() {
       });
     });
 
+    suite("::ignoreClassNamePattern", function() {
+      const DEFAULT_PATTERNS: string[] = [];
+
+      test("default patterns", function() {
+        const cssClassMangler = new CssClassMangler();
+        const result = cssClassMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: DEFAULT_PATTERNS });
+      });
+
+      test("one custom pattern", function() {
+        const ignorePatterns = "foo(bar|baz)-[a-z]+";
+
+        const cssClassMangler = new CssClassMangler({
+          ignoreClassNamePattern: ignorePatterns,
+        });
+        const result = cssClassMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+      });
+
+      test("multiple custom patterns", function() {
+        const ignorePatterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+
+        const cssClassMangler = new CssClassMangler({
+          ignoreClassNamePattern: ignorePatterns,
+        });
+        const result = cssClassMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+      });
+    });
+
     suite("::reservedClassNames", function() {
       test("default reserved", function() {
         const cssClassMangler = new CssClassMangler();

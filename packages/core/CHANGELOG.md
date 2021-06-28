@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Add support for ignore patterns to all built-in manglers.
 - Fix ignored options in `BuiltInManglers` and `RecommendedManglers`.
 - Fix unintentional mangling in HTML attributes.
 

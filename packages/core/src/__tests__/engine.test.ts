@@ -15,6 +15,7 @@ interface TestCase {
   files: WebManglerFile[];
   patterns: string | string[];
   charSet?: CharSet;
+  ignorePatterns?: string | string[];
   reservedNames?: string[];
   manglePrefix?: string;
   id?: string;
@@ -343,6 +344,67 @@ suite("ManglerEngine", function() {
           ]),
           patterns: "[a-z]+",
           charSet: ["x"],
+        },
+      ],
+    },
+    {
+      name: "ignore patterns",
+      cases: [
+        {
+          files: [
+            {
+              type: "css",
+              content: ".foo { } .bar { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".foo { } .a { }",
+            },
+          ],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
+                .withArgs(".foo { } .bar { }", "[a-z]+")
+                .returns(["foo", "bar"]),
+              replaceAll: sinon.stub()
+                .withArgs(".foo { } .bar { }", new Map([
+                  ["bar", "a"],
+                ]))
+                .returns(".foo { } .a { }"),
+            })]],
+          ]),
+          patterns: "[a-z]+",
+          ignorePatterns: "f[a-z]+",
+        },
+        {
+          files: [
+            {
+              type: "css",
+              content: ".foo { } .bar { }",
+            },
+          ],
+          expected: [
+            {
+              type: "css",
+              content: ".a { } .bar { }",
+            },
+          ],
+          expressions: new Map([
+            ["css", [new MangleExpressionMock({
+              findAll: sinon.stub()
+                .withArgs(".foo { } .bar { }", "[a-z]+")
+                .returns(["foo", "bar"]),
+              replaceAll: sinon.stub()
+                .withArgs(".foo { } .bar { }", new Map([
+                  ["foo", "a"],
+                ]))
+                .returns(".a { } .bar { }"),
+            })]],
+          ]),
+          patterns: "[a-z]+",
+          ignorePatterns: ["b[a-z]+"],
         },
       ],
     },
@@ -982,6 +1044,7 @@ suite("ManglerEngine", function() {
 
         const result = engine(files, expressions, {
           charSet: testCase.charSet,
+          ignorePatterns: testCase.ignorePatterns,
           patterns: testCase.patterns,
           reservedNames: testCase.reservedNames,
           manglePrefix: testCase.manglePrefix,

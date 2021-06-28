@@ -735,6 +735,36 @@ suite("CSS Variable Mangler", function() {
       });
     });
 
+    suite("::ignoreCssVarNamePattern", function() {
+      const DEFAULT_PATTERNS: string[] = [];
+
+      test("default patterns", function() {
+        const cssVariableMangler = new CssVariableMangler();
+        const result = cssVariableMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: DEFAULT_PATTERNS });
+      });
+
+      test("one custom pattern", function() {
+        const ignorePatterns = "foo(bar|baz)-[a-z]+";
+
+        const cssVariableMangler = new CssVariableMangler({
+          ignoreCssVarNamePattern: ignorePatterns,
+        });
+        const result = cssVariableMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+      });
+
+      test("multiple custom patterns", function() {
+        const ignorePatterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+
+        const cssVariableMangler = new CssVariableMangler({
+          ignoreCssVarNamePattern: ignorePatterns,
+        });
+        const result = cssVariableMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+      });
+    });
+
     suite("::reservedCssVarNames", function() {
       test("default reserved", function() {
         const cssVariableMangler = new CssVariableMangler();
