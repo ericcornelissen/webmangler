@@ -5,7 +5,7 @@
  * as well as which packages to run tests for.
  */
 
-import { spawnSync } from "child_process";
+import * as cp from "child_process";
 import fs from "fs";
 import * as path from "path";
 
@@ -36,7 +36,7 @@ runTests(cmd, cmdArgs, packages, testType);
 
 function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
   console.log("Running test...");
-  spawnSync(spawnCmd, spawnArgs, {
+  execSync(spawnCmd, spawnArgs, {
     env: Object.assign({ }, process.env, {
       TEST_PACKAGES,
       TEST_TYPE,
@@ -57,7 +57,7 @@ function compilePackages(packagesStr) {
 
   for (const packageName of packagesList) {
     log(`  Compiling packages/${packageName}...`);
-    spawnSync("npm", ["run", "compile"], {
+    execSync("npm", ["run", "compile"], {
       cwd: path.resolve(paths.packagesDir, packageName),
     });
     log(`  Compiled packages/${packageName}.\n`, { overwrite: true });
@@ -115,6 +115,14 @@ function getTestType(args) {
   }
 
   return TEST_TYPE_TEST;
+}
+
+function execSync(command, args, options) {
+  try {
+    cp.execFileSync(command, args, options);
+  } catch (_) {
+    process.exit(1);
+  }
 }
 
 function log(s, opts={}) {
