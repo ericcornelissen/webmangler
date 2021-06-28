@@ -4,24 +4,23 @@
  * Restore the repository to a clean state, removing all generated files.
  */
 
-const { execFileSync } = require("child_process");
-const path = require("path");
+import { execFileSync } from "child_process";
 
-const fromRoot = (fileOrFolder) => path.resolve(__dirname, "..", fileOrFolder);
+import * as paths from "./paths.js";
 
 const FILES_AND_FOLDERS_TO_DELETE = [
   ".temp/",
   "_reports/",
   ".eslintcache",
   "npm-debug.log",
-].map(fromRoot);
+].map(paths.resolve.fromRoot);
 
 const PACKAGES_TO_CLEAN = [
   "packages/benchmarking",
   "packages/cli",
   "packages/core",
   "packages/testing",
-].map(fromRoot);
+].map(paths.resolve.fromRoot);
 
 execFileSync("git", ["checkout", "HEAD", "--", "./testdata"]);
 execFileSync("rm", ["-rf", ...FILES_AND_FOLDERS_TO_DELETE]);

@@ -1,12 +1,17 @@
 "use strict";
 
-let specPackage = "";
-if (process.env.TEST_PKG !== undefined) {
-  specPackage = `${process.env.TEST_PKG}/`;
+let packagesExpr = "*";
+let packagesList = [packagesExpr];
+if (process.env.TEST_PACKAGES !== undefined) {
+  packagesExpr = process.env.TEST_PACKAGES;
+  packagesList = process.env.TEST_PACKAGES.split(",");
+  if (packagesList.length > 1) {
+    packagesExpr = `{${packagesExpr}}`;
+  }
 }
 
 const packagesExclusions = [];
-if (process.env.TEST_PKG === "cli") {
+if (packagesList.includes("cli")) {
   packagesExclusions.push("packages/cli/src/index.ts");
   packagesExclusions.push("packages/cli/src/main.ts");
 }
@@ -37,7 +42,7 @@ module.exports = {
     ".ts",
   ],
   include: [
-    `packages/${specPackage}**/*.ts`,
+    `packages/${packagesExpr}/**/*.ts`,
   ],
   exclude: [
     "_reports/",

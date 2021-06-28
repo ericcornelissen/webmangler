@@ -14,8 +14,4 @@ suite("Standard mocks", function() {
   test("has WebManglerLanguagePluginMock", function() {
     expect(mocks).to.haveOwnProperty("WebManglerLanguagePluginMock");
   });
-
-  test("has WebManglerPluginLanguageMock", function() {
-    expect(mocks).to.haveOwnProperty("WebManglerPluginLanguageMock");
-  });
 });

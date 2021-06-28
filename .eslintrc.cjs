@@ -1,6 +1,7 @@
+"use strict";
+
 const INDENT_SIZE = 2;
 const JS_GLOBALS = {
-  __dirname: "readonly",
   console: "readonly",
   module: "readonly",
   process: "readonly",
@@ -117,7 +118,7 @@ module.exports = {
       ],
       parser: "espree",
       parserOptions: {
-        ecmaVersion: 2015,
+        ecmaVersion: 2020,
       },
       rules: {
         // See: https://eslint.org/docs/rules/
@@ -131,11 +132,10 @@ module.exports = {
         "security/detect-non-literal-fs-filename": "off",
 
         // Disable any lingering TypeScript issues
+        "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-var-requires": "off",
       },
-      globals: Object.assign({}, JS_GLOBALS, {
-        console: "readonly",
-      }),
+      globals: JS_GLOBALS,
     },
     { // Test files
       files: [
@@ -165,10 +165,10 @@ module.exports = {
     },
     { // Configuration files (JS)
       files: [
-        ".eslintrc.js",
-        ".mocharc.js",
-        "commitlint.config.js",
-        "nyc.config.js",
+        ".eslintrc.cjs",
+        ".mocharc.cjs",
+        "commitlint.config.cjs",
+        "nyc.config.cjs",
       ],
       parser: "espree",
       parserOptions: {
@@ -306,12 +306,6 @@ module.exports = {
     "_reports/",
     ".temp/",
     "build/",
-
-    // Generated in packages/core
-    "packages/core/languages/",
-    "packages/core/manglers/",
-    "packages/core/*.d.ts",
-    "packages/core/*.js",
 
     // Don't ignore configuration files
     "!.github/",

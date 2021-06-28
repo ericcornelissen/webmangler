@@ -5,26 +5,24 @@
  * as well as which packages to run tests for.
  */
 
-"use strict";
+import * as cp from "child_process";
+import fs from "fs";
+import * as path from "path";
 
-const { spawnSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
-
-const {
-  TEST_TYPE_BENCHMARK,
-  TEST_TYPE_TEST,
-} = require("./constants");
+import mocharc from "../.mocharc.cjs";
+import * as paths from "./paths.js";
 
 const BENCHMARK_FLAG = "--benchmark";
 const COVERAGE_FLAG = "--coverage";
 const WATCH_FLAG = "--watch";
 
-const projectRoot = path.resolve(__dirname, "..");
-const packagesRoot = path.resolve(projectRoot, "packages");
-const binDir = path.resolve(projectRoot, "node_modules", ".bin");
-const nycBin = path.resolve(binDir, "nyc");
-const mochaBin = path.resolve(binDir, "mocha");
+const {
+  TEST_TYPE_BENCHMARK,
+  TEST_TYPE_TEST,
+} = mocharc._constants;
+
+const nycBin = path.resolve(paths.nodeModules, ".bin", "nyc");
+const mochaBin = path.resolve(paths.nodeModules, ".bin", "mocha");
 
 const argv = process.argv.slice(2);
 
@@ -38,7 +36,7 @@ runTests(cmd, cmdArgs, packages, testType);
 
 function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
   console.log("Running test...");
-  spawnSync(spawnCmd, spawnArgs, {
+  execSync(spawnCmd, spawnArgs, {
     env: Object.assign({ }, process.env, {
       TEST_PACKAGES,
       TEST_TYPE,
@@ -54,13 +52,13 @@ function compilePackages(packagesStr) {
   if (packagesStr !== undefined) {
     packagesList = packagesStr.split(",");
   } else {
-    packagesList = fs.readdirSync(packagesRoot);
+    packagesList = paths.getPackages();
   }
 
   for (const packageName of packagesList) {
     log(`  Compiling packages/${packageName}...`);
-    spawnSync("npm", ["run", "compile"], {
-      cwd: path.resolve(packagesRoot, packageName),
+    execSync("npm", ["run", "compile"], {
+      cwd: path.resolve(paths.packagesDir, packageName),
     });
     log(`  Compiled packages/${packageName}.\n`, { overwrite: true });
   }
@@ -96,7 +94,7 @@ function getPackagesToRun(args) {
   }
 
   const allPackagesExist = packagesArgs.every((packageName) => {
-    const packagePath = path.resolve(projectRoot, "packages", packageName);
+    const packagePath = path.resolve(paths.packagesDir, packageName);
     return fs.existsSync(packagePath);
   });
 
@@ -117,6 +115,14 @@ function getTestType(args) {
   }
 
   return TEST_TYPE_TEST;
+}
+
+function execSync(command, args, options) {
+  try {
+    cp.execFileSync(command, args, options);
+  } catch (_) {
+    process.exit(1);
+  }
 }
 
 function log(s, opts={}) {

@@ -1,9 +1,7 @@
 "use strict";
 
-const {
-  TEST_TYPE_BENCHMARK,
-  TEST_TYPE_TEST,
-} = require("./scripts/constants");
+const TEST_TYPE_BENCHMARK = "benchmark";
+const TEST_TYPE_TEST = "test";
 
 let packagesExpr = "*";
 let packagesList = [packagesExpr];
@@ -42,4 +40,9 @@ module.exports = {
   "watch-ignore": [
     "node_modules/",
   ],
+
+  _constants: {
+    TEST_TYPE_BENCHMARK,
+    TEST_TYPE_TEST,
+  },
 };

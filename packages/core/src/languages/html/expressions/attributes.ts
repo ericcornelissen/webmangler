@@ -14,13 +14,13 @@ function newElementAttributeExpressions(): MangleExpression {
   return new NestedGroupMangleExpression(
     `
       (?:
-        (?:<!--.*?-->)
+        (?:<!--.*?-->|"[^"]*"|'[^']*')
         |
         (?<=\\<\\s*[a-zA-Z0-9]+\\s+)
         (?<${GROUP_MAIN}>
           (?:
             [^>\\s=]+
-            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s]*))?
+            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s"']*))?
             \\s+
           )*
           %s
@@ -29,9 +29,13 @@ function newElementAttributeExpressions(): MangleExpression {
       )
     `,
     `
-      (?<=\\s|^)
-      (?<${GROUP_MAIN}>%s)
-      (?=\\=|\\s|\\/|\\>|$)
+      (?:
+        (?:"[^"]*"|'[^']*')
+        |
+        (?<=\\s|^)
+        (?<${GROUP_MAIN}>%s)
+        (?=\\=|\\s|\\/|\\>|$)
+      )
     `,
     GROUP_MAIN,
   );
@@ -44,7 +48,7 @@ function newElementAttributeExpressions(): MangleExpression {
  *
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.22
+ * @version v0.1.23
  */
 export default function attributeExpressionFactory():
     Iterable<MangleExpression> {

@@ -4,6 +4,7 @@
   "license": "MIT",
   "version": "0.1.0-alpha",
   "private": true,
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/ericcornelissen/webmangler"
@@ -26,27 +27,27 @@
   "devDependencies": {
     "@commitlint/config-conventional": "12.1.4",
     "@istanbuljs/nyc-config-typescript": "1.0.1",
-    "@types/chai": "4.2.18",
+    "@types/chai": "4.2.19",
     "@types/mocha": "8.2.2",
-    "@types/node": "14.17.3",
+    "@types/node": "14.17.4",
     "@types/proxyquire": "1.3.28",
-    "@types/ramda": "0.27.40",
+    "@types/ramda": "0.27.41",
     "@types/sinon": "10.0.2",
     "@types/sinon-chai": "3.2.5",
-    "@typescript-eslint/eslint-plugin": "4.26.1",
-    "@typescript-eslint/parser": "4.26.1",
+    "@typescript-eslint/eslint-plugin": "4.28.0",
+    "@typescript-eslint/parser": "4.28.0",
     "chai": "4.3.4",
     "commitlint": "12.1.4",
-    "eslint": "7.28.0",
+    "eslint": "7.29.0",
     "eslint-plugin-chai-expect": "2.2.0",
-    "eslint-plugin-jsdoc": "35.2.0",
+    "eslint-plugin-jsdoc": "35.4.0",
     "eslint-plugin-json": "3.0.0",
     "eslint-plugin-md": "1.0.19",
     "eslint-plugin-mocha": "9.0.0",
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-yml": "0.9.0",
     "husky": "6.0.0",
-    "mocha": "9.0.0",
+    "mocha": "9.0.1",
     "nyc": "15.1.0",
     "proxyquire": "2.1.3",
     "ramda": "0.27.1",
@@ -66,7 +67,7 @@
     "sinon-chai": "3.7.0",
     "ts-node": "10.0.0",
     "tsconfig-paths": "3.9.0",
-    "typescript": "4.3.2"
+    "typescript": "4.3.4"
   },
   "engines": {
     "node": ">=12.16.0"

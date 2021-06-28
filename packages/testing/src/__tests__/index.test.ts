@@ -22,8 +22,4 @@ suite("Package exports", function() {
   test("has WebManglerLanguagePluginMock", function() {
     expect(testing).to.haveOwnProperty("WebManglerLanguagePluginMock");
   });
-
-  test("has WebManglerPluginLanguageMock", function() {
-    expect(testing).to.haveOwnProperty("WebManglerPluginLanguageMock");
-  });
 });
