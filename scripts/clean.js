@@ -10,30 +10,63 @@ import execSync from "./utilities/exec.js";
 import log from "./utilities/log.js";
 import * as paths from "./paths.js";
 
-const FILES_AND_FOLDERS_TO_REMOVE = [
-  ".temp/",
-  "_reports/",
-  ".eslintcache",
-  "npm-debug.log",
-].map(paths.resolve.fromRoot);
+const HARD_FLAG = "--hard";
 
-resetTestData();
-removeFilesAndFolders(FILES_AND_FOLDERS_TO_REMOVE);
-cleanPackages();
-log.println("Repository cleaned!");
+const ALWAYS_DELETE = [
+  "_reports/",
+  "npm-debug.log",
+];
+
+const HARD_DELETE_ONLY = [
+  ".temp/",
+  ".eslintcache",
+];
+
+main(process.argv);
+
+function main(argv) {
+  argv = argv.slice(2);
+
+  removeFilesAndFolders(argv);
+  resetTestData(argv);
+  cleanPackages(argv);
+}
+
+function removeFilesAndFolders(argv) {
+  log.print("Removing generated files & folders...");
+
+  const filesAndFoldersToRemove = ALWAYS_DELETE;
+  if (argv.includes(HARD_FLAG)) {
+    filesAndFoldersToRemove.push(...HARD_DELETE_ONLY);
+  }
+
+  execSync("rm", [
+    "-rf",
+    ...filesAndFoldersToRemove.map(paths.resolve.fromRoot),
+  ]);
+
+  log.reprintln("Removed generated files & folders.");
+}
 
 function resetTestData() {
+  log.print("Cleaning testdata...");
   execSync("git", ["checkout", "HEAD", "--", "./testdata"]);
+  log.reprintln("Cleaned testdata.");
 }
 
-function removeFilesAndFolders(filesAndFoldersToRemove) {
-  execSync("rm", ["-rf", ...filesAndFoldersToRemove]);
-}
-
-function cleanPackages() {
-  const packages = paths.getPackages();
-  for (const packageName of packages) {
-    const packagePath = path.resolve(paths.packagesDir, packageName);
-    execSync("npm", ["run", "clean"], { cwd: packagePath });
+function cleanPackages(argv) {
+  if (!argv.includes(HARD_FLAG)) {
+    return;
   }
+
+  log.println("Cleaning packages...");
+  for (const packageName of paths.getPackages()) {
+    log.print(`  Cleaning packages/${packageName}...`);
+    execSync("npm", ["run", "clean"], {
+      cwd: path.resolve(paths.packagesDir, packageName),
+    });
+    log.reprintln(`  Cleaned packages/${packageName}.`);
+  }
+
+  log.newline();
 }

@@ -25,15 +25,19 @@ const {
 const nycBin = path.resolve(paths.nodeModules, ".bin", "nyc");
 const mochaBin = path.resolve(paths.nodeModules, ".bin", "mocha");
 
-const argv = process.argv.slice(2);
+main(process.argv);
 
-const cmd = getCliCommand(argv);
-const cmdArgs = getCommandArgs(argv);
-const packages = getPackagesToRun(argv);
-const testType = getTestType(argv);
+function main(argv) {
+  argv = argv.slice(2);
 
-compilePackages(packages);
-runTests(cmd, cmdArgs, packages, testType);
+  const cmd = getCliCommand(argv);
+  const cmdArgs = getCommandArgs(argv);
+  const packages = getPackagesToRun(argv);
+  const testType = getTestType(argv);
+
+  compilePackages(packages);
+  runTests(cmd, cmdArgs, packages, testType);
+}
 
 function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
   log.println("Running test...");
@@ -67,29 +71,29 @@ function compilePackages(packagesStr) {
   log.newline();
 }
 
-function getCliCommand(args) {
-  if (args.includes(COVERAGE_FLAG)) {
+function getCliCommand(argv) {
+  if (argv.includes(COVERAGE_FLAG)) {
     return nycBin;
   }
 
   return mochaBin;
 }
 
-function getCommandArgs(args) {
+function getCommandArgs(argv) {
   const cliArgs = [];
-  if (args.includes(COVERAGE_FLAG)) {
+  if (argv.includes(COVERAGE_FLAG)) {
     cliArgs.push(mochaBin);
   }
 
-  if (args.includes(WATCH_FLAG)) {
+  if (argv.includes(WATCH_FLAG)) {
     cliArgs.push("--watch", "--reporter", "min");
   }
 
   return cliArgs;
 }
 
-function getPackagesToRun(args) {
-  const packagesArgs = args.filter((arg) => !arg.startsWith("-"));
+function getPackagesToRun(argv) {
+  const packagesArgs = argv.filter((arg) => !arg.startsWith("-"));
   if (packagesArgs.length === 0) {
     return;
   }
@@ -107,8 +111,8 @@ function getPackagesToRun(args) {
   return packagesExpr;
 }
 
-function getTestType(args) {
-  for (const arg of args) {
+function getTestType(argv) {
+  for (const arg of argv) {
     switch (arg) {
       case BENCHMARK_FLAG:
         return TEST_TYPE_BENCHMARK;
