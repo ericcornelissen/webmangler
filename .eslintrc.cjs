@@ -114,16 +114,13 @@ module.exports = {
     },
     { // Script files
       files: [
-        "scripts/*.js",
+        "scripts/**/*.js",
       ],
       parser: "espree",
       parserOptions: {
         ecmaVersion: 2020,
       },
       rules: {
-        // See: https://eslint.org/docs/rules/
-        "no-console": "off",
-
         // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
         "jsdoc/require-jsdoc": "off",
 

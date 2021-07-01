@@ -5,11 +5,12 @@
  * as well as which packages to run tests for.
  */
 
-import * as cp from "child_process";
 import fs from "fs";
 import * as path from "path";
 
 import mocharc from "../.mocharc.cjs";
+import execSync from "./utilities/exec.js";
+import log from "./utilities/log.js";
 import * as paths from "./paths.js";
 
 const BENCHMARK_FLAG = "--benchmark";
@@ -24,18 +25,22 @@ const {
 const nycBin = path.resolve(paths.nodeModules, ".bin", "nyc");
 const mochaBin = path.resolve(paths.nodeModules, ".bin", "mocha");
 
-const argv = process.argv.slice(2);
+main(process.argv);
 
-const cmd = getCliCommand(argv);
-const cmdArgs = getCommandArgs(argv);
-const packages = getPackagesToRun(argv);
-const testType = getTestType(argv);
+function main(argv) {
+  argv = argv.slice(2);
 
-compilePackages(packages);
-runTests(cmd, cmdArgs, packages, testType);
+  const cmd = getCliCommand(argv);
+  const cmdArgs = getCommandArgs(argv);
+  const packages = getPackagesToRun(argv);
+  const testType = getTestType(argv);
+
+  compilePackages(packages);
+  runTests(cmd, cmdArgs, packages, testType);
+}
 
 function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
-  console.log("Running test...");
+  log.println("Running test...");
   execSync(spawnCmd, spawnArgs, {
     env: Object.assign({ }, process.env, {
       TEST_PACKAGES,
@@ -46,7 +51,7 @@ function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
 }
 
 function compilePackages(packagesStr) {
-  log("Compiling packages...\n");
+  log.println("Compiling packages...");
 
   let packagesList;
   if (packagesStr !== undefined) {
@@ -56,39 +61,39 @@ function compilePackages(packagesStr) {
   }
 
   for (const packageName of packagesList) {
-    log(`  Compiling packages/${packageName}...`);
+    log.print(`  Compiling packages/${packageName}...`);
     execSync("npm", ["run", "compile"], {
       cwd: path.resolve(paths.packagesDir, packageName),
     });
-    log(`  Compiled packages/${packageName}.\n`, { overwrite: true });
+    log.reprintln(`  Compiled packages/${packageName}.`);
   }
 
-  log("\n");
+  log.newline();
 }
 
-function getCliCommand(args) {
-  if (args.includes(COVERAGE_FLAG)) {
+function getCliCommand(argv) {
+  if (argv.includes(COVERAGE_FLAG)) {
     return nycBin;
   }
 
   return mochaBin;
 }
 
-function getCommandArgs(args) {
+function getCommandArgs(argv) {
   const cliArgs = [];
-  if (args.includes(COVERAGE_FLAG)) {
+  if (argv.includes(COVERAGE_FLAG)) {
     cliArgs.push(mochaBin);
   }
 
-  if (args.includes(WATCH_FLAG)) {
+  if (argv.includes(WATCH_FLAG)) {
     cliArgs.push("--watch", "--reporter", "min");
   }
 
   return cliArgs;
 }
 
-function getPackagesToRun(args) {
-  const packagesArgs = args.filter((arg) => !arg.startsWith("-"));
+function getPackagesToRun(argv) {
+  const packagesArgs = argv.filter((arg) => !arg.startsWith("-"));
   if (packagesArgs.length === 0) {
     return;
   }
@@ -106,8 +111,8 @@ function getPackagesToRun(args) {
   return packagesExpr;
 }
 
-function getTestType(args) {
-  for (const arg of args) {
+function getTestType(argv) {
+  for (const arg of argv) {
     switch (arg) {
       case BENCHMARK_FLAG:
         return TEST_TYPE_BENCHMARK;
@@ -115,24 +120,4 @@ function getTestType(args) {
   }
 
   return TEST_TYPE_TEST;
-}
-
-function execSync(command, args, options) {
-  try {
-    cp.execFileSync(command, args, options);
-  } catch (_) {
-    process.exit(1);
-  }
-}
-
-function log(s, opts={}) {
-  const emptyLine = " ".repeat(process.stdout.columns);
-
-  if (opts.overwrite) {
-    process.stdout.write("\r");
-    process.stdout.write(emptyLine);
-    process.stdout.write("\r");
-  }
-
-  process.stdout.write(s);
 }
