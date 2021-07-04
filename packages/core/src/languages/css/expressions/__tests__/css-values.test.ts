@@ -67,6 +67,35 @@ suite("CSS - CSS Value Expression Factory", function() {
       ],
     },
     {
+      name: "one declaration in a CSS function",
+      pattern: "[0-9]+px",
+      factoryOptions: { },
+      expected: ["42px"],
+      getValuesSets: () => [
+        {
+          beforeValue: [
+            "calc(",
+            "calc(1em+",
+            "calc(2%-",
+            "calc(3vh-",
+            "calc(4/",
+            "minmax(36em,",
+            "3.14em calc(",
+          ].flatMap((s) => [s, `${s} `]),
+          value: ["42px"],
+          afterValue: [
+            ")",
+            "+1em)",
+            "-2%)",
+            "*3vh)",
+            "/4)",
+            ",min-content)",
+            ") 2.718em",
+          ].flatMap((s) => [s, ` ${s}`]),
+        },
+      ],
+    },
+    {
       name: "one declaration, multi-value",
       pattern: "[0-9]+",
       factoryOptions: {
