@@ -129,5 +129,5 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
         uses: codecov/codecov-action@v1
         with:
-          file: ./_reports/lcov.info
+          file: ./_reports/coverage/lcov.info
           flags: package-${{ matrix.package }}

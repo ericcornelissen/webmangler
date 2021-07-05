@@ -13,12 +13,13 @@ import * as paths from "./paths.js";
 const HARD_FLAG = "--hard";
 
 const ALWAYS_DELETE = [
-  "_reports/",
+  ".temp/",
   "npm-debug.log",
+  "stryker.log",
 ];
 
 const HARD_DELETE_ONLY = [
-  ".temp/",
+  "_reports/",
   ".eslintcache",
 ];
 
