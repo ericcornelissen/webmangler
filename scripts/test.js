@@ -37,7 +37,12 @@ function main(argv, env) {
   const packages = getPackagesToRun(argv, env);
   const testType = getTestType(argv);
 
-  compilePackages(packages);
+  if (argv.includes(MUTATION_FLAG)) {
+    compilePackages(undefined, argv);
+  } else {
+    compilePackages(packages, argv);
+  }
+
   runTests(cmd, cmdArgs, packages, testType);
 }
 
