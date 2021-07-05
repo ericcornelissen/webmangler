@@ -22,6 +22,7 @@
     "lint": "eslint . --ext .js,.json,.md,.ts,.yml",
     "postinstall": "husky install scripts/hooks",
     "test": "node scripts/test.js",
+    "test:mutation": "node scripts/test.js --mutation",
     "test:watch": "node scripts/test.js --watch"
   },
   "devDependencies": {

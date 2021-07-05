@@ -166,6 +166,7 @@ module.exports = {
         ".mocharc.cjs",
         "commitlint.config.cjs",
         "nyc.config.cjs",
+        "stryker.config.cjs",
       ],
       parser: "espree",
       parserOptions: {
