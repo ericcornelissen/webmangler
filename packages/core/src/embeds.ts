@@ -71,7 +71,7 @@ function getEmbedsInFile(
     let prevEmbedEndIndex = 0;
     const builder: string[] = [];
     for (const embed of sortedEmbeds) {
-      const embedId = `[${fileUniqueString}-${embed.startIndex}]`;
+      const embedId = `${fileUniqueString}-${embed.startIndex}`;
       fileEmbeds.push({ ...embed, id: embedId });
 
       const preEmbed = file.content.slice(prevEmbedEndIndex, embed.startIndex);
@@ -123,8 +123,16 @@ export function reEmbed(
   embeds: Iterable<IdentifiableWebManglerEmbed>,
   file: WebManglerFile,
 ): void {
-  for (const embed of embeds) {
-    const newEmbedContent = embed.getRaw();
-    file.content = file.content.replace(embed.id, newEmbedContent);
+  const _embeds = Array.from(embeds);
+  if (_embeds.length === 0) {
+    return;
   }
+
+  const map = new Map(_embeds.map((embed) => [embed.id, embed]));
+  const rawExpr = _embeds.map((embed) => embed.id).join("|");
+  const expr = new RegExp(rawExpr, "g");
+  file.content = file.content.replace(expr, (match: string): string => {
+    const embed = map.get(match) as IdentifiableWebManglerEmbed;
+    return embed.getRaw();
+  });
 }
