@@ -4,6 +4,9 @@ import type {
   WebManglerLanguagePlugin,
 } from "./types";
 
+import { ALL_CHARS } from "./characters";
+import NameGenerator from "./name-generator.class";
+
 type EmbedsMap = Map<WebManglerFile, Iterable<IdentifiableWebManglerEmbed>>;
 
 /**
@@ -39,12 +42,11 @@ function compareStartIndex(a: WebManglerEmbed, b: WebManglerEmbed): number {
  * @returns A unique string that does not appear in `s`.
  */
 function generateUniqueString(s: string): string {
-  let id = "";
+  const g = new NameGenerator([], ALL_CHARS);
+
+  let id = g.nextName();
   while (s.includes(id)) {
-    id = "";
-    for (let i = 0; i < 64; i++) {
-      id += Math.floor(Math.random() * 10).toString(16);
-    }
+    id = g.nextName();
   }
 
   return id;
