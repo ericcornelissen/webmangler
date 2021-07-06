@@ -11,3 +11,4 @@ node_modules/
 # Generated & temporary
 _reports/
 .temp/
+*.log

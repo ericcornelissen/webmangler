@@ -54,6 +54,6 @@ module.exports = {
     ...packagesExclusions,
   ],
 
-  reportDir: "./_reports",
+  reportDir: "./_reports/coverage",
   tempDir: "./.temp/nyc",
 };
