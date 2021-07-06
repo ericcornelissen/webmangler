@@ -1303,6 +1303,36 @@ suite("HTML Attribute Mangler", function() {
       });
     });
 
+    suite("::ignoreAttrNamePattern", function() {
+      const DEFAULT_PATTERNS: string[] = [];
+
+      test("default patterns", function() {
+        const htmlAttributeMangler = new HtmlAttributeMangler();
+        const result = htmlAttributeMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: DEFAULT_PATTERNS });
+      });
+
+      test("one custom pattern", function() {
+        const ignorePatterns = "foo(bar|baz)-[a-z]+";
+
+        const htmlAttributeMangler = new HtmlAttributeMangler({
+          ignoreAttrNamePattern: ignorePatterns,
+        });
+        const result = htmlAttributeMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+      });
+
+      test("multiple custom patterns", function() {
+        const ignorePatterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+
+        const htmlAttributeMangler = new HtmlAttributeMangler({
+          ignoreAttrNamePattern: ignorePatterns,
+        });
+        const result = htmlAttributeMangler.options();
+        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+      });
+    });
+
     suite("::reservedAttrNames", function() {
       test("default reserved", function() {
         const htmlAttributeMangler = new HtmlAttributeMangler();

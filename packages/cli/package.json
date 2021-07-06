@@ -21,7 +21,7 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "clean": "rm -rf build/",
+    "clean": "rm -rf build/ *.tsbuildinfo",
     "cli": "ts-node -r tsconfig-paths/register src/index.ts",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
@@ -33,8 +33,8 @@
     "yargs": "^17.0.0"
   },
   "devDependencies": {
-    "@types/yargs": "17.0.0",
-    "typescript": "4.3.4"
+    "@types/yargs": "17.0.1",
+    "typescript": "4.3.5"
   },
   "peerDependencies": {
     "webmangler": "^0.1.16"

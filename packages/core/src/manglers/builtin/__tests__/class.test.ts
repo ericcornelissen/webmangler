@@ -64,12 +64,14 @@ suite("Built-in Manglers class", function() {
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
-        expect(CssClassManglerConstructor).to.have.been.calledOnceWith({
-          classAttributes: options.classAttributes,
-          classNamePattern: options.classNamePattern,
-          reservedClassNames: options.reservedClassNames,
-          keepClassNamePrefix: options.keepClassNamePrefix,
-        });
+        expect(CssClassManglerConstructor).to.have.been.calledOnceWith(
+          sinon.match({
+            classAttributes: options.classAttributes,
+            classNamePattern: options.classNamePattern,
+            reservedClassNames: options.reservedClassNames,
+            keepClassNamePrefix: options.keepClassNamePrefix,
+          }),
+        );
 
         CssClassManglerConstructor.resetHistory();
       }
@@ -104,11 +106,13 @@ suite("Built-in Manglers class", function() {
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
-        expect(CssVariableManglerConstructor).to.have.been.calledOnceWith({
-          cssVarNamePattern: options.cssVarNamePattern,
-          keepCssVarPrefix: options.keepCssVarPrefix,
-          reservedCssVarNames: options.reservedCssVarNames,
-        });
+        expect(CssVariableManglerConstructor).to.have.been.calledOnceWith(
+          sinon.match({
+            cssVarNamePattern: options.cssVarNamePattern,
+            keepCssVarPrefix: options.keepCssVarPrefix,
+            reservedCssVarNames: options.reservedCssVarNames,
+          }),
+        );
 
         CssVariableManglerConstructor.resetHistory();
       }
@@ -143,11 +147,13 @@ suite("Built-in Manglers class", function() {
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
-        expect(HtmlAttributeManglerConstructor).to.have.been.calledOnceWith({
-          attrNamePattern: options.attrNamePattern,
-          keepAttrPrefix: options.keepAttrPrefix,
-          reservedAttrNames: options.reservedAttrNames,
-        });
+        expect(HtmlAttributeManglerConstructor).to.have.been.calledOnceWith(
+          sinon.match({
+            attrNamePattern: options.attrNamePattern,
+            keepAttrPrefix: options.keepAttrPrefix,
+            reservedAttrNames: options.reservedAttrNames,
+          }),
+        );
 
         HtmlAttributeManglerConstructor.resetHistory();
       }
@@ -184,13 +190,15 @@ suite("Built-in Manglers class", function() {
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
-        expect(HtmlIdManglerConstructor).to.have.been.calledOnceWith({
-          idAttributes: options.idAttributes,
-          idNamePattern: options.idNamePattern,
-          keepIdPrefix: options.keepIdPrefix,
-          reservedIds: options.reservedIds,
-          urlAttributes: options.urlAttributes,
-        });
+        expect(HtmlIdManglerConstructor).to.have.been.calledOnceWith(
+          sinon.match({
+            idAttributes: options.idAttributes,
+            idNamePattern: options.idNamePattern,
+            keepIdPrefix: options.keepIdPrefix,
+            reservedIds: options.reservedIds,
+            urlAttributes: options.urlAttributes,
+          }),
+        );
 
         HtmlIdManglerConstructor.resetHistory();
       }

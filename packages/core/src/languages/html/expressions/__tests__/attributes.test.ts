@@ -152,13 +152,31 @@ suite("HTML - Attribute Expression Factory", function() {
     {
       name: "attribute-like attribute values",
       pattern: "data-[a-z\\-]+",
-      expected: [],
+      expected: ["data-bar"],
       getValuesSets: () => [
         {
           tag: valuePresets.elements.tag,
           attributes: [
-            "id=\"data-praise\"",
-            "id='data-the'",
+            "id=\"data-foo\" data-bar",
+            "id='data-foo' data-bar",
+            "id=data-foo data-bar",
+          ],
+          content: valuePresets.elements.content,
+        },
+      ],
+    },
+    {
+      name: "element-like attribute values",
+      pattern: "data-[a-z\\-]+",
+      expected: ["data-bar"],
+      getValuesSets: () => [
+        {
+          tag: valuePresets.elements.tag,
+          attributes: [
+            "alt=\"<div data-foo>\" data-bar",
+            "alt='<div data-foo>' data-bar",
+            "alt=\"<div data-foo='bar'>\" data-bar",
+            "alt='<div data-foo=\"bar\">' data-bar",
           ],
           content: valuePresets.elements.content,
         },

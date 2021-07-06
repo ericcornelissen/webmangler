@@ -28,7 +28,7 @@ const ATTRIBUTE_USAGE_EXPRESSION_OPTIONS:
  * The options for _WebMangler_'s built-in HTML Attributes mangler.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.23
  */
 export type HtmlAttributeManglerOptions = {
   /**
@@ -42,6 +42,14 @@ export type HtmlAttributeManglerOptions = {
    * @version v0.1.17
    */
   attrNamePattern?: string | Iterable<string>;
+
+  /**
+   * One or more patterns for HTML attributes that should **never** be mangled.
+   *
+   * @default `[]`
+   * @version v0.1.23
+   */
+  ignoreAttrNamePattern?: string | Iterable<string>;
 
   /**
    * A list of strings and patterns of HTML attributes names that should not be
@@ -171,7 +179,7 @@ export type HtmlAttributeManglerOptions = {
  * ```
  *
  * @since v0.1.0
- * @version v0.1.18
+ * @version v0.1.23
  */
 export default class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**
@@ -189,6 +197,11 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
     ...ALL_NUMBER_CHARS,
     "-", "_",
   ];
+
+  /**
+   * The default ignore patterns used by a {@link HtmlAttributeMangler}.
+   */
+  private static readonly DEFAULT_IGNORE_PATTERNS: string[] = [];
 
   /**
    * The default patterns used by a {@link HtmlAttributeMangler}.
@@ -210,12 +223,15 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
    *
    * @param options The {@link HtmlAttributeManglerOptions}.
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.23
    */
   constructor(options: HtmlAttributeManglerOptions={}) {
     super({
       charSet: HtmlAttributeMangler.CHARACTER_SET,
       patterns: HtmlAttributeMangler.getPatterns(options.attrNamePattern),
+      ignorePatterns: HtmlAttributeMangler.getIgnorePatterns(
+        options.ignoreAttrNamePattern,
+      ),
       reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),
       prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
       languageOptions: [
@@ -240,6 +256,22 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
     }
 
     return attrNamePattern;
+  }
+
+  /**
+   * Get either the configured patterns or the default patterns.
+   *
+   * @param ignoreAttrNamePattern The configured ignore patterns.
+   * @returns The ignore patterns to be used.
+   */
+  private static getIgnorePatterns(
+    ignoreAttrNamePattern?: string | Iterable<string>,
+  ): string | Iterable<string> {
+    if (ignoreAttrNamePattern === undefined) {
+      return HtmlAttributeMangler.DEFAULT_IGNORE_PATTERNS;
+    }
+
+    return ignoreAttrNamePattern;
   }
 
   /**
