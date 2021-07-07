@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.23] - 2021-07-07
+
 - Add support for ignore patterns to all built-in manglers.
 - Fix ignored options in `BuiltInManglers` and `RecommendedManglers`.
 - Fix mangling of CSS values inside CSS functions.
