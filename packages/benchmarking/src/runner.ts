@@ -56,7 +56,7 @@ function getRepetitions(params: BenchmarkParameters): number {
  * @returns The setup function, or a dummy setup function.
  */
 function getSetupFn(params: BenchmarkParameters): BenchmarkSetup {
-  const NOOP: BenchmarkSetup = () => null;
+  const NOOP: BenchmarkSetup = () => { /* no operation */ };
   return params.setup || NOOP;
 }
 

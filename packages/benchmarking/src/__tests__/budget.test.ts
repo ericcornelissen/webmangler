@@ -12,7 +12,15 @@ chaiUse(sinonChai);
 
 suite("Benchmarking budget", function() {
   suite("::getRuntimeBudget", function() {
-    const testDefaultCpuSpeed = 2500;
+    const stdCpu = {
+      speed: 2500,
+    };
+    const fastCpu = {
+      speed: stdCpu.speed + 500,
+    };
+    const slowCpu = {
+      speed: stdCpu.speed - 500,
+    };
 
     let osCpusStub: SinonStub;
 
@@ -23,9 +31,7 @@ suite("Benchmarking budget", function() {
     test("default system", function() {
       const budget = 3;
 
-      osCpusStub.returns([
-        { speed: testDefaultCpuSpeed },
-      ]);
+      osCpusStub.returns([stdCpu, stdCpu]);
 
       const result = getRuntimeBudget(budget);
       expect(result).to.equal(budget);
@@ -34,9 +40,7 @@ suite("Benchmarking budget", function() {
     test("fast system", function() {
       const budget = 3;
 
-      osCpusStub.returns([
-        { speed: testDefaultCpuSpeed + 500 },
-      ]);
+      osCpusStub.returns([fastCpu, fastCpu]);
 
       const result = getRuntimeBudget(budget);
       expect(result).to.be.lessThan(budget);
@@ -45,9 +49,7 @@ suite("Benchmarking budget", function() {
     test("slow system", function() {
       const budget = 3;
 
-      osCpusStub.returns([
-        { speed: testDefaultCpuSpeed - 500 },
-      ]);
+      osCpusStub.returns([slowCpu, slowCpu]);
 
       const result = getRuntimeBudget(budget);
       expect(result).to.be.greaterThan(budget);

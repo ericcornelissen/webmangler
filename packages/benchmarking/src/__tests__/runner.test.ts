@@ -1,6 +1,10 @@
+import type { SinonStub } from "sinon";
+
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
+
+import * as perf from "perf_hooks";
 
 import { benchmarkFn } from "../runner";
 
@@ -8,6 +12,12 @@ chaiUse(sinonChai);
 
 suite("Benchmarking runner", function() {
   suite("::benchmarkFn", function() {
+    let performanceNow: SinonStub;
+
+    suiteSetup(function() {
+      performanceNow = sinon.stub(perf.performance, "now");
+    });
+
     test("default iterations", function() {
       const spy = sinon.spy();
 
@@ -53,6 +63,25 @@ suite("Benchmarking runner", function() {
 
         expect(setupSpy).to.have.callCount(repetitions);
       }
+    });
+
+    test("median duration", function() {
+      const fake = sinon.fake();
+
+      performanceNow.reset();
+      performanceNow.onFirstCall().returns(1);
+      performanceNow.onSecondCall().returns(2);
+
+      const result = benchmarkFn({
+        fn: fake,
+        repetitions: 1,
+      });
+
+      expect(result.medianDuration).to.equal(1);
+    });
+
+    suiteTeardown(function() {
+      performanceNow.restore();
     });
   });
 });
