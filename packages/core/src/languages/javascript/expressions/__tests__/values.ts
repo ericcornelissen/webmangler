@@ -1,6 +1,15 @@
 import type { JsStatementValuesPresets } from "./types";
 
 /**
+ * A list of valid empty strings.
+ */
+const emptyStrings: string[] = [
+  "\"\"",
+  "''",
+  "``",
+];
+
+/**
  * A list of valid function call.
  */
 const functionCalls: string[] = [
@@ -75,6 +84,11 @@ export const sampleValues = {
  * A collection of preset values for testing the JavaScript language plugin.
  */
 export const valuePresets: JsStatementValuesPresets = {
+  beforeStatement: new Set([
+    ...emptyStrings,
+    ...inlineComments,
+    ...whitespace,
+  ]),
   beforeLeftHand: new Set([
     ...inlineComments,
     ...whitespace,
@@ -99,6 +113,7 @@ export const valuePresets: JsStatementValuesPresets = {
     ...whitespace,
   ]),
   afterStatement: new Set([
+    ...emptyStrings,
     ...inlineComments,
     ...lineComments,
     ...whitespace,

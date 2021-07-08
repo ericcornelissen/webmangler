@@ -162,8 +162,9 @@ suite("JS expression factory test suite string builders", function() {
         expected: "let foo=\"bar\";",
       },
       {
-        name: "all befores and afters with right-hand sid",
+        name: "all befores and afters with right-hand side",
         input: {
+          beforeStatement: "\n",
           beforeLeftHand: "/*foo*/",
           leftHand: "var x",
           afterLeftHand: "/*bar*/",
@@ -172,11 +173,12 @@ suite("JS expression factory test suite string builders", function() {
           afterRightHand: "/*world!*/",
           afterStatement: "\n",
         },
-        expected: "/*foo*/var x/*bar*/=/*Hello*/y/*world!*/;\n",
+        expected: "\n;/*foo*/var x/*bar*/=/*Hello*/y/*world!*/;\n",
       },
       {
         name: "all befores and afters without right-hand side",
         input: {
+          beforeStatement: "\n",
           beforeLeftHand: "/*foo*/",
           leftHand: "var x",
           afterLeftHand: "/*bar*/",
@@ -184,7 +186,7 @@ suite("JS expression factory test suite string builders", function() {
           afterRightHand: "/*world!*/",
           afterStatement: "\n",
         },
-        expected: "/*foo*/var x/*bar*/;\n",
+        expected: "\n;/*foo*/var x/*bar*/;\n",
       },
     ];
 

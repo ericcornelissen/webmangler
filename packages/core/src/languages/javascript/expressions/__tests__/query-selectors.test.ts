@@ -33,6 +33,8 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       expected: ["div"],
       getValuesSets: () => [
         {
+          beforeStatement: valuePresets.beforeStatement,
+          beforeLeftHand: valuePresets.beforeLeftHand,
           leftHand: valuePresets.leftHand,
           afterLeftHand: valuePresets.afterLeftHand,
           beforeRightHand: valuePresets.beforeRightHand,
@@ -42,6 +44,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
+          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
