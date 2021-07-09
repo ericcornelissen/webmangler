@@ -1,3 +1,5 @@
+import type { SinonStub } from "sinon";
+
 import type {
   WebManglerLanguagePluginClass,
   BuiltInLanguagesOptions,
@@ -8,9 +10,9 @@ import {
   WebManglerLanguagePluginMock,
 } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
+import * as _ from "lodash";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
-import * as _ from "lodash";
 
 import { optionsValues } from "./values";
 
@@ -19,15 +21,19 @@ import BuiltInLanguagesPlugin, { injectDependencies } from "../class";
 chaiUse(sinonChai);
 
 suite("BuiltInLanguages class", function() {
-  const CssLanguagePlugin = new WebManglerLanguagePluginMock();
-  const HtmlLanguagePlugin = new WebManglerLanguagePluginMock();
-  const JsLanguagePlugin = new WebManglerLanguagePluginMock();
-
-  const CssLanguagePluginConstructor = sinon.stub();
-  const HtmlLanguagePluginConstructor = sinon.stub();
-  const JsLanguagePluginConstructor = sinon.stub();
+  let CssLanguagePluginConstructor: SinonStub;
+  let HtmlLanguagePluginConstructor: SinonStub;
+  let JsLanguagePluginConstructor: SinonStub;
 
   suiteSetup(function() {
+    const CssLanguagePlugin = new WebManglerLanguagePluginMock();
+    const HtmlLanguagePlugin = new WebManglerLanguagePluginMock();
+    const JsLanguagePlugin = new WebManglerLanguagePluginMock();
+
+    CssLanguagePluginConstructor = sinon.stub();
+    HtmlLanguagePluginConstructor = sinon.stub();
+    JsLanguagePluginConstructor = sinon.stub();
+
     CssLanguagePluginConstructor.returns(CssLanguagePlugin);
     HtmlLanguagePluginConstructor.returns(HtmlLanguagePlugin);
     JsLanguagePluginConstructor.returns(JsLanguagePlugin);

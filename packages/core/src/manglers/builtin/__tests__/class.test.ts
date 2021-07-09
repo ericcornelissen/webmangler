@@ -1,3 +1,5 @@
+import type { SinonStub } from "sinon";
+
 import type { WebManglerPluginClass, BuiltInManglersOptions } from "../types";
 
 import {
@@ -5,9 +7,9 @@ import {
   WebManglerPluginMock,
 } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
+import * as _ from "lodash";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
-import * as _ from "lodash";
 
 import { optionsValues } from "./values";
 
@@ -15,18 +17,23 @@ import BuiltInManglers, { injectDependencies } from "../class";
 
 chaiUse(sinonChai);
 
-suite("Built-in Manglers class", function() {
-  const CssClassMangler = new WebManglerPluginMock();
-  const CssVariableMangler = new WebManglerPluginMock();
-  const HtmlAttributeMangler = new WebManglerPluginMock();
-  const HtmlIdMangler = new WebManglerPluginMock();
-
-  const CssClassManglerConstructor = sinon.stub();
-  const CssVariableManglerConstructor = sinon.stub();
-  const HtmlAttributeManglerConstructor = sinon.stub();
-  const HtmlIdManglerConstructor = sinon.stub();
+suite("BuiltInManglers class", function() {
+  let CssClassManglerConstructor: SinonStub;
+  let CssVariableManglerConstructor: SinonStub;
+  let HtmlAttributeManglerConstructor: SinonStub;
+  let HtmlIdManglerConstructor: SinonStub;
 
   suiteSetup(function() {
+    const CssClassMangler = new WebManglerPluginMock();
+    const CssVariableMangler = new WebManglerPluginMock();
+    const HtmlAttributeMangler = new WebManglerPluginMock();
+    const HtmlIdMangler = new WebManglerPluginMock();
+
+    CssClassManglerConstructor = sinon.stub();
+    CssVariableManglerConstructor = sinon.stub();
+    HtmlAttributeManglerConstructor = sinon.stub();
+    HtmlIdManglerConstructor = sinon.stub();
+
     CssClassManglerConstructor.returns(CssClassMangler);
     CssVariableManglerConstructor.returns(CssVariableMangler);
     HtmlAttributeManglerConstructor.returns(HtmlAttributeMangler);
@@ -40,13 +47,6 @@ suite("Built-in Manglers class", function() {
     );
   });
 
-  setup(function() {
-    CssClassManglerConstructor.resetHistory();
-    CssVariableManglerConstructor.resetHistory();
-    HtmlAttributeManglerConstructor.resetHistory();
-    HtmlIdManglerConstructor.resetHistory();
-  });
-
   suite("CssClassMangler", function() {
     const CssClassManglerKeys: string[] = [
       "classAttributes",
@@ -55,6 +55,10 @@ suite("Built-in Manglers class", function() {
       "keepClassNamePrefix",
       "reservedClassNames",
     ];
+
+    setup(function() {
+      CssClassManglerConstructor.resetHistory();
+    });
 
     test("enable & configure the CssClassMangler", function() {
       const optionsValueSource = Object.assign(
@@ -98,6 +102,10 @@ suite("Built-in Manglers class", function() {
       "reservedCssVarNames",
     ];
 
+    setup(function() {
+      CssVariableManglerConstructor.resetHistory();
+    });
+
     test("enable & configure the CssVariableMangler", function() {
       const optionsValueSource = Object.assign(
         _.pick(optionsValues, CssVariableManglerKeys),
@@ -138,6 +146,10 @@ suite("Built-in Manglers class", function() {
       "keepAttrPrefix",
       "reservedAttrNames",
     ];
+
+    setup(function() {
+      HtmlAttributeManglerConstructor.resetHistory();
+    });
 
     test("enable & configure the HtmlAttributeMangler", function() {
       const optionsValueSource = Object.assign(
@@ -181,6 +193,10 @@ suite("Built-in Manglers class", function() {
       "reservedIds",
       "urlAttributes",
     ];
+
+    setup(function() {
+      HtmlIdManglerConstructor.resetHistory();
+    });
 
     test("enable & configure the HtmlIdMangler", function() {
       const optionsValueSource = Object.assign(
