@@ -2,7 +2,7 @@ import type { MangleExpression } from "../../../types";
 import type { SingleValueAttributeOptions } from "../../options";
 
 import { SingleGroupMangleExpression } from "../../utils/mangle-expressions";
-import { QUOTES_PATTERN } from "./common";
+import { patterns } from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
@@ -15,35 +15,37 @@ const GROUP_QUOTE = "quote";
  * @param attributesPattern The pattern of attribute names.
  * @param valuePrefix An expression of the required prefix for values.
  * @param valueSuffix An expression of the required suffix for values.
- * @returns The {@link MangleExpression} to match attribute values in CSS.
+ * @returns The {@link MangleExpression}s to match attribute values in CSS.
  */
 function newAttributeSelectorSingleValueExpression(
   attributesPattern: string,
   valuePrefix: string,
   valueSuffix: string,
-): MangleExpression {
-  return new SingleGroupMangleExpression(
-    `
-      (?:
-        (?:\\{[^\\}]*\\}|\\/\\*[^\\*\\/]*\\*\\/)
-        |
-        (?<=
-          \\[\\s*
-          (?:${attributesPattern})\\s*
-          (?:\\=|\\~=|\\|=|\\^=|\\$=|\\*=)\\s*
-          (?<${GROUP_QUOTE}>${QUOTES_PATTERN})\\s*
-          ${valuePrefix}
+): Iterable<MangleExpression> {
+  return [
+    new SingleGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.declarationBlock}|${patterns.comment})
+          |
+          (?<=
+            \\[\\s*
+            (?:${attributesPattern})\\s*
+            (?:${patterns.attributeOperators})\\s*
+            (?<${GROUP_QUOTE}>${patterns.quotes})\\s*
+            ${valuePrefix}
+          )
+          (?<${GROUP_MAIN}>%s)
+          (?=
+            ${valueSuffix}
+            \\s*\\k<${GROUP_QUOTE}>
+            \\s*\\]
+          )
         )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          ${valueSuffix}
-          \\s*\\k<${GROUP_QUOTE}>
-          \\s*\\]
-        )
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -64,7 +66,7 @@ export default function singleValueAttributeExpressionFactory(
   const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
 
   return [
-    newAttributeSelectorSingleValueExpression(
+    ...newAttributeSelectorSingleValueExpression(
       attributesPattern,
       valuePrefix,
       valueSuffix,

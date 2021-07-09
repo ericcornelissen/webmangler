@@ -2,6 +2,7 @@ import type { MangleExpression } from "../../../types";
 import type { CssDeclarationPropertyOptions } from "../../options";
 
 import { SingleGroupMangleExpression } from "../../utils/mangle-expressions";
+import { patterns } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -11,32 +12,37 @@ const GROUP_MAIN = "main";
  *
  * @param propertyPrefix The prefix required on properties.
  * @param propertySuffix The suffix required on properties.
- * @returns The {@link MangleExpression} to match declaration properties in CSS.
+ * @returns The {@link MangleExpression}s to match properties in CSS.
  */
 function newCssDeclarationPropertyExpression(
   propertyPrefix: string,
   propertySuffix: string,
-): MangleExpression {
-  return new SingleGroupMangleExpression(
-    `
-      (?:
-        (?:"[^"]*"|'[^']*'|\\/\\*[^\\*\\/]*\\*\\/)
-        |
-        (?<=
-          (?:\\;|\\{|\\*\\/)\\s*
-          ${propertyPrefix}
+): Iterable<MangleExpression> {
+  return [
+    new SingleGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.anyString}|${patterns.comment})
+          |
+          (?<=
+            (?:
+              \\;|\\{|
+              ${patterns.commentClose}
+            )\\s*
+            ${propertyPrefix}
+          )
+          (?<${GROUP_MAIN}>%s)
+          (?=
+            ${propertySuffix}
+            \\s*
+            (?:${patterns.comment})?
+            \\s*:
+          )
         )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          ${propertySuffix}
-          \\s*
-          (?:\\/\\*[^\\*\\/]*\\*\\/)?
-          \\s*:
-        )
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -56,6 +62,6 @@ export default function cssDeclarationPropertyExpressionFactory(
   const propertySuffix = options.suffix ? options.suffix : "";
 
   return [
-    newCssDeclarationPropertyExpression(propertyPrefix, propertySuffix),
+    ...newCssDeclarationPropertyExpression(propertyPrefix, propertySuffix),
   ];
 }
