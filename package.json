@@ -22,11 +22,14 @@
     "lint": "eslint . --ext .js,.json,.md,.ts,.yml",
     "postinstall": "husky install scripts/hooks",
     "test": "node scripts/test.js",
+    "test:mutation": "node scripts/test.js --mutation",
     "test:watch": "node scripts/test.js --watch"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "12.1.4",
     "@istanbuljs/nyc-config-typescript": "1.0.1",
+    "@stryker-mutator/core": "5.2.1",
+    "@stryker-mutator/typescript-checker": "5.2.1",
     "@types/chai": "4.2.19",
     "@types/lodash": "4.14.170",
     "@types/mocha": "8.2.2",
