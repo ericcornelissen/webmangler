@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix mangling query selectors in JavaScript.
 
 ## [0.1.23] - 2021-07-07
 
