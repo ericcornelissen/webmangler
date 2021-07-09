@@ -36,6 +36,8 @@ function newQuerySelectorExpressions(
           %s
           [^${quote}]*${quote}
         )
+        |
+        (?:${quote}[^${quote}]*${quote})
       )
     `,
     `

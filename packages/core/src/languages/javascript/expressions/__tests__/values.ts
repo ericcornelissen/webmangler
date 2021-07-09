@@ -72,6 +72,7 @@ const whitespace: string[] = [
  * A collection of sample values for testing the JavaScript language plugin.
  */
 export const sampleValues = {
+  emptyStrings,
   functionCalls,
   inlineComments,
   lineComments,
@@ -86,8 +87,6 @@ export const sampleValues = {
 export const valuePresets: JsStatementValuesPresets = {
   beforeStatement: new Set([
     ...emptyStrings,
-    ...inlineComments,
-    ...whitespace,
   ]),
   beforeLeftHand: new Set([
     ...inlineComments,
@@ -113,9 +112,7 @@ export const valuePresets: JsStatementValuesPresets = {
     ...whitespace,
   ]),
   afterStatement: new Set([
-    ...emptyStrings,
     ...inlineComments,
     ...lineComments,
-    ...whitespace,
   ]),
 };
