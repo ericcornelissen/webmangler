@@ -1,45 +1,30 @@
-import type { WebManglerPlugin } from "../types";
-import type { CssClassManglerOptions } from "./css-classes";
-import type { CssVariableManglerOptions } from "./css-variables";
-import type { HtmlAttributeManglerOptions } from "./html-attributes";
+import type { WebManglerPlugin } from "../../types";
+import type {
+  RecommendedManglersOptions,
+  WebManglerPluginClass,
+} from "./types";
 
-import { MultiManglerPlugin } from "./utils";
-import CssClassMangler from "./css-classes";
-import CssVariableMangler from "./css-variables";
-import HtmlAttributeMangler from "./html-attributes";
+import { MultiManglerPlugin } from "../utils";
+
+let CssClassMangler: WebManglerPluginClass;
+let CssVariableMangler: WebManglerPluginClass;
+let HtmlAttributeMangler: WebManglerPluginClass;
 
 /**
- * The configuration of the {@link RecommendedManglers}.
+ * Inject the {@link WebManglerPlugin}s used in the {@link RecommendedManglers}.
  *
- * To disable any individual mangler the `pattern` option of that mangler can be
- * set to `undefined`.
- *
- * @since v0.1.0
+ * @param _CssClassMangler The {@link CssClassMangler}.
+ * @param _CssVariableMangler The {@link CssVariableMangler}.
+ * @param _HtmlAttributeMangler The {@link HtmlAttributeMangler}.
  */
-interface RecommendedManglersOptions extends
-  CssClassManglerOptions,
-  CssVariableManglerOptions,
-  HtmlAttributeManglerOptions {
-  /**
-   * Disable the {@see CssClassMangler}.
-   *
-   * @since v0.1.0
-   */
-  disableCssClassMangling?: boolean;
-
-  /**
-   * Disable the {@see CssVariableMangler}.
-   *
-   * @since v0.1.0
-   */
-  disableCssVarMangling?: boolean;
-
-  /**
-   * Disable the {@see HtmlAttributeMangler}.
-   *
-   * @since v0.1.0
-   */
-  disableHtmlAttrMangling?: boolean;
+export function injectDependencies(
+  _CssClassMangler: WebManglerPluginClass,
+  _CssVariableMangler: WebManglerPluginClass,
+  _HtmlAttributeMangler: WebManglerPluginClass,
+): void {
+  CssClassMangler = _CssClassMangler;
+  CssVariableMangler = _CssVariableMangler;
+  HtmlAttributeMangler = _HtmlAttributeMangler;
 }
 
 /**
