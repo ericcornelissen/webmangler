@@ -5,7 +5,7 @@ import {
   NestedGroupMangleExpression,
   SingleGroupMangleExpression,
 } from "../../utils/mangle-expressions";
-import { QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
+import { patterns, QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -14,23 +14,19 @@ const GROUP_MAIN = "main";
  * `the` and `sun` in `<img data-praise="the sun">`.
  *
  * @param attributesPattern The pattern of attribute names.
- * @returns The {@link MangleExpression} to match attribute values in HTML.
+ * @returns The {@link MangleExpression}s to match attribute values in HTML.
  */
 function newElementAttributeMultiValueExpressions(
   attributesPattern: string,
-): MangleExpression[] {
+): Iterable<MangleExpression> {
   return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
     `
       (?:
-        (?:<!--.*?-->)
+        (?:${patterns.comment})
         |
         (?<=
-          \\<\\s*[a-zA-Z0-9]+\\s+
-          (?:
-            [^>\\s=]+
-            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s]*))?
-            \\s+
-          )*
+          ${patterns.tagOpen}
+          ${patterns.attributes}
           ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)}
         )
         (?<${GROUP_MAIN}>
@@ -61,31 +57,30 @@ function newElementAttributeMultiValueExpressions(
  * @param attributesPattern The pattern of attribute names.
  * @returns The {@link MangleExpression}s to match unquoted attribute values.
  */
-function newUnquotedAttributeValueExpression(
+function newUnquotedAttributeValueExpressions(
   attributesPattern: string,
-): MangleExpression {
-  return new SingleGroupMangleExpression(
-    `
-      (?:
-        (?:<!--.*?-->)
-        |
-        (?<=
-          \\<\\s*[a-zA-Z0-9]+\\s+
-          (?:
-            [^>\\s=]+
-            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s]*))?
-            \\s+
-          )*
-          (?:${attributesPattern})\\s*=\\s*
+): Iterable<MangleExpression> {
+  return [
+    new SingleGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.comment})
+          |
+          (?<=
+            ${patterns.tagOpen}
+            ${patterns.attributes}
+            (?:${attributesPattern})
+            \\s*=\\s*
+          )
+          (?<${GROUP_MAIN}>%s)
+          (?=
+            (?:${patterns.afterAttribute})
+          )
         )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          (?:\\s|\\/|\\>)
-        )
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -105,6 +100,6 @@ export default function multiValueAttributeExpressionFactory(
 
   return [
     ...newElementAttributeMultiValueExpressions(attributesPattern),
-    newUnquotedAttributeValueExpression(attributesPattern),
+    ...newUnquotedAttributeValueExpressions(attributesPattern),
   ];
 }
