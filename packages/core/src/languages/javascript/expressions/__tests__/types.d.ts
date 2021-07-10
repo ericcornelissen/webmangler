@@ -14,6 +14,7 @@ type JsFunctionKey =
   "afterFunction";
 
 type JsStatementKey =
+  "beforeStatement" |
   "beforeLeftHand" |
   "leftHand" |
   "afterLeftHand" |
