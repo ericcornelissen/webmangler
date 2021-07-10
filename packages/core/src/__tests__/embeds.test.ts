@@ -61,7 +61,7 @@ suite("Embeds", function() {
               files: [
                 {
                   type: "html",
-                  content: "<style>[a-zA-Z0-9-_]+-[0-9]+</style>",
+                  content: "<style>[a-zA-Z0-9]+-[0-9]+</style>",
                 },
               ],
             },
@@ -99,7 +99,7 @@ suite("Embeds", function() {
               files: [
                 {
                   type: "html",
-                  content: "<script>[a-zA-Z0-9-_]+-[0-9]+</script>",
+                  content: "<script>[a-zA-Z0-9]+-[0-9]+</script>",
                 },
               ],
             },
@@ -152,8 +152,8 @@ suite("Embeds", function() {
               files: [
                 {
                   type: "html",
-                  content: "<style>[a-zA-Z0-9-_]+-[0-9]+</style>" +
-                    "<script>[a-zA-Z0-9-_]+-[0-9]+</script>",
+                  content: "<style>[a-zA-Z0-9]+-[0-9]+</style>" +
+                    "<script>[a-zA-Z0-9]+-[0-9]+</script>",
                 },
               ],
             },
