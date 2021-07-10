@@ -107,7 +107,7 @@ function getMangleMap(
   const orderedInstances = mapToOrderedList(instances);
   const mangleMap: Map<string, string> = new Map();
 
-  const nameGenerator = new NameGenerator(reservedNames, charSet);
+  const nameGenerator = new NameGenerator({ reservedNames, charSet });
   orderedInstances.forEach((originalName: string): void => {
     const mangleName = nameGenerator.nextName();
     const fullMangledName = `${manglePrefix}${mangleName}`;
@@ -127,8 +127,8 @@ function getMangleMap(
 function getSafeTwoStepMangleMapping(
   mangleMap: Map<string, string>,
 ): [Map<string, string>, Map<string, string>] {
-  const mangleOutStrings = Array.from(mangleMap.values());
-  const uniqueNameGenerator = new NameGenerator(mangleOutStrings);
+  const reservedNames = Array.from(mangleMap.values());
+  const uniqueNameGenerator = new NameGenerator({ reservedNames });
 
   const map1 = new Map();
   const map2 = new Map();
