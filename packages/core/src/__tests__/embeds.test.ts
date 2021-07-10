@@ -61,7 +61,7 @@ suite("Embeds", function() {
               files: [
                 {
                   type: "html",
-                  content: "<style>\\[.+\\]</style>",
+                  content: "<style>[a-zA-Z0-9-_]+-[0-9]+</style>",
                 },
               ],
             },
@@ -99,7 +99,7 @@ suite("Embeds", function() {
               files: [
                 {
                   type: "html",
-                  content: "<script>\\[.+\\]</script>",
+                  content: "<script>[a-zA-Z0-9-_]+-[0-9]+</script>",
                 },
               ],
             },
@@ -152,8 +152,8 @@ suite("Embeds", function() {
               files: [
                 {
                   type: "html",
-                  content: "<style>\\[.+\\]</style>" +
-                    "<script>\\[.+\\]</script>",
+                  content: "<style>[a-zA-Z0-9-_]+-[0-9]+</style>" +
+                    "<script>[a-zA-Z0-9-_]+-[0-9]+</script>",
                 },
               ],
             },
@@ -250,12 +250,12 @@ suite("Embeds", function() {
                 startIndex: 3,
                 endIndex: 14,
                 getRaw(): string { return this.content; },
-                id: "[1234567890]",
+                id: "1234567890-1",
               },
             ],
             file: {
               type: "html",
-              content: "<script>[1234567890]</script>",
+              content: "<script>1234567890-1</script>",
             },
             expected: "<script>var foo = \"bar\";</script>",
           },
@@ -267,12 +267,12 @@ suite("Embeds", function() {
                 startIndex: 3,
                 endIndex: 14,
                 getRaw(): string { return "color: red;"; },
-                id: "[0987654321]",
+                id: "0987654321-2",
               },
             ],
             file: {
               type: "html",
-              content: "<div style=\"[0987654321]\"></div>",
+              content: "<div style=\"0987654321-2\"></div>",
             },
             expected: "<div style=\"color: red;\"></div>",
           },
@@ -284,7 +284,7 @@ suite("Embeds", function() {
                 startIndex: 3,
                 endIndex: 14,
                 getRaw(): string { return this.content; },
-                id: "[12345]",
+                id: "12345-1",
               },
               {
                 content: "var foo = \"bar\";",
@@ -292,13 +292,13 @@ suite("Embeds", function() {
                 startIndex: 2,
                 endIndex: 72,
                 getRaw(): string { return this.content; },
-                id: "[67890]",
+                id: "12345-2",
               },
             ],
             file: {
               type: "html",
-              content: "<style>[12345]</style>" +
-                "<script>[67890]</script>",
+              content: "<style>12345-1</style>" +
+                "<script>12345-2</script>",
             },
             expected: "<style>.foo { font: serif; }</style>" +
               "<script>var foo = \"bar\";</script>",

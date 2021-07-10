@@ -15,6 +15,7 @@ import * as paths from "./paths.js";
 
 const BENCHMARK_FLAG = "--benchmark";
 const COVERAGE_FLAG = "--coverage";
+const MUTATION_FLAG = "--mutation";
 const WATCH_FLAG = "--watch";
 
 const {
@@ -24,18 +25,24 @@ const {
 
 const nycBin = path.resolve(paths.nodeModules, ".bin", "nyc");
 const mochaBin = path.resolve(paths.nodeModules, ".bin", "mocha");
+const strykerBin = path.resolve(paths.nodeModules, ".bin", "stryker");
 
-main(process.argv);
+main(process.argv, process.env);
 
-function main(argv) {
+function main(argv, env) {
   argv = argv.slice(2);
 
   const cmd = getCliCommand(argv);
   const cmdArgs = getCommandArgs(argv);
-  const packages = getPackagesToRun(argv);
+  const packages = getPackagesToRun(argv, env);
   const testType = getTestType(argv);
 
-  compilePackages(packages);
+  if (argv.includes(MUTATION_FLAG)) {
+    compilePackages(undefined, argv);
+  } else {
+    compilePackages(packages, argv);
+  }
+
   runTests(cmd, cmdArgs, packages, testType);
 }
 
@@ -76,6 +83,10 @@ function getCliCommand(argv) {
     return nycBin;
   }
 
+  if (argv.includes(MUTATION_FLAG)) {
+    return strykerBin;
+  }
+
   return mochaBin;
 }
 
@@ -85,6 +96,10 @@ function getCommandArgs(argv) {
     cliArgs.push(mochaBin);
   }
 
+  if (argv.includes(MUTATION_FLAG)) {
+    cliArgs.push("run", "stryker.config.cjs");
+  }
+
   if (argv.includes(WATCH_FLAG)) {
     cliArgs.push("--watch", "--reporter", "min");
   }
@@ -92,8 +107,13 @@ function getCommandArgs(argv) {
   return cliArgs;
 }
 
-function getPackagesToRun(argv) {
+function getPackagesToRun(argv, env) {
   const packagesArgs = argv.filter((arg) => !arg.startsWith("-"));
+  if (env.TEST_PACKAGES) {
+    const envPackages = env.TEST_PACKAGES.split(",");
+    packagesArgs.push(...envPackages);
+  }
+
   if (packagesArgs.length === 0) {
     return;
   }

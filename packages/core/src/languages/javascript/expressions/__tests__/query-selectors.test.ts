@@ -33,8 +33,8 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       expected: ["div"],
       getValuesSets: () => [
         {
+          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
-          afterLeftHand: valuePresets.afterLeftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
             ...buildJsStrings("div"),
@@ -42,6 +42,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
+          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -54,8 +55,8 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       expected: ["foobar"],
       getValuesSets: () => [
         {
+          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
-          afterLeftHand: valuePresets.afterLeftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
             ...buildJsStrings(".foobar"),
@@ -63,6 +64,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
+          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -75,8 +77,8 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       expected: ["r2d2"],
       getValuesSets: () => [
         {
+          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
-          afterLeftHand: valuePresets.afterLeftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
             ...buildJsStrings("r2d2"),
@@ -84,6 +86,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
+          afterStatement: valuePresets.afterStatement,
         },
       ],
     },

@@ -262,7 +262,11 @@ suite("NameGenerator", function() {
         const charSet = _charSet || defaultCharsetArray;
         expect(charSet).to.have.length.above(3);
 
-        const g = new NameGenerator(reserved, _charSet);
+        const g = new NameGenerator({
+          reservedNames: reserved,
+          charSet: _charSet,
+        });
+
         for (const { inc, expected } of samples) {
           for (let i = 0; i < inc; i++) {
             g.nextName();
@@ -275,6 +279,8 @@ suite("NameGenerator", function() {
   }
 
   test("empty character set", function() {
-    expect(() => new NameGenerator([], [])).to.throw("character set cannot be empty");
+    expect(() => {
+      new NameGenerator({ charSet: [] });
+    }).to.throw("character set cannot be empty");
   });
 });

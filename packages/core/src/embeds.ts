@@ -42,7 +42,7 @@ function compareStartIndex(a: WebManglerEmbed, b: WebManglerEmbed): number {
  * @returns A unique string that does not appear in `s`.
  */
 function generateUniqueString(s: string): string {
-  const g = new NameGenerator([], ALL_CHARS);
+  const g = new NameGenerator({ charSet: ALL_CHARS });
 
   let id = g.nextName();
   while (s.includes(id)) {
@@ -70,18 +70,19 @@ function getEmbedsInFile(
     const rawEmbeds = Array.from(languagePlugin.getEmbeds(file));
     const sortedEmbeds = rawEmbeds.sort(compareStartIndex);
 
-    let offset = 0;
+    let prevEmbedEndIndex = 0;
+    const builder: string[] = [];
     for (const embed of sortedEmbeds) {
-      const embedId = `[${fileUniqueString}-${embed.startIndex}]`;
+      const embedId = `${fileUniqueString}-${embed.startIndex}`;
       fileEmbeds.push({ ...embed, id: embedId });
 
-      const pre = file.content.slice(0, embed.startIndex + offset);
-      const post = file.content.slice(embed.endIndex + offset);
-      file.content = `${pre}${embedId}${post}`;
+      const preEmbed = file.content.slice(prevEmbedEndIndex, embed.startIndex);
+      builder.push(preEmbed, embedId);
 
-      const embedLength = embed.endIndex - embed.startIndex;
-      offset += (embedId.length - embedLength);
+      prevEmbedEndIndex = embed.endIndex;
     }
+    builder.push(file.content.slice(prevEmbedEndIndex));
+    file.content = builder.join("");
   }
 
   return fileEmbeds;
@@ -124,8 +125,16 @@ export function reEmbed(
   embeds: Iterable<IdentifiableWebManglerEmbed>,
   file: WebManglerFile,
 ): void {
-  for (const embed of embeds) {
-    const newEmbedContent = embed.getRaw();
-    file.content = file.content.replace(embed.id, newEmbedContent);
+  const _embeds = Array.from(embeds);
+  if (_embeds.length === 0) {
+    return;
   }
+
+  const map = new Map(_embeds.map((embed) => [embed.id, embed]));
+  const rawExpr = _embeds.map((embed) => embed.id).join("|");
+  const expr = new RegExp(rawExpr, "g");
+  file.content = file.content.replace(expr, (match: string): string => {
+    const embed = map.get(match) as IdentifiableWebManglerEmbed;
+    return embed.getRaw();
+  });
 }

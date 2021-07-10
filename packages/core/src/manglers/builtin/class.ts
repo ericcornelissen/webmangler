@@ -1,55 +1,31 @@
-import type { WebManglerPlugin } from "../types";
-import type { CssClassManglerOptions } from "./css-classes";
-import type { CssVariableManglerOptions } from "./css-variables";
-import type { HtmlAttributeManglerOptions } from "./html-attributes";
-import type { HtmlIdManglerOptions } from "./html-ids";
+import type { WebManglerPlugin } from "../../types";
+import type { BuiltInManglersOptions, WebManglerPluginClass } from "./types";
 
-import { MultiManglerPlugin } from "./utils";
-import CssClassMangler from "./css-classes";
-import CssVariableMangler from "./css-variables";
-import HtmlAttributeMangler from "./html-attributes";
-import HtmlIdMangler from "./html-ids";
+import { MultiManglerPlugin } from "../utils";
+
+let CssClassMangler: WebManglerPluginClass;
+let CssVariableMangler: WebManglerPluginClass;
+let HtmlAttributeMangler: WebManglerPluginClass;
+let HtmlIdMangler: WebManglerPluginClass;
 
 /**
- * The configuration of the {@link BuiltInManglers}.
+ * Inject the {@link WebManglerPlugin}s used in the {@link BuiltInManglers}.
  *
- * To disable any individual mangler the `pattern` option of that mangler can be
- * set to `undefined`.
- *
- * @since v0.1.0
+ * @param _CssClassMangler The {@link CssClassMangler}.
+ * @param _CssVariableMangler The {@link CssVariableMangler}.
+ * @param _HtmlAttributeMangler The {@link HtmlAttributeMangler}.
+ * @param _HtmlIdMangler The {@link HtmlIdMangler}.
  */
-interface BuiltInManglersOptions extends
-  CssClassManglerOptions,
-  CssVariableManglerOptions,
-  HtmlAttributeManglerOptions,
-  HtmlIdManglerOptions {
-  /**
-   * Disable the {@see CssClassMangler}.
-   *
-   * @since v0.1.0
-   */
-  disableCssClassMangling?: boolean;
-
-  /**
-   * Disable the {@see CssVariableMangler}.
-   *
-   * @since v0.1.0
-   */
-  disableCssVarMangling?: boolean;
-
-  /**
-   * Disable the {@see HtmlAttributeMangler}.
-   *
-   * @since v0.1.0
-   */
-  disableHtmlAttrMangling?: boolean;
-
-  /**
-   * Disable the {@see HtmlIdMangler}.
-   *
-   * @since v0.1.0
-   */
-  disableHtmlIdMangling?: boolean;
+export function injectDependencies(
+  _CssClassMangler: WebManglerPluginClass,
+  _CssVariableMangler: WebManglerPluginClass,
+  _HtmlAttributeMangler: WebManglerPluginClass,
+  _HtmlIdMangler: WebManglerPluginClass,
+): void {
+  CssClassMangler = _CssClassMangler;
+  CssVariableMangler = _CssVariableMangler;
+  HtmlAttributeMangler = _HtmlAttributeMangler;
+  HtmlIdMangler = _HtmlIdMangler;
 }
 
 /**
@@ -102,5 +78,3 @@ export default class BuiltInManglers extends MultiManglerPlugin {
     super(plugins);
   }
 }
-
-export type { BuiltInManglersOptions };

@@ -3,6 +3,29 @@ import type { Char, CharSet } from "./characters";
 import { ALL_LOWERCASE_CHARS } from "./characters";
 
 /**
+ * The options for a {@link NameGenerator}.
+ *
+ * @since v0.1.24
+ */
+type NameGeneratorOptions = {
+  /**
+   * One or more reserved names and/or expressions for the {@link
+   * NameGenerator}.
+   *
+   * @since v0.1.0
+   * @version v0.1.7
+   */
+  reservedNames?: Iterable<string>;
+
+  /**
+   * The {@link CharSet} to be used by the {@link NameGenerator}.
+   *
+   * @since v0.1.7
+   */
+  charSet?: CharSet;
+}
+
+/**
  * The {@link NameGenerator} class is a utility class to generate short, safe,
  * and unique strings.
  *
@@ -53,16 +76,15 @@ export default class NameGenerator {
    * If `charSet` contains duplicates those will be removed so that no duplicate
    * names are generated.
    *
-   * @param [reserved] One or more reserved names and/or expressions.
-   * @param [charSet] A {@link CharSet}.
-   * @throws If `charSet` is empty.
+   * @param [options] The {@link NameGeneratorOptions}.
+   * @throws If `options.charSet` is empty.
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.24
    */
-  constructor(
-    reserved: Iterable<string> = [],
-    charSet: CharSet = NameGenerator.DEFAULT_CHARSET,
-  ) {
+  constructor(options: NameGeneratorOptions) {
+    const reserved = options.reservedNames || [];
+    const charSet = options.charSet || NameGenerator.DEFAULT_CHARSET;
+
     const charSetNoDuplicates = new Set(charSet);
     if (charSetNoDuplicates.size === 0) {
       throw new TypeError("character set cannot be empty");

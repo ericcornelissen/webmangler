@@ -76,6 +76,7 @@ module.exports = {
       prefer: "type-imports",
       disallowTypeAnnotations: false,
     }],
+    "@typescript-eslint/no-unused-vars": "error",
 
     // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
     "jsdoc/require-param-type": "off", // Redundant in TypeScript
@@ -166,6 +167,7 @@ module.exports = {
         ".mocharc.cjs",
         "commitlint.config.cjs",
         "nyc.config.cjs",
+        "stryker.config.cjs",
       ],
       parser: "espree",
       parserOptions: {

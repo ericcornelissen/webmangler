@@ -75,6 +75,7 @@ export function buildJsStatement(
   statementValues: JsStatementValues,
 ): string {
   const {
+    beforeStatement,
     beforeLeftHand = "",
     leftHand = DEFAULT_LEFT_HAND,
     afterLeftHand = "",
@@ -84,23 +85,27 @@ export function buildJsStatement(
     afterStatement = "",
   } = statementValues;
 
-  if (rightHand === undefined) {
-    return beforeLeftHand +
-      leftHand +
-      afterLeftHand +
-      ";" +
-      afterStatement;
-  } else {
-    return beforeLeftHand +
-      leftHand +
-      afterLeftHand +
-      "=" +
-      beforeRightHand +
-      rightHand +
-      afterRightHand +
-      ";" +
-      afterStatement;
+  const builder = [];
+  if (beforeStatement !== undefined) {
+    builder.push(beforeStatement);
+    builder.push(";");
   }
+
+  builder.push(beforeLeftHand);
+  builder.push(leftHand);
+  builder.push(afterLeftHand);
+
+  if (rightHand !== undefined) {
+    builder.push("=");
+    builder.push(beforeRightHand);
+    builder.push(rightHand);
+    builder.push(afterRightHand);
+  }
+
+  builder.push(";");
+  builder.push(afterStatement);
+
+  return builder.join("");
 }
 
 /**
