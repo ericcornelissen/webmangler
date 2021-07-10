@@ -33,6 +33,11 @@ const idCharSet: CharSet = [
 ];
 
 /**
+ * The prefix for all WebMangler embed identifiers.
+ */
+const idPrefix = "wm-embed@";
+
+/**
  * Compare the `startIndex` of two {@link WebManglerEmbed}s. Can be used to sort
  * {@link WebManglerEmbed}s by their starting index.
  *
@@ -86,7 +91,7 @@ function getEmbedsInFile(
       fileEmbeds.push({ ...embed, id: embedId });
 
       const preEmbed = file.content.slice(prevEmbedEndIndex, embed.startIndex);
-      builder.push(preEmbed, embedId);
+      builder.push(preEmbed, idPrefix, embedId);
 
       prevEmbedEndIndex = embed.endIndex;
     }
@@ -139,9 +144,9 @@ export function reEmbed(
     return;
   }
 
-  const map = new Map(_embeds.map((embed) => [embed.id, embed]));
-  const rawExpr = _embeds.map((embed) => embed.id).join("|");
-  const expr = new RegExp(rawExpr, "g");
+  const map = new Map(_embeds.map((embed) => [idPrefix + embed.id, embed]));
+  const idsPattern = _embeds.map((embed) => embed.id).join("|");
+  const expr = new RegExp(`${idPrefix}(${idsPattern})`, "g");
   file.content = file.content.replace(expr, (match: string): string => {
     const embed = map.get(match) as IdentifiableWebManglerEmbed;
     return embed.getRaw();

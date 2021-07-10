@@ -14,7 +14,11 @@ import * as sinon from "sinon";
 import { getEmbeds, reEmbed } from "../embeds";
 
 suite("Embeds", function() {
+    const idPrefix = "wm-embed@";
+
   suite("::getEmbeds", function() {
+    const idPattern = `${idPrefix}[a-zA-Z0-9]+-[0-9]+`;
+
     type TestCase = {
       readonly files: WebManglerFile[];
       readonly plugins: WebManglerLanguagePlugin[];
@@ -61,7 +65,7 @@ suite("Embeds", function() {
               files: [
                 {
                   type: "html",
-                  content: "<style>[a-zA-Z0-9]+-[0-9]+</style>",
+                  content: `<style>${idPattern}</style>`,
                 },
               ],
             },
@@ -99,7 +103,7 @@ suite("Embeds", function() {
               files: [
                 {
                   type: "html",
-                  content: "<script>[a-zA-Z0-9]+-[0-9]+</script>",
+                  content: `<script>${idPattern}</script>`,
                 },
               ],
             },
@@ -152,8 +156,8 @@ suite("Embeds", function() {
               files: [
                 {
                   type: "html",
-                  content: "<style>[a-zA-Z0-9]+-[0-9]+</style>" +
-                    "<script>[a-zA-Z0-9]+-[0-9]+</script>",
+                  content: `<style>${idPattern}</style>` +
+                    `<script>${idPattern}</script>`,
                 },
               ],
             },
@@ -255,7 +259,7 @@ suite("Embeds", function() {
             ],
             file: {
               type: "html",
-              content: "<script>1234567890-1</script>",
+              content: `<script>${idPrefix}1234567890-1</script>`,
             },
             expected: "<script>var foo = \"bar\";</script>",
           },
@@ -272,7 +276,7 @@ suite("Embeds", function() {
             ],
             file: {
               type: "html",
-              content: "<div style=\"0987654321-2\"></div>",
+              content: `<div style="${idPrefix}0987654321-2"></div>`,
             },
             expected: "<div style=\"color: red;\"></div>",
           },
@@ -297,8 +301,8 @@ suite("Embeds", function() {
             ],
             file: {
               type: "html",
-              content: "<style>12345-1</style>" +
-                "<script>12345-2</script>",
+              content: `<style>${idPrefix}12345-1</style>` +
+                `<script>${idPrefix}12345-2</script>`,
             },
             expected: "<style>.foo { font: serif; }</style>" +
               "<script>var foo = \"bar\";</script>",
