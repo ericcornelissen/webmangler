@@ -2,13 +2,10 @@ import type {
   BenchmarkCallback,
   BenchmarkParameters,
   BenchmarkSetup,
-  BenchmarkStats,
   BenchmarkRunStats,
 } from "./types";
 
 import { performance } from "perf_hooks";
-
-import { computeStats } from "./stats";
 
 /**
  * The default number of repetitions when benchmarking a function.
@@ -69,11 +66,9 @@ function getSetupFn(params: BenchmarkParameters): BenchmarkSetup {
  * NOTE: The behaviour of this function below 1 repetitions is not defined.
  *
  * @param params The {@link BenchmarkParameters}.
- * @returns The benchmarking results.
- * @since v0.1.0
- * @version v0.1.1
+ * @returns The per-run benchmarking results.
  */
-export function benchmarkFn(params: BenchmarkParameters): BenchmarkStats {
+export function doBenchmark(params: BenchmarkParameters): BenchmarkRunStats[] {
   const fn = params.fn;
   const setupFn = getSetupFn(params);
   const repetitions = getRepetitions(params);
@@ -85,5 +80,5 @@ export function benchmarkFn(params: BenchmarkParameters): BenchmarkStats {
     results.push(runStats);
   }
 
-  return computeStats(results);
+  return results;
 }
