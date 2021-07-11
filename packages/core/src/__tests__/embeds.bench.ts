@@ -34,7 +34,7 @@ suite("Core embeds", function() {
   });
 
   test("getEmbeds", function() {
-    const budget = getRuntimeBudget(2);
+    const budget = getRuntimeBudget(3);
 
     const files: Iterable<WebManglerFile> = [file];
     const plugins: Iterable<WebManglerLanguagePlugin> = [
@@ -51,7 +51,7 @@ suite("Core embeds", function() {
   });
 
   test("reEmbed", function() {
-    const budget = getRuntimeBudget(2);
+    const budget = getRuntimeBudget(1);
 
     const result = benchmarkFn({
       fn: () => reEmbed(embeds, file),
