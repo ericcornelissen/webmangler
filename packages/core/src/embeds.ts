@@ -1,8 +1,12 @@
+import type { CharSet } from "./characters";
 import type {
   WebManglerEmbed,
   WebManglerFile,
   WebManglerLanguagePlugin,
 } from "./types";
+
+import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "./characters";
+import NameGenerator from "./name-generator.class";
 
 type EmbedsMap = Map<WebManglerFile, Iterable<IdentifiableWebManglerEmbed>>;
 
@@ -19,6 +23,19 @@ export interface IdentifiableWebManglerEmbed extends WebManglerEmbed {
    */
   readonly id: string;
 }
+
+/**
+ * The {@link CharSet} used to generate unique identifiers for embed locations.
+ */
+const idCharSet: CharSet = [
+  ...ALL_LETTER_CHARS,
+  ...ALL_NUMBER_CHARS,
+];
+
+/**
+ * The prefix for all WebMangler embed identifiers.
+ */
+const idPrefix = "wm-embed@";
 
 /**
  * Compare the `startIndex` of two {@link WebManglerEmbed}s. Can be used to sort
@@ -39,12 +56,11 @@ function compareStartIndex(a: WebManglerEmbed, b: WebManglerEmbed): number {
  * @returns A unique string that does not appear in `s`.
  */
 function generateUniqueString(s: string): string {
-  let id = "";
+  const nameGenerator = new NameGenerator({ charSet: idCharSet });
+
+  let id = nameGenerator.nextName();
   while (s.includes(id)) {
-    id = "";
-    for (let i = 0; i < 64; i++) {
-      id += Math.floor(Math.random() * 10).toString(16);
-    }
+    id = nameGenerator.nextName();
   }
 
   return id;
@@ -75,7 +91,7 @@ function getEmbedsInFile(
       fileEmbeds.push({ ...embed, id: embedId });
 
       const preEmbed = file.content.slice(prevEmbedEndIndex, embed.startIndex);
-      builder.push(preEmbed, embedId);
+      builder.push(preEmbed, idPrefix, embedId);
 
       prevEmbedEndIndex = embed.endIndex;
     }
@@ -128,9 +144,9 @@ export function reEmbed(
     return;
   }
 
-  const map = new Map(_embeds.map((embed) => [embed.id, embed]));
-  const rawExpr = _embeds.map((embed) => embed.id).join("|");
-  const expr = new RegExp(rawExpr, "g");
+  const map = new Map(_embeds.map((embed) => [idPrefix + embed.id, embed]));
+  const idsPattern = _embeds.map((embed) => embed.id).join("|");
+  const expr = new RegExp(`${idPrefix}(${idsPattern})`, "g");
   file.content = file.content.replace(expr, (match: string): string => {
     const embed = map.get(match) as IdentifiableWebManglerEmbed;
     return embed.getRaw();
