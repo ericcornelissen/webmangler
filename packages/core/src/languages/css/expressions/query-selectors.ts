@@ -1,11 +1,8 @@
 import type { MangleExpression } from "../../../types";
 import type { QuerySelectorOptions } from "../../options";
 
-import {
-  QUERY_SELECTOR_ALLOWED_AFTER,
-  QUERY_SELECTOR_ALLOWED_BEFORE,
-} from "../../common";
 import { SingleGroupMangleExpression } from "../../utils/mangle-expressions";
+import { patterns } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -15,30 +12,42 @@ const GROUP_MAIN = "main";
  *
  * @param [selectorPrefix] The query selector prefix.
  * @param [selectorSuffix] The query selector suffix.
- * @returns The {@link MangleExpression} to match query selectors in CSS.
+ * @returns The {@link MangleExpression}s to match query selectors in CSS.
  */
 function newCssSelectorExpression(
   selectorPrefix?: string,
   selectorSuffix?: string,
-): MangleExpression {
-  return new SingleGroupMangleExpression(
-    `
-      (?:
-        (?:"[^"]*"|'[^']*'|\\/\\*[^\\*\\/]*\\*\\/)
-        |
-        (?<=
-          ${selectorPrefix ? selectorPrefix :
-            `(?:${QUERY_SELECTOR_ALLOWED_BEFORE}|\\}|\\*\\/|^)`}
+): Iterable<MangleExpression> {
+  return [
+    new SingleGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.anyString}|${patterns.comment})
+          |
+          (?<=
+            ${selectorPrefix ? selectorPrefix : `
+              (?:
+                ^|\\}|
+                ${patterns.validBeforeQuery}|
+                ${patterns.commentClose}
+              )
+            `}
+          )
+          (?<${GROUP_MAIN}>%s)
+          (?=
+            ${selectorSuffix ? selectorSuffix : `
+              (?:
+                $|\\{|
+                ${patterns.validAfterQuery}|
+                ${patterns.commentOpen}
+              )
+            `}
+          )
         )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          ${selectorSuffix ? selectorSuffix :
-            `(?:${QUERY_SELECTOR_ALLOWED_AFTER}|\\{|\\/\\*|$)`}
-        )
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -55,6 +64,6 @@ export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): Iterable<MangleExpression> {
   return [
-    newCssSelectorExpression(options.prefix, options.suffix),
+    ...newCssSelectorExpression(options.prefix, options.suffix),
   ];
 }

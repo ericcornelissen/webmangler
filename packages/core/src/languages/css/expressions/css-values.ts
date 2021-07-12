@@ -2,6 +2,7 @@ import type { MangleExpression } from "../../../types";
 import type { CssDeclarationValueOptions } from "../../options";
 
 import { SingleGroupMangleExpression } from "../../utils/mangle-expressions";
+import { patterns } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -11,34 +12,44 @@ const GROUP_MAIN = "main";
  *
  * @param valuePrefix The prefix required on values.
  * @param valueSuffix The suffix required on values.
- * @returns The {@link MangleExpression} to match declaration values in CSS.
+ * @returns The {@link MangleExpression}s to match declaration values in CSS.
  */
 function newCssDeclarationValueExpression(
   valuePrefix: string,
   valueSuffix: string,
-): MangleExpression {
-  return new SingleGroupMangleExpression(
-    `
-      (?:
-        (?:"[^"]*"|'[^']*'|\\/\\*[^\\*\\/]*\\*\\/)
-        |
-        (?<=
-          \\{
-          [^\\}]+
-          :
-          [^;]*
-          (?<=:|\\s|\\(|\\+|\\-|\\*|\\/|,|\\*\\/)
-          ${valuePrefix}
+): Iterable<MangleExpression> {
+  return [
+    new SingleGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.anyString}|${patterns.comment})
+          |
+          (?<=
+            \\{
+            [^\\}]+
+            :
+            [^;]*
+            (?<=
+              :|\\s|\\(|,|
+              ${patterns.commentClose}|
+              ${patterns.arithmeticOperators}
+            )
+            ${valuePrefix}
+          )
+          (?<${GROUP_MAIN}>%s)
+          (?=
+            ${valueSuffix}
+            (?:
+              \\s|,|\\)|\\!|\\;|\\}|
+              ${patterns.commentClose}|
+              ${patterns.arithmeticOperators}
+            )
+          )
         )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          ${valueSuffix}
-          (?:\\s|,|\\+|\\-|\\*|\\/|\\)|\\!|\\/\\*|\\;|\\})
-        )
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -58,6 +69,6 @@ export default function cssDeclarationValueExpressionFactory(
   const valueSuffix = options.suffix ? options.suffix : "";
 
   return [
-    newCssDeclarationValueExpression(valuePrefix, valueSuffix),
+    ...newCssDeclarationValueExpression(valuePrefix, valueSuffix),
   ];
 }
