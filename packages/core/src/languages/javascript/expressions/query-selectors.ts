@@ -2,10 +2,6 @@ import type { MangleExpression } from "../../../types";
 import type { QuerySelectorOptions } from "../../options";
 
 import {
-  QUERY_SELECTOR_ALLOWED_AFTER,
-  QUERY_SELECTOR_ALLOWED_BEFORE,
-} from "../../common";
-import {
   NestedGroupMangleExpression,
   SingleGroupMangleExpression,
 } from "../../utils/mangle-expressions";
@@ -41,12 +37,12 @@ function newQuerySelectorExpressions(
     `
       (?<=
         ${selectorPrefix ? selectorPrefix :
-          `(?:${quote}|${QUERY_SELECTOR_ALLOWED_BEFORE})`}
+          `(?:${quote}|${patterns.allowedBeforeSelector})`}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
         ${selectorSuffix ? selectorSuffix :
-          `(?:${quote}|${QUERY_SELECTOR_ALLOWED_AFTER})`}
+          `(?:${quote}|${patterns.allowedAfterSelector})`}
       )
     `,
     GROUP_MAIN,

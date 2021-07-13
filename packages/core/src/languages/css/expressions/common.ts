@@ -1,7 +1,21 @@
-import {
-  QUERY_SELECTOR_ALLOWED_AFTER,
-  QUERY_SELECTOR_ALLOWED_BEFORE,
-} from "../../common";
+/**
+ * Regular Expression pattern as a string of ways to combine query selectors in
+ * CSS.
+ */
+const querySelectorCombiners = "(?:\\s|\\,|\\>|\\+|\\~)";
+
+/**
+ * Regular Expression pattern as a string of characters that may appear after
+ * the end of a query selector in CSS.
+ */
+const allowedAfterSelector =
+  `(?:${querySelectorCombiners}|\\.|\\#|\\[|\\:|\\))`;
+
+/**
+ * Regular Expression pattern as a string of characters that may appear before
+ * the start of a query selector in CSS.
+ */
+const allowedBeforeSelector = `(?:${querySelectorCombiners}|\\()`;
 
 /**
  * Regular Expression pattern as a string of all arithmetic operators in CSS.
@@ -57,6 +71,8 @@ const quotes = "(?:\"|')";
  * An object of common Regular Expression patterns in CSS
  */
 export const patterns = {
+  allowedAfterSelector,
+  allowedBeforeSelector,
   arithmeticOperators,
   attributeOperators,
   anyString,
@@ -67,6 +83,4 @@ export const patterns = {
   doubleQuotedString,
   quotes,
   singleQuotedString,
-  validBeforeQuery: QUERY_SELECTOR_ALLOWED_BEFORE,
-  validAfterQuery: QUERY_SELECTOR_ALLOWED_AFTER,
 };

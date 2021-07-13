@@ -28,7 +28,7 @@ function newCssSelectorExpression(
             ${selectorPrefix ? selectorPrefix : `
               (?:
                 ^|\\}|
-                ${patterns.validBeforeQuery}|
+                ${patterns.allowedBeforeSelector}|
                 ${patterns.commentClose}
               )
             `}
@@ -38,7 +38,7 @@ function newCssSelectorExpression(
             ${selectorSuffix ? selectorSuffix : `
               (?:
                 $|\\{|
-                ${patterns.validAfterQuery}|
+                ${patterns.allowedAfterSelector}|
                 ${patterns.commentOpen}
               )
             `}
