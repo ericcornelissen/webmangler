@@ -1,6 +1,7 @@
 import type { MangleExpression } from "../../../types";
 
 import { NestedGroupMangleExpression } from "../../utils/mangle-expressions";
+import { patterns } from "./common";
 
 const GROUP_MAIN = "main";
 
@@ -10,35 +11,33 @@ const GROUP_MAIN = "main";
  *
  * @returns The {@link MangleExpression}s to match element attributes in HTML.
  */
-function newElementAttributeExpressions(): MangleExpression {
-  return new NestedGroupMangleExpression(
-    `
-      (?:
-        (?:<!--.*?-->|"[^"]*"|'[^']*')
-        |
-        (?<=\\<\\s*[a-zA-Z0-9]+\\s+)
-        (?<${GROUP_MAIN}>
-          (?:
-            [^>\\s=]+
-            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s"']*))?
-            \\s+
-          )*
-          %s
+function newElementAttributeExpressions(): Iterable<MangleExpression> {
+  return [
+    new NestedGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.comment}|${patterns.anyString})
+          |
+          (?<=${patterns.tagOpen})
+          (?<${GROUP_MAIN}>
+            ${patterns.attributes}
+            %s
+          )
+          (?=${patterns.afterAttributeName})
         )
-        (?=\\s|\\=|\\/|\\>)
-      )
-    `,
-    `
-      (?:
-        (?:"[^"]*"|'[^']*')
-        |
-        (?<=\\s|^)
-        (?<${GROUP_MAIN}>%s)
-        (?=\\=|\\s|\\/|\\>|$)
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      `
+        (?:
+          (?:${patterns.anyString})
+          |
+          (?<=\\s|^)
+          (?<${GROUP_MAIN}>%s)
+          (?=${patterns.afterAttributeName}|$)
+        )
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -53,6 +52,6 @@ function newElementAttributeExpressions(): MangleExpression {
 export default function attributeExpressionFactory():
     Iterable<MangleExpression> {
   return [
-    newElementAttributeExpressions(),
+    ...newElementAttributeExpressions(),
   ];
 }

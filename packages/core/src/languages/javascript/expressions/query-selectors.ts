@@ -2,14 +2,10 @@ import type { MangleExpression } from "../../../types";
 import type { QuerySelectorOptions } from "../../options";
 
 import {
-  QUERY_SELECTOR_ALLOWED_AFTER,
-  QUERY_SELECTOR_ALLOWED_BEFORE,
-} from "../../common";
-import {
   NestedGroupMangleExpression,
   SingleGroupMangleExpression,
 } from "../../utils/mangle-expressions";
-import { QUOTES_ARRAY, QUOTES_PATTERN } from "./common";
+import { patterns, QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
@@ -25,11 +21,11 @@ const GROUP_QUOTE = "quote";
 function newQuerySelectorExpressions(
   selectorPrefix?: string,
   selectorSuffix?: string,
-): MangleExpression[] {
+): Iterable<MangleExpression> {
   return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
     `
       (?:
-        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n?)
+        (?:${patterns.comment})
         |
         (?<${GROUP_MAIN}>
           ${quote}[^${quote}]*
@@ -43,12 +39,12 @@ function newQuerySelectorExpressions(
     `
       (?<=
         ${selectorPrefix ? selectorPrefix :
-          `(?:${quote}|${QUERY_SELECTOR_ALLOWED_BEFORE})`}
+          `(?:${quote}|${patterns.allowedBeforeSelector})`}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
         ${selectorSuffix ? selectorSuffix :
-          `(?:${quote}|${QUERY_SELECTOR_ALLOWED_AFTER})`}
+          `(?:${quote}|${patterns.allowedAfterSelector})`}
       )
     `,
     GROUP_MAIN,
@@ -59,27 +55,30 @@ function newQuerySelectorExpressions(
  * Get a {@link MangleExpression} to match selectors as standalone strings in
  * JavaScript, e.g. `foobar` in `document.getElementById("foobar");`.
  *
- * @returns The {@link MangleExpression} to match standalone selectors in JS.
+ * @returns The {@link MangleExpression}s to match standalone selectors in JS.
  */
-function newSelectorAsStandaloneStringExpression(): MangleExpression {
-  return new SingleGroupMangleExpression(
-    `
-      (?:
-        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n?)
-        |
-        (?<=
-          (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
-          \\s*
+function newSelectorAsStandaloneStringExpressions():
+    Iterable<MangleExpression> {
+  return [
+    new SingleGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.comment})
+          |
+          (?<=
+            (?<${GROUP_QUOTE}>${patterns.quotes})
+            \\s*
+          )
+          (?<${GROUP_MAIN}>%s)
+          (?=
+            \\s*
+            \\k<${GROUP_QUOTE}>
+          )
         )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          \\s*
-          \\k<${GROUP_QUOTE}>
-        )
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -101,7 +100,7 @@ export default function querySelectorExpressionFactory(
   ];
 
   if (options.suffix || options.prefix) {
-    result.push(newSelectorAsStandaloneStringExpression());
+    result.push(...newSelectorAsStandaloneStringExpressions());
   }
 
   return result;

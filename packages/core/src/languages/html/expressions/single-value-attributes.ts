@@ -2,10 +2,7 @@ import type { MangleExpression } from "../../../types";
 import type { SingleValueAttributeOptions } from "../../options";
 
 import { SingleGroupMangleExpression } from "../../utils/mangle-expressions";
-import {
-  QUOTED_ATTRIBUTE_PATTERN,
-  QUOTES_PATTERN,
-} from "./common";
+import { patterns, QUOTED_ATTRIBUTE_PATTERN } from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
@@ -18,42 +15,40 @@ const GROUP_QUOTE = "quote";
  * @param attributesPattern The pattern of attribute names.
  * @param valuePrefix An pattern of the required prefix for values.
  * @param valueSuffix An pattern of the required suffix for values.
- * @returns The {@link MangleExpression} to match quoted attribute values.
+ * @returns The {@link MangleExpression}s to match quoted attribute values.
  */
-function newQuotedValueExpression(
+function newQuotedValueExpressions(
   attributesPattern: string,
   valuePrefix: string,
   valueSuffix: string,
-): MangleExpression {
-  return new SingleGroupMangleExpression(
-    `
-      (?:
-        (?:<!--.*?-->)
-        |
-        (?<=
-          \\<\\s*[a-zA-Z0-9]+\\s+
-          (?:
-            [^>\\s=]+
-            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s]*))?
-            \\s+
-          )*
-          ${QUOTED_ATTRIBUTE_PATTERN(
-            attributesPattern,
-            `(?<${GROUP_QUOTE}>${QUOTES_PATTERN})`,
-          )}
-          ${valuePrefix}
+): Iterable<MangleExpression> {
+  return [
+    new SingleGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.comment})
+          |
+          (?<=
+            ${patterns.tagOpen}
+            ${patterns.attributes}
+            ${QUOTED_ATTRIBUTE_PATTERN(
+              attributesPattern,
+              `(?<${GROUP_QUOTE}>${patterns.quotes})`,
+            )}
+            ${valuePrefix}
+          )
+          (?<${GROUP_MAIN}>%s)
+          (?=
+            ${valueSuffix}
+            \\s*\\k<${GROUP_QUOTE}>
+            [^>]*
+            >
+          )
         )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          ${valueSuffix}
-          \\s*\\k<${GROUP_QUOTE}>
-          [^>]*
-          >
-        )
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -64,37 +59,36 @@ function newQuotedValueExpression(
  * @param attributesPattern The pattern of attribute names.
  * @param valuePrefix An pattern of the required prefix for values.
  * @param valueSuffix An pattern of the required suffix for values.
- * @returns The {@link MangleExpression} to match unquoted attribute values.
+ * @returns The {@link MangleExpression}s to match unquoted attribute values.
  */
-function newUnquotedValueExpression(
+function newUnquotedValueExpressions(
   attributesPattern: string,
   valuePrefix: string,
   valueSuffix: string,
-): MangleExpression {
-  return new SingleGroupMangleExpression(
-    `
-      (?:
-        (?:<!--.*?-->)
-        |
-        (?<=
-          \\<\\s*[a-zA-Z0-9]+\\s+
-          (?:
-            [^>\\s=]+
-            (?:\\s*=\\s*("[^"]*"|'[^']*'|[^>\\s]*))?
-            \\s+
-          )*
-          (?:${attributesPattern})\\s*=\\s*
-          ${valuePrefix}
+): Iterable<MangleExpression> {
+  return [
+    new SingleGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.comment})
+          |
+          (?<=
+            ${patterns.tagOpen}
+            ${patterns.attributes}
+            (?:${attributesPattern})
+            \\s*=\\s*
+            ${valuePrefix}
+          )
+          (?<${GROUP_MAIN}>%s)
+          (?=
+            ${valueSuffix}
+            ${patterns.afterAttribute}
+          )
         )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          ${valueSuffix}
-          (?:\\s|\\/|\\>)
-        )
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -116,7 +110,7 @@ export default function singleValueAttributeExpressionFactory(
   const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
 
   return [
-    newQuotedValueExpression(attributesPattern, valuePrefix, valueSuffix),
-    newUnquotedValueExpression(attributesPattern, valuePrefix, valueSuffix),
+    ...newQuotedValueExpressions(attributesPattern, valuePrefix, valueSuffix),
+    ...newUnquotedValueExpressions(attributesPattern, valuePrefix, valueSuffix),
   ];
 }

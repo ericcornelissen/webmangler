@@ -2,7 +2,7 @@ import type { MangleExpression } from "../../../types";
 import type { CssDeclarationPropertyOptions } from "../../options";
 
 import { SingleGroupMangleExpression } from "../../utils/mangle-expressions";
-import { QUOTES_PATTERN } from "./common";
+import { patterns } from "./common";
 
 const GROUP_MAIN = "main";
 const GROUP_QUOTE = "q";
@@ -13,32 +13,34 @@ const GROUP_QUOTE = "q";
  *
  * @param propertyPrefix The prefix required on property names.
  * @param propertySuffix The suffix required on property names.
- * @returns The {@link MangleExpression} to match standalone properties in JS.
+ * @returns The {@link MangleExpression}s to match standalone properties in JS.
  */
-function newPropertyAsStandaloneStringExpression(
+function newPropertyAsStandaloneStringExpressions(
   propertyPrefix: string,
   propertySuffix: string,
-): MangleExpression {
-  return new SingleGroupMangleExpression(
-    `
-      (?:
-        (?:\\/\\*[^\\*\\/]*\\*\\/|\\/\\/[^\\r\\n]+\\r?\\n?)
-        |
-        (?<=
-          (?<${GROUP_QUOTE}>${QUOTES_PATTERN})
-          \\s*
-          ${propertyPrefix}
+): Iterable<MangleExpression> {
+  return [
+    new SingleGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.comment})
+          |
+          (?<=
+            (?<${GROUP_QUOTE}>${patterns.quotes})
+            \\s*
+            ${propertyPrefix}
+          )
+          (?<${GROUP_MAIN}>%s)
+          (?=
+            ${propertySuffix}
+            \\s*
+            \\k<${GROUP_QUOTE}>
+          )
         )
-        (?<${GROUP_MAIN}>%s)
-        (?=
-          ${propertySuffix}
-          \\s*
-          \\k<${GROUP_QUOTE}>
-        )
-      )
-    `,
-    GROUP_MAIN,
-  );
+      `,
+      GROUP_MAIN,
+    ),
+  ];
 }
 
 /**
@@ -58,6 +60,6 @@ export default function cssDeclarationPropertyExpressionFactory(
   const propertySuffix = options.suffix ? options.suffix : "";
 
   return [
-    newPropertyAsStandaloneStringExpression(propertyPrefix, propertySuffix),
+    ...newPropertyAsStandaloneStringExpressions(propertyPrefix, propertySuffix),
   ];
 }
