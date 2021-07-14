@@ -1,11 +1,15 @@
 export type {
-  MangleOptions,
+  Char,
+  CharSet,
+} from "./characters";
+export type {
   MangleEngineOptions,
   MangleExpression,
   MangleExpressionOptions,
+  MangleOptions,
   WebManglerEmbed,
   WebManglerFile,
+  WebManglerLanguagePlugin,
   WebManglerOptions,
   WebManglerPlugin,
-  WebManglerLanguagePlugin,
-} from "@webmangler/types";
+} from "./types";

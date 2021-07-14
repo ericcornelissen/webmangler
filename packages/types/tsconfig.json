@@ -4,10 +4,5 @@
     "rootDir": "src",
     "outDir": "build",
     "composite": true
-  },
-  "references": [
-    { "path": "../benchmarking" },
-    { "path": "../testing" },
-    { "path": "../types" }
-  ]
+  }
 }
