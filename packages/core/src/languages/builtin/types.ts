@@ -1,5 +1,5 @@
 import type { WebManglerLanguagePlugin } from "../../types";
-import type { CssLanguagePluginOptions } from "../css";
+import type { CssLanguagePluginOptions } from "@webmangler/language-css";
 import type { HtmlLanguagePluginOptions } from "../html";
 import type { JavaScriptLanguagePluginOptions } from "../javascript";
 

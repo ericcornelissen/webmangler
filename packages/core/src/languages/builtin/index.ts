@@ -3,7 +3,7 @@ import type {
   WebManglerLanguagePluginClass,
 } from "./types";
 
-import CssLanguageSupport from "../css";
+import CssLanguageSupport from "@webmangler/language-css";
 import HtmlLanguageSupport from "../html";
 import JavaScriptLanguageSupport from "../javascript";
 import BuiltInManglers, { injectDependencies } from "./class";

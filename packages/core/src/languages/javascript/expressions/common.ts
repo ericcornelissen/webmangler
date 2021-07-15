@@ -1,4 +1,21 @@
-import { patterns as cssPatterns } from "../../css/expressions/common";
+/**
+ * Regular Expression pattern as a string of ways to combine query selectors in
+ * JavaScript.
+ */
+const querySelectorCombiners = "(?:\\s|\\,|\\>|\\+|\\~)";
+
+/**
+ * Regular Expression pattern as a string of characters that may appear after
+ * the end of a query selector in JavaScript.
+ */
+const allowedAfterSelector =
+  `(?:${querySelectorCombiners}|\\.|\\#|\\[|\\:|\\))`;
+
+/**
+ * Regular Expression pattern as a string of characters that may appear before
+ * the start of a query selector in JavaScript.
+ */
+const allowedBeforeSelector = `(?:${querySelectorCombiners}|\\()`;
 
 /**
  * Array of characters that are quotes in JavaScript.
@@ -29,8 +46,8 @@ const quotes = "(?:\"|'|`)";
  * An object of common Regular Expression patterns in JavaScript.
  */
 export const patterns = {
-  allowedAfterSelector: cssPatterns.allowedAfterSelector,
-  allowedBeforeSelector: cssPatterns.allowedBeforeSelector,
+  allowedAfterSelector,
+  allowedBeforeSelector,
   quotes,
   comment,
 };

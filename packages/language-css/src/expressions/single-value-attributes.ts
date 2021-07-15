@@ -1,5 +1,5 @@
-import type { MangleExpression } from "../../../types";
-import type { SingleValueAttributeOptions } from "../../options";
+import type { MangleExpression } from "@webmangler/types";
+import type { SingleValueAttributeOptions } from "../options";
 
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";

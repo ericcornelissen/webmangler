@@ -1,0 +1,36 @@
+{
+  "name": "@webmangler/language-css",
+  "version": "0.1.23",
+  "description": "CSS language support for WebMangler",
+  "license": "MIT",
+  "main": "./build/index.js",
+  "typings": "./build/index.d.ts",
+  "exports": {
+    ".": "./build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ericcornelissen/webmangler",
+    "directory": "packages/language-css"
+  },
+  "bugs": {
+    "url": "https://github.com/ericcornelissen/webmangler/issues"
+  },
+  "author": {
+    "name": "Eric Cornelissen",
+    "email": "ericornelissen@gmail.com",
+    "url": "https://ericcornelissen.dev/"
+  },
+  "scripts": {
+    "clean": "rm -rf build/ *.tsbuildinfo",
+    "compile": "tsc --build",
+    "prepublishOnly": "npm run compile",
+    "postpublish": "npm run clean"
+  },
+  "devDependencies": {
+    "typescript": "4.3.5"
+  },
+  "engines": {
+    "node": ">=12.16.0"
+  }
+}

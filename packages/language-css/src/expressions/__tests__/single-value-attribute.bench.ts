@@ -1,25 +1,23 @@
-import type { WebManglerFile } from "../../../../types";
+import type { MangleExpression } from "@webmangler/types";
 
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { expect } from "chai";
 
 import { embedContentInContext } from "./benchmark-helpers";
 
-import manglerEngine from "../../../../engine";
 import singleValueAttributeExpressionFactory from "../single-value-attributes";
 
 suite("CSS - Single Value Attribute Expression Factory", function() {
-  const expressionsMap = new Map();
-  const mangleEngineOptions = {
-    patterns: "[a-zA-Z0-9-]+",
-  };
+  let expressions: Iterable<MangleExpression>;
+
+  const patterns = "val-[a-zA-Z0-9]+";
 
   const contentWithSingleValueAttribute = embedContentInContext(`
-    input[id="bar"] {
+    input[id="val-bar"] {
       font-family: sans-serif;
     }
 
-    .foo[for="bar"] {
+    .foo[for="val-bar"] {
       content: "bar";
       color: #123;
     }
@@ -36,63 +34,63 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
   `;
 
   suiteSetup(function() {
-    const expressions = singleValueAttributeExpressionFactory({
+    expressions = singleValueAttributeExpressionFactory({
       attributeNames: ["id", "for"],
     });
-    expressionsMap.set("css", expressions);
   });
 
   test("benchmark validity", function() {
-    const cssExpressions = expressionsMap.get("css");
-    expect(cssExpressions).not.to.be.undefined;
-    expect(cssExpressions).to.have.length.above(0);
+    expect(expressions).to.have.length.above(0);
   });
 
   test("simple file", function() {
-    const budget = getRuntimeBudget(0.3);
+    const budget = getRuntimeBudget(0.1);
     const fileContent = contentWithSingleValueAttribute;
 
-    let files: WebManglerFile[] = [];
+    let found: string[] = [];
     const result = benchmarkFn({
-      setup: () => files = [{ type: "css", content: fileContent }],
-      fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
+      fn: () => {
+        for (const expression of expressions) {
+          found = Array.from(expression.findAll(fileContent, patterns));
+        }
+      },
     });
 
+    expect(found).to.have.length.greaterThan(0);
     expect(result.medianDuration).to.be.below(budget);
-
-    expect(files).to.have.lengthOf(1);
-    expect(files[0].content).not.to.equal(fileContent);
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(6);
+    const budget = getRuntimeBudget(1);
     const fileContent = contentWithSingleValueAttribute.repeat(100);
 
-    let files: WebManglerFile[] = [];
+    let found: string[] = [];
     const result = benchmarkFn({
-      setup: () => files = [{ type: "css", content: fileContent }],
-      fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
+      fn: () => {
+        for (const expression of expressions) {
+          found = Array.from(expression.findAll(fileContent, patterns));
+        }
+      },
     });
 
+    expect(found).to.have.length.greaterThan(0);
     expect(result.medianDuration).to.be.below(budget);
-
-    expect(files).to.have.lengthOf(1);
-    expect(files[0].content).not.to.equal(fileContent);
   });
 
   test("large file without single-value attributes", function() {
     const budget = getRuntimeBudget(1);
     const fileContent = contentWithoutSingleValueAttribute.repeat(100);
 
-    let files: WebManglerFile[] = [];
+    let found: string[] = [];
     const result = benchmarkFn({
-      setup: () => files = [{ type: "css", content: fileContent }],
-      fn: () => manglerEngine(files, expressionsMap, mangleEngineOptions),
+      fn: () => {
+        for (const expression of expressions) {
+          found = Array.from(expression.findAll(fileContent, patterns));
+        }
+      },
     });
 
+    expect(found).to.have.lengthOf(0);
     expect(result.medianDuration).to.be.below(budget);
-
-    expect(files).to.have.lengthOf(1);
-    expect(files[0].content).to.equal(fileContent);
   });
 });

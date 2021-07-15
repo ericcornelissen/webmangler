@@ -22,6 +22,7 @@ module.exports = {
         "core",
         "deps",
         "hooks",
+        "lang-css",
         "lang-utils",
         "scripts",
         "testing",
