@@ -3,7 +3,7 @@ import type {
   WebManglerEmbed,
   WebManglerFile,
   WebManglerLanguagePlugin,
-} from "../../types";
+} from "@webmangler/types";
 
 /**
  * The {@link MultiLanguagePlugin} class is a utility to create a {@link

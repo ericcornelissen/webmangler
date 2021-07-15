@@ -1,6 +1,6 @@
 import type { MangleExpression } from "../../../types";
 
-import { NestedGroupMangleExpression } from "../../utils/mangle-expressions";
+import { NestedGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
 const GROUP_MAIN = "main";

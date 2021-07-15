@@ -1,7 +1,7 @@
 import type { MangleExpression } from "../../../types";
 import type { CssDeclarationPropertyOptions } from "../../options";
 
-import { SingleGroupMangleExpression } from "../../utils/mangle-expressions";
+import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
 const GROUP_MAIN = "main";

@@ -3,7 +3,7 @@ import type {
   WebManglerEmbed,
   WebManglerFile,
   WebManglerLanguagePlugin,
-} from "../../types";
+} from "@webmangler/types";
 
 /**
  * A function that extracts {@link WebManglerEmbed}s from a {@link

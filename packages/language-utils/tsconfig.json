@@ -6,8 +6,6 @@
     "composite": true
   },
   "references": [
-    { "path": "../benchmarking" },
-    { "path": "../language-utils" },
     { "path": "../testing" },
     { "path": "../types" }
   ]

@@ -4,7 +4,7 @@ import type { MultiValueAttributeOptions } from "../../options";
 import {
   NestedGroupMangleExpression,
   SingleGroupMangleExpression,
-} from "../../utils/mangle-expressions";
+} from "@webmangler/language-utils";
 import { patterns, QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";

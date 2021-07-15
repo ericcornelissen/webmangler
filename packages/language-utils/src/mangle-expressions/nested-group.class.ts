@@ -1,4 +1,4 @@
-import type { MangleExpression } from "../../../types";
+import type { MangleExpression } from "@webmangler/types";
 
 import { format as printf } from "util";
 

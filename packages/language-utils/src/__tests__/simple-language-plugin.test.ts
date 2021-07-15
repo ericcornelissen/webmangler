@@ -1,9 +1,10 @@
 import type { TestScenario } from "@webmangler/testing";
+import type { WebManglerEmbed } from "@webmangler/types";
+
 import type {
   EmbedsGetter,
   ExpressionFactory,
 } from "../simple-language-plugin.class";
-import type { WebManglerEmbed } from "../../../types";
 
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";

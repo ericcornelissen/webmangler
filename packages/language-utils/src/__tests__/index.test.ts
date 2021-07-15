@@ -1,8 +1,8 @@
 import { expect } from "chai";
 
-import * as utils from "../utils";
+import * as utils from "../index";
 
-suite("Exports of webmangler/languages/utils", function() {
+suite("Exports of @webmangler/languages-utils", function() {
   suite("MangleExpressions", function() {
     test("has NestedGroupMangleExpression", function() {
       expect(utils).to.haveOwnProperty("NestedGroupMangleExpression");

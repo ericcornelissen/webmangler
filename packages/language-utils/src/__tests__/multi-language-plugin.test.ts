@@ -2,7 +2,7 @@ import type {
   MangleExpression,
   WebManglerEmbed,
   WebManglerLanguagePlugin,
-} from "../../../types";
+} from "@webmangler/types";
 
 import {
   MangleExpressionMock,

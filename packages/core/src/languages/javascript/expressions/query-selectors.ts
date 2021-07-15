@@ -4,7 +4,7 @@ import type { QuerySelectorOptions } from "../../options";
 import {
   NestedGroupMangleExpression,
   SingleGroupMangleExpression,
-} from "../../utils/mangle-expressions";
+} from "@webmangler/language-utils";
 import { patterns, QUOTES_ARRAY } from "./common";
 
 const GROUP_MAIN = "main";

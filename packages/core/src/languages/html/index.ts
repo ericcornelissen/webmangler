@@ -1,6 +1,6 @@
-import type { EmbedsGetter, ExpressionFactory } from "../utils";
+import type { EmbedsGetter, ExpressionFactory } from "@webmangler/language-utils";
 
-import { SimpleLanguagePlugin } from "../utils";
+import { SimpleLanguagePlugin } from "@webmangler/language-utils";
 import {
   embeddedCssFinders,
   embeddedJsFinders,

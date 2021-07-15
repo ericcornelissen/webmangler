@@ -1,6 +1,6 @@
-import type { ExpressionFactory } from "../utils";
+import type { ExpressionFactory } from "@webmangler/language-utils";
 
-import { SimpleLanguagePlugin } from "../utils";
+import { SimpleLanguagePlugin } from "@webmangler/language-utils";
 import {
   cssDeclarationPropertyExpressionFactory,
   querySelectorExpressionFactory,
