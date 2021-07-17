@@ -6,7 +6,7 @@ import type {
 } from "./types";
 
 import { expect } from "chai";
-import * as R from "ramda";
+import * as _ from "lodash";
 import { format as printf } from "util";
 
 import {
@@ -829,10 +829,10 @@ suite("HTML Attribute Mangler", function() {
         [factory("data-foo", "data-a"), factory("data-bar", "data-b")],
         [factory("data-foobar", "data-a"), factory("data-foobar", "data-a")],
       ].flatMap(([testCasesA, testCasesB]): [TestCase, TestCase][] => {
-        return R.zip(
+        return _.zip(
           testCasesA.map(embedDeclarationsInStyle),
           testCasesB.map(embedDeclarationsInStyle),
-        );
+        ) as [TestCase, TestCase][];
       });
 
       scenarios.push(...[
@@ -1474,4 +1474,3 @@ function run(language: string, scenarios: TestScenario<TestCase>[]): void {
     });
   }
 }
-

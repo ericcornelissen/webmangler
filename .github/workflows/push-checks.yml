@@ -28,6 +28,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
+          cache: npm
       - name: Install monorepo dependencies
         if: steps.changes.outputs.changed == 'true'
         run: npm ci
@@ -69,6 +70,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
+          cache: npm
       - name: Install monorepo dependencies
         working-directory: ./
         if: steps.changes.outputs.changed == 'true'
@@ -89,6 +91,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
+          cache: npm
       - name: Install monorepo dependencies
         run: npm ci
       - name: Run linters
@@ -121,6 +124,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
+          cache: npm
       - name: Install monorepo dependencies
         if: steps.changes.outputs.changed == 'true'
         run: npm ci
