@@ -27,6 +27,9 @@
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
   },
+  "dependencies": {
+    "@webmangler/types": "^0.1.23"
+  },
   "devDependencies": {
     "typescript": "4.3.5"
   },
