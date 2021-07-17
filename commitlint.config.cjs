@@ -23,6 +23,7 @@ module.exports = {
         "deps",
         "hooks",
         "lang-css",
+        "lang-html",
         "lang-utils",
         "scripts",
         "testing",

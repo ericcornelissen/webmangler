@@ -16,6 +16,7 @@
     "paths": {
       "@webmangler/benchmarking": ["packages/benchmarking/build"],
       "@webmangler/language-css": ["packages/language-css/build"],
+      "@webmangler/language-html": ["packages/language-html/build"],
       "@webmangler/language-utils": ["packages/language-utils/build"],
       "@webmangler/testing": ["packages/testing/build"],
       "@webmangler/types": ["packages/types/build"],

@@ -27,6 +27,10 @@ flags:
     paths:
       - packages/language-css/**/*.ts
     carryforward: true
+  package-language-html:
+    paths:
+      - packages/language-html/**/*.ts
+    carryforward: true
   package-language-utils:
     paths:
       - packages/language-utils/**/*.ts

@@ -4,7 +4,7 @@ import type {
 } from "./types";
 
 import CssLanguageSupport from "@webmangler/language-css";
-import HtmlLanguageSupport from "../html";
+import HtmlLanguageSupport from "@webmangler/language-html";
 import JavaScriptLanguageSupport from "../javascript";
 import BuiltInManglers, { injectDependencies } from "./class";
 

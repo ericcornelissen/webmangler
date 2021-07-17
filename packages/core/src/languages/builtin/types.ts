@@ -1,6 +1,6 @@
 import type { WebManglerLanguagePlugin } from "../../types";
 import type { CssLanguagePluginOptions } from "@webmangler/language-css";
-import type { HtmlLanguagePluginOptions } from "../html";
+import type { HtmlLanguagePluginOptions } from "@webmangler/language-html";
 import type { JavaScriptLanguagePluginOptions } from "../javascript";
 
 /**

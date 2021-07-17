@@ -1,20 +1,17 @@
 {
-  "name": "webmangler",
+  "name": "@webmangler/language-html",
   "version": "0.1.23",
-  "description": "The WebMangler core",
+  "description": "HTML language support for WebMangler",
   "license": "MIT",
   "main": "./build/index.js",
   "typings": "./build/index.d.ts",
   "exports": {
-    ".": "./build/index.js",
-    "./languages": "./build/languages/index.js",
-    "./manglers": "./build/manglers/index.js",
-    "./manglers/utils": "./build/manglers/utils/index.js"
+    ".": "./build/index.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ericcornelissen/webmangler",
-    "directory": "packages/core"
+    "directory": "packages/language-html"
   },
   "bugs": {
     "url": "https://github.com/ericcornelissen/webmangler/issues"
@@ -31,8 +28,7 @@
     "postpublish": "npm run clean"
   },
   "dependencies": {
-    "@webmangler/language-css": "^0.1.23",
-    "@webmangler/language-html": "^0.1.23",
+    "@webmangler/language-utils": "^0.1.23",
     "@webmangler/types": "^0.1.23"
   },
   "devDependencies": {

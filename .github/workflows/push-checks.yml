@@ -13,6 +13,7 @@ jobs:
         package:
           - core
           - language-css
+          - language-html
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -49,6 +50,7 @@ jobs:
           - cli
           - core
           - language-css
+          - language-html
           - language-utils
           - testing
           - types
@@ -107,6 +109,7 @@ jobs:
           - cli
           - core
           - language-css
+          - language-html
           - language-utils
           - testing
     steps:
