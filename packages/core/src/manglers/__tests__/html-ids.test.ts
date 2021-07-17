@@ -8,7 +8,7 @@ import type {
 } from "./types";
 
 import { expect } from "chai";
-import * as R from "ramda";
+import * as _ from "lodash";
 
 import {
   ATTRIBUTE_SELECTOR_OPERATORS,
@@ -408,7 +408,7 @@ suite("HTML ID Mangler", function() {
         [factory("id-foo", "a"), factory("id-bar", "b")],
         [factory("id-foobar", "a"), factory("id-foobar", "a")],
       ].flatMap(([testCasesA, testCasesB]): [TestCase, TestCase][] => {
-        return R.zip(testCasesA, testCasesB);
+        return _.zip(testCasesA, testCasesB) as [TestCase, TestCase][];
       });
 
       scenarios.push(...[
@@ -1121,4 +1121,3 @@ function run(language: string, scenarios: TestScenario<TestCase>[]): void {
     });
   }
 }
-

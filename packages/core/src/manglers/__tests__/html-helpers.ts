@@ -1,6 +1,6 @@
 import type { TestCase } from "./types";
 
-import { curry } from "ramda";
+import { curry } from "lodash";
 
 import { SELF_CLOSING_TAGS, STANDARD_TAGS } from "./html-constants";
 

@@ -2,7 +2,7 @@ import type { TestScenario } from "@webmangler/testing";
 import type { TestCase } from "./types";
 
 import { expect } from "chai";
-import * as R from "ramda";
+import * as _ from "lodash";
 
 import {
   CSS_PROPERTIES,
@@ -418,10 +418,10 @@ suite("CSS Variable Mangler", function() {
         [factory("var-foo", "a"), factory("var-bar", "b")],
         [factory("var-foobar", "a"), factory("var-foobar", "a")],
       ].flatMap(([testCasesA, testCasesB]): [TestCase, TestCase][] => {
-        return R.zip(
+        return _.zip(
           testCasesA.map(embedDeclarationsInStyle),
           testCasesB.map(embedDeclarationsInStyle),
-        );
+        ) as [TestCase, TestCase][];
       });
 
       scenarios.push(...[

@@ -1,7 +1,7 @@
 import type { TestCase } from "./types";
 
 import { deepStrictEqual } from "assert";
-import { curry } from "ramda";
+import { curry } from "lodash";
 import { format as printf } from "util";
 
 /**
