@@ -25,11 +25,11 @@ jobs:
           filters: |
             changed:
               - 'packages/${{ matrix.package }}/**'
-      - name: Use Node.js 12.x
+      - name: Use Node.js 15
         if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 15.14.0
           cache: npm
       - name: Install monorepo dependencies
         if: steps.changes.outputs.changed == 'true'
@@ -69,11 +69,11 @@ jobs:
           filters: |
             changed:
               - 'packages/${{ matrix.package }}/**'
-      - name: Use Node.js 12.x
+      - name: Use Node.js 15
         if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 15.14.0
           cache: npm
       - name: Install monorepo dependencies
         working-directory: ./
@@ -91,10 +91,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Use Node.js 15
         uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 15.14.0
           cache: npm
       - name: Install monorepo dependencies
         run: npm ci
@@ -125,11 +125,11 @@ jobs:
           filters: |
             changed:
               - 'packages/${{ matrix.package }}/**'
-      - name: Use Node.js 12.x
+      - name: Use Node.js 15
         if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 15.14.0
           cache: npm
       - name: Install monorepo dependencies
         if: steps.changes.outputs.changed == 'true'

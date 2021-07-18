@@ -27,10 +27,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Use Node.js 15
         uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 15.14.0
       - name: Install Renovate CLI
         run: npm install -g renovate
       - name: Validate .github/renovate.json
