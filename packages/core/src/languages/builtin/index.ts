@@ -5,7 +5,7 @@ import type {
 
 import CssLanguageSupport from "@webmangler/language-css";
 import HtmlLanguageSupport from "@webmangler/language-html";
-import JavaScriptLanguageSupport from "../javascript";
+import JavaScriptLanguageSupport from "@webmangler/language-js";
 import BuiltInManglers, { injectDependencies } from "./class";
 
 injectDependencies(

@@ -112,7 +112,7 @@ export function buildJsStatement(
  * Build syntactically valid JavaScript statements from a list of collections of
  * values. One JavaScript statement is created for each collection of values.
  *
- * @param statementsValues Zero or more {@link HtmlElementValues}.
+ * @param statementsValues Zero or more {@link JsStatementValues}.
  * @returns A string of HTML elements.
  */
 export function buildJsStatements(

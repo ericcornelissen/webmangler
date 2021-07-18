@@ -1,10 +1,10 @@
-import type { CssDeclarationPropertyOptions } from "../../../options";
+import type { CssDeclarationPropertyOptions } from "../../options";
 import type { JsStatementValuesSets } from "./types";
 
 import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
-import { getAllMatches } from "../../../__tests__/test-helpers";
+import { getAllMatches } from "./test-helpers";
 import {
   buildJsFunctionCall,
   buildJsStatements,

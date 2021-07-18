@@ -1,4 +1,4 @@
-import type { WebManglerLanguagePlugin } from "../../types";
+import type { WebManglerLanguagePlugin } from "@webmangler/types";
 import type {
   CssDeclarationPropertyOptions,
   QuerySelectorOptions,
@@ -6,9 +6,9 @@ import type {
 
 import { expect } from "chai";
 
-import JavaScriptLanguagePlugin from "../javascript";
+import JavaScriptLanguagePlugin from "../index";
 
-suite("Built-in JavaScript Language Plugin", function() {
+suite("The @webmangler/language-js plugin", function() {
   test("no argument", function() {
     expect(() => new JavaScriptLanguagePlugin()).not.to.throw();
   });

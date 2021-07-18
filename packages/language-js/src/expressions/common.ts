@@ -1,4 +1,9 @@
 /**
+ * Array of characters that are quotes in JavaScript.
+ */
+export const QUOTES_ARRAY: string[] = ["\"", "'", "`"];
+
+/**
  * Regular Expression pattern as a string of ways to combine query selectors in
  * JavaScript.
  */
@@ -16,11 +21,6 @@ const allowedAfterSelector =
  * the start of a query selector in JavaScript.
  */
 const allowedBeforeSelector = `(?:${querySelectorCombiners}|\\()`;
-
-/**
- * Array of characters that are quotes in JavaScript.
- */
-export const QUOTES_ARRAY: string[] = ["\"", "'", "`"];
 
 /**
  * Regular Expression pattern as a string for an inline comment in JavaScript.

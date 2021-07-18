@@ -24,6 +24,7 @@ module.exports = {
         "hooks",
         "lang-css",
         "lang-html",
+        "lang-js",
         "lang-utils",
         "scripts",
         "testing",
