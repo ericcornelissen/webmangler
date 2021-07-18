@@ -4,7 +4,7 @@ import { expect } from "chai";
 
 import {
   buildJsFunctionCall,
-  buildJsInlineComment,
+  buildJsInlineComments,
   buildJsLineComment,
   buildJsStatement,
   buildJsStatements,
@@ -73,9 +73,9 @@ suite("JS expression factory test suite string builders", function() {
     }
   });
 
-  suite("::buildJsInlineComment", function() {
+  suite("::buildJsInlineComments", function() {
     type TestCase = {
-      expected: string;
+      expected: string[];
       input: string;
       name: string;
     };
@@ -84,20 +84,28 @@ suite("JS expression factory test suite string builders", function() {
       {
         name: "empty string",
         input: "",
-        expected: "/**/",
+        expected: [
+          "/**/",
+          "/* * */",
+          "/* / */",
+        ],
       },
       {
         name: "non-empty string",
         input: "foobar",
-        expected: "/*foobar*/",
+        expected: [
+          "/*foobar*/",
+          "/* * foobar*/",
+          "/* / foobar*/",
+        ],
       },
     ];
 
     for (const testCase of testCases) {
       const { expected, input, name } = testCase;
       test(name, function() {
-        const result = buildJsInlineComment(input);
-        expect(result).to.equal(expected);
+        const results = buildJsInlineComments(input);
+        expect(results).to.have.all.members(expected);
       });
     }
   });

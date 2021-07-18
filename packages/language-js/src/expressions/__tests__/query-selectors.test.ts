@@ -8,7 +8,7 @@ import { getAllMatches } from "./test-helpers";
 import {
   buildJsFunctionCall,
   buildJsStatements,
-  buildJsInlineComment,
+  buildJsInlineComments,
   buildJsLineComment,
   buildJsStrings,
 } from "./builders";
@@ -98,7 +98,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       getValuesSets: () => {
         const inlineCommentOfSelectorString = buildJsStrings("div")
           .map(asQuerySelectorAll)
-          .map(buildJsInlineComment);
+          .flatMap(buildJsInlineComments);
 
         return [
           {
@@ -106,21 +106,12 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               "",
               ...inlineCommentOfSelectorString,
             ],
-            afterLeftHand: [
-              "",
-              ...inlineCommentOfSelectorString,
-            ],
             beforeRightHand: [
-              "",
-              ...inlineCommentOfSelectorString,
-            ],
-            afterRightHand: [
               "",
               ...inlineCommentOfSelectorString,
             ],
             afterStatement: [
               "",
-              ...inlineCommentOfSelectorString,
               ...buildJsStrings("div")
                 .map(asQuerySelectorAll)
                 .map(buildJsLineComment),
@@ -139,7 +130,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       getValuesSets: () => {
         const inlineCommentOfSelectorString = buildJsStrings(".foo")
           .map(asQuerySelectorAll)
-          .map(buildJsInlineComment);
+          .flatMap(buildJsInlineComments);
 
         return [
           {
@@ -147,21 +138,12 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               "",
               ...inlineCommentOfSelectorString,
             ],
-            afterLeftHand: [
-              "",
-              ...inlineCommentOfSelectorString,
-            ],
             beforeRightHand: [
-              "",
-              ...inlineCommentOfSelectorString,
-            ],
-            afterRightHand: [
               "",
               ...inlineCommentOfSelectorString,
             ],
             afterStatement: [
               "",
-              ...inlineCommentOfSelectorString,
               ...buildJsStrings(".bar")
                 .map(asQuerySelectorAll)
                 .map(buildJsLineComment),

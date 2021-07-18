@@ -43,8 +43,12 @@ export function buildJsFunctionCall(functionValues: JsFunctionValues): string {
  * @param commentText The comment text.
  * @returns The text as a JavaScript inline comment.
  */
-export function buildJsInlineComment(commentText: string): string {
-  return `/*${commentText}*/`;
+export function buildJsInlineComments(commentText: string): string[] {
+  return [
+    `/*${commentText}*/`,
+    `/* * ${commentText}*/`,
+    `/* / ${commentText}*/`,
+  ];
 }
 
 /**
