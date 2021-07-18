@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- Fix mangling query selectors in JavaScript.
+- Extract built-in language plugins into dependencies.
 
 ## [0.1.23] - 2021-07-07
 

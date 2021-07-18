@@ -12,6 +12,9 @@ jobs:
       matrix:
         package:
           - core
+          - language-css
+          - language-html
+          - language-js
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -47,7 +50,12 @@ jobs:
           - benchmarking
           - cli
           - core
+          - language-css
+          - language-html
+          - language-js
+          - language-utils
           - testing
+          - types
     defaults:
       run:
         working-directory: packages/${{ matrix.package }}
@@ -102,6 +110,10 @@ jobs:
           - benchmarking
           - cli
           - core
+          - language-css
+          - language-html
+          - language-js
+          - language-utils
           - testing
     steps:
       - name: Checkout repository

@@ -3,7 +3,7 @@ import type {
   WebManglerLanguagePluginClass,
 } from "./types";
 
-import { MultiLanguagePlugin } from "../utils";
+import { MultiLanguagePlugin } from "@webmangler/language-utils";
 
 let CssLanguageSupport: WebManglerLanguagePluginClass;
 let HtmlLanguageSupport: WebManglerLanguagePluginClass;

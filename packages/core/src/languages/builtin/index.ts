@@ -3,9 +3,9 @@ import type {
   WebManglerLanguagePluginClass,
 } from "./types";
 
-import CssLanguageSupport from "../css";
-import HtmlLanguageSupport from "../html";
-import JavaScriptLanguageSupport from "../javascript";
+import CssLanguageSupport from "@webmangler/language-css";
+import HtmlLanguageSupport from "@webmangler/language-html";
+import JavaScriptLanguageSupport from "@webmangler/language-js";
 import BuiltInManglers, { injectDependencies } from "./class";
 
 injectDependencies(

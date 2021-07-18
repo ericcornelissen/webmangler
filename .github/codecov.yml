@@ -23,6 +23,22 @@ flags:
     paths:
       - packages/core/**/*.ts
     carryforward: true
+  package-language-css:
+    paths:
+      - packages/language-css/**/*.ts
+    carryforward: true
+  package-language-html:
+    paths:
+      - packages/language-html/**/*.ts
+    carryforward: true
+  package-language-js:
+    paths:
+      - packages/language-js/**/*.ts
+    carryforward: true
+  package-language-utils:
+    paths:
+      - packages/language-utils/**/*.ts
+    carryforward: true
   package-testing:
     paths:
       - packages/testing/**/*.ts

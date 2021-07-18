@@ -7,6 +7,10 @@
   },
   "references": [
     { "path": "../benchmarking" },
-    { "path": "../testing" }
+    { "path": "../language-css" },
+    { "path": "../language-html" },
+    { "path": "../language-js" },
+    { "path": "../testing" },
+    { "path": "../types" }
   ]
 }
