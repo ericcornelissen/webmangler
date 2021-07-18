@@ -28,6 +28,7 @@ const comments: string[] = [
   "/**/",
   "/* */",
   "/* foobar */",
+  "/* .foo{content:'bar';} */",
 ];
 
 /**

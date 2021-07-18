@@ -26,9 +26,9 @@ function newCssDeclarationValueExpression(
           |
           (?<=
             \\{
-            [^\\}]+
+            (?:${patterns.comment}|[^\\}])+
             :
-            [^;]*
+            (?:${patterns.comment}|[^;])*
             (?<=
               :|\\s|\\(|,|
               ${patterns.commentClose}|
@@ -60,7 +60,7 @@ function newCssDeclarationValueExpression(
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.23
+ * @version v0.1.24
  */
 export default function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,

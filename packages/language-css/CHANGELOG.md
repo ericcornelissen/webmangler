@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix CSS value detection bug due to unexpected characters in comments.
 
 ## [0.1.23] - 2021-07-15
 
