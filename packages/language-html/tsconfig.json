@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build",
+    "composite": true
+  },
+  "references": [
+    { "path": "../benchmarking" },
+    { "path": "../language-utils" },
+    { "path": "../testing" },
+    { "path": "../types" }
+  ]
+}

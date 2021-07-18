@@ -22,8 +22,13 @@ module.exports = {
         "core",
         "deps",
         "hooks",
+        "lang-css",
+        "lang-html",
+        "lang-js",
+        "lang-utils",
         "scripts",
         "testing",
+        "types",
       ],
     ],
     "type-enum": [
