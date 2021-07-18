@@ -64,7 +64,7 @@ export type CssLanguagePluginOptions = {
  *   ],
  * });
  * @since v0.1.0
- * @version v0.1.23
+ * @version v0.1.24
  */
 export default class CssLanguagePlugin extends SimpleLanguagePlugin {
   /**
