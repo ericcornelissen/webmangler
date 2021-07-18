@@ -13,7 +13,7 @@ import singleValueAttributeExpressionFactory from "../single-value-attributes";
 suite("HTML - Single Value Attribute Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "id-[a-z-]+";
+  const patterns = "id-[a-zA-Z0-9-]+";
 
   const contentWithSingleValueAttribute = embedContentInContext(`
     <div class="foo bar">

@@ -13,7 +13,7 @@ import multiValueAttributeExpressionFactory from "../multi-value-attributes";
 suite("HTML - Multi Value Attribute Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "cls-[a-z-]+";
+  const patterns = "cls-[a-zA-Z0-9-]+";
 
   const contentWithMultiValueAttribute = embedContentInContext(`
     <div class="cls-foo cls-bar">

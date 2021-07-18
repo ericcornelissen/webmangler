@@ -56,9 +56,10 @@ suite("CSS - CSS Value Expression Factory", function() {
 
     let found: string[] = [];
     const result = benchmarkFn({
+      setup: () => { found = []; },
       fn: () => {
         for (const expression of expressions) {
-          found = Array.from(expression.findAll(fileContent, patterns));
+          found.push(...expression.findAll(fileContent, patterns));
         }
       },
     });
@@ -71,12 +72,12 @@ suite("CSS - CSS Value Expression Factory", function() {
     const budget = getRuntimeBudget(1);
     const fileContent = contentWithVariables.repeat(100);
 
-
     let found: string[] = [];
     const result = benchmarkFn({
+      setup: () => { found = []; },
       fn: () => {
         for (const expression of expressions) {
-          found = Array.from(expression.findAll(fileContent, patterns));
+          found.push(...expression.findAll(fileContent, patterns));
         }
       },
     });
@@ -91,9 +92,10 @@ suite("CSS - CSS Value Expression Factory", function() {
 
     let found: string[] = [];
     const result = benchmarkFn({
+      setup: () => { found = []; },
       fn: () => {
         for (const expression of expressions) {
-          found = Array.from(expression.findAll(fileContent, patterns));
+          found.push(...expression.findAll(fileContent, patterns));
         }
       },
     });

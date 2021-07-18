@@ -58,9 +58,10 @@ suite("CSS - CSS Property Expression Factory", function() {
 
     let found: string[] = [];
     const result = benchmarkFn({
+      setup: () => { found = []; },
       fn: () => {
         for (const expression of expressions) {
-          found = Array.from(expression.findAll(fileContent, patterns));
+          found.push(...expression.findAll(fileContent, patterns));
         }
       },
     });
@@ -75,9 +76,10 @@ suite("CSS - CSS Property Expression Factory", function() {
 
     let found: string[] = [];
     const result = benchmarkFn({
+      setup: () => { found = []; },
       fn: () => {
         for (const expression of expressions) {
-          found = Array.from(expression.findAll(fileContent, patterns));
+          found.push(...expression.findAll(fileContent, patterns));
         }
       },
     });
@@ -92,14 +94,15 @@ suite("CSS - CSS Property Expression Factory", function() {
 
     let found: string[] = [];
     const result = benchmarkFn({
+      setup: () => { found = []; },
       fn: () => {
         for (const expression of expressions) {
-          found = Array.from(expression.findAll(fileContent, patterns));
+          found.push(...expression.findAll(fileContent, patterns));
         }
       },
     });
 
-    expect(Array.from(found)).to.have.lengthOf(0);
+    expect(found).to.have.lengthOf(0);
     expect(result.medianDuration).to.be.below(budget);
   });
 });

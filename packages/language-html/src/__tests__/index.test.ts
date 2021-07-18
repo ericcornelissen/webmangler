@@ -9,7 +9,7 @@ import { expect } from "chai";
 
 import HtmlLanguagePlugin from "../index";
 
-suite("Built-in HTML Language Plugin", function() {
+suite("The @webmangler/language-html plugin", function() {
   test("no argument", function() {
     expect(() => new HtmlLanguagePlugin()).not.to.throw();
   });

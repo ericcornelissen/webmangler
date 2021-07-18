@@ -10,7 +10,7 @@ import singleValueAttributeExpressionFactory from "../single-value-attributes";
 suite("CSS - Single Value Attribute Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "val-[a-zA-Z0-9]+";
+  const patterns = "val-[a-zA-Z0-9-]+";
 
   const contentWithSingleValueAttribute = embedContentInContext(`
     input[id="val-bar"] {
@@ -49,9 +49,10 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
 
     let found: string[] = [];
     const result = benchmarkFn({
+      setup: () => { found = []; },
       fn: () => {
         for (const expression of expressions) {
-          found = Array.from(expression.findAll(fileContent, patterns));
+          found.push(...expression.findAll(fileContent, patterns));
         }
       },
     });
@@ -66,9 +67,10 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
 
     let found: string[] = [];
     const result = benchmarkFn({
+      setup: () => { found = []; },
       fn: () => {
         for (const expression of expressions) {
-          found = Array.from(expression.findAll(fileContent, patterns));
+          found.push(...expression.findAll(fileContent, patterns));
         }
       },
     });
@@ -83,9 +85,10 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
 
     let found: string[] = [];
     const result = benchmarkFn({
+      setup: () => { found = []; },
       fn: () => {
         for (const expression of expressions) {
-          found = Array.from(expression.findAll(fileContent, patterns));
+          found.push(...expression.findAll(fileContent, patterns));
         }
       },
     });
