@@ -58,6 +58,50 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
       ],
     },
     {
+      name: "comments",
+      cases: [
+        {
+          file: {
+            type: "html",
+            content: "<!--<script>var foo = \"bar\";</script>-->",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<!--<script>var foo = \"bar\";</script>-->" +
+              "<script>var foo = \"baz\";</script>",
+          },
+          expected: [
+            {
+              content: "var foo = \"baz\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 48,
+              endIndex: 64,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<script>var foo = \"bar\";</script>" +
+             "<!--<script>var foo = \"baz\";</script>-->",
+          },
+          expected: [
+            {
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: "edge cases",
       cases: [
         {
