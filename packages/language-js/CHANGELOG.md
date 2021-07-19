@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Fix mangling query selectors in JavaScript.
+- Fix unintentional mangling in comments.
 
 ## [0.1.23] - 2021-07-18
 
