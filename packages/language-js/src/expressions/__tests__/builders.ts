@@ -41,10 +41,14 @@ export function buildJsFunctionCall(functionValues: JsFunctionValues): string {
  * const comment = buildJsLineComment("foobar");
  * console.log(comment);  // "\/\* foobar \*\/";
  * @param commentText The comment text.
- * @returns The text as a JavaScript inline comment.
+ * @returns The text as various inline JavaScript comments.
  */
-export function buildJsInlineComment(commentText: string): string {
-  return `/*${commentText}*/`;
+export function buildJsInlineComments(commentText: string): string[] {
+  return [
+    `/*${commentText}*/`,
+    `/* * ${commentText}*/`,
+    `/* / ${commentText}*/`,
+  ];
 }
 
 /**

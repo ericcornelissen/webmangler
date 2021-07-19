@@ -8,7 +8,7 @@ import { getAllMatches } from "./test-helpers";
 import {
   buildJsFunctionCall,
   buildJsStatements,
-  buildJsInlineComment,
+  buildJsInlineComments,
   buildJsLineComment,
   buildJsStrings,
 } from "./builders";
@@ -95,7 +95,7 @@ suite("JavaScript - CSS Property Expression Factory", function() {
       getValuesSets: () => {
         const inlineCommentOfSelectorString = buildJsStrings("color")
           .map(asGetPropertyValue)
-          .map(buildJsInlineComment);
+          .flatMap(buildJsInlineComments);
 
         return [
           {
@@ -103,21 +103,12 @@ suite("JavaScript - CSS Property Expression Factory", function() {
               "",
               ...inlineCommentOfSelectorString,
             ],
-            afterLeftHand: [
-              "",
-              ...inlineCommentOfSelectorString,
-            ],
             beforeRightHand: [
-              "",
-              ...inlineCommentOfSelectorString,
-            ],
-            afterRightHand: [
               "",
               ...inlineCommentOfSelectorString,
             ],
             afterStatement: [
               "",
-              ...inlineCommentOfSelectorString,
               ...buildJsStrings("color")
                 .map(asGetPropertyValue)
                 .map(buildJsLineComment),
