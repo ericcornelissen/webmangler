@@ -182,6 +182,21 @@ suite("HTML - Attribute Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "edge cases",
+      pattern: "data-[a-z]+",
+      expected: [],
+      getValuesSets: () => [
+        {
+          tag: valuePresets.elements.tag,
+          attributes: [
+            ...buildHtmlAttributes({ name: "data-foo-a" }),
+            ...buildHtmlAttributes({ name: "data-foo-a", value: "bar" }),
+          ],
+          content: valuePresets.elements.content,
+        },
+      ],
+    },
   ];
 
   for (const scenario of scenarios) {
