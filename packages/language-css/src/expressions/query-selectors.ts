@@ -58,7 +58,7 @@ function newCssSelectorExpression(
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.22
+ * @version v0.1.24
  */
 export default function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
