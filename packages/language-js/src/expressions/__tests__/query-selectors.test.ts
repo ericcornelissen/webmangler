@@ -70,9 +70,55 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     },
     {
       name: "with prefix, as standalone string",
-      pattern: "[a-z0-9]+",
+      pattern: "[a-z][0-9][a-z][0-9]",
       factoryOptions: {
         prefix: "\\#",
+      },
+      expected: ["r2d2"],
+      getValuesSets: () => [
+        {
+          beforeStatement: valuePresets.beforeStatement,
+          leftHand: valuePresets.leftHand,
+          beforeRightHand: valuePresets.beforeRightHand,
+          rightHand: [
+            ...buildJsStrings("r2d2"),
+            ...buildJsStrings("r2d2")
+              .map(asQuerySelectorAll),
+          ],
+          afterRightHand: valuePresets.afterRightHand,
+          afterStatement: valuePresets.afterStatement,
+        },
+      ],
+    },
+    {
+      name: "with suffix, as CSS selector",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "\\[",
+        suffix: "\\]",
+      },
+      expected: ["foobar"],
+      getValuesSets: () => [
+        {
+          beforeStatement: valuePresets.beforeStatement,
+          leftHand: valuePresets.leftHand,
+          beforeRightHand: valuePresets.beforeRightHand,
+          rightHand: [
+            ...buildJsStrings("[foobar]"),
+            ...buildJsStrings("[foobar]")
+              .map(asQuerySelectorAll),
+          ],
+          afterRightHand: valuePresets.afterRightHand,
+          afterStatement: valuePresets.afterStatement,
+        },
+      ],
+    },
+    {
+      name: "with suffix, as standalone string",
+      pattern: "[a-z][0-9][a-z][0-9]",
+      factoryOptions: {
+        prefix: "\\[",
+        suffix: "\\]",
       },
       expected: ["r2d2"],
       getValuesSets: () => [
