@@ -19,6 +19,7 @@
       "@webmangler/language-html": ["packages/language-html/build"],
       "@webmangler/language-js": ["packages/language-js/build"],
       "@webmangler/language-utils": ["packages/language-utils/build"],
+      "@webmangler/mangler-utils": ["packages/mangler-utils/build"],
       "@webmangler/testing": ["packages/testing/build"],
       "@webmangler/types": ["packages/types/build"],
       "webmangler": ["packages/core/build"],

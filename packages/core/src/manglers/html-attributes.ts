@@ -6,8 +6,9 @@ import type {
 } from "../languages/options";
 import type { MangleExpressionOptions } from "../types";
 
+import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
+
 import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
-import { SimpleManglerPlugin } from "./utils";
 
 const ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<AttributeOptions> = {

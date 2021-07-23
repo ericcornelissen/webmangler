@@ -1,12 +1,12 @@
-import type { CharSet } from "../../characters";
 import type {
+  CharSet,
   MangleOptions,
   MangleExpressionOptions,
   WebManglerPlugin,
-} from "../../types";
+} from "@webmangler/types";
 
 /**
- * Interface defining the configuration of a {@link SimpleLanguagePlugin}.
+ * Interface defining the configuration of a {@link SimpleManglerPlugin}.
  *
  * @since v0.1.0
  * @version v0.1.23

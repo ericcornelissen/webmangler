@@ -1,8 +1,8 @@
 import { expect } from "chai";
 
-import * as utils from "../utils";
+import * as utils from "../index";
 
-suite("Exports of webmangler/manglers/utils", function() {
+suite("Exports of @webmangler/manglers-utils", function() {
   suite("WebManglerPlugins", function() {
     test("has MultiManglerPlugin", function() {
       expect(utils).to.haveOwnProperty("MultiManglerPlugin");

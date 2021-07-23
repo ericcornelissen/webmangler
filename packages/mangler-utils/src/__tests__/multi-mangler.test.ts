@@ -1,4 +1,4 @@
-import type { WebManglerPlugin } from "../../../types";
+import type { WebManglerPlugin } from "@webmangler/types";
 
 import { WebManglerPluginMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";

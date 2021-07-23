@@ -4,7 +4,7 @@ import type {
   WebManglerPluginClass,
 } from "./types";
 
-import { MultiManglerPlugin } from "../utils";
+import { MultiManglerPlugin } from "@webmangler/mangler-utils";
 
 let CssClassMangler: WebManglerPluginClass;
 let CssVariableMangler: WebManglerPluginClass;

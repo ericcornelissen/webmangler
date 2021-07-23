@@ -1,19 +1,17 @@
 {
-  "name": "webmangler",
+  "name": "@webmangler/mangler-utils",
   "version": "0.1.23",
-  "description": "The WebMangler core",
+  "description": "Utilities for building WebMangler mangle plugins",
   "license": "MIT",
   "main": "./build/index.js",
   "typings": "./build/index.d.ts",
   "exports": {
-    ".": "./build/index.js",
-    "./languages": "./build/languages/index.js",
-    "./manglers": "./build/manglers/index.js"
+    ".": "./build/index.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ericcornelissen/webmangler",
-    "directory": "packages/core"
+    "directory": "packages/mangler-utils"
   },
   "bugs": {
     "url": "https://github.com/ericcornelissen/webmangler/issues"
@@ -30,9 +28,6 @@
     "postpublish": "npm run clean"
   },
   "dependencies": {
-    "@webmangler/language-css": "^0.1.23",
-    "@webmangler/language-html": "^0.1.23",
-    "@webmangler/language-js": "^0.1.23",
     "@webmangler/types": "^0.1.23"
   },
   "devDependencies": {

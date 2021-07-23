@@ -6,11 +6,6 @@
     "composite": true
   },
   "references": [
-    { "path": "../benchmarking" },
-    { "path": "../language-css" },
-    { "path": "../language-html" },
-    { "path": "../language-js" },
-    { "path": "../mangler-utils" },
     { "path": "../testing" },
     { "path": "../types" }
   ]

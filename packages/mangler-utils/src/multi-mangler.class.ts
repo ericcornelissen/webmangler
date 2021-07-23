@@ -1,6 +1,6 @@
-import type { MangleOptions, WebManglerPlugin } from "../../types";
+import type { MangleOptions, WebManglerPlugin } from "@webmangler/types";
 
-import { toArrayIfNeeded } from "../../helpers";
+import { toArrayIfNeeded } from "./helpers";
 
 /**
  * The {@link MultiManglerPlugin} class is a utility to create a {@link

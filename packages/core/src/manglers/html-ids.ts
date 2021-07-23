@@ -5,8 +5,9 @@ import type {
 } from "../languages/options";
 import type { MangleExpressionOptions } from "../types";
 
+import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
+
 import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
-import { SimpleManglerPlugin } from "./utils";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     MangleExpressionOptions<QuerySelectorOptions> = {

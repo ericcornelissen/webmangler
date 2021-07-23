@@ -1,5 +1,5 @@
-import type { CharSet } from "../../../characters";
-import type { MangleExpressionOptions } from "../../../types";
+import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+
 import type { SimpleManglerOptions } from "../simple-mangler.class";
 
 import { expect } from "chai";

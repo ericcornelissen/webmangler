@@ -26,6 +26,7 @@ module.exports = {
         "lang-html",
         "lang-js",
         "lang-utils",
+        "mangler-utils",
         "scripts",
         "testing",
         "types",
