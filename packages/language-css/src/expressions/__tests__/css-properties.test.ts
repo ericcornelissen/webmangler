@@ -181,6 +181,8 @@ suite("CSS - CSS Property Expression Factory", function() {
         const commentWithDeclarations = [
           "/* color: violet; */",
           "/* ; color: purple; */",
+          "/* * color: purple; */",
+          "/* / color: purple; */",
         ];
 
         return [

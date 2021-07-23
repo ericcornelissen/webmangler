@@ -154,6 +154,8 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
         const commentWithAttributeSelector = [
           "/* [data-foo=\"bar\"] */",
           "/* [data-foo='bar'] */",
+          "/* * [data-foo='bar'] */",
+          "/* / [data-foo='bar'] */",
         ];
 
         return [
