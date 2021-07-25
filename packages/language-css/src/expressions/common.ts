@@ -40,7 +40,7 @@ const commentClose = "(?:\\*\\/)";
 /**
  * Regular Expression pattern as a string of a comment in CSS.
  */
-const comment = `(?:${commentOpen}[^\\*\\/]*${commentClose})`;
+const comment = `(?:${commentOpen}.*?${commentClose})`;
 
 /**
  * Regular Expression pattern as a string of a declaration block in CSS.

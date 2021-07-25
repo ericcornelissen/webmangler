@@ -157,6 +157,8 @@ suite("CSS - Query Selector Expression Factory", function() {
               "/* } footer { } */",
               "/* main, */",
               "/* } aside > */",
+              "/* * aside > */",
+              "/* / aside > */",
         ];
 
         return [

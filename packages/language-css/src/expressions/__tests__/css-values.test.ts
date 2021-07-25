@@ -141,6 +141,8 @@ suite("CSS - CSS Value Expression Factory", function() {
         const commentWithDeclarations = [
           "/* color: green; */",
           "/* ; color: mint; */",
+          "/* * color: mint; */",
+          "/* / color: mint; */",
         ];
 
         return [
