@@ -1,13 +1,14 @@
-import type { CharSet } from "../characters";
+import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+
 import type {
+  CssClassManglerOptions,
   MultiValueAttributeOptions,
   QuerySelectorOptions,
-} from "../languages/options";
-import type { MangleExpressionOptions } from "../types";
+} from "./types";
 
 import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
-import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
+import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "./characters";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     MangleExpressionOptions<QuerySelectorOptions> = {
@@ -16,62 +17,6 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     prefix: "\\.",
   },
 };
-
-/**
- * The options for _WebMangler_'s built-in CSS class mangler.
- *
- * @since v0.1.0
- * @version v0.1.23
- */
-export type CssClassManglerOptions = {
-  /**
-   * One or more patterns for CSS classes that should be mangled.
-   *
-   * @default `"cls-[a-zA-Z-_]+"`
-   * @since v0.1.0
-   * @version v0.1.17
-   */
-  classNamePattern?: string | Iterable<string>;
-
-  /**
-   * One or more patterns for CSS classes that should **never** be mangled.
-   *
-   * @default `[]`
-   * @version v0.1.23
-   */
-  ignoreClassNamePattern?: string | Iterable<string>;
-
-  /**
-   * A list of strings and patterns of CSS class names that should not be used.
-   *
-   * Patterns are supported since v0.1.7.
-   *
-   * @default `[]`
-   * @since v0.1.0
-   * @version v0.1.17
-   */
-  reservedClassNames?: Iterable<string>;
-
-  /**
-   * A prefix to use for mangled CSS classes.
-   *
-   * @default `""`
-   * @since v0.1.0
-   */
-  keepClassNamePrefix?: string;
-
-  /**
-   * A list of HTML attributes whose value to treat as `class`.
-   *
-   * NOTE: the `class` attribute is always included and does not need to be
-   * specified when using this option.
-   *
-   * @default `[]`
-   * @since v0.1.16
-   * @version v0.1.17
-   */
-  classAttributes?: Iterable<string>;
-}
 
 /**
  * The CSS class mangler is a built-in plugin of _WebMangler_ that can be used
@@ -173,7 +118,7 @@ export type CssClassManglerOptions = {
  * @since v0.1.0
  * @version v0.1.23
  */
-export default class CssClassMangler extends SimpleManglerPlugin {
+class CssClassMangler extends SimpleManglerPlugin {
   /**
    * The list of reserved strings that are always reserved because they are
    * illegal class names.
@@ -327,3 +272,5 @@ export default class CssClassMangler extends SimpleManglerPlugin {
     };
   }
 }
+
+export default CssClassMangler;

@@ -1,13 +1,14 @@
-import type { CharSet } from "../characters";
+import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+
 import type {
+  HtmlIdManglerOptions,
   QuerySelectorOptions,
   SingleValueAttributeOptions,
-} from "../languages/options";
-import type { MangleExpressionOptions } from "../types";
+} from "./types";
 
 import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
-import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
+import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "./characters";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     MangleExpressionOptions<QuerySelectorOptions> = {
@@ -16,76 +17,6 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     prefix: "#",
   },
 };
-
-/**
- * The options for _WebMangler_'s built-in HTML IDs mangler.
- *
- * @since v0.1.0
- * @version v0.1.23
- */
-export type HtmlIdManglerOptions = {
-  /**
-   * One or more patterns for IDs that should be mangled.
-   *
-   * @default `"id-[a-zA-Z-_]+"`
-   * @since v0.1.0
-   * @version v0.1.17
-   */
-  idNamePattern?: string | Iterable<string>;
-
-  /**
-   * One or more patterns for CSS classes that should **never** be mangled.
-   *
-   * @default `[]`
-   * @version v0.1.23
-   */
-  ignoreIdNamePattern?: string | Iterable<string>;
-
-  /**
-   * A list of strings and patterns of IDs that should not be used.
-   *
-   * Patterns are supported since v0.1.7.
-   *
-   * @default `[]`
-   * @since v0.1.0
-   * @version v0.1.17
-   */
-  reservedIds?: Iterable<string>;
-
-  /**
-   * A prefix to use for mangled IDs.
-   *
-   * @default `""`
-   * @since v0.1.0
-   */
-  keepIdPrefix?: string;
-
-  /**
-   * A list of HTML attributes whose value to treat as an `id`.
-   *
-   * NOTE: the `id` and `for` attributes are always included and do not need to
-   * be specified when using this option.
-   *
-   * @default `[]`
-   * @since v0.1.15
-   * @version v0.1.17
-   */
-  idAttributes?: Iterable<string>;
-
-  /**
-   * A list of HTML attributes whose value to treat as a URL. That is, the ID
-   * fragment of URLs in these attributes will be mangled if it is an internal
-   * URL.
-   *
-   * NOTE: the `href` attribute is always included and does not need to be
-   * specified when using this option.
-   *
-   * @default `[]`
-   * @since v0.1.15
-   * @version v0.1.17
-   */
-  urlAttributes?: Iterable<string>;
-}
 
 /**
  * The HTML ID mangler (or just ID mangler) is a built-in plugin of _WebMangler_
@@ -188,7 +119,7 @@ export type HtmlIdManglerOptions = {
  * @since v0.1.0
  * @version v0.1.23
  */
-export default class HtmlIdMangler extends SimpleManglerPlugin {
+class HtmlIdMangler extends SimpleManglerPlugin {
   /**
    * The character set used by {@link HtmlIdMangler}.
    */
@@ -355,3 +286,5 @@ export default class HtmlIdMangler extends SimpleManglerPlugin {
     };
   }
 }
+
+export default HtmlIdMangler;

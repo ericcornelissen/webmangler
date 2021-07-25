@@ -1,13 +1,14 @@
-import type { CharSet } from "../characters";
+import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+
 import type {
   CssDeclarationPropertyOptions,
   CssDeclarationValueOptions,
-} from "../languages/options";
-import type { MangleExpressionOptions } from "../types";
+  CssVariableManglerOptions,
+} from "./types";
 
 import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
-import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "../characters";
+import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "./characters";
 
 const CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS:
     MangleExpressionOptions<CssDeclarationPropertyOptions> = {
@@ -25,51 +26,6 @@ const CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS:
     suffix: "\\s*(,[^\\)]+)?\\)",
   },
 };
-
-/**
- * The options for _WebMangler_'s built-in CSS variables mangler.
- *
- * @since v0.1.0
- * @version v0.1.23
- */
-export type CssVariableManglerOptions = {
-  /**
-   * One or more patterns for CSS variables that should be mangled.
-   *
-   * @default `"[a-zA-Z-]+"`
-   * @since v0.1.0
-   * @version v0.1.17
-   */
-  cssVarNamePattern?: string | Iterable<string>;
-
-  /**
-   * One or more patterns for CSS variables that should **never** be mangled.
-   *
-   * @default `[]`
-   * @version v0.1.23
-   */
-  ignoreCssVarNamePattern?: string | Iterable<string>;
-
-  /**
-   * A list of strings and patterns of CSS variable names that should not be
-   * used.
-   *
-   * Patterns are supported since v0.1.7.
-   *
-   * @default `[]`
-   * @since v0.1.0
-   * @version v0.1.17
-   */
-  reservedCssVarNames?: Iterable<string>;
-
-  /**
-   * A prefix to use for mangled CSS variables.
-   *
-   * @default `""`
-   * @since v0.1.0
-   */
-  keepCssVarPrefix?: string;
-}
 
 /**
  * The CSS variables mangler is a built-in plugin of _WebMangler_ that can be
@@ -168,7 +124,7 @@ export type CssVariableManglerOptions = {
  * @since v0.1.0
  * @version v0.1.23
  */
-export default class CssVariableMangler extends SimpleManglerPlugin {
+class CssVariableMangler extends SimpleManglerPlugin {
   /**
    * The list of reserved strings that are always reserved because they are
    * illegal CSS variable names.
@@ -293,3 +249,5 @@ export default class CssVariableMangler extends SimpleManglerPlugin {
     return keepCssVarPrefix;
   }
 }
+
+export default CssVariableMangler;

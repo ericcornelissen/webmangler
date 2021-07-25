@@ -1,19 +1,17 @@
 {
-  "name": "webmangler",
+  "name": "@webmangler/mangler-html-attributes",
   "version": "0.1.23",
-  "description": "The WebMangler core",
+  "description": "Mangle HTML attributes with WebMangler",
   "license": "MIT",
   "main": "./build/index.js",
   "typings": "./build/index.d.ts",
   "exports": {
-    ".": "./build/index.js",
-    "./languages": "./build/languages/index.js",
-    "./manglers": "./build/manglers/index.js"
+    ".": "./build/index.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ericcornelissen/webmangler",
-    "directory": "packages/core"
+    "directory": "packages/mangler-html-attributes"
   },
   "bugs": {
     "url": "https://github.com/ericcornelissen/webmangler/issues"
@@ -30,13 +28,7 @@
     "postpublish": "npm run clean"
   },
   "dependencies": {
-    "@webmangler/language-css": "^0.1.23",
-    "@webmangler/language-html": "^0.1.23",
-    "@webmangler/language-js": "^0.1.23",
-    "@webmangler/mangler-css-classes": "^0.1.23",
-    "@webmangler/mangler-css-variables": "^0.1.23",
-    "@webmangler/mangler-html-attributes": "^0.1.23",
-    "@webmangler/mangler-html-ids": "^0.1.23",
+    "@webmangler/mangler-utils": "^0.1.23",
     "@webmangler/types": "^0.1.23"
   },
   "devDependencies": {

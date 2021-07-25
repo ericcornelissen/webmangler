@@ -1,14 +1,15 @@
-import type { CharSet } from "../characters";
+import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+
 import type {
   AttributeOptions,
   CssDeclarationValueOptions,
+  HtmlAttributeManglerOptions,
   QuerySelectorOptions,
-} from "../languages/options";
-import type { MangleExpressionOptions } from "../types";
+} from "./types";
 
 import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
-import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "../characters";
+import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "./characters";
 
 const ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<AttributeOptions> = {
@@ -24,58 +25,6 @@ const ATTRIBUTE_USAGE_EXPRESSION_OPTIONS:
     suffix: "(\\s+([a-zA-Z]+|%))?\\s*(,[^)]+)?\\)",
   },
 };
-
-/**
- * The options for _WebMangler_'s built-in HTML Attributes mangler.
- *
- * @since v0.1.0
- * @version v0.1.23
- */
-export type HtmlAttributeManglerOptions = {
-  /**
-   * One or more patterns for HTML attributes that should be mangled.
-   *
-   * The most common value for this option is: `'data-[a-z-]+'`,  which will
-   * mangle all `data-` attributes.
-   *
-   * @default `"data-[a-z-]+"`
-   * @since v0.1.0
-   * @version v0.1.17
-   */
-  attrNamePattern?: string | Iterable<string>;
-
-  /**
-   * One or more patterns for HTML attributes that should **never** be mangled.
-   *
-   * @default `[]`
-   * @version v0.1.23
-   */
-  ignoreAttrNamePattern?: string | Iterable<string>;
-
-  /**
-   * A list of strings and patterns of HTML attributes names that should not be
-   * used.
-   *
-   * Patterns are supported since v0.1.7.
-   *
-   * @default `[]`
-   * @since v0.1.0
-   * @version v0.1.17
-   */
-  reservedAttrNames?: Iterable<string>;
-
-  /**
-   * A prefix to use for mangled HTML attributes. Set to `''` if no prefix
-   * should be used for mangled HTML attributes.
-   *
-   * The most common value for this option is: `'data-`, which will keep the
-   * prefix of 'data-' attributes.
-   *
-   * @default `"data-"`
-   * @since v0.1.0
-   */
-  keepAttrPrefix?: string;
-}
 
 /**
  * The HTML attribute mangler is a built-in plugin of _WebMangler_ that can be
@@ -182,7 +131,7 @@ export type HtmlAttributeManglerOptions = {
  * @since v0.1.0
  * @version v0.1.23
  */
-export default class HtmlAttributeMangler extends SimpleManglerPlugin {
+class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**
    * The list of reserved strings that are always reserved because they are
    * illegal HTML attribute names.
@@ -326,3 +275,5 @@ export default class HtmlAttributeMangler extends SimpleManglerPlugin {
     };
   }
 }
+
+export default HtmlAttributeMangler;
