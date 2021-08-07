@@ -198,6 +198,21 @@ suite("JavaScript - Query Selector Expression Factory", function() {
         ];
       },
     },
+    {
+      name: "no match due to unexpected character",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: [],
+      getValuesSets: () => [
+        {
+          leftHand: valuePresets.leftHand,
+          rightHand: [
+            ...buildJsStrings("_div"),
+            ...buildJsStrings("div_"),
+          ],
+        },
+      ],
+    },
   ];
 
   for (const scenario of scenarios) {

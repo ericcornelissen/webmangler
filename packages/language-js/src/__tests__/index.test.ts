@@ -54,19 +54,21 @@ suite("The @webmangler/language-js plugin", function() {
   suite("::getLanguages", function() {
     const DEFAULT_EXTENSIONS = ["js", "cjs", "mjs"];
 
-    test("get languages", function() {
+    test("no configured languages", function() {
       const plugin = new JavaScriptLanguagePlugin();
-      const result = Array.from(plugin.getLanguages());
-      expect(result).to.include.members(DEFAULT_EXTENSIONS);
+      const result = new Set(plugin.getLanguages());
+      expect(result).to.deep.equal(new Set(DEFAULT_EXTENSIONS));
     });
 
-    test("get configured languages", function() {
+    test("multiple configured languages", function() {
       const jsExtensions = ["jsx", "ts"];
 
       const plugin = new JavaScriptLanguagePlugin({ jsExtensions });
-      const result = Array.from(plugin.getLanguages());
-      expect(result).to.include.members(DEFAULT_EXTENSIONS);
-      expect(result).to.include.members(jsExtensions);
+      const result = new Set(plugin.getLanguages());
+      expect(result).to.deep.equal(new Set([
+        ...DEFAULT_EXTENSIONS,
+        ...jsExtensions,
+      ]));
     });
   });
 });
