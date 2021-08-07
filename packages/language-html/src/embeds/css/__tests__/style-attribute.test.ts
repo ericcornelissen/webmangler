@@ -33,6 +33,36 @@ suite("HTML CSS Embeds - Style attribute", function() {
         {
           file: {
             type: "html",
+            content: "<div style =\"color: red;\"><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 13,
+              endIndex: 24,
+              getRaw(): string { return "color: red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div style= \"color: red;\"><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 13,
+              endIndex: 24,
+              getRaw(): string { return "color: red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
             content: "<div disabled style=\"color: blue;\"><div>",
           },
           expected: [
@@ -41,6 +71,21 @@ suite("HTML CSS Embeds - Style attribute", function() {
               type: EMBED_TYPE_CSS,
               startIndex: 21,
               endIndex: 33,
+              getRaw(): string { return "color: blue;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div disabled  style=\"color: blue;\"><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color: blue;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 22,
+              endIndex: 34,
               getRaw(): string { return "color: blue;"; },
             },
           ],
@@ -57,6 +102,51 @@ suite("HTML CSS Embeds - Style attribute", function() {
               startIndex: 24,
               endIndex: 36,
               getRaw(): string { return "color: blue;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div id=\"foobar\"  style=\"color: red;\"><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 25,
+              endIndex: 36,
+              getRaw(): string { return "color: red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div id= \"foobar\" style=\"color: red;\"><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 25,
+              endIndex: 36,
+              getRaw(): string { return "color: red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div id =\"foobar\" style=\"color: red;\"><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 25,
+              endIndex: 36,
+              getRaw(): string { return "color: red;"; },
             },
           ],
         },
@@ -103,6 +193,111 @@ suite("HTML CSS Embeds - Style attribute", function() {
               type: EMBED_TYPE_CSS,
               startIndex: 11,
               endIndex: 21,
+              getRaw(): string { return "color:red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div style =color:red;><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 12,
+              endIndex: 22,
+              getRaw(): string { return "color:red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div style= color:red;><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 12,
+              endIndex: 22,
+              getRaw(): string { return "color:red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div  style=color:red;><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 12,
+              endIndex: 22,
+              getRaw(): string { return "color:red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div id=\"foobar\" style=color:red;><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 23,
+              endIndex: 33,
+              getRaw(): string { return "color:red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div id=\"foobar\"  style=color:red;><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 24,
+              endIndex: 34,
+              getRaw(): string { return "color:red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div id =\"foobar\" style=color:red;><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 24,
+              endIndex: 34,
+              getRaw(): string { return "color:red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div id= \"foobar\" style=color:red;><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 24,
+              endIndex: 34,
               getRaw(): string { return "color:red;"; },
             },
           ],
@@ -161,22 +356,8 @@ suite("HTML CSS Embeds - Style attribute", function() {
       ],
     },
     {
-      name: "edge cases",
+      name: "edge cases, with matches",
       cases: [
-        {
-          file: {
-            type: "html",
-            content: "<div>foobar</div>",
-          },
-          expected: [],
-        },
-        {
-          file: {
-            type: "html",
-            content: "<div style=\"\">foobar</div>",
-          },
-          expected: [],
-        },
         {
           file: {
             type: "html",
@@ -189,6 +370,21 @@ suite("HTML CSS Embeds - Style attribute", function() {
               startIndex: 12,
               endIndex: 13,
               getRaw(): string { return " "; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "< div style=\"color: red;\"><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 13,
+              endIndex: 24,
+              getRaw(): string { return "color: red;"; },
             },
           ],
         },
@@ -228,6 +424,32 @@ suite("HTML CSS Embeds - Style attribute", function() {
               getRaw(): string { return "color: red;"; },
             },
           ],
+        },
+      ],
+    },
+    {
+      name: "edge cases, without matches",
+      cases: [
+        {
+          file: {
+            type: "html",
+            content: "<div>foobar</div>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div style=\"\">foobar</div>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<divstyle=color:red;><div>",
+          },
+          expected: [],
         },
       ],
     },

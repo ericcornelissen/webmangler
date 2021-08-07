@@ -31,6 +31,21 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
+            content: "<style type=\"text/css\">.foobar { color: red; }</style>",
+          },
+          expected: [
+            {
+              content: ".foobar { color: red; }",
+              type: EMBED_TYPE_CSS,
+              startIndex: 23,
+              endIndex: 46,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
             content: "<html>" +
               "<head>" +
               "<style>.foo { color: red; }</style>" +
@@ -102,22 +117,8 @@ suite("HTML CSS Embeds - <style> tag", function() {
       ],
     },
     {
-      name: "edge cases",
+      name: "edge cases, with matches",
       cases: [
-        {
-          file: {
-            type: "html",
-            content: "<div>foobar</div>",
-          },
-          expected: [],
-        },
-        {
-          file: {
-            type: "html",
-            content: "<style></style>",
-          },
-          expected: [],
-        },
         {
           file: {
             type: "html",
@@ -132,6 +133,40 @@ suite("HTML CSS Embeds - <style> tag", function() {
               getRaw(): string { return this.content; },
             },
           ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "< style>.foobar { color: red; }</style>",
+          },
+          expected: [
+            {
+              content: ".foobar { color: red; }",
+              type: EMBED_TYPE_CSS,
+              startIndex: 8,
+              endIndex: 31,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "edge cases, without matches",
+      cases: [
+        {
+          file: {
+            type: "html",
+            content: "<div>foobar</div>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<style></style>",
+          },
+          expected: [],
         },
       ],
     },

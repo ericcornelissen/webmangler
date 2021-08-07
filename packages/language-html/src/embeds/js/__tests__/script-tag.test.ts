@@ -31,6 +31,21 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
         {
           file: {
             type: "html",
+            content: "<script id=\"foobar\">var foo = \"bar\";</script>",
+          },
+          expected: [
+            {
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 20,
+              endIndex: 36,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
             content: "<html>" +
               "<head>" +
               "<script>var foo = \"bar\";</script>" +
@@ -58,22 +73,52 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
       ],
     },
     {
-      name: "edge cases",
+      name: "comments",
       cases: [
         {
           file: {
             type: "html",
-            content: "<div>foobar</div>",
+            content: "<!--<script>var foo = \"bar\";</script>-->",
           },
           expected: [],
         },
         {
           file: {
             type: "html",
-            content: "<script></script>",
+            content: "<!--<script>var foo = \"bar\";</script>-->" +
+              "<script>var foo = \"baz\";</script>",
           },
-          expected: [],
+          expected: [
+            {
+              content: "var foo = \"baz\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 48,
+              endIndex: 64,
+              getRaw(): string { return this.content; },
+            },
+          ],
         },
+        {
+          file: {
+            type: "html",
+            content: "<script>var foo = \"bar\";</script>" +
+             "<!--<script>var foo = \"baz\";</script>-->",
+          },
+          expected: [
+            {
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "edge cases, with matches",
+      cases: [
         {
           file: {
             type: "html",
@@ -88,6 +133,40 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
               getRaw(): string { return this.content; },
             },
           ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "< script>var foo = \"bar\";</script>",
+          },
+          expected: [
+            {
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 9,
+              endIndex: 25,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "edge cases, without matches",
+      cases: [
+        {
+          file: {
+            type: "html",
+            content: "<div>foobar</div>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<script></script>",
+          },
+          expected: [],
         },
       ],
     },
