@@ -11,13 +11,8 @@ const MAX_LINE_LENGTH = 80;
 
 module.exports = {
   root: true,
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: "./tsconfig.json",
-  },
 
   plugins: [
-    "@typescript-eslint",
     "jsdoc",
     "security",
   ],
@@ -25,6 +20,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:jsdoc/recommended",
+    "plugin:markdown/recommended",
     "plugin:security/recommended",
   ],
   rules: {
@@ -71,13 +67,6 @@ module.exports = {
     "space-before-function-paren": ["error", "never"],
     "space-in-parens": ["error", "never"],
 
-    // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
-    "@typescript-eslint/consistent-type-imports": ["error", {
-      prefer: "type-imports",
-      disallowTypeAnnotations: false,
-    }],
-    "@typescript-eslint/no-unused-vars": "error",
-
     // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
     "jsdoc/require-param-type": "off", // Redundant in TypeScript
     "jsdoc/require-returns-type": "off", // Redundant in TypeScript
@@ -105,6 +94,29 @@ module.exports = {
   },
 
   overrides: [
+    { // Typescript files
+      files: [
+        "**/*.ts",
+      ],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        project: "./tsconfig.json",
+      },
+      plugins: [
+        "@typescript-eslint",
+      ],
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+      ],
+      rules: {
+        // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+        "@typescript-eslint/consistent-type-imports": ["error", {
+          prefer: "type-imports",
+          disallowTypeAnnotations: false,
+        }],
+        "@typescript-eslint/no-unused-vars": "error",
+      },
+    },
     { // packages/cli
       files: [
         "packages/cli/**/*.ts",
@@ -203,79 +215,10 @@ module.exports = {
         "plugin:yml/standard",
       ],
     },
-    { // Documentation (Markdown)
-      files: [
-        "**/*.md",
-      ],
-      parser: "markdown-eslint-parser",
-      extends: [
-        "plugin:md/recommended",
-      ],
-      rules: {
-        // https://github.com/remarkjs/remark-lint/tree/main/packages/remark-preset-lint-markdown-style-guide#rules
-        "md/remark": ["error",{
-          plugins: [
-            ["lint-blockquote-indentation", INDENT_SIZE],
-            ["lint-code-block-style", "fenced"],
-            ["lint-definition-case"],
-            ["lint-definition-spacing"],
-            ["lint-emphasis-marker", "_"],
-            ["lint-fenced-code-flag", { allowEmpty: false }],
-            ["lint-fenced-code-marker", "`"],
-            ["lint-final-definition"],
-            ["lint-final-newline"],
-            ["lint-first-heading-level"],
-            ["lint-hard-break-spaces"],
-            ["lint-heading-style", "atx"],
-            ["lint-heading-increment"],
-            ["lint-link-title-style", "\""],
-            ["lint-list-item-indent", "space"],
-            ["lint-no-auto-link-without-protocol"],
-            ["lint-no-blockquote-without-marker"],
-            ["lint-no-consecutive-blank-lines"],
-            ["lint-no-duplicate-defined-urls"],
-            ["lint-no-duplicate-definitions"],
-            ["lint-no-duplicate-headings", false],  // use "-in-section" instead
-            ["lint-no-duplicate-headings-in-section"],
-            ["lint-no-emphasis-as-heading"],
-            ["lint-no-empty-url"],
-            ["lint-no-file-name-mixed-case"],
-            ["lint-no-file-name-articles"],
-            ["lint-no-file-name-irregular-characters"],
-            ["lint-no-file-name-consecutive-dashes"],
-            ["lint-no-file-name-outer-dashes"],
-            ["lint-no-heading-content-indent"],
-            ["lint-no-heading-indent"],
-            ["lint-no-heading-like-paragraph"],
-            ["lint-no-heading-punctuation", ".;!?"],
-            ["lint-no-html"],
-            ["lint-no-inline-padding"],
-            ["lint-no-literal-urls"],
-            ["lint-no-multiple-toplevel-headings"],
-            ["lint-no-paragraph-content-indent"],
-            ["lint-no-reference-like-url"],
-            ["lint-no-shortcut-reference-image", false], // Ugly in plaintext
-            ["lint-no-shortcut-reference-link", false], // Ugly in plaintext
-            ["lint-no-table-indentation"],
-            ["lint-maximum-heading-length", 60],
-            ["lint-maximum-line-length", false], // rely on "max-len" instead
-            ["lint-ordered-list-marker-style", "."],
-            ["lint-ordered-list-marker-value", "ordered"],
-            ["lint-rule-style", "---"],
-            ["lint-no-shell-dollars", false], // OK for single line code lock
-            ["lint-strong-marker", "*"],
-            ["lint-table-cell-padding"],
-            ["lint-table-pipe-alignment"],
-            ["lint-table-pipes"],
-            ["lint-unordered-list-marker-style", "-"],
-          ],
-        }],
-      },
-    },
     { // Documentation Snippets (MarkDown.*)
       files: [
-        "**/*.md.js",
-        "**/*.md.ts",
+        "**/*.md/*.js",
+        "**/*.md/*.ts",
       ],
       parser: "@typescript-eslint/parser",
       parserOptions: {
