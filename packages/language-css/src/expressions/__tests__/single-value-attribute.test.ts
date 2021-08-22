@@ -139,6 +139,8 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
           declarations: [
             "content: \"[data-foo='bar']\";",
             "content: '[data-foo=\"bar\"]';",
+            "content: \" \\\" [data-foo=\"bar\"]\";",
+            "content: ' \\' [data-foo=\"bar\"]';",
           ],
         },
       ],

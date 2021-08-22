@@ -118,7 +118,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       expected: ["red"],
       getValuesSets: () => [
         {
-          property: "content",
+          property: ["content"],
           value: [
             "\"color: blue;\"",
             "\"; color: teal;\"",
@@ -151,7 +151,7 @@ suite("CSS - CSS Value Expression Factory", function() {
               "",
               ...commentWithDeclarations,
             ],
-            property: "padding",
+            property: ["padding"],
             afterProperty: [
               "",
               ...commentWithDeclarations,
@@ -172,6 +172,26 @@ suite("CSS - CSS Value Expression Factory", function() {
           },
         ];
       },
+    },
+    {
+      name: "value-like strings",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "var\\(--",
+        suffix: "\\)",
+      },
+      expected: [],
+      getValuesSets: () => [
+        {
+          property: ["content"],
+          value: [
+            "\" var(--foobar) \"",
+            "' var(--foobar) '",
+            "\"foo \\\" var(--bar) \"",
+            "'foo \\' var(--bar) '",
+          ],
+        },
+      ],
     },
   ];
 

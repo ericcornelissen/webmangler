@@ -164,6 +164,8 @@ suite("CSS - CSS Property Expression Factory", function() {
             "\"; color: purple;\"",
             "'color: green;'",
             "'; color: mint;'",
+            "\" \\\" color: black; \"",
+            "' \\' color: yellow; '",
           ],
         },
         {

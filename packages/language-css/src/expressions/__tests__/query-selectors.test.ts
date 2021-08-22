@@ -134,6 +134,7 @@ suite("CSS - Query Selector Expression Factory", function() {
             "",
             "content: \"span { }\";",
             "content: \"} main {\";",
+            "content: \" \\\" div { }\";",
           ],
         },
         {
@@ -142,6 +143,7 @@ suite("CSS - Query Selector Expression Factory", function() {
             "[data-foo=\"bar\"]",
             "[data-hello=\"world { }\"]",
             "[data-value=\"} header {\"]",
+            "[data-value=\" \\\" footer {\"]",
           ],
         },
       ],
@@ -153,12 +155,12 @@ suite("CSS - Query Selector Expression Factory", function() {
       expected: ["div"],
       getValuesSets: () => {
         const commentWithSelector = [
-              "/* header { } */",
-              "/* } footer { } */",
-              "/* main, */",
-              "/* } aside > */",
-              "/* * aside > */",
-              "/* / aside > */",
+          "/* header { } */",
+          "/* } footer { } */",
+          "/* main, */",
+          "/* } aside > */",
+          "/* * aside > */",
+          "/* / aside > */",
         ];
 
         return [
