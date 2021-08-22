@@ -1,7 +1,7 @@
-import type { WebManglerPlugin } from "../../types";
+import type { WebManglerPlugin } from "@webmangler/types";
 import type { BuiltInManglersOptions, WebManglerPluginClass } from "./types";
 
-import { MultiManglerPlugin } from "../utils";
+import { MultiManglerPlugin } from "@webmangler/mangler-utils";
 
 let CssClassMangler: WebManglerPluginClass;
 let CssVariableMangler: WebManglerPluginClass;
@@ -16,7 +16,7 @@ let HtmlIdMangler: WebManglerPluginClass;
  * @param _HtmlAttributeMangler The {@link HtmlAttributeMangler}.
  * @param _HtmlIdMangler The {@link HtmlIdMangler}.
  */
-export function injectDependencies(
+function injectDependencies(
   _CssClassMangler: WebManglerPluginClass,
   _CssVariableMangler: WebManglerPluginClass,
   _HtmlAttributeMangler: WebManglerPluginClass,
@@ -44,7 +44,7 @@ export function injectDependencies(
  * @since v0.1.0
  * @version v0.1.23
  */
-export default class BuiltInManglers extends MultiManglerPlugin {
+class BuiltInManglers extends MultiManglerPlugin {
   /**
    * Instantiate a new {@link BuiltInManglers}.
    *
@@ -78,3 +78,9 @@ export default class BuiltInManglers extends MultiManglerPlugin {
     super(plugins);
   }
 }
+
+export default BuiltInManglers;
+
+export {
+  injectDependencies,
+};

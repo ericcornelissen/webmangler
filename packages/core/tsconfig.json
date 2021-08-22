@@ -10,6 +10,10 @@
     { "path": "../language-css" },
     { "path": "../language-html" },
     { "path": "../language-js" },
+    { "path": "../mangler-css-classes" },
+    { "path": "../mangler-css-variables" },
+    { "path": "../mangler-html-attributes" },
+    { "path": "../mangler-html-ids" },
     { "path": "../testing" },
     { "path": "../types" }
   ]

@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Extract built-in language plugins into dependencies.
+- Extract built-in mangler plugins into dependencies.
 
 ## [0.1.23] - 2021-07-07
 

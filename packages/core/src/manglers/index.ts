@@ -1,6 +1,16 @@
-export { default as BuiltInManglers } from "./builtin";
-export { default as CssClassMangler } from "./css-classes";
-export { default as CssVariableMangler } from "./css-variables";
-export { default as HtmlAttributeMangler } from "./html-attributes";
-export { default as HtmlIdMangler } from "./html-ids";
-export { default as RecommendedManglers } from "./recommended";
+import CssClassMangler from "@webmangler/mangler-css-classes";
+import CssVariableMangler from "@webmangler/mangler-css-variables";
+import HtmlAttributeMangler from "@webmangler/mangler-html-attributes";
+import HtmlIdMangler from "@webmangler/mangler-html-ids";
+
+import BuiltInManglers from "./builtin";
+import RecommendedManglers from "./recommended";
+
+export {
+  BuiltInManglers,
+  CssClassMangler,
+  CssVariableMangler,
+  HtmlAttributeMangler,
+  HtmlIdMangler,
+  RecommendedManglers,
+};

@@ -1,14 +1,14 @@
-import type { WebManglerPlugin } from "../../types";
-import type { CssClassManglerOptions } from "../css-classes";
-import type { CssVariableManglerOptions } from "../css-variables";
-import type { HtmlAttributeManglerOptions } from "../html-attributes";
+import type { CssClassManglerOptions } from "@webmangler/mangler-css-classes";
+import type { CssVariableManglerOptions } from "@webmangler/mangler-css-variables";
+import type { HtmlAttributeManglerOptions } from "@webmangler/mangler-html-attributes";
+import type { WebManglerPlugin } from "@webmangler/types";
 
 /**
  * The configuration of the {@link RecommendedManglers}.
  *
  * @since v0.1.0
  */
-export interface RecommendedManglersOptions extends
+interface RecommendedManglersOptions extends
   CssClassManglerOptions,
   CssVariableManglerOptions,
   HtmlAttributeManglerOptions {
@@ -37,7 +37,11 @@ export interface RecommendedManglersOptions extends
 /**
  * Type of the constructor of a {@link WebManglerPlugin}.
  */
-export type WebManglerPluginClass = {
+interface WebManglerPluginClass {
   new(options?: unknown): WebManglerPlugin;
-};
+}
 
+export {
+  RecommendedManglersOptions,
+  WebManglerPluginClass,
+};

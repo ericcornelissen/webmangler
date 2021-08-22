@@ -1,0 +1,40 @@
+{
+  "name": "@webmangler/mangler-css-variables",
+  "version": "0.1.23",
+  "description": "Mangle CSS variables with WebMangler",
+  "license": "MIT",
+  "main": "./build/index.js",
+  "typings": "./build/index.d.ts",
+  "exports": {
+    ".": "./build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ericcornelissen/webmangler",
+    "directory": "packages/mangler-css-variables"
+  },
+  "bugs": {
+    "url": "https://github.com/ericcornelissen/webmangler/issues"
+  },
+  "author": {
+    "name": "Eric Cornelissen",
+    "email": "ericornelissen@gmail.com",
+    "url": "https://ericcornelissen.dev/"
+  },
+  "scripts": {
+    "clean": "rm -rf build/ *.tsbuildinfo",
+    "compile": "tsc --build",
+    "prepublishOnly": "npm run compile",
+    "postpublish": "npm run clean"
+  },
+  "dependencies": {
+    "@webmangler/mangler-utils": "^0.1.23",
+    "@webmangler/types": "^0.1.23"
+  },
+  "devDependencies": {
+    "typescript": "4.3.5"
+  },
+  "engines": {
+    "node": ">=12.16.0"
+  }
+}

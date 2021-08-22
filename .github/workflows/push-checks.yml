@@ -54,6 +54,11 @@ jobs:
           - language-html
           - language-js
           - language-utils
+          - mangler-css-classes
+          - mangler-css-variables
+          - mangler-html-attributes
+          - mangler-html-ids
+          - mangler-utils
           - testing
           - types
     defaults:
@@ -114,6 +119,11 @@ jobs:
           - language-html
           - language-js
           - language-utils
+          - mangler-css-classes
+          - mangler-css-variables
+          - mangler-html-attributes
+          - mangler-html-ids
+          - mangler-utils
           - testing
     steps:
       - name: Checkout repository

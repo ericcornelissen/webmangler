@@ -8,8 +8,7 @@
   "exports": {
     ".": "./build/index.js",
     "./languages": "./build/languages/index.js",
-    "./manglers": "./build/manglers/index.js",
-    "./manglers/utils": "./build/manglers/utils/index.js"
+    "./manglers": "./build/manglers/index.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +33,10 @@
     "@webmangler/language-css": "^0.1.23",
     "@webmangler/language-html": "^0.1.23",
     "@webmangler/language-js": "^0.1.23",
+    "@webmangler/mangler-css-classes": "^0.1.23",
+    "@webmangler/mangler-css-variables": "^0.1.23",
+    "@webmangler/mangler-html-attributes": "^0.1.23",
+    "@webmangler/mangler-html-ids": "^0.1.23",
     "@webmangler/types": "^0.1.23"
   },
   "devDependencies": {
