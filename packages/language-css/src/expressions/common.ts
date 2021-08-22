@@ -50,12 +50,12 @@ const declarationBlock = "(?:\\{[^\\}]*\\})";
 /**
  * Regular Expression pattern as a string for a double quoted string in CSS.
  */
-const doubleQuotedString = "(?:\"[^\"]*\")";
+const doubleQuotedString = "(?:\"(?:\\\"|[^\"])*\")";
 
 /**
  * Regular Expression pattern as a string for a single quoted string in CSS.
  */
-const singleQuotedString = "(?:'[^']*')";
+const singleQuotedString = "(?:'(?:\\'|[^'])*')";
 
 /**
  * Regular Expression pattern as a string for a string in CSS.
