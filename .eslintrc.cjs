@@ -248,6 +248,7 @@ module.exports = {
     "_reports/",
     ".temp/",
     "build/",
+    "lib/",
 
     // Don't ignore configuration files
     "!.github/",

@@ -15,7 +15,7 @@
     "baseUrl": "./",
     "paths": {
       "@webmangler/benchmarking": ["packages/benchmarking/build"],
-      "@webmangler/language-css": ["packages/language-css/build"],
+      "@webmangler/language-css": ["packages/language-css/lib"],
       "@webmangler/language-html": ["packages/language-html/build"],
       "@webmangler/language-js": ["packages/language-js/build"],
       "@webmangler/language-utils": ["packages/language-utils/build"],
