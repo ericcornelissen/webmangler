@@ -6,7 +6,7 @@ import { expect } from "chai";
 
 import { getAllMatches } from "./test-helpers";
 import { buildCssDeclarations, buildCssRuleset } from "./builders";
-import { valuePresets } from "./values";
+import { sampleValues, valuePresets } from "./values";
 
 import expressionsFactory from "../css-values";
 
@@ -108,6 +108,34 @@ suite("CSS - CSS Value Expression Factory", function() {
           beforeValue: valuePresets.beforeValue,
           value: ["0 3px 0 14px"],
           afterValue: valuePresets.afterValue,
+        },
+      ],
+    },
+    {
+      name: "declaration between strings and comments",
+      pattern: "[a-z]+",
+      factoryOptions: { },
+      expected: ["red"],
+      getValuesSets: () => [
+        {
+          property: ["content"],
+          value: [
+            "\"foo\"",
+            "'foo'",
+          ],
+          afterValue: sampleValues.comments,
+        },
+        {
+          property: ["color"],
+          value: ["red"],
+        },
+        {
+          beforeProperty: sampleValues.comments,
+          property: ["content"],
+          value: [
+            "\"bar\"",
+            "'bar'",
+          ],
         },
       ],
     },
