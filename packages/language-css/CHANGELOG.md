@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix issue where large chunks of CSS would not be recognized. ([#156])
 
 ## [0.1.24] - 2021-08-23
 
@@ -24,5 +24,6 @@ Versioning].
 [#138]: https://github.com/ericcornelissen/webmangler/pull/138
 [#143]: https://github.com/ericcornelissen/webmangler/pull/143
 [#151]: https://github.com/ericcornelissen/webmangler/pull/151
+[#156]: https://github.com/ericcornelissen/webmangler/pull/156
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
