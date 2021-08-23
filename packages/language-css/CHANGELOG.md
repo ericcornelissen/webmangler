@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.25] - 2021-08-23
+
 - Fix issue where large chunks of CSS would not be recognized. ([#156])
 
 ## [0.1.24] - 2021-08-23
