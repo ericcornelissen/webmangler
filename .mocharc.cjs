@@ -1,7 +1,12 @@
 "use strict";
 
 const TEST_TYPE_BENCHMARK = "benchmark";
+const TEST_TYPE_INTEGRATION = "integration";
 const TEST_TYPE_TEST = "test";
+const TEST_TYPE_UNIT = "unit";
+
+const SPEC_SUFFIX_BENCHMARK = "bench";
+const SPEC_SUFFIX_TEST = "test";
 
 let packagesExpr = "*";
 let packagesList = [packagesExpr];
@@ -14,13 +19,24 @@ if (process.env.TEST_PACKAGES !== undefined) {
 }
 
 let specSuffix;
+let specFolder;
 switch (process.env.TEST_TYPE) {
   case TEST_TYPE_BENCHMARK:
-    specSuffix = "bench";
+    specSuffix = SPEC_SUFFIX_BENCHMARK;
+    specFolder = "{.,benchmark}";
+    break;
+  case TEST_TYPE_INTEGRATION:
+    specFolder = "integration";
+    specSuffix = SPEC_SUFFIX_TEST;
+    break;
+  case TEST_TYPE_UNIT:
+    specFolder = "{common,unit}";
+    specSuffix = SPEC_SUFFIX_TEST;
     break;
   case TEST_TYPE_TEST:
   default:
-    specSuffix = "test";
+    specFolder = "**";
+    specSuffix = SPEC_SUFFIX_TEST;
 }
 
 module.exports = {
@@ -28,7 +44,7 @@ module.exports = {
   reporter: "dot",
   timeout: 5000,
   ui: "tdd",
-  spec: `packages/${packagesExpr}/**/__tests__/*.${specSuffix}.ts`,
+  spec: `packages/${packagesExpr}/**/__tests__/${specFolder}/*.${specSuffix}.ts`,
   require: [
     "ts-node/register",
     "tsconfig-paths/register",
@@ -43,6 +59,8 @@ module.exports = {
 
   _constants: {
     TEST_TYPE_BENCHMARK,
+    TEST_TYPE_INTEGRATION,
     TEST_TYPE_TEST,
+    TEST_TYPE_UNIT,
   },
 };

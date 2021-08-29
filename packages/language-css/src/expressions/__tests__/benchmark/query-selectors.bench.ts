@@ -3,46 +3,47 @@ import type { MangleExpression } from "@webmangler/types";
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { expect } from "chai";
 
-import { embedContentInContext } from "./benchmark-helpers";
+import { embedContentInContext } from "../common";
 
-import cssDeclarationValueExpressionFactory from "../css-values";
+import querySelectorExpressionFactory from "../../query-selectors";
 
-suite("CSS - CSS Value Expression Factory", function() {
+suite("CSS - Query Selector Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "var-[a-zA-Z0-9-]+";
+  const patterns = "cls-[a-zA-Z0-9-]+";
 
-  const contentWithVariables = embedContentInContext(`
-    #foobar {
-      content: var(--var-foobar);
+  const contentWithQuerySelector = embedContentInContext(`
+    body {
+      font-family: sans-serif;
     }
 
-    .foo {
-      content: var(--var-bar);
+    .cls-foo[data-bar] {
+      content: attr(data-foo);
     }
 
-    .bar::after {
-      content: var(--var-foo);
+    .cls-foo[data-baz]::after {
+      content: "bar";
+      color: #123;
     }
   `);
-  const contentWithoutVariables = `
-    #foobar {
-      content: "foobar";
+  const contentWithoutQuerySelector = `
+    body {
+      font-family: sans-serif;
     }
 
-    .foo {
+    #foo[data-bar] {
+      content: attr(data-foo);
+    }
+
+    #foo[data-baz]::after {
       content: "bar";
-    }
-
-    .bar::after {
-      content: "foo";
+      color: #123;
     }
   `;
 
   suiteSetup(function() {
-    expressions = cssDeclarationValueExpressionFactory({
-      prefix: "var\\(--",
-      suffix: "\\)",
+    expressions = querySelectorExpressionFactory({
+      prefix: "\\.",
     });
   });
 
@@ -52,7 +53,7 @@ suite("CSS - CSS Value Expression Factory", function() {
 
   test("simple file", function() {
     const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithVariables;
+    const fileContent = contentWithQuerySelector;
 
     let found: string[] = [];
     const result = benchmarkFn({
@@ -70,7 +71,7 @@ suite("CSS - CSS Value Expression Factory", function() {
 
   test("large file", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithVariables.repeat(100);
+    const fileContent = contentWithQuerySelector.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({
@@ -86,9 +87,9 @@ suite("CSS - CSS Value Expression Factory", function() {
     expect(result.medianDuration).to.be.below(budget);
   });
 
-  test("large file without variables", function() {
+  test("large file without query selectors", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithoutVariables.repeat(100);
+    const fileContent = contentWithoutQuerySelector.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({

@@ -1,14 +1,18 @@
-import type { CssDeclarationValueOptions } from "../../options";
-import type { CssDeclarationValuesSets } from "./types";
+import type { CssDeclarationValueOptions } from "../../../options";
+import type { CssDeclarationValuesSets } from "../common";
 
 import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
-import { getAllMatches } from "./test-helpers";
-import { buildCssDeclarations, buildCssRuleset } from "./builders";
-import { sampleValues, valuePresets } from "./values";
+import {
+  buildCssDeclarations,
+  buildCssRuleset,
+  getAllMatches,
+  sampleValues,
+  valuePresets,
+} from "../common";
 
-import expressionsFactory from "../css-values";
+import expressionsFactory from "../../css-values";
 
 suite("CSS - CSS Value Expression Factory", function() {
   type TestScenario = {
