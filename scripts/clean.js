@@ -23,18 +23,18 @@ const HARD_DELETE_ONLY = [
   ".eslintcache",
 ];
 
-main(process.argv);
+main(process.argv.slice(2));
 
 function main(argv) {
-  argv = argv.slice(2);
-
+  log.print("Cleaning repository...");
   removeFilesAndFolders(argv);
   resetTestData(argv);
   cleanPackages(argv);
+  log.reprintln("Repository cleaned.");
 }
 
 function removeFilesAndFolders(argv) {
-  log.print("Removing generated files & folders...");
+  log.reprint("Removing generated files & folders...");
 
   const filesAndFoldersToRemove = ALWAYS_DELETE;
   if (argv.includes(HARD_FLAG)) {
@@ -45,14 +45,11 @@ function removeFilesAndFolders(argv) {
     "-rf",
     ...filesAndFoldersToRemove.map(paths.resolve.fromRoot),
   ]);
-
-  log.reprintln("Removed generated files & folders.");
 }
 
 function resetTestData() {
-  log.print("Cleaning testdata...");
+  log.reprint("Resetting testdata...");
   execSync("git", ["checkout", "HEAD", "--", "./testdata"]);
-  log.reprintln("Cleaned testdata.");
 }
 
 function cleanPackages(argv) {
@@ -60,14 +57,11 @@ function cleanPackages(argv) {
     return;
   }
 
-  log.println("Cleaning packages...");
+  log.reprint("Cleaning packages...");
   for (const packageName of paths.getPackages()) {
-    log.print(`  Cleaning packages/${packageName}...`);
+    log.reprint(`Cleaning packages/${packageName}...`);
     execSync("npm", ["run", "clean"], {
       cwd: path.resolve(paths.packagesDir, packageName),
     });
-    log.reprintln(`  Cleaned packages/${packageName}.`);
   }
-
-  log.newline();
 }
