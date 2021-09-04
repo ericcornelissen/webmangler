@@ -1,7 +1,14 @@
 "use strict";
 
 const TEST_TYPE_BENCHMARK = "benchmark";
+const TEST_TYPE_INTEGRATION = "integration";
 const TEST_TYPE_TEST = "test";
+const TEST_TYPE_UNIT = "unit";
+
+const SPEC_SUFFIX_BENCHMARK = "bench";
+const SPEC_SUFFIX_INTEGRATION = "intg";
+const SPEC_SUFFIX_TEST = "test";
+const SPEC_SUFFIX_UNIT = "unit";
 
 let packagesExpr = "*";
 let packagesList = [packagesExpr];
@@ -16,11 +23,17 @@ if (process.env.TEST_PACKAGES !== undefined) {
 let specSuffix;
 switch (process.env.TEST_TYPE) {
   case TEST_TYPE_BENCHMARK:
-    specSuffix = "bench";
+    specSuffix = SPEC_SUFFIX_BENCHMARK;
+    break;
+  case TEST_TYPE_INTEGRATION:
+    specSuffix = SPEC_SUFFIX_INTEGRATION;
+    break;
+  case TEST_TYPE_UNIT:
+    specSuffix = SPEC_SUFFIX_UNIT;
     break;
   case TEST_TYPE_TEST:
   default:
-    specSuffix = "test";
+    specSuffix = `{${SPEC_SUFFIX_INTEGRATION},${SPEC_SUFFIX_TEST},${SPEC_SUFFIX_UNIT}}`;
 }
 
 module.exports = {
@@ -43,6 +56,8 @@ module.exports = {
 
   _constants: {
     TEST_TYPE_BENCHMARK,
+    TEST_TYPE_INTEGRATION,
     TEST_TYPE_TEST,
+    TEST_TYPE_UNIT,
   },
 };
