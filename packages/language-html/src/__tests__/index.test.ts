@@ -94,17 +94,19 @@ suite("The @webmangler/language-html plugin", function() {
 
     test("get languages", function() {
       const plugin = new HtmlLanguagePlugin();
-      const result = Array.from(plugin.getLanguages());
-      expect(result).to.include.members(DEFAULT_EXTENSIONS);
+      const result = new Set(plugin.getLanguages());
+      expect(result).to.deep.equal(new Set(DEFAULT_EXTENSIONS));
     });
 
     test("get configured languages", function() {
       const htmlExtensions = ["html5", "pug"];
 
       const plugin = new HtmlLanguagePlugin({ htmlExtensions });
-      const result = Array.from(plugin.getLanguages());
-      expect(result).to.include.members(DEFAULT_EXTENSIONS);
-      expect(result).to.include.members(htmlExtensions);
+      const result = new Set(plugin.getLanguages());
+      expect(result).to.deep.equal(new Set([
+        ...DEFAULT_EXTENSIONS,
+        ...htmlExtensions,
+      ]));
     });
   });
 });

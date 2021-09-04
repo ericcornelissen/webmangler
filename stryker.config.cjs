@@ -1,12 +1,16 @@
 "use strict";
 
 let packagesExpr = "*";
+let packagesList = "";
 if (process.env.TEST_PACKAGES !== undefined) {
+  const packagesArray = process.env.TEST_PACKAGES.split(",");
+
   packagesExpr = process.env.TEST_PACKAGES;
-  const packagesList = process.env.TEST_PACKAGES.split(",");
-  if (packagesList.length > 1) {
+  if (packagesArray.length > 1) {
     packagesExpr = `{${packagesExpr}}`;
   }
+
+  packagesList = packagesArray.join(" ");
 }
 
 module.exports = {
@@ -16,6 +20,12 @@ module.exports = {
     `packages/${packagesExpr}/src/**/*.ts`,
     "!**/{__mocks__,__tests__}/**/*.ts",
   ],
+  commandRunner: {
+    command: `npm run test -- ${packagesList}`,
+  },
+
+  timeoutMS: 25000,
+  timeoutFactor: 2.5,
 
   disableTypeChecks: `packages/${packagesExpr}/src/**/*.ts`,
   checkers: ["typescript"],
@@ -23,8 +33,8 @@ module.exports = {
 
   reporters: [
     "clear-text",
-    "progress",
     "html",
+    "progress",
   ],
   htmlReporter: {
     baseDir: "_reports/mutation",
@@ -35,6 +45,6 @@ module.exports = {
     break: 50,
   },
 
-  tempDirName: ".temp",
+  tempDirName: ".temp/stryker",
   cleanTempDir: false,
 };
