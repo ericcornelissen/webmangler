@@ -32,7 +32,7 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
       name: "one element, no configuration",
       pattern: "[a-z]+",
       factoryOptions: {
-        attributeNames: ["id"],
+        attributeNames: ["id", "x-id"],
       },
       expected: ["foobar"],
       getValuesSets: () => [
