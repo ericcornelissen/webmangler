@@ -1,0 +1,78 @@
+# NOTICE:
+# THIS WORKFLOW IS GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+name: Validate package language-html
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/language-html/**"
+  pull_request:
+    paths:
+      - "packages/language-html/**"
+jobs:
+  benchmark:
+    name: Benchmark package language-html
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 15
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15.14.0
+          cache: npm
+      - name: Install monorepo dependencies
+        working-directory: ./
+        run: npm ci
+      - name: Install packages/undefined dependencies
+        working-directory: ./packages/undefined
+        run: npm ci
+      - name: Run benchmarks for packages/language-html
+        run: npm run benchmark -- language-html
+  compile:
+    name: Compile package language-html
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 15
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15.14.0
+          cache: npm
+      - name: Install monorepo dependencies
+        working-directory: ./
+        run: npm ci
+      - name: Install packages/undefined dependencies
+        working-directory: ./packages/undefined
+        run: npm ci
+      - name: Compile packages/language-html
+        working-directory: packages/language-html
+        run: npm run compile
+  test:
+    name: Test package language-html
+    runs-on: ubuntu-latest
+    needs: [compile]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 15
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15.14.0
+          cache: npm
+      - name: Install monorepo dependencies
+        working-directory: ./
+        run: npm ci
+      - name: Install packages/undefined dependencies
+        working-directory: ./packages/undefined
+        run: npm ci
+      - name: Run test suite for packages/language-html
+        run: npm run coverage -- language-html
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./_reports/coverage/lcov.info
+          flags: package-language-html

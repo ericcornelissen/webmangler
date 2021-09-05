@@ -1,0 +1,58 @@
+# NOTICE:
+# THIS WORKFLOW IS GENERATED AND SHOULD NOT BE EDITED MANUALLY.
+name: Validate package mangler-html-ids
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/mangler-html-ids/**"
+  pull_request:
+    paths:
+      - "packages/mangler-html-ids/**"
+jobs:
+  compile:
+    name: Compile package mangler-html-ids
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 15
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15.14.0
+          cache: npm
+      - name: Install monorepo dependencies
+        working-directory: ./
+        run: npm ci
+      - name: Install packages/undefined dependencies
+        working-directory: ./packages/undefined
+        run: npm ci
+      - name: Compile packages/mangler-html-ids
+        working-directory: packages/mangler-html-ids
+        run: npm run compile
+  test:
+    name: Test package mangler-html-ids
+    runs-on: ubuntu-latest
+    needs: [compile]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 15
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15.14.0
+          cache: npm
+      - name: Install monorepo dependencies
+        working-directory: ./
+        run: npm ci
+      - name: Install packages/undefined dependencies
+        working-directory: ./packages/undefined
+        run: npm ci
+      - name: Run test suite for packages/mangler-html-ids
+        run: npm run coverage -- mangler-html-ids
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./_reports/coverage/lcov.info
+          flags: package-mangler-html-ids
