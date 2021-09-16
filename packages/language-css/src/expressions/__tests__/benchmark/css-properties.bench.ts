@@ -3,39 +3,48 @@ import type { MangleExpression } from "@webmangler/types";
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { expect } from "chai";
 
-import { embedContentInContext } from "./benchmark-helpers";
+import { embedContentInContext } from "../common";
 
-import singleValueAttributeExpressionFactory from "../single-value-attributes";
+import cssDeclarationPropertyExpressionFactory from "../../css-properties";
 
-suite("CSS - Single Value Attribute Expression Factory", function() {
+suite("CSS - CSS Property Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "val-[a-zA-Z0-9-]+";
+  const patterns = "var-[a-zA-Z0-9-]+";
 
-  const contentWithSingleValueAttribute = embedContentInContext(`
-    input[id="val-bar"] {
-      font-family: sans-serif;
+  const contentWithVariables = embedContentInContext(`
+    :root {
+      --var-font-family: sans-serif;
     }
 
-    .foo[for="val-bar"] {
+    .foo {
+      --var-color: red;
+      font-family: var(--var-font-family);
+    }
+
+    .foo[data-bar]::after {
       content: "bar";
       color: #123;
     }
   `);
-  const contentWithoutSingleValueAttribute = `
+  const contentWithoutVariables = `
     body {
       font-family: sans-serif;
     }
 
-    .foobar {
+    .foo {
+      color: #321;
+    }
+
+    #bar::after {
       content: "bar";
       color: #123;
     }
   `;
 
   suiteSetup(function() {
-    expressions = singleValueAttributeExpressionFactory({
-      attributeNames: ["id", "for"],
+    expressions = cssDeclarationPropertyExpressionFactory({
+      prefix: "--",
     });
   });
 
@@ -45,7 +54,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
 
   test("simple file", function() {
     const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithSingleValueAttribute;
+    const fileContent = contentWithVariables;
 
     let found: string[] = [];
     const result = benchmarkFn({
@@ -63,7 +72,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
 
   test("large file", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithSingleValueAttribute.repeat(100);
+    const fileContent = contentWithVariables.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({
@@ -79,9 +88,9 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
     expect(result.medianDuration).to.be.below(budget);
   });
 
-  test("large file without single-value attributes", function() {
+  test("large file without variables", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithoutSingleValueAttribute.repeat(100);
+    const fileContent = contentWithoutVariables.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({

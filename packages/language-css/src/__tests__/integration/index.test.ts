@@ -4,11 +4,11 @@ import type {
   CssDeclarationValueOptions,
   QuerySelectorOptions,
   SingleValueAttributeOptions,
-} from "../options";
+} from "../../options";
 
 import { expect } from "chai";
 
-import CssLanguagePlugin from "../index";
+import CssLanguagePlugin from "../../index";
 
 suite("The @webmangler/language-css plugin", function() {
   test("no argument", function() {
