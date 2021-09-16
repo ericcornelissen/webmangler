@@ -21,9 +21,9 @@ const UNIT_FLAG = "--unit";
 const WATCH_FLAG = "--watch";
 
 const {
+  TEST_TYPE_ALL,
   TEST_TYPE_BENCHMARK,
   TEST_TYPE_INTEGRATION,
-  TEST_TYPE_TEST,
   TEST_TYPE_UNIT,
 } = mocharc._constants;
 
@@ -147,5 +147,5 @@ function getTestType(argv) {
     }
   }
 
-  return TEST_TYPE_TEST;
+  return TEST_TYPE_ALL;
 }

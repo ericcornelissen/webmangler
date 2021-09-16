@@ -1,8 +1,8 @@
 "use strict";
 
+const TEST_TYPE_ALL = "all";
 const TEST_TYPE_BENCHMARK = "benchmark";
 const TEST_TYPE_INTEGRATION = "integration";
-const TEST_TYPE_TEST = "test";
 const TEST_TYPE_UNIT = "unit";
 
 const SPEC_SUFFIX_BENCHMARK = "bench";
@@ -33,7 +33,7 @@ switch (process.env.TEST_TYPE) {
     specFolder = "{common,unit}";
     specSuffix = SPEC_SUFFIX_TEST;
     break;
-  case TEST_TYPE_TEST:
+  case TEST_TYPE_ALL:
   default:
     specFolder = "**";
     specSuffix = SPEC_SUFFIX_TEST;
@@ -58,9 +58,9 @@ module.exports = {
   ],
 
   _constants: {
+    TEST_TYPE_ALL,
     TEST_TYPE_BENCHMARK,
     TEST_TYPE_INTEGRATION,
-    TEST_TYPE_TEST,
     TEST_TYPE_UNIT,
   },
 };
