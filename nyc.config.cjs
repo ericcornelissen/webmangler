@@ -51,6 +51,7 @@ module.exports = {
     "packages/**/*.bench.ts",
     "packages/**/*.test.ts",
     "packages/**/build/",
+    "packages/**/lib/",
     ...packagesExclusions,
   ],
 

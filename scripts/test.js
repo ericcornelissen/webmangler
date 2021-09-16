@@ -62,7 +62,7 @@ function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
 }
 
 function compilePackages(packagesStr) {
-  log.println("Compiling packages...");
+  log.print("Compiling packages...");
 
   let packagesList;
   if (packagesStr !== undefined) {
@@ -71,15 +71,15 @@ function compilePackages(packagesStr) {
     packagesList = paths.getPackages();
   }
 
-  for (const packageName of packagesList) {
-    log.print(`  Compiling packages/${packageName}...`);
+  packagesList.forEach((packageName, i) => {
+    log.reprint(`[${i+1}/${packagesList.length}] `);
+    log.print(`Compiling packages/${packageName}...`);
     execSync("npm", ["run", "compile"], {
       cwd: path.resolve(paths.packagesDir, packageName),
     });
-    log.reprintln(`  Compiled packages/${packageName}.`);
-  }
+  });
 
-  log.newline();
+  log.reprintln(`Compiled ${packagesList.length} package(s).`);
 }
 
 function getCliCommand(argv) {
