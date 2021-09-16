@@ -17,7 +17,7 @@
       "@webmangler/benchmarking": ["packages/benchmarking/build"],
       "@webmangler/language-css": ["packages/language-css/lib"],
       "@webmangler/language-html": ["packages/language-html/build"],
-      "@webmangler/language-js": ["packages/language-js/build"],
+      "@webmangler/language-js": ["packages/language-js/lib"],
       "@webmangler/language-utils": ["packages/language-utils/build"],
       "@webmangler/mangler-css-classes": ["packages/mangler-css-classes/build"],
       "@webmangler/mangler-css-variables": ["packages/mangler-css-variables/build"],

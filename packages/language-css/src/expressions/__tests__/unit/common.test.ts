@@ -4,9 +4,9 @@ import {
   attributeSelectorOperators,
   sampleValues,
   selectorCombinators,
-} from "./values";
+} from "../common/values";
 
-import { patterns } from "../common";
+import { patterns } from "../../common";
 
 suite("CSS - common expressions", function() {
   suite("Patterns", function() {

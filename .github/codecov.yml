@@ -39,6 +39,26 @@ flags:
     paths:
       - packages/language-utils/**/*.ts
     carryforward: true
+  package-mangler-css-classes:
+    paths:
+      - packages/mangler-css-classes/**/*.ts
+    carryforward: true
+  package-mangler-css-variables:
+    paths:
+      - packages/mangler-css-variables/**/*.ts
+    carryforward: true
+  package-mangler-html-attributes:
+    paths:
+      - packages/mangler-html-attributes/**/*.ts
+    carryforward: true
+  package-mangler-html-ids:
+    paths:
+      - packages/mangler-html-ids/**/*.ts
+    carryforward: true
+  package-mangler-utils:
+    paths:
+      - packages/mangler-utils/**/*.ts
+    carryforward: true
   package-testing:
     paths:
       - packages/testing/**/*.ts

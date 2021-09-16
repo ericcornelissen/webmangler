@@ -3,47 +3,39 @@ import type { MangleExpression } from "@webmangler/types";
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { expect } from "chai";
 
-import { embedContentInContext } from "./benchmark-helpers";
+import { embedContentInContext } from "../common";
 
-import querySelectorExpressionFactory from "../query-selectors";
+import singleValueAttributeExpressionFactory from "../../single-value-attributes";
 
-suite("CSS - Query Selector Expression Factory", function() {
+suite("CSS - Single Value Attribute Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "cls-[a-zA-Z0-9-]+";
+  const patterns = "val-[a-zA-Z0-9-]+";
 
-  const contentWithQuerySelector = embedContentInContext(`
-    body {
+  const contentWithSingleValueAttribute = embedContentInContext(`
+    input[id="val-bar"] {
       font-family: sans-serif;
     }
 
-    .cls-foo[data-bar] {
-      content: attr(data-foo);
-    }
-
-    .cls-foo[data-baz]::after {
+    .foo[for="val-bar"] {
       content: "bar";
       color: #123;
     }
   `);
-  const contentWithoutQuerySelector = `
+  const contentWithoutSingleValueAttribute = `
     body {
       font-family: sans-serif;
     }
 
-    #foo[data-bar] {
-      content: attr(data-foo);
-    }
-
-    #foo[data-baz]::after {
+    .foobar {
       content: "bar";
       color: #123;
     }
   `;
 
   suiteSetup(function() {
-    expressions = querySelectorExpressionFactory({
-      prefix: "\\.",
+    expressions = singleValueAttributeExpressionFactory({
+      attributeNames: ["id", "for"],
     });
   });
 
@@ -53,7 +45,7 @@ suite("CSS - Query Selector Expression Factory", function() {
 
   test("simple file", function() {
     const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithQuerySelector;
+    const fileContent = contentWithSingleValueAttribute;
 
     let found: string[] = [];
     const result = benchmarkFn({
@@ -71,7 +63,7 @@ suite("CSS - Query Selector Expression Factory", function() {
 
   test("large file", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithQuerySelector.repeat(100);
+    const fileContent = contentWithSingleValueAttribute.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({
@@ -87,9 +79,9 @@ suite("CSS - Query Selector Expression Factory", function() {
     expect(result.medianDuration).to.be.below(budget);
   });
 
-  test("large file without query selectors", function() {
+  test("large file without single-value attributes", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithoutQuerySelector.repeat(100);
+    const fileContent = contentWithoutSingleValueAttribute.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({
