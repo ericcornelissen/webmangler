@@ -39,7 +39,19 @@ const ALL_LETTER_CHARS: CharSet = [
   ...ALL_UPPERCASE_CHARS,
 ];
 
+/**
+ * A character set ({@link CharSet}) of all allowed characters.
+ *
+ * @since v0.1.16
+ */
+const ALL_CHARS: CharSet = [
+  ...ALL_LETTER_CHARS,
+  ...ALL_NUMBER_CHARS,
+  "-", "_",
+];
+
 export {
+  ALL_CHARS,
   ALL_LETTER_CHARS,
   ALL_LOWERCASE_CHARS,
   ALL_NUMBER_CHARS,

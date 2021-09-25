@@ -6,9 +6,11 @@ import type {
   SingleValueAttributeOptions,
 } from "./types";
 
-import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
-
-import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "./characters";
+import {
+  ALL_LETTER_CHARS,
+  ALL_NUMBER_CHARS,
+  SimpleManglerPlugin,
+} from "@webmangler/mangler-utils";
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     MangleExpressionOptions<QuerySelectorOptions> = {

@@ -1,14 +1,17 @@
-import type { QuerySelectorOptions } from "../../options";
-import type { CssRulesetValuesSets } from "./types";
+import type { QuerySelectorOptions } from "../../../options";
+import type { CssRulesetValuesSets } from "../common";
 
 import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
-import { getAllMatches } from "./test-helpers";
-import { buildCssRulesets } from "./builders";
-import { selectorCombinators, valuePresets } from "./values";
+import {
+  buildCssRulesets,
+  getAllMatches,
+  valuePresets,
+  selectorCombinators,
+} from "../common";
 
-import expressionsFactory from "../query-selectors";
+import expressionsFactory from "../../query-selectors";
 
 suite("CSS - Query Selector Expression Factory", function() {
   type TestScenario = {

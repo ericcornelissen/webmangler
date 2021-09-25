@@ -3,48 +3,46 @@ import type { MangleExpression } from "@webmangler/types";
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { expect } from "chai";
 
-import { embedContentInContext } from "./benchmark-helpers";
+import { embedContentInContext } from "../common";
 
-import cssDeclarationPropertyExpressionFactory from "../css-properties";
+import cssDeclarationValueExpressionFactory from "../../css-values";
 
-suite("CSS - CSS Property Expression Factory", function() {
+suite("CSS - CSS Value Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
   const patterns = "var-[a-zA-Z0-9-]+";
 
   const contentWithVariables = embedContentInContext(`
-    :root {
-      --var-font-family: sans-serif;
+    #foobar {
+      content: var(--var-foobar);
     }
 
     .foo {
-      --var-color: red;
-      font-family: var(--var-font-family);
+      content: var(--var-bar);
     }
 
-    .foo[data-bar]::after {
-      content: "bar";
-      color: #123;
+    .bar::after {
+      content: var(--var-foo);
     }
   `);
   const contentWithoutVariables = `
-    body {
-      font-family: sans-serif;
+    #foobar {
+      content: "foobar";
     }
 
     .foo {
-      color: #321;
+      content: "bar";
     }
 
-    #bar::after {
-      content: "bar";
-      color: #123;
+    .bar::after {
+      content: "foo";
     }
   `;
 
   suiteSetup(function() {
-    expressions = cssDeclarationPropertyExpressionFactory({
-      prefix: "--",
+    expressions = cssDeclarationValueExpressionFactory({
+      prefix: "var\\(--",
+      suffix: "\\)",
     });
   });
 

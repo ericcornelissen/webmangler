@@ -6,9 +6,11 @@ import type {
   CssVariableManglerOptions,
 } from "./types";
 
-import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
-
-import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "./characters";
+import {
+  ALL_LETTER_CHARS,
+  ALL_NUMBER_CHARS,
+  SimpleManglerPlugin,
+} from "@webmangler/mangler-utils";
 
 const CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS:
     MangleExpressionOptions<CssDeclarationPropertyOptions> = {

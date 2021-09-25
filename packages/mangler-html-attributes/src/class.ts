@@ -7,9 +7,11 @@ import type {
   QuerySelectorOptions,
 } from "./types";
 
-import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
-
-import { ALL_LOWERCASE_CHARS, ALL_NUMBER_CHARS } from "./characters";
+import {
+  ALL_LOWERCASE_CHARS,
+  ALL_NUMBER_CHARS,
+  SimpleManglerPlugin,
+} from "@webmangler/mangler-utils";
 
 const ATTRIBUTE_EXPRESSION_OPTIONS:
     MangleExpressionOptions<AttributeOptions> = {
