@@ -1,17 +1,8 @@
 "use strict";
 
-let packagesExpr = "*";
-let packagesList = "";
-if (process.env.TEST_PACKAGES !== undefined) {
-  const packagesArray = process.env.TEST_PACKAGES.split(",");
+const mocharc = require("./.mocharc.cjs");
 
-  packagesExpr = process.env.TEST_PACKAGES;
-  if (packagesArray.length > 1) {
-    packagesExpr = `{${packagesExpr}}`;
-  }
-
-  packagesList = packagesArray.join(" ");
-}
+const { packagesExpr, packagesList } = mocharc._values;
 
 module.exports = {
   coverageAnalysis: "perTest",
@@ -21,7 +12,7 @@ module.exports = {
     "!**/{__mocks__,__tests__}/**/*.ts",
   ],
   commandRunner: {
-    command: `npm run test -- ${packagesList}`,
+    command: `npm run test -- ${packagesList.join(" ")}`,
   },
 
   timeoutMS: 25000,

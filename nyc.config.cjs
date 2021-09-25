@@ -1,14 +1,8 @@
 "use strict";
 
-let packagesExpr = "*";
-let packagesList = [packagesExpr];
-if (process.env.TEST_PACKAGES !== undefined) {
-  packagesExpr = process.env.TEST_PACKAGES;
-  packagesList = process.env.TEST_PACKAGES.split(",");
-  if (packagesList.length > 1) {
-    packagesExpr = `{${packagesExpr}}`;
-  }
-}
+const mocharc = require("./.mocharc.cjs");
+
+const { packagesExpr, packagesList } = mocharc._values;
 
 const packagesExclusions = [];
 if (packagesList.includes("cli")) {

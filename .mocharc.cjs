@@ -63,4 +63,8 @@ module.exports = {
     TEST_TYPE_INTEGRATION,
     TEST_TYPE_UNIT,
   },
+  _values: {
+    packagesExpr,
+    packagesList,
+  },
 };
