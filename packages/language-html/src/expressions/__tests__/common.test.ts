@@ -138,7 +138,7 @@ suite("HTML - common expressions", function() {
         }
       });
 
-      test.skip("no attributes", function() {
+      test("no attributes", function() {
         const testCases = [
           "",
           " ",
