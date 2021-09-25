@@ -30,7 +30,7 @@ function newQuotedValueExpressions(
           |
           (?<=
             ${patterns.tagOpen}
-            ${patterns.attributes}
+            (?:${patterns.attributes})?
             ${QUOTED_ATTRIBUTE_PATTERN(
               attributesPattern,
               `(?<${GROUP_QUOTE}>${patterns.quotes})`,
@@ -74,7 +74,7 @@ function newUnquotedValueExpressions(
           |
           (?<=
             ${patterns.tagOpen}
-            ${patterns.attributes}
+            (?:${patterns.attributes})?
             (?:${attributesPattern})
             \\s*=\\s*
             ${valuePrefix}

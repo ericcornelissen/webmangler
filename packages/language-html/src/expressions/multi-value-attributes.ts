@@ -26,7 +26,7 @@ function newElementAttributeMultiValueExpressions(
         |
         (?<=
           ${patterns.tagOpen}
-          ${patterns.attributes}
+          (?:${patterns.attributes})?
           ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)}
         )
         (?<${GROUP_MAIN}>
@@ -68,7 +68,7 @@ function newUnquotedAttributeValueExpressions(
           |
           (?<=
             ${patterns.tagOpen}
-            ${patterns.attributes}
+            (?:${patterns.attributes})?
             (?:${attributesPattern})
             \\s*=\\s*
           )
