@@ -1,13 +1,13 @@
-import type { CharSet } from "./characters";
+import type { CharSet } from "../characters";
 import type {
   MangleEngineOptions,
   MangleExpression,
   WebManglerFile,
-} from "./types";
+} from "../types";
 
-import { ALL_LOWERCASE_CHARS } from "./characters";
-import { toArrayIfNeeded } from "./helpers";
-import NameGenerator from "./name-generator.class";
+import { ALL_LOWERCASE_CHARS } from "../characters";
+import { toArrayIfNeeded } from "../helpers";
+import NameGenerator from "../name-generator.class";
 
 const DEFAULT_CHAR_SET = ALL_LOWERCASE_CHARS;
 const DEFAULT_IGNORE_PATTERNS: string[] = [];
