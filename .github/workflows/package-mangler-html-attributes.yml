@@ -25,8 +25,8 @@ jobs:
       - name: Install monorepo dependencies
         working-directory: ./
         run: npm ci
-      - name: Install packages/undefined dependencies
-        working-directory: ./packages/undefined
+      - name: Install packages/mangler-html-attributes dependencies
+        working-directory: ./packages/mangler-html-attributes
         run: npm ci
       - name: Compile packages/mangler-html-attributes
         working-directory: packages/mangler-html-attributes
@@ -46,8 +46,8 @@ jobs:
       - name: Install monorepo dependencies
         working-directory: ./
         run: npm ci
-      - name: Install packages/undefined dependencies
-        working-directory: ./packages/undefined
+      - name: Install packages/mangler-html-attributes dependencies
+        working-directory: ./packages/mangler-html-attributes
         run: npm ci
       - name: Run test suite for packages/mangler-html-attributes
         run: npm run coverage -- mangler-html-attributes

@@ -25,8 +25,8 @@ jobs:
       - name: Install monorepo dependencies
         working-directory: ./
         run: npm ci
-      - name: Install packages/undefined dependencies
-        working-directory: ./packages/undefined
+      - name: Install packages/mangler-css-variables dependencies
+        working-directory: ./packages/mangler-css-variables
         run: npm ci
       - name: Compile packages/mangler-css-variables
         working-directory: packages/mangler-css-variables
@@ -46,8 +46,8 @@ jobs:
       - name: Install monorepo dependencies
         working-directory: ./
         run: npm ci
-      - name: Install packages/undefined dependencies
-        working-directory: ./packages/undefined
+      - name: Install packages/mangler-css-variables dependencies
+        working-directory: ./packages/mangler-css-variables
         run: npm ci
       - name: Run test suite for packages/mangler-css-variables
         run: npm run coverage -- mangler-css-variables

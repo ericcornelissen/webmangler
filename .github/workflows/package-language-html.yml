@@ -26,8 +26,8 @@ jobs:
       - name: Install monorepo dependencies
         working-directory: ./
         run: npm ci
-      - name: Install packages/undefined dependencies
-        working-directory: ./packages/undefined
+      - name: Install packages/language-html dependencies
+        working-directory: ./packages/language-html
         run: npm ci
       - name: Run benchmarks for packages/language-html
         run: npm run benchmark -- language-html
@@ -45,8 +45,8 @@ jobs:
       - name: Install monorepo dependencies
         working-directory: ./
         run: npm ci
-      - name: Install packages/undefined dependencies
-        working-directory: ./packages/undefined
+      - name: Install packages/language-html dependencies
+        working-directory: ./packages/language-html
         run: npm ci
       - name: Compile packages/language-html
         working-directory: packages/language-html
@@ -66,8 +66,8 @@ jobs:
       - name: Install monorepo dependencies
         working-directory: ./
         run: npm ci
-      - name: Install packages/undefined dependencies
-        working-directory: ./packages/undefined
+      - name: Install packages/language-html dependencies
+        working-directory: ./packages/language-html
         run: npm ci
       - name: Run test suite for packages/language-html
         run: npm run coverage -- language-html

@@ -54,7 +54,7 @@ function createBenchmarkJob(pkg) {
     runs-on: ${JOB_RUNS_ON}
     needs: [${JOB_NAME_TEST}]
     steps:
-      ${commonJobSetup()}
+      ${commonJobSetup(pkg)}
       - name: Run benchmarks for packages/${pkg}
         run: npm run benchmark -- ${pkg}
   `;
@@ -65,7 +65,7 @@ function createCompileJob(pkg) {
     name: Compile package ${pkg}
     runs-on: ${JOB_RUNS_ON}
     steps:
-      ${commonJobSetup()}
+      ${commonJobSetup(pkg)}
       - name: Compile packages/${pkg}
         working-directory: packages/${pkg}
         run: npm run compile
@@ -83,7 +83,7 @@ function createTestJob(pkg) {
     runs-on: ${JOB_RUNS_ON}
     needs: [${JOB_NAME_COMPILE}]
     steps:
-      ${commonJobSetup()}
+      ${commonJobSetup(pkg)}
       - name: Run test suite for packages/${pkg}
         run: npm run coverage -- ${pkg}
       - name: Upload coverage to Codecov
