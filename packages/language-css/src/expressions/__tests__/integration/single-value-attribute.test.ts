@@ -1,18 +1,18 @@
-import type { SingleValueAttributeOptions } from "../../options";
-import type { CssRulesetValuesSets } from "./types";
+import type { SingleValueAttributeOptions } from "../../../options";
+import type { CssRulesetValuesSets } from "../common";
 
 import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
-import { getAllMatches } from "./test-helpers";
-import { buildCssRulesets } from "./builders";
 import {
   attributeSelectorOperators,
-  valuePresets,
+  buildCssRulesets,
+  getAllMatches,
   selectorCombinators,
-} from "./values";
+  valuePresets,
+} from "../common";
 
-import expressionsFactory from "../single-value-attributes";
+import expressionsFactory from "../../single-value-attributes";
 
 suite("CSS - Single Value Attribute Expression Factory", function() {
   type TestScenario = {

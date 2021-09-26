@@ -69,6 +69,29 @@ const whitespace: string[] = [
 ];
 
 /**
+ * The full list of CSS selector combinators.
+ */
+ export const selectorCombinators: string[] = [
+  ...whitespace.filter((s) => s !== ""),
+  ",",
+  ">",
+  "+",
+  "~",
+  " ,",
+  " >",
+  " +",
+  " ~",
+  ", ",
+  "> ",
+  "+ ",
+  "~ ",
+  " , ",
+  " > ",
+  " + ",
+  " ~ ",
+];
+
+/**
  * A collection of sample values for testing the JavaScript language plugin.
  */
 export const sampleValues = {

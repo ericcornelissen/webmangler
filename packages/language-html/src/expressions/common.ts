@@ -46,7 +46,8 @@ const afterAttributeName = `(?:\\=|${afterAttribute})`;
 /**
  * Regular Expression pattern as a string for any number of attributes in HTML.
  */
-const attributes = `(?:[^>\\s=]+(?:\\s*=\\s*(${anyString}|[^>\\s"']*))?\\s+)*`;
+const attributes =
+  `(?:[^>\\s=]+(?:\\s*=\\s*(?:${anyString}|[^>\\s"']*))?\\s+)+`;
 
 /**
  * Regular Expression pattern as a string of a comment in HTML.

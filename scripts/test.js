@@ -15,12 +15,16 @@ import * as paths from "./paths.js";
 
 const BENCHMARK_FLAG = "--benchmark";
 const COVERAGE_FLAG = "--coverage";
+const INTEGRATION_FLAG = "--integration";
 const MUTATION_FLAG = "--mutation";
+const UNIT_FLAG = "--unit";
 const WATCH_FLAG = "--watch";
 
 const {
+  TEST_TYPE_ALL,
   TEST_TYPE_BENCHMARK,
-  TEST_TYPE_TEST,
+  TEST_TYPE_INTEGRATION,
+  TEST_TYPE_UNIT,
 } = mocharc._constants;
 
 const nycBin = path.resolve(paths.nodeModules, ".bin", "nyc");
@@ -136,8 +140,12 @@ function getTestType(argv) {
     switch (arg) {
       case BENCHMARK_FLAG:
         return TEST_TYPE_BENCHMARK;
+      case INTEGRATION_FLAG:
+        return TEST_TYPE_INTEGRATION;
+      case UNIT_FLAG:
+        return TEST_TYPE_UNIT;
     }
   }
 
-  return TEST_TYPE_TEST;
+  return TEST_TYPE_ALL;
 }

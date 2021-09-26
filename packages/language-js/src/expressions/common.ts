@@ -30,7 +30,7 @@ const inlineComment = "(?:\\/\\*.*?\\*\\/)";
 /**
  * Regular Expression pattern as a string for a line comment in JavaScript.
  */
-const lineComment = "(?:\\/\\/[^\\r\\n]+\\r?\\n?)";
+const lineComment = "(?:\\/\\/[^\\r\\n]*\\r?\\n?)";
 
 /**
  * Regular Expression pattern as a string for any comment in JavaScript.

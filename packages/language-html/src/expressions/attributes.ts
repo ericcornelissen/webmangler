@@ -20,7 +20,7 @@ function newElementAttributeExpressions(): Iterable<MangleExpression> {
           |
           (?<=${patterns.tagOpen})
           (?<${GROUP_MAIN}>
-            ${patterns.attributes}
+            (?:${patterns.attributes})?
             %s
           )
           (?=${patterns.afterAttributeName})
