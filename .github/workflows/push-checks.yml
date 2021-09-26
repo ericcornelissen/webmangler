@@ -12,25 +12,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Use Node.js 15
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15.14.0
+          cache: npm
+      - name: Get filters string
+        id: filters
+        run: |
+          export FILTERS=$(node scripts/ci/get-filters.js)
+          FILTERS="${FILTERS//'%'/'%25'}"
+          FILTERS="${FILTERS//$'\n'/'%0A'}"
+          FILTERS="${FILTERS//$'\r'/'%0D'}"
+          echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes
         uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: |
-            benchmarking: packages/benchmarking/src/**
-            cli: packages/cli/src/**
-            core: packages/core/src/**
-            language-css: packages/language-css/src/**
-            language-html: packages/language-html/src/**
-            language-js: packages/language-js/src/**
-            language-utils: packages/language-utils/src/**
-            mangler-css-classes: packages/mangler-css-classes/src/**
-            mangler-css-variables: packages/mangler-css-variables/src/**
-            mangler-html-attributes: packages/mangler-html-attributes/src/**
-            mangler-html-ids: packages/mangler-html-ids/src/**
-            mangler-utils: packages/mangler-utils/src/**
-            testing: packages/testing/src/**
-            types: packages/types/src/**
+            ${{ steps.filters.outputs.filters }}
   benchmark:
     name: Benchmark
     runs-on: ubuntu-latest
