@@ -127,6 +127,22 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
       ],
     },
     {
+      name: "selector in media query",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        attributeNames: ["data-foo"],
+      },
+      expected: ["bar"],
+      getValuesSets: () => [
+        {
+          beforeRuleset: ["@media (screen) {"],
+          selector: generateAttributeSelectors("data-foo", "bar"),
+          declarations: valuePresets.declarations,
+          afterRuleset: ["}"],
+        },
+      ],
+    },
+    {
       name: "attribute selector-like strings",
       pattern: "[a-z]+",
       factoryOptions: {
