@@ -64,6 +64,15 @@ const importantRule: string[] = [
 ];
 
 /**
+ * A list of valid CSS media queries.
+ */
+const mediaQueries: string[] = [
+  "@media only screen and (max-width: 1080px)",
+  "@media not print and (min-width: 1920px)",
+  "@media (orientation: portrait)",
+];
+
+/**
  * A list of valid CSS property names.
  */
 const propertyNames: string[] = [
@@ -163,8 +172,9 @@ export const sampleValues = {
   classSelectors,
   comments,
   declarations,
-  importantRule,
   idSelectors,
+  importantRule,
+  mediaQueries,
   propertyNames,
   pseudoElementSelectors,
   pseudoSelectors,

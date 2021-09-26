@@ -8,6 +8,7 @@ import {
   attributeSelectorOperators,
   buildCssRulesets,
   getAllMatches,
+  sampleValues,
   selectorCombinators,
   valuePresets,
 } from "../common";
@@ -135,7 +136,9 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
       expected: ["bar"],
       getValuesSets: () => [
         {
-          beforeRuleset: ["@media (screen) {"],
+          beforeRuleset: [
+            ...sampleValues.mediaQueries.map((s) => `${s}{`),
+          ],
           selector: generateAttributeSelectors("data-foo", "bar"),
           declarations: valuePresets.declarations,
           afterRuleset: ["}"],
