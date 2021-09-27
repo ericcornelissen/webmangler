@@ -8,7 +8,9 @@ jobs:
     name: Detect changed packages
     runs-on: ubuntu-latest
     outputs:
-      packages: ${{ steps.filter.outputs.changes }}
+      all-packages: ${{ steps.all-filter.outputs.changes }}
+      benchmarked-packages: ${{ steps.benchmarked-filter.outputs.changes }}
+      tested-packages: ${{ steps.tested-filter.outputs.changes }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -17,28 +19,56 @@ jobs:
         with:
           node-version: 15.14.0
           cache: npm
-      - name: Get filters string
-        id: filters
+      - name: Get filters string for all packages
+        id: all-filters
         run: |
-          export FILTERS=$(node scripts/ci/get-filters.js)
+          export FILTERS=$(node scripts/ci/get-filters.js all)
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
-      - name: Check for file changes
+      - name: Check for file changes in all packages
         uses: dorny/paths-filter@v2
-        id: filter
+        id: all-filter
         with:
           filters: |
-            ${{ steps.filters.outputs.filters }}
+            ${{ steps.all-filters.outputs.filters }}
+      - name: Get filters string for benchmark job
+        id: benchmarked-filters
+        run: |
+          export FILTERS=$(node scripts/ci/get-filters.js benchmark)
+          FILTERS="${FILTERS//'%'/'%25'}"
+          FILTERS="${FILTERS//$'\n'/'%0A'}"
+          FILTERS="${FILTERS//$'\r'/'%0D'}"
+          echo "::set-output name=filters::$FILTERS"
+      - name: Check for file changes in benchmarked packages
+        uses: dorny/paths-filter@v2
+        id: benchmarked-filter
+        with:
+          filters: |
+            ${{ steps.benchmarked-filters.outputs.filters }}
+      - name: Get filters string for test job
+        id: tested-filters
+        run: |
+          export FILTERS=$(node scripts/ci/get-filters.js test)
+          FILTERS="${FILTERS//'%'/'%25'}"
+          FILTERS="${FILTERS//$'\n'/'%0A'}"
+          FILTERS="${FILTERS//$'\r'/'%0D'}"
+          echo "::set-output name=filters::$FILTERS"
+      - name: Check for file changes in tested packages
+        uses: dorny/paths-filter@v2
+        id: tested-filter
+        with:
+          filters: |
+            ${{ steps.tested-filters.outputs.filters }}
   benchmark:
     name: Benchmark
     runs-on: ubuntu-latest
     needs: [changes, build, test]
-    if: ${{ join(fromJSON(needs.changes.outputs.packages), '') != '' }}
+    if: ${{ needs.changes.outputs.benchmarked-packages != '[]' }}
     strategy:
       matrix:
-        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+        package: ${{ fromJSON(needs.changes.outputs.benchmarked-packages) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -55,13 +85,13 @@ jobs:
       - name: Run benchmarks for packages/${{ matrix.package }}
         run: npm run benchmark -- ${{ matrix.package }}
   build:
-    name: Build
+    name: Compile
     runs-on: ubuntu-latest
     needs: [changes]
-    if: ${{ join(fromJSON(needs.changes.outputs.packages), '') != '' }}
+    if: ${{ needs.changes.outputs.all-packages != '[]' }}
     strategy:
       matrix:
-        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+        package: ${{ fromJSON(needs.changes.outputs.all-packages) }}
     defaults:
       run:
         working-directory: packages/${{ matrix.package }}
@@ -99,10 +129,10 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     needs: [changes, build]
-    if: ${{ join(fromJSON(needs.changes.outputs.packages), '') != '' }}
+    if: ${{ needs.changes.outputs.tested-packages != '[]' }}
     strategy:
       matrix:
-        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+        package: ${{ fromJSON(needs.changes.outputs.tested-packages) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
