@@ -43,11 +43,6 @@ const commentClose = "(?:\\*\\/)";
 const comment = `(?:${commentOpen}.*?${commentClose})`;
 
 /**
- * Regular Expression pattern as a string of a declaration block in CSS.
- */
-const declarationBlock = "(?:\\{[^\\}]*\\})";
-
-/**
  * Regular Expression pattern as a string for a double quoted string in CSS.
  */
 const doubleQuotedString = "(?:\"(?:\\\\\"|[^\"])*\")";
@@ -79,7 +74,6 @@ export const patterns = {
   comment,
   commentClose,
   commentOpen,
-  declarationBlock,
   doubleQuotedString,
   quotes,
   singleQuotedString,

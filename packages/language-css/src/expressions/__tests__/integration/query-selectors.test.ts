@@ -8,6 +8,7 @@ import {
   buildCssRulesets,
   getAllMatches,
   valuePresets,
+  sampleValues,
   selectorCombinators,
 } from "../common";
 
@@ -122,6 +123,24 @@ suite("CSS - Query Selector Expression Factory", function() {
         {
           selector: ["#bar"],
           declarations: valuePresets.declarations,
+        },
+      ],
+    },
+    {
+      name: "selector in media query",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: ["foobar"],
+      getValuesSets: () => [
+        {
+          beforeRuleset: [
+            ...sampleValues.mediaQueries.map((s) => `${s}{`),
+          ],
+          selector: [".foobar"],
+          declarations: valuePresets.declarations,
+          afterRuleset: ["}"],
         },
       ],
     },
