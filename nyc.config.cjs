@@ -2,12 +2,13 @@
 
 const mocharc = require("./.mocharc.cjs");
 
+const { compiled, packages, reports, src, temp } = mocharc._dirs;
 const { packagesExpr, packagesList } = mocharc._values;
 
 const packagesExclusions = [];
 if (packagesList.includes("cli")) {
-  packagesExclusions.push("packages/cli/src/index.ts");
-  packagesExclusions.push("packages/cli/src/main.ts");
+  packagesExclusions.push(`${packages}/cli/${src}/index.ts`);
+  packagesExclusions.push(`${packages}/cli/${src}/main.ts`);
 }
 
 module.exports = {
@@ -36,19 +37,18 @@ module.exports = {
     ".ts",
   ],
   include: [
-    `packages/${packagesExpr}/**/*.ts`,
+    `${packages}/${packagesExpr}/**/*.ts`,
   ],
   exclude: [
-    "_reports/",
-    ".temp/",
+    `${reports}/`,
+    `${temp}/`,
     "node_modules/",
-    "packages/**/*.bench.ts",
-    "packages/**/*.test.ts",
-    "packages/**/build/",
-    "packages/**/lib/",
+    `${packages}/**/*.bench.ts`,
+    `${packages}/**/*.test.ts`,
+    `${packages}/**/${compiled}/`,
     ...packagesExclusions,
   ],
 
-  reportDir: "./_reports/coverage",
-  tempDir: "./.temp/nyc",
+  reportDir: `./${reports}/coverage`,
+  tempDir: `./${temp}/nyc`,
 };
