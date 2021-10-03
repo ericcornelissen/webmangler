@@ -1,9 +1,9 @@
 "use strict";
 
-const mocharc = require("./.mocharc.cjs");
+const { dirs, values } = require("./.values.cjs");
 
-const { compiled, packages, reports, src, temp } = mocharc._dirs;
-const { packagesExpr, packagesList } = mocharc._values;
+const { compiled, packages, reports, src, temp } = dirs;
+const { packagesExpr, packagesList } = values;
 
 const packagesExclusions = [];
 if (packagesList.includes("cli")) {

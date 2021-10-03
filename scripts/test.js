@@ -8,7 +8,7 @@
 import fs from "fs";
 import * as path from "path";
 
-import mocharc from "../.mocharc.cjs";
+import values from "../.values.cjs";
 import execSync from "./utilities/exec.js";
 import log from "./utilities/log.js";
 import * as paths from "./paths.js";
@@ -25,7 +25,7 @@ const {
   TEST_TYPE_BENCHMARK,
   TEST_TYPE_INTEGRATION,
   TEST_TYPE_UNIT,
-} = mocharc._constants;
+} = values.constants;
 
 const nycBin = path.resolve(paths.nodeModules, ".bin", "nyc");
 const mochaBin = path.resolve(paths.nodeModules, ".bin", "mocha");

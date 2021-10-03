@@ -1,9 +1,9 @@
 "use strict";
 
-const mocharc = require("./.mocharc.cjs");
+const { dirs, values } = require("./.values.cjs");
 
-const { mocks, packages, reports, src, temp, tests } = mocharc._dirs;
-const { packagesExpr, packagesList } = mocharc._values;
+const { mocks, packages, reports, src, temp, tests } = dirs;
+const { packagesExpr, packagesList } = values;
 
 module.exports = {
   coverageAnalysis: "perTest",
