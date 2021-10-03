@@ -6,6 +6,7 @@
  */
 
 import fs from "fs";
+import gitChangedFiles from "git-changed-files";
 import * as path from "path";
 
 import mocharc from "../.mocharc.cjs";
@@ -33,12 +34,12 @@ const strykerBin = path.resolve(paths.nodeModules, ".bin", "stryker");
 
 main(process.argv, process.env);
 
-function main(argv, env) {
+async function main(argv, env) {
   argv = argv.slice(2);
 
   const cmd = getCliCommand(argv);
   const cmdArgs = getCommandArgs(argv);
-  const packages = getPackagesToRun(argv, env);
+  const packages = await getPackagesToRun(argv, env);
   const testType = getTestType(argv);
 
   if (argv.includes(MUTATION_FLAG)) {
@@ -111,7 +112,7 @@ function getCommandArgs(argv) {
   return cliArgs;
 }
 
-function getPackagesToRun(argv, env) {
+async function getPackagesToRun(argv, env) {
   const packagesArgs = argv.filter((arg) => !arg.startsWith("-"));
   if (env.TEST_PACKAGES) {
     const envPackages = env.TEST_PACKAGES.split(",");
@@ -119,7 +120,8 @@ function getPackagesToRun(argv, env) {
   }
 
   if (packagesArgs.length === 0) {
-    return;
+    const changedPackages = await getVcsChangedPackages();
+    return changedPackages.length > 0 ? changedPackages.join(",") : undefined;
   }
 
   const allPackagesExist = packagesArgs.every((packageName) => {
@@ -133,6 +135,20 @@ function getPackagesToRun(argv, env) {
   }
 
   return packagesExpr;
+}
+
+async function getVcsChangedPackages() {
+  const { committedFiles, unCommittedFiles } = await gitChangedFiles({
+    baseBranch: "main",
+    formats: ["*.ts"],
+  });
+
+  const changedFiles = committedFiles.concat(unCommittedFiles);
+  const changedPackages = changedFiles
+    .map((filePath) => filePath.split(path.sep)[1])
+    .filter((pkg, index, arr) => arr.indexOf(pkg) === index);
+
+  return changedPackages;
 }
 
 function getTestType(argv) {
