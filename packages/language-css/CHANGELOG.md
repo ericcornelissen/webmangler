@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.26] - 2021-10-04
+
 - Fix bug where some selectors in media query would not be recognized. ([#173])
 
 ## [0.1.25] - 2021-08-23
