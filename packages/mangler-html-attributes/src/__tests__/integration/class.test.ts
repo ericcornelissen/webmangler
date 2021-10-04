@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import HtmlAttributeMangler from "../class";
+import HtmlAttributeMangler from "../../class";
 
 suite("HTML Attribute Mangler", function() {
   suite("Configuration", function() {
