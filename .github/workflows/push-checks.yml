@@ -25,11 +25,15 @@ jobs:
           filters: |
             changed:
               - 'packages/${{ matrix.package }}/**'
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        if: steps.changes.outputs.changed == 'true'
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
         if: steps.changes.outputs.changed == 'true'
@@ -61,9 +65,6 @@ jobs:
           - mangler-utils
           - testing
           - types
-    defaults:
-      run:
-        working-directory: packages/${{ matrix.package }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -74,20 +75,25 @@ jobs:
           filters: |
             changed:
               - 'packages/${{ matrix.package }}/**'
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        if: steps.changes.outputs.changed == 'true'
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
-        working-directory: ./
         if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Install packages/${{ matrix.package }} dependencies
+        working-directory: packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Compile packages/${{ matrix.package }}
+        working-directory: packages/${{ matrix.package }}
         if: steps.changes.outputs.changed == 'true'
         run: npm run compile
   lint:
@@ -96,10 +102,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
         run: npm ci
@@ -135,11 +144,15 @@ jobs:
           filters: |
             changed:
               - 'packages/${{ matrix.package }}/**'
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        if: steps.changes.outputs.changed == 'true'
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
         if: steps.changes.outputs.changed == 'true'
