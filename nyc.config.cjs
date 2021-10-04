@@ -1,14 +1,24 @@
 "use strict";
 
-const { dirs, values } = require("./.values.cjs");
+const values = require("./.values.cjs");
 
-const { compiled, packages, reports, src, temp } = dirs;
-const { packagesExpr, packagesList } = values;
+const {
+  dependenciesDir,
+  compiledDir,
+  packagesDir,
+  packagesExpr,
+  packagesList,
+  reportsDir,
+  srcDir,
+  tempDir,
+  testSuffixBenchmark,
+  testSuffixTest,
+} = values;
 
 const packagesExclusions = [];
 if (packagesList.includes("cli")) {
-  packagesExclusions.push(`${packages}/cli/${src}/index.ts`);
-  packagesExclusions.push(`${packages}/cli/${src}/main.ts`);
+  packagesExclusions.push(`${packagesDir}/cli/${srcDir}/index.ts`);
+  packagesExclusions.push(`${packagesDir}/cli/${srcDir}/main.ts`);
 }
 
 module.exports = {
@@ -37,18 +47,17 @@ module.exports = {
     ".ts",
   ],
   include: [
-    `${packages}/${packagesExpr}/**/*.ts`,
+    `${packagesDir}/${packagesExpr}/**/*.ts`,
   ],
   exclude: [
-    `${reports}/`,
-    `${temp}/`,
-    "node_modules/",
-    `${packages}/**/*.bench.ts`,
-    `${packages}/**/*.test.ts`,
-    `${packages}/**/${compiled}/`,
+    `${reportsDir}/`,
+    `${tempDir}/`,
+    `${dependenciesDir}/`,
+    `${packagesDir}/**/*.{${testSuffixBenchmark},${testSuffixTest}}.ts`,
+    `${packagesDir}/**/${compiledDir}/`,
     ...packagesExclusions,
   ],
 
-  reportDir: `./${reports}/coverage`,
-  tempDir: `./${temp}/nyc`,
+  reportDir: `./${reportsDir}/coverage`,
+  tempDir: `./${tempDir}/nyc`,
 };

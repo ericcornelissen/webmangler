@@ -1,16 +1,23 @@
 "use strict";
 
-const { dirs, values } = require("./.values.cjs");
+const values = require("./.values.cjs");
 
-const { mocks, packages, reports, src, temp, tests } = dirs;
-const { packagesExpr, packagesList } = values;
+const {
+  packagesDir,
+  packagesExpr,
+  packagesList,
+  reportsDir,
+  srcDir,
+  tempDir,
+  testDirs,
+} = values;
 
 module.exports = {
   coverageAnalysis: "perTest",
   inPlace: false,
   mutate: [
-    `${packages}/${packagesExpr}/${src}/**/*.ts`,
-    `!**/{${mocks},${tests}}/**/*.ts`,
+    `${packagesDir}/${packagesExpr}/${srcDir}/**/*.ts`,
+    `!**/${testDirs}/**/*.ts`,
   ],
   commandRunner: {
     command: `npm run test -- ${packagesList.join(" ")}`,
@@ -19,7 +26,7 @@ module.exports = {
   timeoutMS: 25000,
   timeoutFactor: 2.5,
 
-  disableTypeChecks: `${packages}/${packagesExpr}/${src}/**/*.ts`,
+  disableTypeChecks: `${packagesDir}/${packagesExpr}/${srcDir}/**/*.ts`,
   checkers: ["typescript"],
   tsconfigFile: "tsconfig.json",
 
@@ -29,7 +36,7 @@ module.exports = {
     "progress",
   ],
   htmlReporter: {
-    baseDir: `${reports}/mutation`,
+    baseDir: `${reportsDir}/mutation`,
   },
   thresholds: {
     high: 80,
@@ -37,6 +44,6 @@ module.exports = {
     break: 50,
   },
 
-  tempDirName: `${temp}/stryker`,
+  tempDirName: `${tempDir}/stryker`,
   cleanTempDir: false,
 };

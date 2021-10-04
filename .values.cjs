@@ -1,9 +1,24 @@
 "use strict";
 
-const TEST_TYPE_ALL = "all";
-const TEST_TYPE_BENCHMARK = "benchmark";
-const TEST_TYPE_INTEGRATION = "integration";
-const TEST_TYPE_UNIT = "unit";
+const testSuffixBenchmark = "bench";
+const testSuffixTest = "test";
+
+const testTypeTests = "tests";
+const testTypeBenchmark = "benchmark";
+const testTypeIntegration = "integration";
+const testTypeUnit = "unit";
+
+const compiledDir = "{build,lib}";
+const dependenciesDir = "node_modules";
+const githubDir = ".github";
+const mocksDir = "__mocks__";
+const packagesDir = "packages";
+const scriptsDir = "scripts";
+const srcDir = "src";
+const reportsDir = "_reports";
+const tempDir = ".temp";
+const testDataDir = "testdata";
+const testsDir = "__tests__";
 
 let packagesExpr = "*";
 let packagesList = [packagesExpr];
@@ -16,25 +31,29 @@ if (process.env.TEST_PACKAGES !== undefined) {
 }
 
 module.exports = {
-  constants: {
-    TEST_TYPE_ALL,
-    TEST_TYPE_BENCHMARK,
-    TEST_TYPE_INTEGRATION,
-    TEST_TYPE_UNIT,
-  },
-  dirs: {
-    packages: "packages",
-    compiled: "{build,lib}",
-    src: "src",
+  // Directories
+  compiledDir,
+  dependenciesDir,
+  githubDir,
+  mocksDir,
+  packagesDir,
+  reportsDir,
+  scriptsDir,
+  srcDir,
+  tempDir,
+  testDataDir,
+  testDirs: `{${testsDir},${mocksDir}}`,
+  testsDir,
 
-    tests: "__tests__",
-    mocks: "__mocks__",
+  // Computed
+  packagesExpr,
+  packagesList,
 
-    reports: "_reports",
-    temp: ".temp",
-  },
-  values: {
-    packagesExpr,
-    packagesList,
-  },
+  // Tests
+  testSuffixBenchmark,
+  testSuffixTest,
+  testTypeBenchmark,
+  testTypeIntegration,
+  testTypeTests,
+  testTypeUnit,
 };

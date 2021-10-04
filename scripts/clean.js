@@ -9,17 +9,24 @@ import * as path from "path";
 import execSync from "./utilities/exec.js";
 import log from "./utilities/log.js";
 import * as paths from "./paths.js";
+import values from "../.values.cjs";
+
+const {
+  reportsDir,
+  tempDir,
+  testDataDir,
+} = values;
 
 const HARD_FLAG = "--hard";
 
 const ALWAYS_DELETE = [
-  ".temp/",
+  `${tempDir}/`,
   "npm-debug.log",
   "stryker.log",
 ];
 
 const HARD_DELETE_ONLY = [
-  "_reports/",
+  `${reportsDir}/`,
   ".eslintcache",
 ];
 
@@ -49,7 +56,7 @@ function removeFilesAndFolders(argv) {
 
 function resetTestData() {
   log.reprint("Resetting testdata...");
-  execSync("git", ["checkout", "HEAD", "--", "./testdata"]);
+  execSync("git", ["checkout", "HEAD", "--", `./${testDataDir}`]);
 }
 
 function cleanPackages(argv) {
