@@ -1,109 +1,136 @@
+import type { MangleOptions } from "@webmangler/types";
+
+import type { HtmlAttributeManglerOptions } from "../../types";
+
 import { expect } from "chai";
+import { toArray } from "lodash";
 
 import HtmlAttributeMangler from "../../class";
 
 suite("HTML Attribute Mangler", function() {
-  suite("Configuration", function() {
-    suite("::attrNamePattern", function() {
-      const DEFAULT_PATTERNS = ["data-[a-z-]+"];
+  const defaultIgnorePatterns: string[] = [];
+  const defaultManglePrefix = "data-";
+  const defaultPatterns: string[] = [
+    "data-[a-z-]+",
+  ];
+  const alwaysReservedNames: string[] = [
+    "([0-9]|-|_).*",
+  ];
 
-      test("default patterns", function() {
-        const htmlAttributeMangler = new HtmlAttributeMangler();
-        const result = htmlAttributeMangler.options();
-        expect(result).to.deep.include({ patterns: DEFAULT_PATTERNS });
+  interface TestCase {
+    readonly name: string;
+    readonly options?: HtmlAttributeManglerOptions;
+  }
+
+  const testCases: TestCase[] = [
+    {
+      name: "no options",
+      options: undefined,
+    },
+    {
+      name: "empty options",
+      options: { },
+    },
+    {
+      name: "attribute name patterns only",
+      options: {
+        attrNamePattern: ["foo", "bar"],
+      },
+    },
+    {
+      name: "ignore patterns only",
+      options: {
+        ignoreAttrNamePattern: ["foo", "bar"],
+      },
+    },
+    {
+      name: "reserved patterns only",
+      options: {
+        reservedAttrNames: ["foo", "bar"],
+      },
+    },
+    {
+      name: "keepAttrPrefix only",
+      options: {
+        keepAttrPrefix: "cls-",
+      },
+    },
+  ];
+
+  for (const { name, options } of testCases) {
+    suite(`${name} - ::options()`, function() {
+      let mangleOptions: MangleOptions;
+
+      setup(function() {
+        const subject = new HtmlAttributeMangler(options);
+        mangleOptions = subject.options();
       });
 
-      test("custom pattern", function() {
-        const pattern = "foo(bar|baz)-[a-z]+";
-
-        const htmlAttributeMangler = new HtmlAttributeMangler({
-          attrNamePattern: pattern,
-        });
-        const result = htmlAttributeMangler.options();
-        expect(result).to.deep.include({ patterns: pattern });
+      test("the character set is defined", function() {
+        const charSet = mangleOptions.charSet;
+        expect(charSet).not.to.be.undefined;
       });
 
-      test("custom patterns", function() {
-        const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
+      test("the ignore patterns are defined correctly", function() {
+        const ignorePatterns = toArray(mangleOptions.ignorePatterns);
+        expect(ignorePatterns).not.to.be.undefined;
 
-        const htmlAttributeMangler = new HtmlAttributeMangler({
-          attrNamePattern: patterns,
-        });
-        const result = htmlAttributeMangler.options();
-        expect(result).to.deep.include({ patterns: patterns });
+        const expected: string[] = [];
+        if (options?.ignoreAttrNamePattern) {
+          expected.push(...options.ignoreAttrNamePattern);
+        } else {
+          expected.push(...defaultIgnorePatterns);
+        }
+
+        expect(ignorePatterns).to.include.members(expected);
+        expect(ignorePatterns).to.have.length(expected.length);
+      });
+
+      test("the mangle prefix is defined correctly", function() {
+        const manglePrefix = mangleOptions.manglePrefix;
+        expect(manglePrefix).not.to.be.undefined;
+
+        if (options?.keepAttrPrefix) {
+          expect(manglePrefix).to.equal(options.keepAttrPrefix);
+        } else {
+          expect(manglePrefix).to.equal(defaultManglePrefix);
+        }
+      });
+
+      test("the patterns are defined correctly", function() {
+        const patterns = toArray(mangleOptions.patterns);
+        expect(patterns).not.to.be.undefined;
+
+        const expected: string[] = [];
+        if (options?.attrNamePattern) {
+          expected.push(...options.attrNamePattern);
+        } else {
+          expected.push(...defaultPatterns);
+        }
+
+        expect(patterns).to.include.members(expected);
+        expect(patterns).to.have.length(expected.length);
+      });
+
+      test("the reserved names are defined correctly", function() {
+        const reservedNames = toArray(mangleOptions.reservedNames);
+        expect(reservedNames).not.to.be.undefined;
+
+        const expected: string[] = [
+          ...alwaysReservedNames,
+        ];
+        if (options?.reservedAttrNames) {
+          expected.push(...options.reservedAttrNames);
+        }
+
+        expect(reservedNames).to.include.members(expected);
+        expect(reservedNames).to.have.length(expected.length);
+      });
+
+      test("the language options are defined", function() {
+        const languageOptions = mangleOptions.languageOptions;
+        expect(languageOptions).not.to.be.undefined;
       });
     });
-
-    suite("::ignoreAttrNamePattern", function() {
-      const DEFAULT_PATTERNS: string[] = [];
-
-      test("default patterns", function() {
-        const htmlAttributeMangler = new HtmlAttributeMangler();
-        const result = htmlAttributeMangler.options();
-        expect(result).to.deep.include({ ignorePatterns: DEFAULT_PATTERNS });
-      });
-
-      test("one custom pattern", function() {
-        const ignorePatterns = "foo(bar|baz)-[a-z]+";
-
-        const htmlAttributeMangler = new HtmlAttributeMangler({
-          ignoreAttrNamePattern: ignorePatterns,
-        });
-        const result = htmlAttributeMangler.options();
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
-      });
-
-      test("multiple custom patterns", function() {
-        const ignorePatterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
-
-        const htmlAttributeMangler = new HtmlAttributeMangler({
-          ignoreAttrNamePattern: ignorePatterns,
-        });
-        const result = htmlAttributeMangler.options();
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
-      });
-    });
-
-    suite("::reservedAttrNames", function() {
-      test("default reserved", function() {
-        const htmlAttributeMangler = new HtmlAttributeMangler();
-        const result = htmlAttributeMangler.options();
-        expect(result).to.have.property("reservedNames").that.is.not.empty;
-      });
-
-      test("custom reserved", function() {
-        const reserved: string[] = ["foo", "bar"];
-
-        const htmlAttributeMangler = new HtmlAttributeMangler({
-          reservedAttrNames: reserved,
-        });
-
-        const result = htmlAttributeMangler.options();
-        expect(result).to.have.property("reservedNames");
-
-        const reservedNames = Array.from(result.reservedNames as string[]);
-        expect(reservedNames).to.include.members(reserved);
-      });
-    });
-
-    suite("::keepAttrPrefix", function() {
-      const DEFAULT_MANGLE_PREFIX = "data-";
-
-      test("default prefix", function() {
-        const htmlAttributeMangler = new HtmlAttributeMangler();
-        const result = htmlAttributeMangler.options();
-        expect(result).to.deep.include({ manglePrefix: DEFAULT_MANGLE_PREFIX });
-      });
-
-      test("custom prefix", function() {
-        const prefix = "foobar";
-
-        const htmlAttributeMangler = new HtmlAttributeMangler({
-          keepAttrPrefix: prefix,
-        });
-        const result = htmlAttributeMangler.options();
-        expect(result).to.deep.include({ manglePrefix: prefix });
-      });
-    });
-  });
+  }
 });
