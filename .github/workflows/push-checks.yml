@@ -14,10 +14,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Get filters string for all packages
         id: all-filters
@@ -72,10 +75,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
         run: npm ci
@@ -92,23 +98,24 @@ jobs:
     strategy:
       matrix:
         package: ${{ fromJSON(needs.changes.outputs.all-packages) }}
-    defaults:
-      run:
-        working-directory: packages/${{ matrix.package }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
-        working-directory: ./
         run: npm ci
       - name: Install packages/${{ matrix.package }} dependencies
+        working-directory: packages/${{ matrix.package }}
         run: npm ci
       - name: Compile packages/${{ matrix.package }}
+        working-directory: packages/${{ matrix.package }}
         run: npm run compile
   lint:
     name: Lint
@@ -116,10 +123,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
         run: npm ci
@@ -136,10 +146,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
         run: npm ci

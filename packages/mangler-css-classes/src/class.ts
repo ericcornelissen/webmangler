@@ -1,10 +1,6 @@
-import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+import type { CharSet } from "@webmangler/types";
 
-import type {
-  CssClassManglerOptions,
-  MultiValueAttributeOptions,
-  QuerySelectorOptions,
-} from "./types";
+import type { CssClassManglerOptions } from "./types";
 
 import {
   ALL_LETTER_CHARS,
@@ -12,13 +8,7 @@ import {
   SimpleManglerPlugin,
 } from "@webmangler/mangler-utils";
 
-const QUERY_SELECTOR_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<QuerySelectorOptions> = {
-  name: "query-selectors",
-  options: {
-    prefix: "\\.",
-  },
-};
+import * as helpers from "./helpers";
 
 /**
  * The CSS class mangler is a built-in plugin of _WebMangler_ that can be used
@@ -122,12 +112,6 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
  */
 class CssClassMangler extends SimpleManglerPlugin {
   /**
-   * The list of reserved strings that are always reserved because they are
-   * illegal class names.
-   */
-  private static readonly ALWAYS_RESERVED: string[] = ["(-|[0-9]).*"];
-
-  /**
    * The character set used by {@link CssClassMangler}.
    */
   private static readonly CHARACTER_SET: CharSet = [
@@ -135,32 +119,6 @@ class CssClassMangler extends SimpleManglerPlugin {
     ...ALL_NUMBER_CHARS,
     "-", "_",
   ];
-
-  /**
-   * The default ignore patterns used by a {@link CssClassMangler}.
-   */
-  private static readonly DEFAULT_IGNORE_PATTERNS: string[] = [];
-
-  /**
-   * The default patterns used by a {@link CssClassMangler}.
-   */
-  private static readonly DEFAULT_PATTERNS: string[] = ["cls-[a-zA-Z-_]+"];
-
-  /**
-   * The default prefix used by a {@link CssClassMangler}.
-   */
-  private static readonly DEFAULT_PREFIX = "";
-
-  /**
-   * The default reserved names used by a {@link CssClassMangler}.
-   */
-  private static readonly DEFAULT_RESERVED: string[] = [];
-
-  /**
-   * A list of the attributes always treated as `class` by {@link
-   * CssClassMangler}s.
-   */
-  private static readonly STANDARD_CLASS_ATTRIBUTES: string[] = ["class"];
 
   /**
    * Instantiate a new {@link CssClassMangler}.
@@ -172,106 +130,15 @@ class CssClassMangler extends SimpleManglerPlugin {
   constructor(options: CssClassManglerOptions={}) {
     super({
       charSet: CssClassMangler.CHARACTER_SET,
-      patterns: CssClassMangler.getPatterns(options.classNamePattern),
-      ignorePatterns: CssClassMangler.getIgnorePatterns(
-        options.ignoreClassNamePattern,
-      ),
-      reserved: CssClassMangler.getReserved(options.reservedClassNames),
-      prefix: CssClassMangler.getPrefix(options.keepClassNamePrefix),
+      patterns: helpers.getPatterns(options.classNamePattern),
+      ignorePatterns: helpers.getIgnorePatterns(options.ignoreClassNamePattern),
+      reserved: helpers.getReserved(options.reservedClassNames),
+      prefix: helpers.getPrefix(options.keepClassNamePrefix),
       languageOptions: [
-        QUERY_SELECTOR_EXPRESSION_OPTIONS,
-        CssClassMangler.getClassAttributeExpressionOptions(
-          options.classAttributes,
-        ),
+        helpers.getQuerySelectorExpressionOptions(),
+        helpers.getClassAttributeExpressionOptions(options.classAttributes),
       ],
     });
-  }
-
-  /**
-   * Get either the configured patterns or the default patterns.
-   *
-   * @param classNamePattern The configured patterns.
-   * @returns The patterns to be used.
-   */
-  private static getPatterns(
-    classNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (classNamePattern === undefined) {
-      return CssClassMangler.DEFAULT_PATTERNS;
-    }
-
-    return classNamePattern;
-  }
-
-  /**
-   * Get either the configured patterns or the default patterns.
-   *
-   * @param ignoreClassNamePattern The configured ignore patterns.
-   * @returns The ignore patterns to be used.
-   */
-  private static getIgnorePatterns(
-    ignoreClassNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (ignoreClassNamePattern === undefined) {
-      return CssClassMangler.DEFAULT_IGNORE_PATTERNS;
-    }
-
-    return ignoreClassNamePattern;
-  }
-
-  /**
-   * Get either the configured reserved names or the default reserved names.
-   *
-   * @param reservedClassNames The configured reserved names.
-   * @returns The reserved names to be used.
-   */
-  private static getReserved(
-    reservedClassNames?: Iterable<string>,
-  ): Iterable<string> {
-    let configured = reservedClassNames;
-    if (configured === undefined) {
-      configured = CssClassMangler.DEFAULT_RESERVED;
-    }
-
-    return [
-      ...CssClassMangler.ALWAYS_RESERVED,
-      ...configured,
-    ];
-  }
-
-  /**
-   * Get either the configured prefix or the default prefix.
-   *
-   * @param keepClassNamePrefix The configured prefix.
-   * @returns The prefix to be used.
-   */
-  private static getPrefix(keepClassNamePrefix?: string): string {
-    if (keepClassNamePrefix === undefined) {
-      return CssClassMangler.DEFAULT_PREFIX;
-    }
-
-    return keepClassNamePrefix;
-  }
-
-  /**
-   * Get the {@link MangleExpressionOptions} for mangling class-like attributes.
-   * The `class` attribute is always included.
-   *
-   * @param attributes The attributes to treat as `class`es.
-   * @returns The {@link MangleExpressionOptions}.
-   */
-  private static getClassAttributeExpressionOptions(
-    attributes: Iterable<string> = [],
-  ): MangleExpressionOptions<MultiValueAttributeOptions> {
-    return {
-      name: "multi-value-attributes",
-      options: {
-        attributeNames: new Set([
-          ...CssClassMangler.STANDARD_CLASS_ATTRIBUTES,
-          ...attributes,
-        ]),
-      },
-    };
   }
 }
 

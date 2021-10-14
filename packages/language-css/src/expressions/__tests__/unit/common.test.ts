@@ -285,40 +285,6 @@ suite("CSS - common expressions", function() {
       });
     });
 
-    suite("::declarationBlock", function() {
-      const getRegExp = () => {
-        return new RegExp(patterns.declarationBlock, "gm");
-      };
-
-      test("declaration blocks", function() {
-        const testCases = [
-          "{}",
-          "{color:red;}",
-          "{color:red;font:serif;}",
-          "{/* foobar */}",
-        ];
-
-        for (const testCase of testCases) {
-          const regExp = getRegExp();
-          const result = regExp.test(testCase);
-          expect(result).to.equal(true, `in "${testCase}"`);
-        }
-      });
-
-      test("no declaration block", function() {
-        const testCases = [
-          "",
-          "foobar",
-        ];
-
-        for (const testCase of testCases) {
-          const regExp = getRegExp();
-          const result = regExp.test(testCase);
-          expect(result).to.equal(false, `in "${testCase}"`);
-        }
-      });
-    });
-
     suite("::doubleQuotedString", function() {
       const getRegExp = () => {
         return new RegExp(patterns.doubleQuotedString, "gm");

@@ -67,18 +67,22 @@ export function buildCssRuleset(
   rulesetValues: CssRulesetValues,
 ): string {
   const {
+    beforeRuleset = "",
     beforeSelector = "",
     selector = DEFAULT_SELECTOR,
     afterSelector = "",
     declarations = "",
+    afterRuleset = "",
   } = rulesetValues;
 
-  return beforeSelector +
+  return beforeRuleset +
+    beforeSelector +
     selector +
     afterSelector +
     "{" +
     declarations +
-    "}";
+    "}" +
+    afterRuleset;
 }
 
 /**

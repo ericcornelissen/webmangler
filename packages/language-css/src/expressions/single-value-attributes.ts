@@ -26,9 +26,9 @@ function newAttributeSelectorSingleValueExpression(
     new SingleGroupMangleExpression(
       `
         (?:
-          (?:${patterns.declarationBlock}|${patterns.comment})
+          (?:${patterns.anyString}|${patterns.comment})
           |
-          (?<=
+          (?:
             \\[\\s*
             (?:${attributesPattern})\\s*
             (?:${patterns.attributeOperators})\\s*
@@ -36,7 +36,7 @@ function newAttributeSelectorSingleValueExpression(
             ${valuePrefix}
           )
           (?<${GROUP_MAIN}>%s)
-          (?=
+          (?:
             ${valueSuffix}
             \\s*\\k<${GROUP_QUOTE}>
             \\s*\\]
@@ -56,7 +56,7 @@ function newAttributeSelectorSingleValueExpression(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.24
+ * @version v0.1.26
  */
 export default function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
