@@ -13,10 +13,12 @@ type CssDeclarationKey =
   "afterValue";
 
 type CssRulesetKey =
+  "beforeRuleset" |
   "beforeSelector" |
   "selector" |
   "afterSelector" |
-  "declarations";
+  "declarations" |
+  "afterRuleset";
 
 /**
  * Type representing the values for the different parts of a CSS declaration.

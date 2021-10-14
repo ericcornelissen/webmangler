@@ -20,7 +20,13 @@ export function getPackages() {
 }
 
 export const resolve = {
-  fromRoot(relativePath) {
-    return path.resolve(projectRoot, relativePath);
+  _(...relativePath) {
+    return path.resolve(...relativePath);
+  },
+  fromPackage(packageName, ...relativePath) {
+    return path.resolve(packagesDir, packageName, ...relativePath);
+  },
+  fromRoot(...relativePath) {
+    return path.resolve(projectRoot, ...relativePath);
   },
 };

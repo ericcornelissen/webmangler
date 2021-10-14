@@ -4,91 +4,118 @@ on:
   - pull_request
 
 jobs:
+  changes:
+    name: Determine jobs
+    runs-on: ubuntu-latest
+    outputs:
+      all-packages: ${{ steps.all-filter.outputs.changes }}
+      benchmarked-packages: ${{ steps.benchmarked-filter.outputs.changes }}
+      tested-packages: ${{ steps.tested-filter.outputs.changes }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.node.outputs.VERSION }}
+          cache: npm
+      - name: Get filters string for all packages
+        id: all-filters
+        run: |
+          export FILTERS=$(node scripts/ci/get-filters.js all)
+          FILTERS="${FILTERS//'%'/'%25'}"
+          FILTERS="${FILTERS//$'\n'/'%0A'}"
+          FILTERS="${FILTERS//$'\r'/'%0D'}"
+          echo "::set-output name=filters::$FILTERS"
+      - name: Check for file changes in all packages
+        uses: dorny/paths-filter@v2
+        id: all-filter
+        with:
+          filters: |
+            ${{ steps.all-filters.outputs.filters }}
+      - name: Get filters string for benchmark job
+        id: benchmarked-filters
+        run: |
+          export FILTERS=$(node scripts/ci/get-filters.js benchmark)
+          FILTERS="${FILTERS//'%'/'%25'}"
+          FILTERS="${FILTERS//$'\n'/'%0A'}"
+          FILTERS="${FILTERS//$'\r'/'%0D'}"
+          echo "::set-output name=filters::$FILTERS"
+      - name: Check for file changes in benchmarked packages
+        uses: dorny/paths-filter@v2
+        id: benchmarked-filter
+        with:
+          filters: |
+            ${{ steps.benchmarked-filters.outputs.filters }}
+      - name: Get filters string for test job
+        id: tested-filters
+        run: |
+          export FILTERS=$(node scripts/ci/get-filters.js test)
+          FILTERS="${FILTERS//'%'/'%25'}"
+          FILTERS="${FILTERS//$'\n'/'%0A'}"
+          FILTERS="${FILTERS//$'\r'/'%0D'}"
+          echo "::set-output name=filters::$FILTERS"
+      - name: Check for file changes in tested packages
+        uses: dorny/paths-filter@v2
+        id: tested-filter
+        with:
+          filters: |
+            ${{ steps.tested-filters.outputs.filters }}
   benchmark:
     name: Benchmark
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [changes, compile, test]
+    if: ${{ needs.changes.outputs.benchmarked-packages != '[]' }}
     strategy:
       matrix:
-        package:
-          - core
-          - language-css
-          - language-html
-          - language-js
+        package: ${{ fromJSON(needs.changes.outputs.benchmarked-packages) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Check for file changes
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            changed:
-              - 'packages/${{ matrix.package }}/**'
-      - name: Use Node.js 15
-        if: steps.changes.outputs.changed == 'true'
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
-        if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Install packages/${{ matrix.package }} dependencies
         working-directory: ./packages/${{ matrix.package }}
-        if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Run benchmarks for packages/${{ matrix.package }}
-        if: steps.changes.outputs.changed == 'true'
         run: npm run benchmark -- ${{ matrix.package }}
-  build:
-    name: Build
+  compile:
+    name: Compile
     runs-on: ubuntu-latest
+    needs: [changes]
+    if: ${{ needs.changes.outputs.all-packages != '[]' }}
     strategy:
       matrix:
-        package:
-          - benchmarking
-          - cli
-          - core
-          - language-css
-          - language-html
-          - language-js
-          - language-utils
-          - mangler-css-classes
-          - mangler-css-variables
-          - mangler-html-attributes
-          - mangler-html-ids
-          - mangler-utils
-          - testing
-          - types
-    defaults:
-      run:
-        working-directory: packages/${{ matrix.package }}
+        package: ${{ fromJSON(needs.changes.outputs.all-packages) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Check for file changes
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            changed:
-              - 'packages/${{ matrix.package }}/**'
-      - name: Use Node.js 15
-        if: steps.changes.outputs.changed == 'true'
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
-        working-directory: ./
-        if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Install packages/${{ matrix.package }} dependencies
-        if: steps.changes.outputs.changed == 'true'
+        working-directory: packages/${{ matrix.package }}
         run: npm ci
       - name: Compile packages/${{ matrix.package }}
-        if: steps.changes.outputs.changed == 'true'
+        working-directory: packages/${{ matrix.package }}
         run: npm run compile
   lint:
     name: Lint
@@ -96,10 +123,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js 15
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
         run: npm ci
@@ -108,51 +138,30 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [changes, compile]
+    if: ${{ needs.changes.outputs.tested-packages != '[]' }}
     strategy:
       matrix:
-        package:
-          - benchmarking
-          - cli
-          - core
-          - language-css
-          - language-html
-          - language-js
-          - language-utils
-          - mangler-css-classes
-          - mangler-css-variables
-          - mangler-html-attributes
-          - mangler-html-ids
-          - mangler-utils
-          - testing
+        package: ${{ fromJSON(needs.changes.outputs.tested-packages) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Check for file changes
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            changed:
-              - 'packages/${{ matrix.package }}/**'
-      - name: Use Node.js 15
-        if: steps.changes.outputs.changed == 'true'
+      - name: Get Node.js configuration
+        id: node
+        run: echo ::set-output name=VERSION::$(cat .nvmrc)
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 15.14.0
+          node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
       - name: Install monorepo dependencies
-        if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Install packages/${{ matrix.package }} dependencies
         working-directory: ./packages/${{ matrix.package }}
-        if: steps.changes.outputs.changed == 'true'
         run: npm ci
       - name: Run test suite for packages/${{ matrix.package }}
-        if: steps.changes.outputs.changed == 'true'
         run: npm run coverage -- ${{ matrix.package }}
       - name: Upload coverage to Codecov
-        if: steps.changes.outputs.changed == 'true'
         uses: codecov/codecov-action@v2
         with:
           file: ./_reports/coverage/lcov.info
