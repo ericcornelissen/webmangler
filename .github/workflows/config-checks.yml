@@ -8,6 +8,8 @@ on:
       - .github/codecov.yml
       - .github/renovate.json
 
+permissions: read-all
+
 jobs:
   codecov:
     name: Codecov
