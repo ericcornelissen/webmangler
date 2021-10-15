@@ -1,11 +1,6 @@
-import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+import type { CharSet } from "@webmangler/types";
 
-import type {
-  AttributeOptions,
-  CssDeclarationValueOptions,
-  HtmlAttributeManglerOptions,
-  QuerySelectorOptions,
-} from "./types";
+import type { HtmlAttributeManglerOptions } from "./types";
 
 import {
   ALL_LOWERCASE_CHARS,
@@ -13,20 +8,7 @@ import {
   SimpleManglerPlugin,
 } from "@webmangler/mangler-utils";
 
-const ATTRIBUTE_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<AttributeOptions> = {
-  name: "attributes",
-  options: null,
-};
-
-const ATTRIBUTE_USAGE_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<CssDeclarationValueOptions> = {
-  name: "css-declaration-values",
-  options: {
-    prefix: "attr\\s*\\(\\s*",
-    suffix: "(\\s+([a-zA-Z]+|%))?\\s*(,[^)]+)?\\)",
-  },
-};
+import * as helpers from "./helpers";
 
 /**
  * The HTML attribute mangler is a built-in plugin of _WebMangler_ that can be
@@ -135,12 +117,6 @@ const ATTRIBUTE_USAGE_EXPRESSION_OPTIONS:
  */
 class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**
-   * The list of reserved strings that are always reserved because they are
-   * illegal HTML attribute names.
-   */
-  private static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-|_).*"];
-
-  /**
    * The character set used by {@link HtmlAttributeMangler}. Note that HTML
    * attributes are case insensitive, so only lowercase letters are used.
    */
@@ -149,26 +125,6 @@ class HtmlAttributeMangler extends SimpleManglerPlugin {
     ...ALL_NUMBER_CHARS,
     "-", "_",
   ];
-
-  /**
-   * The default ignore patterns used by a {@link HtmlAttributeMangler}.
-   */
-  private static readonly DEFAULT_IGNORE_PATTERNS: string[] = [];
-
-  /**
-   * The default patterns used by a {@link HtmlAttributeMangler}.
-   */
-  private static readonly DEFAULT_PATTERNS: string[] = ["data-[a-z-]+"];
-
-  /**
-   * The default prefix used by a {@link HtmlAttributeMangler}.
-   */
-  private static readonly DEFAULT_PREFIX = "data-";
-
-  /**
-   * The default reserved names used by a {@link HtmlAttributeMangler}.
-   */
-  private static readonly DEFAULT_RESERVED: string[] = [];
 
   /**
    * Instantiate a new {@link HtmlAttributeMangler}.
@@ -180,101 +136,16 @@ class HtmlAttributeMangler extends SimpleManglerPlugin {
   constructor(options: HtmlAttributeManglerOptions={}) {
     super({
       charSet: HtmlAttributeMangler.CHARACTER_SET,
-      patterns: HtmlAttributeMangler.getPatterns(options.attrNamePattern),
-      ignorePatterns: HtmlAttributeMangler.getIgnorePatterns(
-        options.ignoreAttrNamePattern,
-      ),
-      reserved: HtmlAttributeMangler.getReserved(options.reservedAttrNames),
-      prefix: HtmlAttributeMangler.getPrefix(options.keepAttrPrefix),
+      patterns: helpers.getPatterns(options.attrNamePattern),
+      ignorePatterns: helpers.getIgnorePatterns(options.ignoreAttrNamePattern),
+      reserved: helpers.getReserved(options.reservedAttrNames),
+      prefix: helpers.getPrefix(options.keepAttrPrefix),
       languageOptions: [
-        ATTRIBUTE_EXPRESSION_OPTIONS,
-        ATTRIBUTE_USAGE_EXPRESSION_OPTIONS,
-        HtmlAttributeMangler.getAttributeSelectorExpressionOptions(),
+        helpers.getAttributeExpressionOptions(),
+        helpers.getAttributeSelectorExpressionOptions(),
+        helpers.getAttributeUsageExpressionFactory(),
       ],
     });
-  }
-
-  /**
-   * Get either the configured patterns or the default patterns.
-   *
-   * @param attrNamePattern The configured patterns.
-   * @returns The patterns to be used.
-   */
-  private static getPatterns(
-    attrNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (attrNamePattern === undefined) {
-      return HtmlAttributeMangler.DEFAULT_PATTERNS;
-    }
-
-    return attrNamePattern;
-  }
-
-  /**
-   * Get either the configured patterns or the default patterns.
-   *
-   * @param ignoreAttrNamePattern The configured ignore patterns.
-   * @returns The ignore patterns to be used.
-   */
-  private static getIgnorePatterns(
-    ignoreAttrNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (ignoreAttrNamePattern === undefined) {
-      return HtmlAttributeMangler.DEFAULT_IGNORE_PATTERNS;
-    }
-
-    return ignoreAttrNamePattern;
-  }
-
-  /**
-   * Get either the configured reserved names or the default reserved names.
-   *
-   * @param reservedAttrNames The configured reserved names.
-   * @returns The reserved names to be used.
-   */
-  private static getReserved(
-    reservedAttrNames?: Iterable<string>,
-  ): Iterable<string> {
-    let configured = reservedAttrNames;
-    if (configured === undefined) {
-      configured = HtmlAttributeMangler.DEFAULT_RESERVED;
-    }
-
-    return [
-      ...HtmlAttributeMangler.ALWAYS_RESERVED,
-      ...configured,
-    ];
-  }
-
-  /**
-   * Get either the configured prefix or the default prefix.
-   *
-   * @param keepAttrPrefix The configured prefix.
-   * @returns The prefix to be used.
-   */
-  private static getPrefix(keepAttrPrefix?: string): string {
-    if (keepAttrPrefix === undefined) {
-      return HtmlAttributeMangler.DEFAULT_PREFIX;
-    }
-
-    return keepAttrPrefix;
-  }
-
-  /**
-   * Get the {@link MangleExpressionOptions} for mangling attributes query
-   * selectors with specific quotation marks.
-   *
-   * @returns The {@link QuerySelectorOptions}.
-   */
-  private static getAttributeSelectorExpressionOptions():
-      MangleExpressionOptions<QuerySelectorOptions> {
-    return {
-      name: "query-selectors",
-      options: {
-        prefix: "\\[\\s*",
-        suffix: "\\s*(?:\\]|(?:=|~=|\\|=|\\^=|\\$=|\\*=))",
-      },
-    };
   }
 }
 
