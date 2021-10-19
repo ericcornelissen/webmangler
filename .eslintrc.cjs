@@ -40,6 +40,7 @@ module.exports = {
       functions: "always-multiline",
     }],
     "function-paren-newline": ["error", "multiline-arguments"],
+    "indent": ["warn", 2],
     "max-len": ["error", {
       code: MAX_LINE_LENGTH,
       comments: MAX_LINE_LENGTH,
