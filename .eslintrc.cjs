@@ -116,6 +116,17 @@ module.exports = {
           disallowTypeAnnotations: false,
         }],
         "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/member-delimiter-style": ["warn", {
+          multiline: {
+            delimiter: "semi",
+            requireLast: true,
+          },
+          singleline: {
+            delimiter: "semi",
+            requireLast: true,
+          },
+          multilineDetection: "brackets",
+        }],
       },
     },
     { // packages/cli
