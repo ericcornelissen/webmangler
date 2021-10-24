@@ -64,6 +64,15 @@ const importantRule: string[] = [
 ];
 
 /**
+ * A list of valid CSS media queries.
+ */
+const mediaQueries: string[] = [
+  "@media only screen and (max-width: 1080px)",
+  "@media not print and (min-width: 1920px)",
+  "@media (orientation: portrait)",
+];
+
+/**
  * A list of valid CSS property names.
  */
 const propertyNames: string[] = [
@@ -163,8 +172,9 @@ export const sampleValues = {
   classSelectors,
   comments,
   declarations,
-  importantRule,
   idSelectors,
+  importantRule,
+  mediaQueries,
   propertyNames,
   pseudoElementSelectors,
   pseudoSelectors,
@@ -177,6 +187,7 @@ export const sampleValues = {
  * A collection of preset values for testing the CSS language plugin.
  */
 export const valuePresets: CssValuesPresets = {
+  beforeRuleset: new Set(),
   beforeSelector: new Set([
     ...comments,
     ...whitespace,
@@ -225,4 +236,5 @@ export const valuePresets: CssValuesPresets = {
     ...importantRule,
     ...whitespace,
   ]),
+  afterRuleset: new Set(),
 };

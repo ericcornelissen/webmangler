@@ -1,19 +1,24 @@
 "use strict";
 
-let packagesExpr = "*";
-let packagesList = [packagesExpr];
-if (process.env.TEST_PACKAGES !== undefined) {
-  packagesExpr = process.env.TEST_PACKAGES;
-  packagesList = process.env.TEST_PACKAGES.split(",");
-  if (packagesList.length > 1) {
-    packagesExpr = `{${packagesExpr}}`;
-  }
-}
+const values = require("./.values.cjs");
+
+const {
+  dependenciesDir,
+  compiledDir,
+  packagesDir,
+  packagesExpr,
+  packagesList,
+  reportsDir,
+  srcDir,
+  tempDir,
+  testSuffixBenchmark,
+  testSuffixTest,
+} = values;
 
 const packagesExclusions = [];
 if (packagesList.includes("cli")) {
-  packagesExclusions.push("packages/cli/src/index.ts");
-  packagesExclusions.push("packages/cli/src/main.ts");
+  packagesExclusions.push(`${packagesDir}/cli/${srcDir}/index.ts`);
+  packagesExclusions.push(`${packagesDir}/cli/${srcDir}/main.ts`);
 }
 
 module.exports = {
@@ -42,19 +47,17 @@ module.exports = {
     ".ts",
   ],
   include: [
-    `packages/${packagesExpr}/**/*.ts`,
+    `${packagesDir}/${packagesExpr}/**/*.ts`,
   ],
   exclude: [
-    "_reports/",
-    ".temp/",
-    "node_modules/",
-    "packages/**/*.bench.ts",
-    "packages/**/*.test.ts",
-    "packages/**/build/",
-    "packages/**/lib/",
+    `${reportsDir}/`,
+    `${tempDir}/`,
+    `${dependenciesDir}/`,
+    `${packagesDir}/**/*.{${testSuffixBenchmark},${testSuffixTest}}.ts`,
+    `${packagesDir}/**/${compiledDir}/`,
     ...packagesExclusions,
   ],
 
-  reportDir: "./_reports/coverage",
-  tempDir: "./.temp/nyc",
+  reportDir: `./${reportsDir}/coverage`,
+  tempDir: `./${tempDir}/nyc`,
 };

@@ -10,6 +10,10 @@ Versioning].
 
 - _No changes yet_
 
+## [0.1.26] - 2021-10-04
+
+- Fix bug where some selectors in media query would not be recognized. ([#173])
+
 ## [0.1.25] - 2021-08-23
 
 - Fix issue where large chunks of CSS would not be recognized. ([#156])
@@ -29,5 +33,6 @@ Versioning].
 [#143]: https://github.com/ericcornelissen/webmangler/pull/143
 [#151]: https://github.com/ericcornelissen/webmangler/pull/151
 [#156]: https://github.com/ericcornelissen/webmangler/pull/156
+[#173]: https://github.com/ericcornelissen/webmangler/pull/173
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
