@@ -1,5 +1,18 @@
 "use strict";
 
+const values = require("./.values.cjs");
+
+const {
+  dependenciesDir,
+  githubDir,
+  packagesDir,
+  reportsDir,
+  scriptsDir,
+  tempDir,
+  testDataDir,
+  testDirs,
+} = values;
+
 const INDENT_SIZE = 2;
 const JS_GLOBALS = {
   console: "readonly",
@@ -131,7 +144,7 @@ module.exports = {
     },
     { // packages/cli
       files: [
-        "packages/cli/**/*.ts",
+        `${packagesDir}/cli/**/*.ts`,
       ],
       rules: {
         "security/detect-non-literal-fs-filename": "off",
@@ -139,7 +152,7 @@ module.exports = {
     },
     { // Script files
       files: [
-        "scripts/**/*.js",
+        `${scriptsDir}/**/*.js`,
       ],
       parser: "espree",
       parserOptions: {
@@ -161,8 +174,7 @@ module.exports = {
     },
     { // Test files
       files: [
-        "packages/**/__mocks__/**/*",
-        "packages/**/__tests__/**/*",
+        `${packagesDir}/**/${testDirs}/**/*`,
       ],
       plugins: [
         "mocha",
@@ -189,6 +201,7 @@ module.exports = {
       files: [
         ".eslintrc.cjs",
         ".mocharc.cjs",
+        ".values.cjs",
         "commitlint.config.cjs",
         "nyc.config.cjs",
         "stryker.config.cjs",
@@ -250,21 +263,17 @@ module.exports = {
   ],
 
   ignorePatterns: [
-    // Dependencies
-    "node_modules/",
-
-    // Test data
-    "testdata/",
+    `${dependenciesDir}/`,
+    `${testDataDir}/`,
 
     // Generated & temporary
-    "_reports/",
-    ".temp/",
+    `${reportsDir}/`,
+    `${tempDir}/`,
     "build/",
     "lib/",
 
     // Don't ignore configuration files
-    "!.github/",
+    `!${githubDir}/`,
     "!.*.js",
-    "!.*.yml",
   ],
 };

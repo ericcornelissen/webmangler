@@ -8,10 +8,10 @@
 import fs from "fs";
 import * as path from "path";
 
-import mocharc from "../.mocharc.cjs";
 import execSync from "./utilities/exec.js";
 import log from "./utilities/log.js";
 import * as paths from "./paths.js";
+import values from "../.values.cjs";
 
 const BENCHMARK_FLAG = "--benchmark";
 const COVERAGE_FLAG = "--coverage";
@@ -19,13 +19,6 @@ const INTEGRATION_FLAG = "--integration";
 const MUTATION_FLAG = "--mutation";
 const UNIT_FLAG = "--unit";
 const WATCH_FLAG = "--watch";
-
-const {
-  TEST_TYPE_ALL,
-  TEST_TYPE_BENCHMARK,
-  TEST_TYPE_INTEGRATION,
-  TEST_TYPE_UNIT,
-} = mocharc._constants;
 
 const nycBin = path.resolve(paths.nodeModules, ".bin", "nyc");
 const mochaBin = path.resolve(paths.nodeModules, ".bin", "mocha");
@@ -139,13 +132,13 @@ function getTestType(argv) {
   for (const arg of argv) {
     switch (arg) {
       case BENCHMARK_FLAG:
-        return TEST_TYPE_BENCHMARK;
+        return values.testTypeBenchmark;
       case INTEGRATION_FLAG:
-        return TEST_TYPE_INTEGRATION;
+        return values.testTypeIntegration;
       case UNIT_FLAG:
-        return TEST_TYPE_UNIT;
+        return values.testTypeUnit;
     }
   }
 
-  return TEST_TYPE_ALL;
+  return values.testTypeTests;
 }
