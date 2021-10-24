@@ -4,8 +4,9 @@
  * NOTE: This is currently not configurable.
  *
  * @since v0.1.14
+ * @version v0.1.24
  */
-type AttributeOptions = null;
+type AttributeOptions = Record<string, never>;
 
 /**
  * The {@link MangleExpression} options for CSS properties.
