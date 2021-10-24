@@ -8,7 +8,7 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
+      "automerge": false
     }
   ],
   "lockFileMaintenance": {
@@ -18,7 +18,7 @@
     "enabled": true,
     "schedule": "before 3am on Monday"
   },
-  "automerge": true,
+  "automerge": false,
   "automergeType": "pr",
   "labels": ["dependencies"],
   "schedule": "before 3am on Monday"

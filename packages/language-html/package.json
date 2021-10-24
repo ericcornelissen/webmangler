@@ -31,9 +31,6 @@
     "@webmangler/language-utils": "^0.1.23",
     "@webmangler/types": "^0.1.23"
   },
-  "devDependencies": {
-    "typescript": "4.4.3"
-  },
   "engines": {
     "node": ">=12.16.0"
   }

@@ -58,6 +58,22 @@
     "tsconfig-paths": "3.11.0",
     "typescript": "4.4.3"
   },
+  "workspaces": [
+    "packages/benchmarking",
+    "packages/cli",
+    "packages/core",
+    "packages/language-css",
+    "packages/language-html",
+    "packages/language-js",
+    "packages/language-utils",
+    "packages/mangler-css-classes",
+    "packages/mangler-css-variables",
+    "packages/mangler-html-attributes",
+    "packages/mangler-html-ids",
+    "packages/mangler-utils",
+    "packages/testing",
+    "packages/types"
+  ],
   "engines": {
     "node": "^12 || ^14 || ^16",
     "npm": ">=7.0.0"
