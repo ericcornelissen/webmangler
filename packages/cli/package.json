@@ -21,6 +21,7 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
+    "preinstall": "mkdir -p build && touch build/index.js",
     "clean": "rm -rf build/ *.tsbuildinfo",
     "cli": "ts-node -r tsconfig-paths/register src/index.ts",
     "compile": "tsc --build",
