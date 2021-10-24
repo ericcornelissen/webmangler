@@ -125,6 +125,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - name: Fetch main branch
+        run: git fetch origin main:main
       - name: Get Node.js configuration
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
