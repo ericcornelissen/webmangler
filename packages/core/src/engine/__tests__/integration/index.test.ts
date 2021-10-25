@@ -1,12 +1,15 @@
 import type { TestScenario } from "@webmangler/testing";
-import type { CharSet } from "../characters";
-import type { MangleExpression, WebManglerFile } from "../types";
+import type {
+  CharSet,
+  MangleExpression,
+  WebManglerFile,
+} from "@webmangler/types";
 
 import { MangleExpressionMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import engine from "../engine";
+import engine from "../../index";
 
 interface TestCase {
   description?: string;
