@@ -1,4 +1,6 @@
 #!/bin/sh
 . "$(dirname $0)/_/husky.sh"
 
-$(dirname $0)/../../node_modules/.bin/commitlint -e
+$(dirname $0)/../../node_modules/.bin/commitlint \
+  --config commitlint.config.cjs \
+  -e
