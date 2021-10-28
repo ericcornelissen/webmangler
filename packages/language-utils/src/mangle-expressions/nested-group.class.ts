@@ -44,6 +44,11 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   private readonly groupName: string;
 
   /**
+   * A boolean indicating whether or not the expression is case sensitive.
+   */
+  private readonly caseSensitive: boolean;
+
+  /**
    * Create an expression from a top-level pattern an sub pattern with a single
    * named group to match and replace.
    *
@@ -54,16 +59,20 @@ export default class NestedGroupMangleExpression implements MangleExpression {
    * @param patternTemplate The top-level template.
    * @param subPatternTemplate The sub template.
    * @param groupName The name of a group in both pattern templates.
+   * @param [caseSensitive] Should the expression be case sensitive.
    * @since v0.1.12
+   * @version v0.1.24
    */
   constructor(
     patternTemplate: string,
     subPatternTemplate: string,
     groupName: string,
+    caseSensitive = true,
   ) {
     this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.subPatternTemplate = subPatternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
+    this.caseSensitive =  caseSensitive;
   }
 
   /**

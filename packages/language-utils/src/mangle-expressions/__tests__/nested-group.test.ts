@@ -10,6 +10,7 @@ suite("NestedGroupMangleExpression", function() {
       patternTemplate: string;
       subPatternTemplate: string;
       group: string;
+      caseSensitive: boolean;
       pattern: string;
       s: string;
       expected: string[];
@@ -23,6 +24,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
             subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
+            caseSensitive: true,
             pattern: "[a-z]+",
             s: "var pw = 'correct horse battery staple';",
             expected: ["horse", "battery"],
@@ -31,6 +33,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=class=\")(?<g>[^\"]*%s[^\"]*)(?=\")",
             subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s)",
             group: "g",
+            caseSensitive: true,
             pattern: "cls-[a-z]+",
             s: "<img class=\"cls-foo cls-bar\">",
             expected: ["cls-foo", "cls-bar"],
@@ -39,8 +42,32 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
             subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
             group: "g",
+            caseSensitive: true,
             pattern: "data-[a-z]+",
             s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
+            expected: ["data-foo", "data-bar"],
+          },
+        ],
+      },
+      {
+        name: "case insensitive",
+        cases: [
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: false,
+            pattern: "data-[a-z]+",
+            s: "<div data-foo=\"bar\" id=\"3\" data-BAR></div>",
+            expected: ["data-foo", "data-bar"],
+          },
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: false,
+            pattern: "data-[a-z]+",
+            s: "<div data-Foo=\"bar\" id=\"3\" data-Bar></div>",
             expected: ["data-foo", "data-bar"],
           },
         ],
@@ -52,6 +79,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<g1>foo%s)",
             subPatternTemplate: "(?<g2>%s)",
             group: "g1",
+            caseSensitive: true,
             pattern: "[a-z]+",
             s: "foobar",
             expected: [],
@@ -60,6 +88,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<g1>hello%s)",
             subPatternTemplate: "(?<g2>%s)",
             group: "g2",
+            caseSensitive: true,
             pattern: "\\s[a-z]+",
             s: "hello world",
             expected: [],
@@ -73,6 +102,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
             subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
+            caseSensitive: true,
             pattern: "[a-z]+",
             s: "",
             expected: [],
@@ -81,6 +111,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
             subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
+            caseSensitive: true,
             pattern: "[a-z]+",
             s: "var m = new Map();",
             expected: [],
@@ -96,6 +127,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate,
             subPatternTemplate,
             group,
+            caseSensitive,
             pattern,
             s,
             expected,
@@ -105,6 +137,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate,
             subPatternTemplate,
             group,
+            caseSensitive,
           );
 
           let i = 0;
@@ -124,6 +157,7 @@ suite("NestedGroupMangleExpression", function() {
       patternTemplate: string;
       subPatternTemplate: string;
       group: string;
+      caseSensitive: boolean;
       replacements: Map<string, string>;
       s: string;
       expected: string;
@@ -137,6 +171,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
             subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["horse", "zebra"],
               ["battery", "cell"],
@@ -148,6 +183,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=class=\")(?<g>[^\"]*%s[^\"]*)(?=\")",
             subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["cls-foo", "a"],
               ["cls-foobar", "b"],
@@ -160,6 +196,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
             subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["data-foo", "data-a"],
               ["data-bar", "data-b"],
@@ -171,12 +208,54 @@ suite("NestedGroupMangleExpression", function() {
         ],
       },
       {
+        name: "case insensitive",
+        cases: [
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: false,
+            replacements: new Map([
+              ["data-foo", "data-a"],
+              ["data-bar", "data-b"],
+            ]),
+            s: "<div data-FOO=\"bar\" id=\"3\" data-bar></div>",
+            expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
+          },
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: false,
+            replacements: new Map([
+              ["data-foo", "data-a"],
+              ["data-bar", "data-b"],
+            ]),
+            s: "<div data-foo=\"bar\" id=\"3\" data-BAR></div>",
+            expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
+          },
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: false,
+            replacements: new Map([
+              ["data-foo", "data-a"],
+              ["data-bar", "data-b"],
+            ]),
+            s: "<div data-FOO=\"bar\" id=\"3\" data-bar></div>",
+            expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
+          },
+        ],
+      },
+      {
         name: "missing group",
         cases: [
           {
             patternTemplate: "(?<g1>foo%s)",
             subPatternTemplate: "(?<g2>%s)",
             group: "g1",
+            caseSensitive: true,
             replacements: new Map([
               ["bar", "baz"],
             ]),
@@ -187,6 +266,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<g1>hello%s)",
             subPatternTemplate: "(?<g2>%s)",
             group: "g2",
+            caseSensitive: true,
             replacements: new Map([
               [" world", " planet"],
             ]),
@@ -202,6 +282,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
             subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map(),
             s: "",
             expected: "",
@@ -210,6 +291,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
             subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map(),
             s: "var pw = 'correct horse battery staple';",
             expected: "var pw = 'correct horse battery staple';",
@@ -218,6 +300,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
             subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
             ]),
@@ -228,6 +311,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
             subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
             ]),
@@ -238,6 +322,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
             subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
             ]),
@@ -255,6 +340,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate,
             subPatternTemplate,
             group,
+            caseSensitive,
             replacements,
             s,
             expected,
@@ -264,6 +350,7 @@ suite("NestedGroupMangleExpression", function() {
             patternTemplate,
             subPatternTemplate,
             group,
+            caseSensitive,
           );
           const result = subject.replaceAll(s, replacements);
           expect(result).to.equal(expected);
