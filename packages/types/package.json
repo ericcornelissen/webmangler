@@ -27,9 +27,6 @@
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
   },
-  "devDependencies": {
-    "typescript": "4.4.3"
-  },
   "engines": {
     "node": ">=12.16.0"
   }

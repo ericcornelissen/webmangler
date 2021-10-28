@@ -40,7 +40,7 @@ function getPackageFilters(packageCriteria) {
 }
 
 function asPackageFilter(packageName) {
-  return `${packageName}: packages/${packageName}/src/**`;
+  return `${packageName}: packages/${packageName}/**`;
 }
 
 function hasFiles(pkg, fileRegExp) {

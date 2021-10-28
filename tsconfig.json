@@ -23,7 +23,7 @@
       "@webmangler/mangler-css-variables": ["packages/mangler-css-variables/build"],
       "@webmangler/mangler-html-attributes": ["packages/mangler-html-attributes/build"],
       "@webmangler/mangler-html-ids": ["packages/mangler-html-ids/build"],
-      "@webmangler/mangler-utils": ["packages/mangler-utils/build"],
+      "@webmangler/mangler-utils": ["packages/mangler-utils/lib"],
       "@webmangler/testing": ["packages/testing/build"],
       "@webmangler/types": ["packages/types/build"],
       "webmangler": ["packages/core/build"],
