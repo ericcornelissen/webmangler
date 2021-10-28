@@ -1,5 +1,9 @@
 "use strict";
 
+const { getAllPackagesAsArray } = require("./.values.cjs");
+
+const packages = getAllPackagesAsArray();
+
 module.exports = {
   extends: ["@commitlint/config-conventional"],
   rules: {
@@ -17,23 +21,10 @@ module.exports = {
       2,
       "always",
       [
-        "benchmarking",
-        "cli",
-        "core",
         "deps",
         "hooks",
-        "lang-css",
-        "lang-html",
-        "lang-js",
-        "lang-utils",
-        "mangler-css-classes",
-        "mangler-css-variables",
-        "mangler-html-attributes",
-        "mangler-html-ids",
-        "mangler-utils",
         "scripts",
-        "testing",
-        "types",
+        ...packages,
       ],
     ],
     "type-enum": [
