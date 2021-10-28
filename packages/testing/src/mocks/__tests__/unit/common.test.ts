@@ -3,7 +3,7 @@ import type { SinonStub } from "sinon";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import { getStubOrDefault } from "../common";
+import { getStubOrDefault } from "../../common";
 
 suite("Mocks common", function() {
   suite("::getStubOrDefault", function() {

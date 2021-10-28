@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { generateValueObjects, generateValueObjectsAll } from "../generate";
+import { generateValueObjects, generateValueObjectsAll } from "../../generate";
 
 suite("Generate", function() {
   suite("::generateValueObjects", function() {
