@@ -1,10 +1,6 @@
-import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+import type { CharSet } from "@webmangler/types";
 
-import type {
-  CssDeclarationPropertyOptions,
-  CssDeclarationValueOptions,
-  CssVariableManglerOptions,
-} from "./types";
+import type { CssVariableManglerOptions } from "./types";
 
 import {
   ALL_LETTER_CHARS,
@@ -12,22 +8,7 @@ import {
   SimpleManglerPlugin,
 } from "@webmangler/mangler-utils";
 
-const CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<CssDeclarationPropertyOptions> = {
-  name: "css-declaration-properties",
-  options: {
-    prefix: "--",
-  },
-};
-
-const CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<CssDeclarationValueOptions> = {
-  name: "css-declaration-values",
-  options: {
-    prefix: "var\\s*\\(\\s*--",
-    suffix: "\\s*(,[^\\)]+)?\\)",
-  },
-};
+import * as helpers from "./helpers";
 
 /**
  * The CSS variables mangler is a built-in plugin of _WebMangler_ that can be
@@ -128,12 +109,6 @@ const CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS:
  */
 class CssVariableMangler extends SimpleManglerPlugin {
   /**
-   * The list of reserved strings that are always reserved because they are
-   * illegal CSS variable names.
-   */
-  private static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-).*"];
-
-  /**
    * The character set used by {@link CssVariableMangler}.
    */
   private static readonly CHARACTER_SET: CharSet = [
@@ -141,26 +116,6 @@ class CssVariableMangler extends SimpleManglerPlugin {
     ...ALL_NUMBER_CHARS,
     "-", "_",
   ];
-
-  /**
-   * The default ignore patterns used by a {@link CssVariableMangler}.
-   */
-  private static readonly DEFAULT_IGNORE_PATTERNS: string[] = [];
-
-  /**
-   * The default patterns used by a {@link CssVariableMangler}.
-   */
-  private static readonly DEFAULT_PATTERNS: string[] = ["[a-zA-Z-]+"];
-
-  /**
-   * The default prefix used by a {@link CssVariableMangler}.
-   */
-  private static readonly DEFAULT_PREFIX = "";
-
-  /**
-   * The default reserved names used by a {@link CssVariableMangler}.
-   */
-  private static readonly DEFAULT_RESERVED: string[] = [];
 
   /**
    * Instantiate a new {@link CssVariableMangler}.
@@ -172,83 +127,17 @@ class CssVariableMangler extends SimpleManglerPlugin {
   constructor(options: CssVariableManglerOptions={}) {
     super({
       charSet: CssVariableMangler.CHARACTER_SET,
-      patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
-      ignorePatterns: CssVariableMangler.getIgnorePatterns(
+      patterns: helpers.getPatterns(options.cssVarNamePattern),
+      ignorePatterns: helpers.getIgnorePatterns(
         options.ignoreCssVarNamePattern,
       ),
-      reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
-      prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),
+      reserved: helpers.getReserved(options.reservedCssVarNames),
+      prefix: helpers.getPrefix(options.keepCssVarPrefix),
       languageOptions: [
-        CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS,
-        CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS,
+        helpers.getCssVariableDefinitionExpressionOptions(),
+        helpers.getCssVariableUsageExpressionOptions(),
       ],
     });
-  }
-
-  /**
-   * Get either the configured patterns or the default patterns.
-   *
-   * @param cssVarNamePattern The configured patterns.
-   * @returns The patterns to be used.
-   */
-  private static getPatterns(
-    cssVarNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (cssVarNamePattern === undefined) {
-      return CssVariableMangler.DEFAULT_PATTERNS;
-    }
-
-    return cssVarNamePattern;
-  }
-
-  /**
-   * Get either the configured patterns or the default patterns.
-   *
-   * @param ignoreCssVarNamePattern The configured ignore patterns.
-   * @returns The ignore patterns to be used.
-   */
-  private static getIgnorePatterns(
-    ignoreCssVarNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (ignoreCssVarNamePattern === undefined) {
-      return CssVariableMangler.DEFAULT_IGNORE_PATTERNS;
-    }
-
-    return ignoreCssVarNamePattern;
-  }
-
-  /**
-   * Get either the configured reserved names or the default reserved names.
-   *
-   * @param reservedCssVarNames The configured reserved names.
-   * @returns The reserved names to be used.
-   */
-  private static getReserved(
-    reservedCssVarNames?: Iterable<string>,
-  ): Iterable<string> {
-    let configured = reservedCssVarNames;
-    if (configured === undefined) {
-      configured = CssVariableMangler.DEFAULT_RESERVED;
-    }
-
-    return [
-      ...CssVariableMangler.ALWAYS_RESERVED,
-      ...configured,
-    ];
-  }
-
-  /**
-   * Get either the configured prefix or the default prefix.
-   *
-   * @param keepCssVarPrefix The configured prefix.
-   * @returns The prefix to be used.
-   */
-  private static getPrefix(keepCssVarPrefix?: string): string {
-    if (keepCssVarPrefix === undefined) {
-      return CssVariableMangler.DEFAULT_PREFIX;
-    }
-
-    return keepCssVarPrefix;
   }
 }
 
