@@ -12,7 +12,7 @@ let uniqueId = 0;
  *
  * @since v0.1.5
  */
-export default class WebManglerLanguagePluginMock {
+class WebManglerLanguagePluginMock {
   /**
    * The `getEmbeds` method of the mock.
    *
@@ -45,9 +45,9 @@ export default class WebManglerLanguagePluginMock {
    * @since v0.1.5
    */
   constructor(stubs?: {
-    getEmbeds?: SinonStub,
-    getExpressions?: SinonStub,
-    getLanguages?: SinonStub,
+    getEmbeds?: SinonStub;
+    getExpressions?: SinonStub;
+    getLanguages?: SinonStub;
   }) {
     this.getEmbeds = getStubOrDefault([uniqueId++], stubs?.getEmbeds);
     this.getExpressions = getStubOrDefault(
@@ -57,3 +57,5 @@ export default class WebManglerLanguagePluginMock {
     this.getLanguages = getStubOrDefault([uniqueId++], stubs?.getLanguages);
   }
 }
+
+export default WebManglerLanguagePluginMock;

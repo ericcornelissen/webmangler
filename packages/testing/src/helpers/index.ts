@@ -1,1 +1,6 @@
-export { generateValueObjects, generateValueObjectsAll } from "./generate";
+import { generateValueObjects, generateValueObjectsAll } from "./generate";
+
+export {
+  generateValueObjects,
+  generateValueObjectsAll,
+};

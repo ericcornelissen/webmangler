@@ -13,7 +13,7 @@ let uniqueId = 0;
  * @since v0.1.1
  * @version v0.1.5
  */
-export default class MangleExpressionMock {
+class MangleExpressionMock {
   /**
    * The `findAll` method of the mock.
    *
@@ -38,10 +38,12 @@ export default class MangleExpressionMock {
    * @since v0.1.5
    */
   constructor(stubs?: {
-    findAll?: SinonStub,
-    replaceAll?: SinonStub,
+    findAll?: SinonStub;
+    replaceAll?: SinonStub;
   }) {
     this.findAll = getStubOrDefault([uniqueId++], stubs?.findAll);
     this.replaceAll = getStubOrDefault(uniqueId++, stubs?.replaceAll);
   }
 }
+
+export default MangleExpressionMock;

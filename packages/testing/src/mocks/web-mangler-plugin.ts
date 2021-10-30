@@ -13,7 +13,7 @@ let uniqueId = 0;
  * @since v0.1.1
  * @version v0.1.5
  */
-export default class WebManglerPluginMock {
+class WebManglerPluginMock {
   /**
    * The `options` method of the mock.
    *
@@ -30,8 +30,10 @@ export default class WebManglerPluginMock {
    * @since v0.1.5
    */
   constructor(stubs?: {
-    options?: SinonStub,
+    options?: SinonStub;
   }) {
     this.options = getStubOrDefault({ id: uniqueId++ }, stubs?.options);
   }
 }
+
+export default WebManglerPluginMock;

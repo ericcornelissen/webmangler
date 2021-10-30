@@ -10,7 +10,7 @@ import * as sinon from "sinon";
  * @param [stub] The stub to return in case it is provided.
  * @returns The provided `stub` or a stub returning `defaultReturnValue`.
  */
-export function getStubOrDefault(
+function getStubOrDefault(
   defaultReturnValue: unknown,
   stub?: SinonStub,
 ): SinonStub {
@@ -20,3 +20,7 @@ export function getStubOrDefault(
 
   return sinon.stub().returns(defaultReturnValue);
 }
+
+export {
+  getStubOrDefault,
+};
