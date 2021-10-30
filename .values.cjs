@@ -30,6 +30,14 @@ if (process.env.TEST_PACKAGES !== undefined) {
   }
 }
 
+function getAllPackagesAsArray() {
+  const fs = require("fs");
+  const path = require("path");
+  const packagesDir = path.resolve(__dirname, "packages");
+  const packagesList = fs.readdirSync(packagesDir);
+  return packagesList;
+}
+
 module.exports = {
   // Directories
   compiledDir,
@@ -46,6 +54,7 @@ module.exports = {
   testsDir,
 
   // Computed
+  getAllPackagesAsArray,
   packagesExpr,
   packagesList,
 
