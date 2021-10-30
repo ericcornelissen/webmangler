@@ -76,6 +76,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2.3.5
+      - name: Cache compiled package
+        uses: actions/cache@v2
+        with:
+          path: |
+            packages/*/build
+            packages/*/lib
+            packages/*/tsconfig.tsbuildinfo
+          key: >-
+            compiled
+            ${{ matrix.package }}
+            ${{ hashFiles(format('packages/{0}/src/**', matrix.package)) }}
+          restore-keys: |
+            compiled ${{ matrix.package }}
       - name: Get Node.js configuration
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
@@ -99,6 +112,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2.3.5
+      - name: Cache compiled package
+        uses: actions/cache@v2
+        with:
+          path: |
+            packages/*/build
+            packages/*/lib
+            packages/*/tsconfig.tsbuildinfo
+          key: >-
+            compiled
+            ${{ matrix.package }}
+            ${{ hashFiles(format('packages/{0}/src/**', matrix.package)) }}
+          restore-keys: |
+            compiled ${{ matrix.package }}
       - name: Get Node.js configuration
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
@@ -145,6 +171,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2.3.5
+      - name: Cache compiled package
+        uses: actions/cache@v2
+        with:
+          path: |
+            packages/*/build
+            packages/*/lib
+            packages/*/tsconfig.tsbuildinfo
+          key: >-
+            compiled
+            ${{ matrix.package }}
+            ${{ hashFiles(format('packages/{0}/src/**', matrix.package)) }}
+          restore-keys: |
+            compiled ${{ matrix.package }}
       - name: Get Node.js configuration
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
