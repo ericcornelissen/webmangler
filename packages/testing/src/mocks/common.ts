@@ -1,19 +1,19 @@
-import type { SinonStub } from "sinon";
+import type { Stub } from "./types";
 
 import * as sinon from "sinon";
 
 /**
- * Get a "default" stub that returns a specific value, or get a specific stub in
- * case it is provided.
+ * Get a "default" {@link Stub} that returns a specific value, or get a specific
+ * {@link Stub} in case it is provided.
  *
- * @param defaultReturnValue The value to be returned by the "default" stub.
- * @param [stub] The stub to return in case it is provided.
- * @returns The provided `stub` or a stub returning `defaultReturnValue`.
+ * @param defaultReturnValue The return value of the "default" {@link Stub}.
+ * @param [stub] The {@link Stub} to return in case it is provided.
+ * @returns The provided `stub` or a default {@link Stub}.
  */
 function getStubOrDefault(
   defaultReturnValue: unknown,
-  stub?: SinonStub,
-): SinonStub {
+  stub?: Stub,
+): Stub {
   if (stub) {
     return stub;
   }

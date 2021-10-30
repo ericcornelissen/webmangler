@@ -1,9 +1,9 @@
-import type { SinonStub } from "sinon";
+import type { Stub } from "./types";
 
 import { getStubOrDefault } from "./common";
 
 /**
- * A counter used to make the return value of automatic stubs unique.
+ * A counter used to make the return value of automatic {@link Stub}s unique.
  */
 let uniqueId = 0;
 
@@ -19,18 +19,18 @@ class WebManglerPluginMock {
    *
    * @since v0.1.1
    */
-  public readonly options: SinonStub;
+  public readonly options: Stub;
 
   /**
    * Create a new {@link WebManglerPluginMock}. Optionally with specific
    * behaviour.
    *
-   * @param [stubs] The stubs for this mock.
-   * @param [stubs.options] A {@link SinonStub} for `options`.
+   * @param [stubs] The {@link Stub}s for this mock.
+   * @param [stubs.options] A {@link Stub} for `options`.
    * @since v0.1.5
    */
   constructor(stubs?: {
-    options?: SinonStub;
+    options?: Stub;
   }) {
     this.options = getStubOrDefault({ id: uniqueId++ }, stubs?.options);
   }
