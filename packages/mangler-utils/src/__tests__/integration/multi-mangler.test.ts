@@ -4,7 +4,7 @@ import { WebManglerPluginMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
 import * as sinonChai from "sinon-chai";
 
-import MultiManglerPlugin from "../multi-mangler.class";
+import MultiManglerPlugin from "../../multi-mangler.class";
 
 chaiUse(sinonChai);
 

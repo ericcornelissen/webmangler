@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import {
   providedOrDefault,
-} from "../inputs";
+} from "../../inputs";
 
 suite("Mangler input utilities", function() {
   suite("::providedOrDefault", function() {

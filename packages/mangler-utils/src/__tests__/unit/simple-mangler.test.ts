@@ -1,10 +1,10 @@
 import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
 
-import type { SimpleManglerOptions } from "../simple-mangler.class";
+import type { SimpleManglerOptions } from "../../simple-mangler.class";
 
 import { expect } from "chai";
 
-import SimpleManglerPlugin from "../simple-mangler.class";
+import SimpleManglerPlugin from "../../simple-mangler.class";
 
 class ConcreteSimpleManglerPlugin extends SimpleManglerPlugin {
   constructor(options: SimpleManglerOptions) {
