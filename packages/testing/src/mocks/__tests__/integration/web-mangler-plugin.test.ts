@@ -4,7 +4,7 @@ import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import WebManglerPluginMock from "../web-mangler-plugin";
+import { WebManglerPluginMock } from "../../index";
 
 chaiUse(sinonChai);
 

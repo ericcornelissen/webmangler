@@ -4,7 +4,7 @@ import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import MangleExpressionMock from "../mangle-expression";
+import { MangleExpressionMock } from "../../index";
 
 chaiUse(sinonChai);
 

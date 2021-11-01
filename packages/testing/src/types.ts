@@ -14,7 +14,7 @@
  * }
  * @since v0.1.0
  */
-export interface TestScenario<TestCase> {
+interface TestScenario<TestCase> {
   /**
    * The name of the test scenario. This should be used as (part of) a test
    * case.
@@ -45,7 +45,7 @@ export interface TestScenario<TestCase> {
  * };
  * @since v0.1.5
  */
-export type TestValues<KeyName extends string> = {
+type TestValues<KeyName extends string> = {
   [key in KeyName]?: string;
 }
 
@@ -67,7 +67,7 @@ export type TestValues<KeyName extends string> = {
  * };
  * @since v0.1.5
  */
-export type TestValuesPresets<KeyName extends string> = {
+type TestValuesPresets<KeyName extends string> = {
   [key in KeyName]: Iterable<string | undefined>;
 }
 
@@ -85,6 +85,13 @@ export type TestValuesPresets<KeyName extends string> = {
  * };
  * @since v0.1.5
  */
-export type TestValuesSets<KeyName extends string> = {
+type TestValuesSets<KeyName extends string> = {
   [key in KeyName]?: Iterable<string | undefined>;
 }
+
+export {
+  TestScenario,
+  TestValues,
+  TestValuesPresets,
+  TestValuesSets,
+};
