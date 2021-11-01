@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import CssVariableMangler from "../class";
+import CssVariableMangler from "../../class";
 
 suite("CSS Variable Mangler", function() {
   suite("Configuration", function() {
