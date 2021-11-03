@@ -71,7 +71,11 @@ export default class SingleGroupMangleExpression implements MangleExpression {
     while ((match = regExp.exec(s)) !== null) {
       const groups = match.groups as RegExpMatchGroups;
       if (this.didMatch(groups)) {
-        yield groups[this.groupName];
+        if (this.caseSensitive) {
+          yield groups[this.groupName];
+        } else {
+          yield groups[this.groupName].toLowerCase();
+        }
       }
     }
   }
@@ -91,7 +95,10 @@ export default class SingleGroupMangleExpression implements MangleExpression {
     return s.replace(regExp, (match: string, ...args: unknown[]): string => {
       const groups = args[args.length - 1] as RegExpMatchGroups;
       if (this.didMatch(groups)) {
-        const original = groups[this.groupName];
+        let original = groups[this.groupName];
+        if (!this.caseSensitive) {
+          original = original.toLowerCase();
+        }
         const replacement = replacements.get(original);
         return replacement as string;
       } else {
@@ -118,7 +125,22 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    * @returns A {@link RegExp} corresponding to this expression and `pattern`.
    */
   private newRegExp(pattern: string): RegExp {
+    const flags = this.getRegExpFlags();
     const rawExpr = printf(this.patternTemplate, pattern);
-    return new RegExp(rawExpr, "gm");
+    return new RegExp(rawExpr, flags);
+  }
+
+  /**
+   * Get the flags given the instance options.
+   *
+   * @returns A string of {@link RegExp} flags.
+   */
+  private getRegExpFlags(): string {
+    const baseFlags = "gm";
+    if (!this.caseSensitive) {
+      return `${baseFlags}i`;
+    }
+
+    return baseFlags;
   }
 }
