@@ -53,6 +53,7 @@ module.exports = {
       functions: "always-multiline",
     }],
     "function-paren-newline": ["error", "multiline-arguments"],
+    "indent": ["error", 2],
     "max-len": ["error", {
       code: MAX_LINE_LENGTH,
       comments: MAX_LINE_LENGTH,
@@ -128,6 +129,17 @@ module.exports = {
           disallowTypeAnnotations: false,
         }],
         "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/member-delimiter-style": ["error", {
+          multiline: {
+            delimiter: "semi",
+            requireLast: true,
+          },
+          singleline: {
+            delimiter: "semi",
+            requireLast: true,
+          },
+          multilineDetection: "brackets",
+        }],
       },
     },
     { // packages/cli

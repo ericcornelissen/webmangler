@@ -7,7 +7,7 @@ import type { TestValues, TestValuesSets } from "../types";
  * @yields An object for all possible combinations of values in the input.
  * @since v0.1.5
  */
-export function* generateValueObjects<KeyName extends string>(
+function* generateValueObjects<KeyName extends string>(
   valuesSource: TestValuesSets<KeyName>,
 ): IterableIterator<TestValues<KeyName>> {
   const entry = Object.entries(valuesSource).pop();
@@ -34,7 +34,7 @@ export function* generateValueObjects<KeyName extends string>(
  * @yields All possible combinations of objects for each entry in the input.
  * @since v0.1.5
  */
-export function* generateValueObjectsAll<KeyName extends string>(
+function* generateValueObjectsAll<KeyName extends string>(
   valuesSources: Iterable<TestValuesSets<KeyName>>,
 ): IterableIterator<Iterable<TestValues<KeyName>>> {
   const clone = Array.from(valuesSources);
@@ -49,3 +49,8 @@ export function* generateValueObjectsAll<KeyName extends string>(
     }
   }
 }
+
+export {
+  generateValueObjects,
+  generateValueObjectsAll,
+};

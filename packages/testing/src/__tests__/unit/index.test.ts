@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import * as testing from "../index";
+import * as testing from "../../index";
 
 suite("Package exports", function() {
   test("has generateValueObjects", function() {

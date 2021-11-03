@@ -10,10 +10,13 @@ Versioning].
 
 - _No changes yet_
 
+## [0.1.25] - 2021-10-30
+
+- Add helper function to handle optional inputs. ([#182])
+
 ## [0.1.24] - 2021-10-28
 
 - Export character sets. ([#159])
-- Add helper function to handle optional inputs. ([#182])
 
 ## [0.1.23] - 2021-07-23
 
