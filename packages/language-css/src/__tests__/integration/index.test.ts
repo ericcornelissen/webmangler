@@ -74,17 +74,19 @@ suite("The @webmangler/language-css plugin", function() {
 
     test("get default languages", function() {
       const plugin = new CssLanguagePlugin();
-      const result = Array.from(plugin.getLanguages());
-      expect(result).to.include.members(DEFAULT_EXTENSIONS);
+      const result = new Set(plugin.getLanguages());
+      expect(result).to.deep.equal(new Set(DEFAULT_EXTENSIONS));
     });
 
     test("get configured languages", function() {
       const cssExtensions = ["less", "sass"];
 
       const plugin = new CssLanguagePlugin({ cssExtensions });
-      const result = Array.from(plugin.getLanguages());
-      expect(result).to.include.members(DEFAULT_EXTENSIONS);
-      expect(result).to.include.members(cssExtensions);
+      const result = new Set(plugin.getLanguages());
+      expect(result).to.deep.equal(new Set([
+        ...DEFAULT_EXTENSIONS,
+        ...cssExtensions,
+      ]));
     });
   });
 });
