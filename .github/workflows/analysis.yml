@@ -6,6 +6,8 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - "packages/**"
   schedule:
     - cron: "0 7 * * 3"
 
