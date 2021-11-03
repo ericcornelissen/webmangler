@@ -10,7 +10,7 @@ suite("NestedGroupMangleExpression", function() {
       patternTemplate: string;
       subPatternTemplate: string;
       group: string;
-      caseSensitive: boolean;
+      caseSensitive?: boolean;
       pattern: string;
       s: string;
       expected: string[];
@@ -43,6 +43,14 @@ suite("NestedGroupMangleExpression", function() {
             subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
             group: "g",
             caseSensitive: true,
+            pattern: "data-[a-z]+",
+            s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
+            expected: ["data-foo", "data-bar"],
+          },
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
             pattern: "data-[a-z]+",
             s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
             expected: ["data-foo", "data-bar"],

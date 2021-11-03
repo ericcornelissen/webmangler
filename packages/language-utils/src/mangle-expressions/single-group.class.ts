@@ -5,7 +5,7 @@ import { format as printf } from "util";
 /**
  * Type of a the groups object of a Regular Expression match.
  */
-type RegExpMatchGroups = { [key: string]: string };
+type RegExpMatchGroups = { [key: string]: string; };
 
 /**
  * A {@link SingleGroupMangleExpression} is a {@link MangleExpression}
@@ -33,6 +33,11 @@ export default class SingleGroupMangleExpression implements MangleExpression {
   private readonly groupName: string;
 
   /**
+   * A boolean indicating whether or not the expression is case sensitive.
+   */
+  private readonly caseSensitive: boolean;
+
+  /**
    * Create an expression from a pattern template with a named group to match
    * and replace.
    *
@@ -42,15 +47,18 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    *
    * @param patternTemplate The generic pattern (only one "%s" allowed).
    * @param groupName The name of a group in `patternTemplate`.
+   * @param [caseSensitive] Should the expression be case sensitive.
    * @since v0.1.11
    * @version v0.1.21
    */
   constructor(
     patternTemplate: string,
     groupName: string,
+    caseSensitive = true,
   ) {
     this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
+    this.caseSensitive =  caseSensitive;
   }
 
   /**
