@@ -1,6 +1,8 @@
+import type { MangleOptions } from "@webmangler/types";
+
 import { expect } from "chai";
 
-import CssVariableMangler from "../../class";
+import CssVariableMangler from "../../index";
 
 suite("CSS Variable Mangler", function() {
   suite("Configuration", function() {
@@ -78,7 +80,7 @@ suite("CSS Variable Mangler", function() {
           reservedCssVarNames: reserved,
         });
 
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.have.property("reservedNames");
 
         const reservedNames = Array.from(result.reservedNames as string[]);
