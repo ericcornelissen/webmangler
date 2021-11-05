@@ -1,38 +1,7 @@
-import type { ExpressionFactory } from "@webmangler/language-utils";
+import type { CssLanguagePluginOptions } from "./class";
 
-import { SimpleLanguagePlugin } from "@webmangler/language-utils";
-import {
-  cssDeclarationPropertyExpressionFactory,
-  cssDeclarationValueExpressionFactory ,
-  querySelectorExpressionFactory,
-  singleValueAttributeExpressionFactory,
-} from "./expressions";
+import initCssLanguagePlugin from "./class";
 
-const map: Map<string, ExpressionFactory> = new Map();
-map.set("css-declaration-properties", cssDeclarationPropertyExpressionFactory);
-map.set("css-declaration-values", cssDeclarationValueExpressionFactory);
-map.set("query-selectors", querySelectorExpressionFactory);
-map.set("single-value-attributes", singleValueAttributeExpressionFactory);
-
-/**
- * The options for _WebMangler_'s built-in {@link CssLanguagePlugin}.
- *
- * @since v0.1.17
- */
-export type CssLanguagePluginOptions = {
-  /**
-   * One or more extensions that the {@link CssLanguagePlugin} should be used
-   * for. This can be used when CSS files have a non-standard extension or to
-   * use this plugin for CSS-like languages.
-   *
-   * NOTE: the default extensions are always included and do not need to be
-   * specified when using this option.
-   *
-   * @default `[]`
-   * @since v0.1.17
-   */
-  cssExtensions?: Iterable<string>;
-}
 
 /**
  * This {@link WebManglerLanguagePlugin} provides support for mangling the
@@ -66,45 +35,10 @@ export type CssLanguagePluginOptions = {
  * @since v0.1.0
  * @version v0.1.26
  */
-export default class CssLanguagePlugin extends SimpleLanguagePlugin {
-  /**
-   * The language aliases supported by the {@link CssLanguagePlugin}.
-   */
-  private static DEFAULT_LANGUAGES: string[] = [
-    "css",
-  ];
+const CssLanguagePlugin = initCssLanguagePlugin();
 
-  /**
-   * The {@link ExpressionFactory}s provided by the {@link CssLanguagePlugin}.
-   */
-  private static EXPRESSION_FACTORIES: Map<string, ExpressionFactory> = map;
+export default CssLanguagePlugin;
 
-  /**
-   * Instantiate a new {@link CssLanguagePlugin} plugin.
-   *
-   * @param [options] The {@link CssLanguagePluginOptions}.
-   * @since v0.1.0
-   * @version v0.1.17
-   */
-  constructor(options: CssLanguagePluginOptions={}) {
-    super(
-      CssLanguagePlugin.getLanguages(options.cssExtensions),
-      CssLanguagePlugin.EXPRESSION_FACTORIES,
-    );
-  }
-
-  /**
-   * Get all the languages for a new {@link CssLanguagePlugin} instance.
-   *
-   * @param configuredLanguages The configured languages, if any.
-   * @returns The languages for the instances.
-   */
-  private static getLanguages(
-    configuredLanguages: Iterable<string> = [],
-  ): Iterable<string> {
-    return new Set([
-      ...CssLanguagePlugin.DEFAULT_LANGUAGES,
-      ...configuredLanguages,
-    ]);
-  }
-}
+export type {
+  CssLanguagePluginOptions,
+};
