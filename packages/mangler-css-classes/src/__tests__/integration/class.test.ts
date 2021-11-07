@@ -69,7 +69,7 @@ suite("CssClassMangler", function() {
 
       setup(function() {
         const subject = new CssClassMangler(options);
-        mangleOptions = subject.options();
+        mangleOptions = subject.options() as MangleOptions;
       });
 
       test("the character set is defined", function() {

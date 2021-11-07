@@ -63,7 +63,7 @@ suite("HTML Attribute Mangler", function() {
 
       setup(function() {
         const subject = new HtmlAttributeMangler(options);
-        mangleOptions = subject.options();
+        mangleOptions = subject.options() as MangleOptions;
       });
 
       test("the character set is defined", function() {

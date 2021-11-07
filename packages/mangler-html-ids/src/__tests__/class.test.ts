@@ -13,7 +13,7 @@ suite("HTML ID Mangler", function() {
 
       test("default patterns", function() {
         const htmlIdMangler = new HtmlIdMangler();
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.deep.include({ patterns: DEFAULT_PATTERNS });
       });
 
@@ -21,7 +21,7 @@ suite("HTML ID Mangler", function() {
         const pattern = "foo(bar|baz)-[a-z]+";
 
         const htmlIdMangler = new HtmlIdMangler({ idNamePattern: pattern });
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.deep.include({ patterns: pattern });
       });
 
@@ -29,7 +29,7 @@ suite("HTML ID Mangler", function() {
         const patterns: string[] = ["foobar-[a-z]+", "foobar-[0-9]+"];
 
         const htmlIdMangler = new HtmlIdMangler({ idNamePattern: patterns });
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.deep.include({ patterns: patterns });
       });
     });
@@ -39,7 +39,7 @@ suite("HTML ID Mangler", function() {
 
       test("default patterns", function() {
         const htmlIdMangler = new HtmlIdMangler();
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.deep.include({ ignorePatterns: DEFAULT_PATTERNS });
       });
 
@@ -49,7 +49,7 @@ suite("HTML ID Mangler", function() {
         const htmlIdMangler = new HtmlIdMangler({
           ignoreIdNamePattern: ignorePatterns,
         });
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
       });
 
@@ -59,7 +59,7 @@ suite("HTML ID Mangler", function() {
         const htmlIdMangler = new HtmlIdMangler({
           ignoreIdNamePattern: ignorePatterns,
         });
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
       });
     });
@@ -68,7 +68,7 @@ suite("HTML ID Mangler", function() {
       test("default reserved", function() {
 
         const htmlIdMangler = new HtmlIdMangler();
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.have.property("reservedNames").that.is.empty;
       });
 
@@ -76,7 +76,7 @@ suite("HTML ID Mangler", function() {
         const reserved: string[] = ["foo", "bar"];
 
         const htmlIdMangler = new HtmlIdMangler({ reservedIds: reserved });
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.deep.include({ reservedNames: reserved });
       });
     });
@@ -86,7 +86,7 @@ suite("HTML ID Mangler", function() {
 
       test("default prefix", function() {
         const htmlIdMangler = new HtmlIdMangler();
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.deep.include({ manglePrefix: DEFAULT_MANGLE_PREFIX });
       });
 
@@ -94,7 +94,7 @@ suite("HTML ID Mangler", function() {
         const prefix = "foobar";
 
         const htmlIdMangler = new HtmlIdMangler({ keepIdPrefix: prefix });
-        const result = htmlIdMangler.options();
+        const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.deep.include({ manglePrefix: prefix });
       });
     });
@@ -110,7 +110,7 @@ suite("HTML ID Mangler", function() {
         return languageOptions?.options as SingleValueAttributeOptions;
       };
 
-      const cases: { idAttributes: string[], expected: string[] }[] = [
+      const cases: { idAttributes: string[]; expected: string[]; }[] = [
         {
           idAttributes: undefined as unknown as string[],
           expected: [...standardIdAttributes],
@@ -133,7 +133,7 @@ suite("HTML ID Mangler", function() {
         for (const testCase of cases) {
           const { expected, idAttributes } = testCase;
           const htmlIdMangler = new HtmlIdMangler({ idAttributes });
-          const mangleOptions = htmlIdMangler.options();
+          const mangleOptions = htmlIdMangler.options() as MangleOptions;
           const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
@@ -161,7 +161,7 @@ suite("HTML ID Mangler", function() {
         return languageOptions?.options as SingleValueAttributeOptions;
       };
 
-      const cases: { urlAttributes: string[], expected: string[] }[] = [
+      const cases: { urlAttributes: string[]; expected: string[]; }[] = [
         {
           urlAttributes: undefined as unknown as string[],
           expected: [...standardUrlAttributes],
@@ -184,7 +184,7 @@ suite("HTML ID Mangler", function() {
         for (const testCase of cases) {
           const { expected, urlAttributes } = testCase;
           const htmlIdMangler = new HtmlIdMangler({ urlAttributes });
-          const mangleOptions = htmlIdMangler.options();
+          const mangleOptions = htmlIdMangler.options() as MangleOptions;
           const options = getLanguageOptions(mangleOptions);
           expect(options).not.to.be.undefined;
 
