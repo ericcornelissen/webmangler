@@ -22,24 +22,21 @@ suite("CssVariableMangler class", function() {
   let getIgnorePatterns: SinonStub;
   let getReserved: SinonStub;
   let getPrefix: SinonStub;
-  let getCssVariableDefinitionExpressionOptions: SinonStub;
-  let getCssVariableUsageExpressionOptions: SinonStub;
+  let getLanguageOptions: SinonStub;
 
   suiteSetup(function() {
     getPatterns = sinon.stub();
     getIgnorePatterns = sinon.stub();
     getReserved = sinon.stub();
     getPrefix = sinon.stub();
-    getCssVariableDefinitionExpressionOptions = sinon.stub();
-    getCssVariableUsageExpressionOptions = sinon.stub();
+    getLanguageOptions = sinon.stub();
 
     CssVariableMangler = initCssVariableMangler({
       getPatterns,
       getIgnorePatterns,
       getReserved,
       getPrefix,
-      getCssVariableDefinitionExpressionOptions,
-      getCssVariableUsageExpressionOptions,
+      getLanguageOptions,
     });
   });
 
@@ -48,8 +45,7 @@ suite("CssVariableMangler class", function() {
     getIgnorePatterns.resetHistory();
     getReserved.resetHistory();
     getPrefix.resetHistory();
-    getCssVariableDefinitionExpressionOptions.resetHistory();
-    getCssVariableUsageExpressionOptions.resetHistory();
+    getLanguageOptions.resetHistory();
   });
 
   const testScenarios: Iterable<TestScenario> = [
@@ -198,16 +194,11 @@ suite("CssVariableMangler class", function() {
         );
       });
 
-      test("the getCssVariableDefinitionExpressionOptions function is used", function() {
-        expect(getCssVariableDefinitionExpressionOptions).to.have.callCount(1);
-        expect(getCssVariableDefinitionExpressionOptions)
-          .to.have.been.calledWithExactly();
-      });
-
-      test("the getCssVariableUsageExpressionOptions function is used", function() {
-        expect(getCssVariableUsageExpressionOptions).to.have.callCount(1);
-        expect(getCssVariableUsageExpressionOptions)
-          .to.have.been.calledWithExactly();
+      test("the getLanguageOptions function is used", function() {
+        expect(getLanguageOptions).to.have.callCount(1);
+        expect(getLanguageOptions).to.have.been.calledWithExactly(
+          options || { },
+        );
       });
     });
   }

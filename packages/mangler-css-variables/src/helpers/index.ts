@@ -1,3 +1,5 @@
+import type { MangleExpressionOptions } from "@webmangler/types";
+
 import {
   getCssVariableDefinitionExpressionOptions,
   getCssVariableUsageExpressionOptions,
@@ -6,10 +8,21 @@ import { getIgnorePatterns, getPatterns } from "./patterns";
 import { getPrefix } from "./prefix";
 import { getReserved } from "./reserved";
 
+/**
+ * Get all language options.
+ *
+ * @returns The language options.
+ */
+function getLanguageOptions(): Iterable<MangleExpressionOptions<unknown>> {
+  return [
+    getCssVariableDefinitionExpressionOptions(),
+    getCssVariableUsageExpressionOptions(),
+  ];
+}
+
 export {
-  getCssVariableDefinitionExpressionOptions,
-  getCssVariableUsageExpressionOptions,
   getIgnorePatterns,
+  getLanguageOptions,
   getPatterns,
   getPrefix,
   getReserved,

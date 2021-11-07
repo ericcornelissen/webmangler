@@ -29,9 +29,9 @@ interface CssVariableManglerDependencies {
 
   getPrefix(keepCssVarPrefix?: string): string;
 
-  getCssVariableDefinitionExpressionOptions(): MangleExpressionOptions<unknown>;
-
-  getCssVariableUsageExpressionOptions(): MangleExpressionOptions<unknown>;
+  getLanguageOptions(
+    options: Record<never, never>,
+  ): Iterable<MangleExpressionOptions<unknown>>;
 }
 
 /**
@@ -69,10 +69,7 @@ function initCssVariableMangler(
         ),
         reserved: helpers.getReserved(options.reservedCssVarNames),
         prefix: helpers.getPrefix(options.keepCssVarPrefix),
-        languageOptions: [
-          helpers.getCssVariableDefinitionExpressionOptions(),
-          helpers.getCssVariableUsageExpressionOptions(),
-        ],
+        languageOptions: helpers.getLanguageOptions(options),
       });
     }
   };
