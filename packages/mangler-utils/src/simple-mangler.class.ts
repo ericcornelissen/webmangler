@@ -6,12 +6,25 @@ import type {
 } from "@webmangler/types";
 
 /**
+ * The type of the {@link SimpleManglerPlugin} abstract constructor.
+ */
+type SimpleManglerPluginConstructor = abstract new (
+  options: SimpleManglerOptions,
+) => WebManglerPlugin;
+
+/**
+ * The interface defining the dependencies of the {@link SimpleManglerPlugin}
+ * abstract class.
+ */
+type SimpleManglerPluginDependencies = Record<never, never>;
+
+/**
  * Interface defining the configuration of a {@link SimpleManglerPlugin}.
  *
  * @since v0.1.0
  * @version v0.1.23
  */
-export interface SimpleManglerOptions {
+interface SimpleManglerOptions {
   /**
    * The character set to use when mangling.
    *
@@ -58,76 +71,85 @@ export interface SimpleManglerOptions {
 }
 
 /**
- * The {@link SimpleManglerPlugin} abstract class provides an implementation of
- * a {@link WebManglerPlugin} that deals with implementing the API if it is
- * provided with the appropriate data.
+ * Initialize the {@link SimpleManglerPlugin} abstract class with explicit
+ * dependencies.
  *
- * It is recommended to extend this class - or {@link MultiManglerPlugin},
- * depending on your needs - if you're implementing a {@link WebManglerPlugin}.
- *
- * @since v0.1.0
- * @version v0.1.23
+ * @param params The dependencies of the abstract class.
+ * @returns The {@link SimpleManglerPlugin} abstract class.
  */
-export default abstract class SimpleManglerPlugin implements WebManglerPlugin {
-  /**
-   * The character set to use when mangling.
-   */
-  private readonly charSet: CharSet;
+function initSimpleManglerPlugin(
+  params: SimpleManglerPluginDependencies, // eslint-disable-line @typescript-eslint/no-unused-vars
+): SimpleManglerPluginConstructor {
+  abstract class SimpleManglerPlugin implements WebManglerPlugin {
+    /**
+     * The character set to use when mangling.
+     */
+    private readonly charSet: CharSet;
 
-  /**
-   * The pattern(s) that should **never** be mangled.
-   */
-  private readonly ignorePatterns: string | Iterable<string>;
+    /**
+     * The pattern(s) that should **never** be mangled.
+     */
+    private readonly ignorePatterns: string | Iterable<string>;
 
-  /**
-   * The configuration for the {@link WebManglerLanguagePlugin}s.
-   */
-  private readonly languageOptions: Iterable<MangleExpressionOptions<unknown>>;
+    /**
+     * The configuration for the {@link WebManglerLanguagePlugin}s.
+     */
+    private readonly languageOptions:
+      Iterable<MangleExpressionOptions<unknown>>;
 
-  /**
-   * The pattern(s) to be mangled.
-   */
-  private readonly patterns: string | Iterable<string>;
+    /**
+     * The pattern(s) to be mangled.
+     */
+    private readonly patterns: string | Iterable<string>;
 
-  /**
-   * The prefix to be used by this mangler.
-   */
-  private readonly prefix: string;
+    /**
+     * The prefix to be used by this mangler.
+     */
+    private readonly prefix: string;
 
-  /**
-   * The reserved names not to be used by this mangler.
-   */
-  private readonly reserved: Iterable<string>;
+    /**
+     * The reserved names not to be used by this mangler.
+     */
+    private readonly reserved: Iterable<string>;
 
-  /**
-   * Initialize a new {@link WebManglerPlugin}.
-   *
-   * @param options The {@link SimpleManglerOptions} (previously `id`).
-   * @since v0.1.0
-   * @version v0.1.23
-   */
-  constructor(options: SimpleManglerOptions) {
-    this.charSet = options.charSet;
-    this.ignorePatterns = options.ignorePatterns;
-    this.languageOptions = options.languageOptions;
-    this.patterns = options.patterns;
-    this.prefix = options.prefix;
-    this.reserved = options.reserved;
+    /**
+     * Initialize a new {@link WebManglerPlugin}.
+     *
+     * @param options The {@link SimpleManglerOptions}.
+     * @since v0.1.0
+     * @version v0.1.23
+     */
+    constructor(options: SimpleManglerOptions) {
+      this.charSet = options.charSet;
+      this.ignorePatterns = options.ignorePatterns;
+      this.languageOptions = options.languageOptions;
+      this.patterns = options.patterns;
+      this.prefix = options.prefix;
+      this.reserved = options.reserved;
+    }
+
+    /**
+     * @inheritDoc
+     * @since v0.1.14
+     * @version v0.1.23
+     */
+    options(): MangleOptions {
+      return {
+        charSet: this.charSet,
+        ignorePatterns: this.ignorePatterns,
+        languageOptions: this.languageOptions,
+        manglePrefix: this.prefix,
+        patterns: this.patterns,
+        reservedNames: this.reserved,
+      };
+    }
   }
 
-  /**
-   * @inheritDoc
-   * @since v0.1.14
-   * @version v0.1.23
-   */
-  options(): MangleOptions {
-    return {
-      charSet: this.charSet,
-      ignorePatterns: this.ignorePatterns,
-      languageOptions: this.languageOptions,
-      manglePrefix: this.prefix,
-      patterns: this.patterns,
-      reservedNames: this.reserved,
-    };
-  }
+  return SimpleManglerPlugin;
 }
+
+export default initSimpleManglerPlugin;
+
+export type {
+  SimpleManglerOptions,
+};
