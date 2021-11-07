@@ -5,7 +5,9 @@ import { format as printf } from "util";
 /**
  * Type of a the groups object of a Regular Expression match.
  */
-type RegExpMatchGroups = { [key: string]: string };
+type RegExpMatchGroups = {
+  [key: string]: string;
+};
 
 /**
  * A {@link NestedGroupMangleExpression} is a {@link MangleExpression}
@@ -21,9 +23,9 @@ type RegExpMatchGroups = { [key: string]: string };
  * // and for the replacements "horse->zebra" and "battery->cell" will change it
  * // into "var pw = 'correct zebra cell staple';"
  * @since v0.1.12
- * @version v0.1.22
+ * @version v0.1.24
  */
-export default class NestedGroupMangleExpression implements MangleExpression {
+class NestedGroupMangleExpression implements MangleExpression {
   /**
    * The top-level template string to use as (generic) pattern to find
    * substrings in the target string that can be processed by the
@@ -78,7 +80,7 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.20
-   * @version v0.1.22
+   * @version v0.1.24
    */
   public * findAll(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(this.patternTemplate, pattern);
@@ -107,7 +109,7 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.12
-   * @version v0.1.22
+   * @version v0.1.24
    */
   public replaceAll(
     str: string,
@@ -201,3 +203,5 @@ export default class NestedGroupMangleExpression implements MangleExpression {
     return baseFlags;
   }
 }
+
+export default NestedGroupMangleExpression;

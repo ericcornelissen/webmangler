@@ -5,7 +5,9 @@ import { format as printf } from "util";
 /**
  * Type of a the groups object of a Regular Expression match.
  */
-type RegExpMatchGroups = { [key: string]: string; };
+type RegExpMatchGroups = {
+  [key: string]: string;
+};
 
 /**
  * A {@link SingleGroupMangleExpression} is a {@link MangleExpression}
@@ -19,9 +21,9 @@ type RegExpMatchGroups = { [key: string]: string; };
  * // matches "bar" in "foo--bar--" and for the replacement "baz" will change it
  * // into "foo--baz--".
  * @since v0.1.11
- * @version v0.1.21
+ * @version v0.1.24
  */
-export default class SingleGroupMangleExpression implements MangleExpression {
+class SingleGroupMangleExpression implements MangleExpression {
   /**
    * The template string to use as (generic) pattern.
    */
@@ -49,7 +51,7 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    * @param groupName The name of a group in `patternTemplate`.
    * @param [caseSensitive] Should the expression be case sensitive.
    * @since v0.1.11
-   * @version v0.1.21
+   * @version v0.1.24
    */
   constructor(
     patternTemplate: string,
@@ -64,6 +66,7 @@ export default class SingleGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.20
+   * @version v0.1.24
    */
   public * findAll(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(pattern);
@@ -83,7 +86,7 @@ export default class SingleGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.11
-   * @version v0.1.20
+   * @version v0.1.24
    */
   public replaceAll(s: string, replacements: Map<string, string>): string {
     if (replacements.size === 0) {
@@ -144,3 +147,5 @@ export default class SingleGroupMangleExpression implements MangleExpression {
     return baseFlags;
   }
 }
+
+export default SingleGroupMangleExpression;
