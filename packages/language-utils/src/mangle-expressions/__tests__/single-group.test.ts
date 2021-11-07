@@ -9,6 +9,7 @@ suite("SingleGroupMangleExpression", function() {
     type TestCase = {
       patternTemplate: string;
       group: string;
+      caseSensitive?: boolean;
       pattern: string;
       s: string;
       expected: string[];
@@ -21,6 +22,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             pattern: "\\-[a-z]+",
             s: "foo-bar",
             expected: ["-bar"],
@@ -28,9 +30,18 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<=\\-)(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             pattern: "[a-z]+",
             s: "foo-bar",
             expected: ["bar"],
+          },
+          {
+            patternTemplate: "(?<g>%s)(?=\\-)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "[a-z]+",
+            s: "foo-bar",
+            expected: ["foo"],
           },
           {
             patternTemplate: "(?<g>%s)(?=\\-)",
@@ -42,11 +53,33 @@ suite("SingleGroupMangleExpression", function() {
         ],
       },
       {
+        name: "case insensitive",
+        cases: [
+          {
+            patternTemplate: "(?<=\\-)(?<g>%s)",
+            group: "g",
+            caseSensitive: false,
+            pattern: "[a-z]+",
+            s: "foo-BAR",
+            expected: ["bar"],
+          },
+          {
+            patternTemplate: "(?<g>%s)(?=\\-)",
+            group: "g",
+            caseSensitive: false,
+            pattern: "[a-z]+",
+            s: "Foo-bar",
+            expected: ["foo"],
+          },
+        ],
+      },
+      {
         name: "missing group",
         cases: [
           {
             patternTemplate: "(?<g>foo%s)",
             group: "f",
+            caseSensitive: true,
             pattern: "[a-z]+",
             s: "foobar",
             expected: [],
@@ -59,6 +92,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<=\\-)(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             pattern: "[a-z]+",
             s: "",
             expected: [],
@@ -66,6 +100,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<=\\-)(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             pattern: "[a-z]+",
             s: "var m = new Map();",
             expected: [],
@@ -80,6 +115,7 @@ suite("SingleGroupMangleExpression", function() {
           const {
             patternTemplate,
             group,
+            caseSensitive,
             pattern,
             s,
             expected,
@@ -88,6 +124,7 @@ suite("SingleGroupMangleExpression", function() {
           const subject = new SingleGroupMangleExpression(
             patternTemplate,
             group,
+            caseSensitive,
           );
 
           let i = 0;
@@ -106,6 +143,7 @@ suite("SingleGroupMangleExpression", function() {
     type TestCase = {
       patternTemplate: string;
       group: string;
+      caseSensitive: boolean;
       replacements: Map<string, string>;
       s: string;
       expected: string;
@@ -118,6 +156,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["bar", "baz"],
             ]),
@@ -127,6 +166,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<=\\-)(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["foo", "oof"],
               ["bar", "baz"],
@@ -137,6 +177,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<g>%s)(?=\\!)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["world", "mundo"],
               ["planet", "planeta"],
@@ -147,11 +188,38 @@ suite("SingleGroupMangleExpression", function() {
         ],
       },
       {
+        name: "case insensitive",
+        cases: [
+          {
+            patternTemplate: "(?<g>%s)",
+            group: "g",
+            caseSensitive: false,
+            replacements: new Map([
+              ["bar", "baz"],
+            ]),
+            s: "foo-BAR",
+            expected: "foo-baz",
+          },
+          {
+            patternTemplate: "(?<g>%s)(?=\\!)",
+            group: "g",
+            caseSensitive: false,
+            replacements: new Map([
+              ["world", "mundo"],
+              ["planet", "planeta"],
+            ]),
+            s: "Hello World! Hey PLANET!",
+            expected: "Hello mundo! Hey planeta!",
+          },
+        ],
+      },
+      {
         name: "missing group",
         cases: [
           {
             patternTemplate: "(?<g>%s)",
             group: "f",
+            caseSensitive: true,
             replacements: new Map([
               ["foobar", "foobaz"],
             ]),
@@ -166,6 +234,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<=\\-)(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map(),
             s: "",
             expected: "",
@@ -173,6 +242,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<=\\-)(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map(),
             s: "foo-bar",
             expected: "foo-bar",
@@ -180,6 +250,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<=\\-)(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
             ]),
@@ -189,6 +260,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<=\\-)(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
             ]),
@@ -198,6 +270,7 @@ suite("SingleGroupMangleExpression", function() {
           {
             patternTemplate: "(?<=\\-)(?<g>%s)",
             group: "g",
+            caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
             ]),
@@ -214,6 +287,7 @@ suite("SingleGroupMangleExpression", function() {
           const {
             patternTemplate,
             group,
+            caseSensitive,
             replacements,
             s,
             expected,
@@ -222,6 +296,7 @@ suite("SingleGroupMangleExpression", function() {
           const subject = new SingleGroupMangleExpression(
             patternTemplate,
             group,
+            caseSensitive,
           );
 
           const result = subject.replaceAll(s, replacements);
