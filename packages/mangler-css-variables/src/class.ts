@@ -6,17 +6,17 @@ import type {
 
 import type { CssVariableManglerOptions } from "./types";
 
-import {
-  ALL_LETTER_CHARS,
-  ALL_NUMBER_CHARS,
-  SimpleManglerPlugin,
-} from "@webmangler/mangler-utils";
+import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
 type CssVariableManglerConstructor = new (
   options?: CssVariableManglerOptions
 ) => WebManglerPlugin;
 
 interface CssVariableManglerDependencies {
+  getCharacterSet(
+    options: Record<never, never>,
+  ): CharSet;
+
   getPatterns(
     cssVarNamePattern?: string | Iterable<string>,
   ): string | Iterable<string>;
@@ -45,15 +45,6 @@ function initCssVariableMangler(
 ): CssVariableManglerConstructor {
   return class CssVariableMangler extends SimpleManglerPlugin {
     /**
-     * The character set used by {@link CssVariableMangler}.
-     */
-    private static readonly CHARACTER_SET: CharSet = [
-      ...ALL_LETTER_CHARS,
-      ...ALL_NUMBER_CHARS,
-      "-", "_",
-    ];
-
-    /**
      * Instantiate a new {@link CssVariableMangler}.
      *
      * @param options The {@link CssVariableManglerOptions}.
@@ -62,7 +53,7 @@ function initCssVariableMangler(
      */
     constructor(options: CssVariableManglerOptions={}) {
       super({
-        charSet: CssVariableMangler.CHARACTER_SET,
+        charSet: helpers.getCharacterSet(options),
         patterns: helpers.getPatterns(options.cssVarNamePattern),
         ignorePatterns: helpers.getIgnorePatterns(
           options.ignoreCssVarNamePattern,

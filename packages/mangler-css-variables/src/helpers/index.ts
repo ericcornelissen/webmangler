@@ -1,5 +1,6 @@
 import type { MangleExpressionOptions } from "@webmangler/types";
 
+import { getCharacterSet } from "./characters";
 import {
   getCssVariableDefinitionExpressionOptions,
   getCssVariableUsageExpressionOptions,
@@ -21,6 +22,7 @@ function getLanguageOptions(): Iterable<MangleExpressionOptions<unknown>> {
 }
 
 export {
+  getCharacterSet,
   getIgnorePatterns,
   getLanguageOptions,
   getPatterns,

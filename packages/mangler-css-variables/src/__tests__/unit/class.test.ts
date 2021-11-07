@@ -18,6 +18,7 @@ interface TestScenario {
 suite("CssVariableMangler class", function() {
   let CssVariableMangler: ReturnType<typeof initCssVariableMangler>;
 
+  let getCharacterSet: SinonStub;
   let getPatterns: SinonStub;
   let getIgnorePatterns: SinonStub;
   let getReserved: SinonStub;
@@ -25,6 +26,7 @@ suite("CssVariableMangler class", function() {
   let getLanguageOptions: SinonStub;
 
   suiteSetup(function() {
+    getCharacterSet = sinon.stub();
     getPatterns = sinon.stub();
     getIgnorePatterns = sinon.stub();
     getReserved = sinon.stub();
@@ -32,6 +34,7 @@ suite("CssVariableMangler class", function() {
     getLanguageOptions = sinon.stub();
 
     CssVariableMangler = initCssVariableMangler({
+      getCharacterSet,
       getPatterns,
       getIgnorePatterns,
       getReserved,
@@ -41,6 +44,7 @@ suite("CssVariableMangler class", function() {
   });
 
   setup(function() {
+    getCharacterSet.resetHistory();
     getPatterns.resetHistory();
     getIgnorePatterns.resetHistory();
     getReserved.resetHistory();
@@ -164,6 +168,13 @@ suite("CssVariableMangler class", function() {
 
       setup(function() {
         new CssVariableMangler(options);
+      });
+
+      test("the getCharacterSet function is used", function() {
+        expect(getCharacterSet).to.have.callCount(1);
+        expect(getCharacterSet).to.have.been.calledWithExactly(
+          options || {},
+        );
       });
 
       test("the getPatterns function is used", function() {
