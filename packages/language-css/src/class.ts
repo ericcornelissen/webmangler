@@ -2,27 +2,36 @@ import type { WebManglerLanguagePlugin } from "@webmangler/types";
 import type { ExpressionFactory } from "@webmangler/language-utils";
 
 import { SimpleLanguagePlugin } from "@webmangler/language-utils";
-import {
-  cssDeclarationPropertyExpressionFactory,
-  cssDeclarationValueExpressionFactory ,
-  querySelectorExpressionFactory,
-  singleValueAttributeExpressionFactory,
-} from "./expressions";
-
-const map: Map<string, ExpressionFactory> = new Map();
-map.set("css-declaration-properties", cssDeclarationPropertyExpressionFactory);
-map.set("css-declaration-values", cssDeclarationValueExpressionFactory);
-map.set("query-selectors", querySelectorExpressionFactory);
-map.set("single-value-attributes", singleValueAttributeExpressionFactory);
 
 /**
  * The constructor type of the {@link CssLanguagePlugin} class.
- *
- * @since v0.1.27
  */
 type CssLanguagePluginConstructor = new (
   options?: CssLanguagePluginOptions
 ) => WebManglerLanguagePlugin;
+
+/**
+ * The interface defining the dependencies of the {@link CssLanguagePlugin}
+ * class.
+ */
+interface CssLanguagePluginDependencies {
+  /**
+   * Get all the expression factories for a new {@link CssLanguagePlugin}
+   * instance.
+   *
+   * @returns The expression factories {@link Map}.
+   */
+  getExpressionFactories(): Map<string, ExpressionFactory>;
+
+  /**
+   *
+   * @param [configuredLanguages] The configured languages, if any.
+   * @returns The languages for the instances.
+   */
+  getLanguages(
+    configuredLanguages?: Iterable<string>,
+  ): Iterable<string>;
+}
 
 /**
  * The options for _WebMangler_'s built-in {@link CssLanguagePlugin}.
@@ -47,23 +56,16 @@ interface CssLanguagePluginOptions {
 /**
  * Initialize the {@link CssLanguagePlugin} class with explicit dependencies.
  *
+ * @param helpers The dependencies of the class.
+ * @param helpers.getExpressionFactories A function to get expression factories.
+ * @param helpers.getLanguages A function to get supported language extensions.
  * @returns The {@link CssLanguagePlugin} class.
- * @since v0.1.27
  */
-function initCssLanguagePlugin(): CssLanguagePluginConstructor {
+function initCssLanguagePlugin({
+  getExpressionFactories,
+  getLanguages,
+}: CssLanguagePluginDependencies): CssLanguagePluginConstructor {
   return class CssLanguagePlugin extends SimpleLanguagePlugin {
-    /**
-     * The language aliases supported by the {@link CssLanguagePlugin}.
-     */
-    private static DEFAULT_LANGUAGES: Iterable<string> = [
-      "css",
-    ];
-
-    /**
-     * The {@link ExpressionFactory}s provided by the {@link CssLanguagePlugin}.
-     */
-    private static EXPRESSION_FACTORIES: Map<string, ExpressionFactory> = map;
-
     /**
      * Instantiate a new {@link CssLanguagePlugin} plugin.
      *
@@ -73,24 +75,9 @@ function initCssLanguagePlugin(): CssLanguagePluginConstructor {
      */
     constructor(options: CssLanguagePluginOptions={}) {
       super(
-        CssLanguagePlugin.getLanguages(options.cssExtensions),
-        CssLanguagePlugin.EXPRESSION_FACTORIES,
+        getLanguages(options.cssExtensions),
+        getExpressionFactories(),
       );
-    }
-
-    /**
-     * Get all the languages for a new {@link CssLanguagePlugin} instance.
-     *
-     * @param [configuredLanguages] The configured languages, if any.
-     * @returns The languages for the instances.
-     */
-    private static getLanguages(
-      configuredLanguages: Iterable<string> = [],
-    ): Iterable<string> {
-      return new Set([
-        ...CssLanguagePlugin.DEFAULT_LANGUAGES,
-        ...configuredLanguages,
-      ]);
     }
   };
 }

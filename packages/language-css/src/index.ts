@@ -1,7 +1,7 @@
 import type { CssLanguagePluginOptions } from "./class";
 
 import initCssLanguagePlugin from "./class";
-
+import * as helpers from "./helpers";
 
 /**
  * This {@link WebManglerLanguagePlugin} provides support for mangling the
@@ -35,7 +35,10 @@ import initCssLanguagePlugin from "./class";
  * @since v0.1.0
  * @version v0.1.26
  */
-const CssLanguagePlugin = initCssLanguagePlugin();
+const CssLanguagePlugin = initCssLanguagePlugin({
+  getExpressionFactories: helpers.getExpressionFactories,
+  getLanguages: helpers.getLanguages,
+});
 
 export default CssLanguagePlugin;
 
