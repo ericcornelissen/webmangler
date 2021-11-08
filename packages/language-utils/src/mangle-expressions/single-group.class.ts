@@ -5,7 +5,9 @@ import { format as printf } from "util";
 /**
  * Type of a the groups object of a Regular Expression match.
  */
-type RegExpMatchGroups = { [key: string]: string };
+type RegExpMatchGroups = {
+  [key: string]: string;
+};
 
 /**
  * A {@link SingleGroupMangleExpression} is a {@link MangleExpression}
@@ -19,9 +21,9 @@ type RegExpMatchGroups = { [key: string]: string };
  * // matches "bar" in "foo--bar--" and for the replacement "baz" will change it
  * // into "foo--baz--".
  * @since v0.1.11
- * @version v0.1.21
+ * @version v0.1.24
  */
-export default class SingleGroupMangleExpression implements MangleExpression {
+class SingleGroupMangleExpression implements MangleExpression {
   /**
    * The template string to use as (generic) pattern.
    */
@@ -33,6 +35,11 @@ export default class SingleGroupMangleExpression implements MangleExpression {
   private readonly groupName: string;
 
   /**
+   * A boolean indicating whether or not the expression is case sensitive.
+   */
+  private readonly caseSensitive: boolean;
+
+  /**
    * Create an expression from a pattern template with a named group to match
    * and replace.
    *
@@ -42,20 +49,24 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    *
    * @param patternTemplate The generic pattern (only one "%s" allowed).
    * @param groupName The name of a group in `patternTemplate`.
+   * @param [caseSensitive] Should the expression be case sensitive.
    * @since v0.1.11
-   * @version v0.1.21
+   * @version v0.1.24
    */
   constructor(
     patternTemplate: string,
     groupName: string,
+    caseSensitive = true,
   ) {
     this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
+    this.caseSensitive =  caseSensitive;
   }
 
   /**
    * @inheritdoc
    * @since v0.1.20
+   * @version v0.1.24
    */
   public * findAll(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(pattern);
@@ -63,7 +74,11 @@ export default class SingleGroupMangleExpression implements MangleExpression {
     while ((match = regExp.exec(s)) !== null) {
       const groups = match.groups as RegExpMatchGroups;
       if (this.didMatch(groups)) {
-        yield groups[this.groupName];
+        if (this.caseSensitive) {
+          yield groups[this.groupName];
+        } else {
+          yield groups[this.groupName].toLowerCase();
+        }
       }
     }
   }
@@ -71,7 +86,7 @@ export default class SingleGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.11
-   * @version v0.1.20
+   * @version v0.1.24
    */
   public replaceAll(s: string, replacements: Map<string, string>): string {
     if (replacements.size === 0) {
@@ -83,7 +98,10 @@ export default class SingleGroupMangleExpression implements MangleExpression {
     return s.replace(regExp, (match: string, ...args: unknown[]): string => {
       const groups = args[args.length - 1] as RegExpMatchGroups;
       if (this.didMatch(groups)) {
-        const original = groups[this.groupName];
+        let original = groups[this.groupName];
+        if (!this.caseSensitive) {
+          original = original.toLowerCase();
+        }
         const replacement = replacements.get(original);
         return replacement as string;
       } else {
@@ -110,7 +128,24 @@ export default class SingleGroupMangleExpression implements MangleExpression {
    * @returns A {@link RegExp} corresponding to this expression and `pattern`.
    */
   private newRegExp(pattern: string): RegExp {
+    const flags = this.getRegExpFlags();
     const rawExpr = printf(this.patternTemplate, pattern);
-    return new RegExp(rawExpr, "gm");
+    return new RegExp(rawExpr, flags);
+  }
+
+  /**
+   * Get the flags given the instance options.
+   *
+   * @returns A string of {@link RegExp} flags.
+   */
+  private getRegExpFlags(): string {
+    const baseFlags = "gm";
+    if (!this.caseSensitive) {
+      return `${baseFlags}i`;
+    }
+
+    return baseFlags;
   }
 }
+
+export default SingleGroupMangleExpression;

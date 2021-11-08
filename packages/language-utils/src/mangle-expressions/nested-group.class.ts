@@ -5,7 +5,9 @@ import { format as printf } from "util";
 /**
  * Type of a the groups object of a Regular Expression match.
  */
-type RegExpMatchGroups = { [key: string]: string };
+type RegExpMatchGroups = {
+  [key: string]: string;
+};
 
 /**
  * A {@link NestedGroupMangleExpression} is a {@link MangleExpression}
@@ -21,9 +23,9 @@ type RegExpMatchGroups = { [key: string]: string };
  * // and for the replacements "horse->zebra" and "battery->cell" will change it
  * // into "var pw = 'correct zebra cell staple';"
  * @since v0.1.12
- * @version v0.1.22
+ * @version v0.1.24
  */
-export default class NestedGroupMangleExpression implements MangleExpression {
+class NestedGroupMangleExpression implements MangleExpression {
   /**
    * The top-level template string to use as (generic) pattern to find
    * substrings in the target string that can be processed by the
@@ -44,6 +46,11 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   private readonly groupName: string;
 
   /**
+   * A boolean indicating whether or not the expression is case sensitive.
+   */
+  private readonly caseSensitive: boolean;
+
+  /**
    * Create an expression from a top-level pattern an sub pattern with a single
    * named group to match and replace.
    *
@@ -54,22 +61,26 @@ export default class NestedGroupMangleExpression implements MangleExpression {
    * @param patternTemplate The top-level template.
    * @param subPatternTemplate The sub template.
    * @param groupName The name of a group in both pattern templates.
+   * @param [caseSensitive] Should the expression be case sensitive.
    * @since v0.1.12
+   * @version v0.1.24
    */
   constructor(
     patternTemplate: string,
     subPatternTemplate: string,
     groupName: string,
+    caseSensitive = true,
   ) {
     this.patternTemplate = patternTemplate.replace(/\s/g, "");
     this.subPatternTemplate = subPatternTemplate.replace(/\s/g, "");
     this.groupName = groupName;
+    this.caseSensitive =  caseSensitive;
   }
 
   /**
    * @inheritdoc
    * @since v0.1.20
-   * @version v0.1.22
+   * @version v0.1.24
    */
   public * findAll(s: string, pattern: string): IterableIterator<string> {
     const regExp = this.newRegExp(this.patternTemplate, pattern);
@@ -84,7 +95,11 @@ export default class NestedGroupMangleExpression implements MangleExpression {
         while ((matchSub = regExpSub.exec(subStr)) !== null) {
           const subGroups = matchSub.groups as RegExpMatchGroups;
           if (this.didMatch(subGroups)) {
-            yield subGroups[this.groupName];
+            if (this.caseSensitive) {
+              yield subGroups[this.groupName];
+            } else {
+              yield subGroups[this.groupName].toLowerCase();
+            }
           }
         }
       }
@@ -94,7 +109,7 @@ export default class NestedGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.12
-   * @version v0.1.22
+   * @version v0.1.24
    */
   public replaceAll(
     str: string,
@@ -117,7 +132,10 @@ export default class NestedGroupMangleExpression implements MangleExpression {
         ): string => {
           const subGroups = subArgs[subArgs.length - 1] as RegExpMatchGroups;
           if (this.didMatch(subGroups)) {
-            const original = this.extractGroup(subArgs);
+            let original = this.extractGroup(subArgs);
+            if (!this.caseSensitive) {
+              original = original.toLowerCase();
+            }
             const replacement = replacements.get(original);
             return replacement as string;
           } else {
@@ -166,7 +184,24 @@ export default class NestedGroupMangleExpression implements MangleExpression {
    * @returns A {@link RegExp} corresponding to the `template` and `pattern`.
    */
   private newRegExp(template: string, pattern: string): RegExp {
+    const flags = this.getRegExpFlags();
     const rawExpr = printf(template, `(?:${pattern})`);
-    return new RegExp(rawExpr, "gm");
+    return new RegExp(rawExpr, flags);
+  }
+
+  /**
+   * Get the flags given the instance options.
+   *
+   * @returns A string of {@link RegExp} flags.
+   */
+  private getRegExpFlags(): string {
+    const baseFlags = "gm";
+    if (!this.caseSensitive) {
+      return `${baseFlags}i`;
+    }
+
+    return baseFlags;
   }
 }
+
+export default NestedGroupMangleExpression;

@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Drop Sinon.JS v10 support.
+- Fix return value of `MangleExpressionMock.replaceAll`. ([#190])
 
 ## [0.1.5] - 2021-06-15
 
@@ -38,5 +39,6 @@ Versioning].
 
 - Add interface for structuring generated tests.
 
+[#190]: https://github.com/ericcornelissen/webmangler/pull/190
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

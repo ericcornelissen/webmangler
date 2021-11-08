@@ -1,13 +1,13 @@
 import { expect } from "chai";
 
-import { generateValueObjects, generateValueObjectsAll } from "../generate";
+import { generateValueObjects, generateValueObjectsAll } from "../../generate";
 
 suite("Generate", function() {
   suite("::generateValueObjects", function() {
     type TestCase = {
       name: string;
-      input: { [key: string]: string[]; },
-      expected: { [key: string]: string; }[],
+      input: { [key: string]: string[]; };
+      expected: { [key: string]: string; }[];
     }
 
     const testCases: TestCase[] = [
@@ -61,8 +61,8 @@ suite("Generate", function() {
   suite("::generateValueObjectsAll", function() {
     type TestCase = {
       name: string;
-      input: Iterable<{ [key: string]: string[]; }>,
-      expected: Iterable<{ [key: string]: string; }>[],
+      input: Iterable<{ [key: string]: string[]; }>;
+      expected: Iterable<{ [key: string]: string; }>[];
     }
 
     const testCases: TestCase[] = [

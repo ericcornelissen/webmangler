@@ -1,47 +1,52 @@
-import type { SinonStub } from "sinon";
+import type { Stub } from "./types";
 
-import { getStubOrDefault } from "./common";
-
-/**
- * A counter used to make the return value of automatic stubs unique.
- */
-let uniqueId = 0;
-
-/**
- * A simple mock for _WebMangler_'s {@link MangleExpression} interface.
- *
- * @since v0.1.1
- * @version v0.1.5
- */
-export default class MangleExpressionMock {
-  /**
-   * The `findAll` method of the mock.
-   *
-   * @since v0.1.3
-   */
-  public readonly findAll: SinonStub;
-
-  /**
-   * The `replaceAll` method of the mock.
-   *
-   * @since v0.1.1
-   */
-  public readonly replaceAll: SinonStub;
-
-  /**
-   * Create a new {@link MangleExpressionMock}. Optionally with specific
-   * behaviour.
-   *
-   * @param [stubs] The stubs for this mock.
-   * @param [stubs.findAll] A {@link SinonStub} for `findAll`.
-   * @param [stubs.replaceAll] A {@link SinonStub} for `replaceAll`.
-   * @since v0.1.5
-   */
-  constructor(stubs?: {
-    findAll?: SinonStub,
-    replaceAll?: SinonStub,
-  }) {
-    this.findAll = getStubOrDefault([uniqueId++], stubs?.findAll);
-    this.replaceAll = getStubOrDefault(uniqueId++, stubs?.replaceAll);
-  }
+interface MangleExpressionMockDependencies {
+  createStub(): Stub;
 }
+
+/**
+ * Initialize the {@link MangleExpressionMock} class with explicit dependencies.
+ *
+ * @param params The dependencies of the mock.
+ * @param params.createStub A function to create a {@link Stub}.
+ * @returns The {@link MangleExpressionMock} class.
+ */
+function initMangleExpressionMock({
+  createStub,
+}: MangleExpressionMockDependencies) {
+  let id = 0;
+  return class MangleExpressionMock {
+    /**
+     * The `findAll` method of the mock.
+     *
+     * @since v0.1.3
+     */
+    public readonly findAll: Stub;
+
+    /**
+     * The `replaceAll` method of the mock.
+     *
+     * @since v0.1.1
+     */
+    public readonly replaceAll: Stub;
+
+    /**
+     * Create a new {@link MangleExpressionMock}. Optionally with specific
+     * behaviour.
+     *
+     * @param [stubs] The {@link Stub}s for this mock.
+     * @param [stubs.findAll] A {@link Stub} for `findAll`.
+     * @param [stubs.replaceAll] A {@link Stub} for `replaceAll`.
+     * @since v0.1.5
+     */
+    constructor(stubs?: {
+      findAll?: Stub;
+      replaceAll?: Stub;
+    }) {
+      this.findAll = stubs?.findAll || createStub().returns([id++]);
+      this.replaceAll = stubs?.replaceAll || createStub().returns(`${id++}`);
+    }
+  };
+}
+
+export default initMangleExpressionMock;
