@@ -12,7 +12,7 @@ suite("CSS Variable Mangler reserved helpers", function() {
     const DEFAULT_RESERVED: string[] = [];
 
     test("default reserved", function() {
-      const _result = getReserved();
+      const _result = getReserved({ });
       const result = Array.from(_result);
 
       expect(result).to.include.members(ALWAYS_RESERVED);
@@ -28,7 +28,9 @@ suite("CSS Variable Mangler reserved helpers", function() {
         "bar",
       ];
 
-      const _result = getReserved(reserved);
+      const _result = getReserved({
+        reservedCssVarNames: reserved,
+      });
       const result = Array.from(_result);
 
       expect(result).to.include.members(ALWAYS_RESERVED);

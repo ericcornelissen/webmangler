@@ -170,44 +170,44 @@ suite("CssVariableMangler class", function() {
         new CssVariableMangler(options);
       });
 
-      test("the getCharacterSet function is used", function() {
+      test("the `getCharacterSet` function is used", function() {
         expect(getCharacterSet).to.have.callCount(1);
         expect(getCharacterSet).to.have.been.calledWithExactly(
-          options || {},
+          options || { },
         );
       });
 
-      test("the getPatterns function is used", function() {
-        expect(getPatterns).to.have.callCount(1);
-        expect(getPatterns).to.have.been.calledWithExactly(
-          options?.cssVarNamePattern,
-        );
-      });
-
-      test("the getIgnorePatterns function is used", function() {
+      test("the `getIgnorePatterns` function is used", function() {
         expect(getIgnorePatterns).to.have.callCount(1);
         expect(getIgnorePatterns).to.have.been.calledWithExactly(
-          options?.ignoreCssVarNamePattern,
+          options || { },
         );
       });
 
-      test("the getReserved function is used", function() {
-        expect(getReserved).to.have.callCount(1);
-        expect(getReserved).to.have.been.calledWithExactly(
-          options?.reservedCssVarNames,
-        );
-      });
-
-      test("the getPrefix function is used", function() {
-        expect(getPrefix).to.have.callCount(1);
-        expect(getPrefix).to.have.been.calledWithExactly(
-          options?.keepCssVarPrefix,
-        );
-      });
-
-      test("the getLanguageOptions function is used", function() {
+      test("the `getLanguageOptions` function is used", function() {
         expect(getLanguageOptions).to.have.callCount(1);
         expect(getLanguageOptions).to.have.been.calledWithExactly(
+          options || { },
+        );
+      });
+
+      test("the `getPatterns` function is used", function() {
+        expect(getPatterns).to.have.callCount(1);
+        expect(getPatterns).to.have.been.calledWithExactly(
+          options || { },
+        );
+      });
+
+      test("the `getPrefix` function is used", function() {
+        expect(getPrefix).to.have.callCount(1);
+        expect(getPrefix).to.have.been.calledWithExactly(
+          options || { },
+        );
+      });
+
+      test("the `getReserved` function is used", function() {
+        expect(getReserved).to.have.callCount(1);
+        expect(getReserved).to.have.been.calledWithExactly(
           options || { },
         );
       });

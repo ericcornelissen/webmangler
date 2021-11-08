@@ -14,14 +14,26 @@ const DEFAULT_RESERVED: string[] = [
 ];
 
 /**
+ * The options for CSS variable mangler reserved names.
+ */
+interface ReservedOptions {
+  /**
+   * A list of strings and patterns of CSS variable names that should not be
+   * used, if any.
+   */
+  readonly reservedCssVarNames?: Iterable<string>;
+}
+
+/**
  * Get either the configured reserved names or the default reserved names.
  *
- * @param reservedCssVarNames The configured reserved names.
+ * @param options The {@link ReservedOptions}.
+ * @param options.reservedCssVarNames The configured reserved names.
  * @returns The reserved names to be used.
  */
-function getReserved(
-  reservedCssVarNames?: Iterable<string>,
-): Iterable<string> {
+function getReserved({
+  reservedCssVarNames,
+}: ReservedOptions): Iterable<string> {
   let configured = reservedCssVarNames;
   if (configured === undefined) {
     configured = DEFAULT_RESERVED;

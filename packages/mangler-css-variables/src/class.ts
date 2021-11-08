@@ -8,30 +8,77 @@ import type { CssVariableManglerOptions } from "./types";
 
 import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
+/**
+ * The type of the {@link CssVariableMangler} constructor.
+ */
 type CssVariableManglerConstructor = new (
   options?: CssVariableManglerOptions
 ) => WebManglerPlugin;
 
+/**
+ * The interface defining the dependencies of the {@link CssVariableMangler}
+ * class.
+ */
 interface CssVariableManglerDependencies {
+  /**
+   * Get the {@link CharSet} for the {@link CssVariableMangler}.
+   *
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The {@link CharSet}.
+   */
   getCharacterSet(
     options: Record<never, never>,
   ): CharSet;
 
-  getPatterns(
-    cssVarNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string>;
+  /**
+   * Get the ignore patterns for the {@link CssVariableMangler}.
+   *
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The ignore patterns.
+   */
+   getIgnorePatterns(options: {
+    ignoreCssVarNamePattern?: string | Iterable<string>;
+  }): string | Iterable<string>;
 
-  getIgnorePatterns(
-    ignoreCssVarNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string>;
-
-  getReserved(reservedCssVarNames?: Iterable<string>): Iterable<string>;
-
-  getPrefix(keepCssVarPrefix?: string): string;
-
-  getLanguageOptions(
+  /**
+   * Get the language options for the {@link CssVariableMangler}.
+   *
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The language options.
+   */
+   getLanguageOptions(
     options: Record<never, never>,
   ): Iterable<MangleExpressionOptions<unknown>>;
+
+  /**
+   * Get the patterns for the {@link CssVariableMangler}.
+   *
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The patterns.
+   */
+  getPatterns(options: {
+    cssVarNamePattern?: string | Iterable<string>;
+  }): string | Iterable<string>;
+
+  /**
+   * Get the mangle prefix for the {@link CssVariableMangler}.
+   *
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The mangle prefix.
+   */
+   getPrefix(options: {
+    keepCssVarPrefix?: string;
+  }): string;
+
+  /**
+   * Get the reserved names for the {@link CssVariableMangler}.
+   *
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The reserved names.
+   */
+  getReserved(options: {
+    reservedCssVarNames?: Iterable<string>;
+  }): Iterable<string>;
 }
 
 /**
@@ -54,12 +101,10 @@ function initCssVariableMangler(
     constructor(options: CssVariableManglerOptions={}) {
       super({
         charSet: helpers.getCharacterSet(options),
-        patterns: helpers.getPatterns(options.cssVarNamePattern),
-        ignorePatterns: helpers.getIgnorePatterns(
-          options.ignoreCssVarNamePattern,
-        ),
-        reserved: helpers.getReserved(options.reservedCssVarNames),
-        prefix: helpers.getPrefix(options.keepCssVarPrefix),
+        patterns: helpers.getPatterns(options),
+        ignorePatterns: helpers.getIgnorePatterns(options),
+        reserved: helpers.getReserved(options),
+        prefix: helpers.getPrefix(options),
         languageOptions: helpers.getLanguageOptions(options),
       });
     }

@@ -15,14 +15,26 @@ const DEFAULT_PATTERNS: Iterable<string> = [
 ];
 
 /**
+ * The options for CSS variable mangler ignore patterns.
+ */
+ interface IgnorePatternOptions {
+  /**
+   * One or more patterns for CSS variables that should **never** be mangled, if
+   * any.
+   */
+  readonly ignoreCssVarNamePattern?: string | Iterable<string>;
+}
+
+/**
  * Get either the configured patterns or the default patterns.
  *
- * @param ignoreCssVarNamePattern The configured ignore patterns.
+ * @param options The {@link IgnorePatternOptions}.
+ * @param options.ignoreCssVarNamePattern The configured ignore patterns.
  * @returns The ignore patterns to be used.
  */
-function getIgnorePatterns(
-  ignoreCssVarNamePattern?: string | Iterable<string>,
-): string | Iterable<string> {
+function getIgnorePatterns({
+  ignoreCssVarNamePattern,
+}: IgnorePatternOptions): string | Iterable<string> {
   if (ignoreCssVarNamePattern === undefined) {
     return DEFAULT_IGNORE_PATTERNS;
   }
@@ -31,14 +43,25 @@ function getIgnorePatterns(
 }
 
 /**
+ * The options for CSS variable mangler patterns.
+ */
+ interface PatternOptions {
+  /**
+   * One or more patterns for CSS variables that should be mangled, if any.
+   */
+  readonly cssVarNamePattern?: string | Iterable<string>;
+}
+
+/**
  * Get either the configured patterns or the default patterns.
  *
- * @param cssVarNamePattern The configured patterns.
+ * @param options The {@link PatternOptions}.
+ * @param options.cssVarNamePattern The configured patterns.
  * @returns The patterns to be used.
  */
-function getPatterns(
-  cssVarNamePattern?: string | Iterable<string>,
-): string | Iterable<string> {
+function getPatterns({
+  cssVarNamePattern,
+}: PatternOptions): string | Iterable<string> {
   if (cssVarNamePattern === undefined) {
     return DEFAULT_PATTERNS;
   }
