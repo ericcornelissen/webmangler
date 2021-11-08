@@ -19,7 +19,7 @@ jobs:
       tested-packages: ${{ steps.tested-filter.outputs.changes }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
       - name: Get Node.js configuration
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
@@ -79,7 +79,7 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.benchmarked-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
       - name: Cache compiled package
         uses: actions/cache@v2
         with:
@@ -115,7 +115,7 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.all-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
       - name: Cache compiled package
         uses: actions/cache@v2
         with:
@@ -146,7 +146,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
         with:
           fetch-depth: 0
       - name: Fetch main branch
@@ -174,7 +174,7 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.tested-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
       - name: Cache compiled package
         uses: actions/cache@v2
         with:
