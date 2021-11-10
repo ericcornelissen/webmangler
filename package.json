@@ -15,7 +15,6 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "benchmark": "node scripts/test.js --benchmark",
     "clean": "node scripts/clean.js",
     "coverage": "node scripts/test.js --coverage",
     "format": "node scripts/lint.js --format",
@@ -23,6 +22,7 @@
     "postinstall": "husky install scripts/hooks",
     "test": "node scripts/test.js",
     "test:mutation": "node scripts/test.js --mutation",
+    "test:performance": "node scripts/test.js --benchmark",
     "test:watch": "node scripts/test.js --watch"
   },
   "devDependencies": {
