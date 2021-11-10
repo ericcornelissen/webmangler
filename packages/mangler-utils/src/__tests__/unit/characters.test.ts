@@ -1,0 +1,96 @@
+import { expect } from "chai";
+
+import {
+  ALL_CHARS,
+  ALL_LETTER_CHARS,
+  ALL_LOWERCASE_CHARS,
+  ALL_NUMBER_CHARS,
+  ALL_UPPERCASE_CHARS,
+} from "../../characters";
+
+suite("Character sets", function() {
+  const alphabetSize = 26;
+  const numbersSize = 10;
+
+  suite("ALL_CHARS", function() {
+    test("only contains letters", function() {
+      const expr = /^[A-Za-z0-9_-]$/;
+      for (const character of ALL_CHARS) {
+        const result = expr.test(character);
+        expect(result, `${character} is not a valid character`).to.be.true;
+      }
+    });
+
+    test("contains all letters", function() {
+      const charactersAsSet = new Set(ALL_CHARS);
+      const numberOfCharacters = charactersAsSet.size;
+      expect(numberOfCharacters).to.equal(
+        (2 * alphabetSize) + numbersSize + 2,
+      );
+    });
+  });
+
+  suite("ALL_LETTER_CHARS", function() {
+    test("only contains letters", function() {
+      const expr = /^[A-Za-z]$/;
+      for (const character of ALL_LETTER_CHARS) {
+        const result = expr.test(character);
+        expect(result, `${character} is not a letter`).to.be.true;
+      }
+    });
+
+    test("contains all letters", function() {
+      const charactersAsSet = new Set(ALL_LETTER_CHARS);
+      const numberOfCharacters = charactersAsSet.size;
+      expect(numberOfCharacters).to.equal(2 * alphabetSize);
+    });
+  });
+
+  suite("ALL_LOWERCASE_CHARS", function() {
+    test("only contains lowercase letters", function() {
+      const expr = /^[a-z]$/;
+      for (const character of ALL_LOWERCASE_CHARS) {
+        const result = expr.test(character);
+        expect(result, `${character} is not a lowercase character`).to.be.true;
+      }
+    });
+
+    test("contains all letters", function() {
+      const charactersAsSet = new Set(ALL_LOWERCASE_CHARS);
+      const numberOfCharacters = charactersAsSet.size;
+      expect(numberOfCharacters).to.equal(alphabetSize);
+    });
+  });
+
+  suite("ALL_NUMBER_CHARS", function() {
+    test("only contains numbers", function() {
+      const expr = /^[0-9]$/;
+      for (const character of ALL_NUMBER_CHARS) {
+        const result = expr.test(character);
+        expect(result, `${character} is not a number`).to.be.true;
+      }
+    });
+
+    test("contains all letters", function() {
+      const charactersAsSet = new Set(ALL_NUMBER_CHARS);
+      const numberOfCharacters = charactersAsSet.size;
+      expect(numberOfCharacters).to.equal(numbersSize);
+    });
+  });
+
+  suite("ALL_UPPERCASE_CHARS", function() {
+    test("only contains uppercase letters", function() {
+      const expr = /^[A-Z]$/;
+      for (const character of ALL_UPPERCASE_CHARS) {
+        const result = expr.test(character);
+        expect(result, `${character} is not an uppercase character`).to.be.true;
+      }
+    });
+
+    test("contains all letters", function() {
+      const charactersAsSet = new Set(ALL_UPPERCASE_CHARS);
+      const numberOfCharacters = charactersAsSet.size;
+      expect(numberOfCharacters).to.equal(alphabetSize);
+    });
+  });
+});
