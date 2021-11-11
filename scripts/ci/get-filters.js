@@ -13,9 +13,7 @@ import log from "../utilities/log.js";
 import * as paths from "../paths.js";
 
 const RUN_MUTATION_TESTING = [
-  "benchmarking",
   "language-css",
-  "language-html",
   "language-js",
   "mangler-css-variables",
   "mangler-utils",

@@ -20,7 +20,7 @@ module.exports = {
     `!**/${testDirs}/**/*.ts`,
   ],
   commandRunner: {
-    command: `npm run test -- ${packagesList.join(" ")}`,
+    command: `npm run test -- ${packagesList.join(" ")} --unit`,
   },
 
   timeoutMS: 25000,
