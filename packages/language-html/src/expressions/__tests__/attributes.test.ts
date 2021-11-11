@@ -96,6 +96,27 @@ suite("HTML - Attribute Expression Factory", function() {
       ],
     },
     {
+      name: "same attribute with different casing",
+      pattern: "data-[a-z]+",
+      expected: ["data-foo", "data-foo"],
+      getValuesSets: () => [
+        {
+          tag: valuePresets.elements.tag,
+          attributes: [
+            ...buildHtmlAttributes({ name: "data-foo" }),
+          ],
+          content: valuePresets.elements.content,
+        },
+        {
+          tag: valuePresets.elements.tag,
+          attributes: [
+            ...buildHtmlAttributes({ name: "data-FOO" }),
+          ],
+          content: valuePresets.elements.content,
+        },
+      ],
+    },
+    {
       name: "attribute-like comments",
       pattern: "data-foo",
       expected: [],
