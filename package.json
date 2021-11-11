@@ -22,7 +22,7 @@
     "postinstall": "husky install scripts/hooks",
     "test": "node scripts/test.js",
     "test:mutation": "node scripts/test.js --mutation",
-    "test:performance": "node scripts/test.js --benchmark",
+    "test:performance": "node scripts/test.js --performance",
     "test:watch": "node scripts/test.js --watch"
   },
   "devDependencies": {

@@ -13,7 +13,7 @@ import log from "./utilities/log.js";
 import * as paths from "./paths.js";
 import values from "../.values.cjs";
 
-const BENCHMARK_FLAG = "--benchmark";
+const PERFORMANCE_FLAG = "--performance";
 const COVERAGE_FLAG = "--coverage";
 const INTEGRATION_FLAG = "--integration";
 const MUTATION_FLAG = "--mutation";
@@ -131,12 +131,12 @@ function getPackagesToRun(argv, env) {
 function getTestType(argv) {
   for (const arg of argv) {
     switch (arg) {
-      case BENCHMARK_FLAG:
-        return values.testTypeBenchmark;
-      case INTEGRATION_FLAG:
-        return values.testTypeIntegration;
-      case UNIT_FLAG:
-        return values.testTypeUnit;
+    case PERFORMANCE_FLAG:
+      return values.testTypePerformance;
+    case INTEGRATION_FLAG:
+      return values.testTypeIntegration;
+    case UNIT_FLAG:
+      return values.testTypeUnit;
     }
   }
 

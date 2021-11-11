@@ -10,7 +10,7 @@ const {
   testsDir,
   testSuffixBenchmark,
   testSuffixTest,
-  testTypeBenchmark,
+  testTypePerformance,
   testTypeIntegration,
   testTypeTests,
   testTypeUnit,
@@ -20,7 +20,7 @@ const {
 let testTypeDir;
 let testTypeSuffix;
 switch (process.env.TEST_TYPE) {
-  case testTypeBenchmark:
+  case testTypePerformance:
     testTypeDir = "{.,benchmark}";
     testTypeSuffix = testSuffixBenchmark;
     break;

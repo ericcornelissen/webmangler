@@ -4,7 +4,7 @@ const testSuffixBenchmark = "bench";
 const testSuffixTest = "test";
 
 const testTypeTests = "tests";
-const testTypeBenchmark = "benchmark";
+const testTypePerformance = "performance";
 const testTypeIntegration = "integration";
 const testTypeUnit = "unit";
 
@@ -61,7 +61,7 @@ module.exports = {
   // Tests
   testSuffixBenchmark,
   testSuffixTest,
-  testTypeBenchmark,
+  testTypePerformance,
   testTypeIntegration,
   testTypeTests,
   testTypeUnit,

@@ -3,8 +3,8 @@
  * @fileoverview
  * Generate a `filters` YAML string for dorny/paths-filter for the various
  * conditional jobs (first argument). The filters are based on what files are
- * present in each package - e.g. a package without benchmarks isn't included
- * in the output for "benchmark".
+ * present in each package - e.g. a package without performance tests isn't
+ * included in the output for "performance".
  */
 
 import * as fs from "fs";
@@ -22,12 +22,12 @@ function main(argv) {
 
 function getPackageCriteria(arg) {
   switch (arg) {
-    case "benchmark":
-      return (pkg) => hasFiles(pkg, /\.bench\.ts$/);
-    case "test":
-      return (pkg) => hasFiles(pkg, /\.test\.ts$/);
-    default:
-      return () => true;
+  case "performance":
+    return (pkg) => hasFiles(pkg, /\.bench\.ts$/);
+  case "test":
+    return (pkg) => hasFiles(pkg, /\.test\.ts$/);
+  default:
+    return () => true;
   }
 }
 
