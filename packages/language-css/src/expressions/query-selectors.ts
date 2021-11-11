@@ -1,5 +1,7 @@
-import type { MangleExpression } from "@webmangler/types";
-import type { QuerySelectorOptions } from "../options";
+import type {
+  MangleExpression,
+  QuerySelectorOptions,
+} from "@webmangler/types";
 
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
@@ -60,10 +62,12 @@ function newCssSelectorExpression(
  * @since v0.1.14
  * @version v0.1.24
  */
-export default function querySelectorExpressionFactory(
+function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): Iterable<MangleExpression> {
   return [
     ...newCssSelectorExpression(options.prefix, options.suffix),
   ];
 }
+
+export default querySelectorExpressionFactory;
