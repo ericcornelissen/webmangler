@@ -12,6 +12,15 @@ import * as fs from "fs";
 import log from "../utilities/log.js";
 import * as paths from "../paths.js";
 
+const RUN_MUTATION_TESTING = [
+  "benchmarking",
+  "language-css",
+  "language-html",
+  "language-js",
+  "mangler-css-variables",
+  "mangler-utils",
+];
+
 main(process.argv);
 
 function main(argv) {
@@ -22,12 +31,14 @@ function main(argv) {
 
 function getPackageCriteria(arg) {
   switch (arg) {
-    case "benchmark":
-      return (pkg) => hasFiles(pkg, /\.bench\.ts$/);
-    case "test":
-      return (pkg) => hasFiles(pkg, /\.test\.ts$/);
-    default:
-      return () => true;
+  case "benchmark":
+    return (pkg) => hasFiles(pkg, /\.bench\.ts$/);
+  case "test":
+    return (pkg) => hasFiles(pkg, /\.test\.ts$/);
+  case "mutation":
+    return (pkg) => RUN_MUTATION_TESTING.includes(pkg);
+  default:
+    return () => true;
   }
 }
 
