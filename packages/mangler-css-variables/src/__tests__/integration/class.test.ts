@@ -11,7 +11,7 @@ suite("CSS Variable Mangler", function() {
 
       test("default patterns", function() {
         const cssVariableMangler = new CssVariableMangler();
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.deep.include({ patterns: DEFAULT_PATTERNS });
       });
 
@@ -21,7 +21,7 @@ suite("CSS Variable Mangler", function() {
         const cssVariableMangler = new CssVariableMangler({
           cssVarNamePattern: pattern,
         });
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.deep.include({ patterns: pattern });
       });
 
@@ -31,7 +31,7 @@ suite("CSS Variable Mangler", function() {
         const cssVariableMangler = new CssVariableMangler({
           cssVarNamePattern: patterns,
         });
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.deep.include({ patterns: patterns });
       });
     });
@@ -41,7 +41,7 @@ suite("CSS Variable Mangler", function() {
 
       test("default patterns", function() {
         const cssVariableMangler = new CssVariableMangler();
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.deep.include({ ignorePatterns: DEFAULT_PATTERNS });
       });
 
@@ -51,7 +51,7 @@ suite("CSS Variable Mangler", function() {
         const cssVariableMangler = new CssVariableMangler({
           ignoreCssVarNamePattern: ignorePatterns,
         });
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
       });
 
@@ -61,7 +61,7 @@ suite("CSS Variable Mangler", function() {
         const cssVariableMangler = new CssVariableMangler({
           ignoreCssVarNamePattern: ignorePatterns,
         });
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
       });
     });
@@ -69,7 +69,7 @@ suite("CSS Variable Mangler", function() {
     suite("::reservedCssVarNames", function() {
       test("default reserved", function() {
         const cssVariableMangler = new CssVariableMangler();
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.have.property("reservedNames").that.is.not.empty;
       });
 
@@ -93,7 +93,7 @@ suite("CSS Variable Mangler", function() {
 
       test("default prefix", function() {
         const cssVariableMangler = new CssVariableMangler();
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.deep.include({ manglePrefix: DEFAULT_MANGLE_PREFIX });
       });
 
@@ -103,7 +103,7 @@ suite("CSS Variable Mangler", function() {
         const cssVariableMangler = new CssVariableMangler({
           keepCssVarPrefix: prefix,
         });
-        const result = cssVariableMangler.options();
+        const result = cssVariableMangler.options() as MangleOptions;
         expect(result).to.deep.include({ manglePrefix: prefix });
       });
     });

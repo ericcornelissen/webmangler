@@ -1,3 +1,5 @@
+import type { SimpleManglerOptions } from "./simple-mangler.class";
+
 import {
   ALL_CHARS,
   ALL_LETTER_CHARS,
@@ -5,9 +7,39 @@ import {
   ALL_NUMBER_CHARS,
   ALL_UPPERCASE_CHARS,
 } from "./characters";
+import { toArrayIfNeeded } from "./helpers";
 import { providedOrDefault } from "./inputs";
-import MultiManglerPlugin from "./multi-mangler.class";
-import SimpleManglerPlugin from "./simple-mangler.class";
+import initMultiManglerPlugin from "./multi-mangler.class";
+import initSimpleManglerPlugin from "./simple-mangler.class";
+
+/**
+ * The {@link MultiManglerPlugin} abstract class is a utility to create a
+ * {@link WebManglerPlugin} that provides multiple manglers in one plugin.
+ *
+ * {@link MultiManglerPlugin} is used to implement {@link RecommendedManglers}
+ * and {@link BuiltInManglers}.
+ *
+ * @since v0.1.0
+ * @version v0.1.17
+ */
+const MultiManglerPlugin = initMultiManglerPlugin({
+  toArrayIfNeeded,
+});
+
+/**
+ * The {@link SimpleManglerPlugin} abstract class provides an implementation of
+ * a {@link WebManglerPlugin} that deals with implementing the API if it is
+ * provided with the appropriate data.
+ *
+ * It is recommended to extend this class - or {@link MultiManglerPlugin},
+ * depending on your needs - if you're implementing a {@link WebManglerPlugin}.
+ *
+ * @since v0.1.0
+ * @version v0.1.23
+ */
+const SimpleManglerPlugin = initSimpleManglerPlugin({
+  // SimpleManglerPlugin has no dependencies
+});
 
 export {
   ALL_CHARS,
@@ -20,4 +52,6 @@ export {
   SimpleManglerPlugin,
 };
 
-export type { SimpleManglerOptions } from "./simple-mangler.class";
+export type {
+  SimpleManglerOptions,
+};
