@@ -1,4 +1,5 @@
-import type { SingleValueAttributeOptions } from "../../options";
+import type { SingleValueAttributeOptions } from "@webmangler/types";
+
 import type { HtmlElementValuesSets } from "./types";
 
 import {
