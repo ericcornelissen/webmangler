@@ -1,11 +1,7 @@
 name: Validate Source Code
 on:
-  push:
-    paths:
-      - "packages/**"
-  pull_request:
-    paths:
-      - "packages/**"
+  - push
+  - pull_request
 
 permissions: read-all
 

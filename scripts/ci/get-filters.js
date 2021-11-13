@@ -22,12 +22,12 @@ function main(argv) {
 
 function getPackageCriteria(arg) {
   switch (arg) {
-    case "benchmark":
-      return (pkg) => hasFiles(pkg, /\.bench\.ts$/);
-    case "test":
-      return (pkg) => hasFiles(pkg, /\.test\.ts$/);
-    default:
-      return () => true;
+  case "benchmark":
+    return (pkg) => hasFiles(pkg, /\.bench\.ts$/);
+  case "test":
+    return (pkg) => hasFiles(pkg, /\.test\.ts$/);
+  default:
+    return () => true;
   }
 }
 
@@ -40,7 +40,12 @@ function getPackageFilters(packageCriteria) {
 }
 
 function asPackageFilter(packageName) {
-  return `${packageName}: packages/${packageName}/**`;
+  return [
+    `${packageName}:`,
+    "  - .github/workflows/push-checks.yml",
+    `  - packages/${packageName}/**`,
+    "  - package-lock.json",
+  ].join("\n");
 }
 
 function hasFiles(pkg, fileRegExp) {
