@@ -33,9 +33,9 @@ if (process.env.TEST_PACKAGES !== undefined) {
 function getAllPackagesAsArray() {
   const fs = require("fs");
   const path = require("path");
-  const packagesDir = path.resolve(__dirname, "packages");
-  const packagesList = fs.readdirSync(packagesDir);
-  return packagesList;
+  const absPackagesDir = path.resolve(__dirname, "packages");
+  const packagesArray = fs.readdirSync(absPackagesDir); // eslint-disable-line security/detect-non-literal-fs-filename
+  return packagesArray;
 }
 
 module.exports = {

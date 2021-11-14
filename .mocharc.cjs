@@ -20,22 +20,22 @@ const {
 let testTypeDir;
 let testTypeSuffix;
 switch (process.env.TEST_TYPE) {
-  case testTypeBenchmark:
-    testTypeDir = "{.,benchmark}";
-    testTypeSuffix = testSuffixBenchmark;
-    break;
-  case testTypeIntegration:
-    testTypeDir = "integration";
-    testTypeSuffix = testSuffixTest;
-    break;
-  case testTypeUnit:
-    testTypeDir = "{common,unit}";
-    testTypeSuffix = testSuffixTest;
-    break;
-  case testTypeTests:
-  default:
-    testTypeDir = "**";
-    testTypeSuffix = testSuffixTest;
+case testTypeBenchmark:
+  testTypeDir = "{.,benchmark}";
+  testTypeSuffix = testSuffixBenchmark;
+  break;
+case testTypeIntegration:
+  testTypeDir = "integration";
+  testTypeSuffix = testSuffixTest;
+  break;
+case testTypeUnit:
+  testTypeDir = "{common,unit}";
+  testTypeSuffix = testSuffixTest;
+  break;
+case testTypeTests:
+default:
+  testTypeDir = "**";
+  testTypeSuffix = testSuffixTest;
 }
 
 module.exports = {
@@ -43,14 +43,23 @@ module.exports = {
   reporter: "dot",
   timeout: 5000,
   ui: "tdd",
-  spec: `${packagesDir}/${packagesExpr}/**/${testsDir}/${testTypeDir}/*.${testTypeSuffix}.ts`,
+  spec: [
+    packagesDir,
+    packagesExpr,
+    "**",
+    testsDir,
+    testTypeDir,
+    `*.${testTypeSuffix}.ts`,
+  ].join("/"),
   require: [
     "ts-node/register",
     "tsconfig-paths/register",
   ],
 
   "watch-files": [
-    ...packagesList.map((packageName) => `${packagesDir}/${packageName}/**/*.ts`),
+    ...packagesList.map((packageName) => {
+      return `${packagesDir}/${packageName}/**/*.ts`;
+    }),
   ],
   "watch-ignore": [
     `${dependenciesDir}/`,

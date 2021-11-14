@@ -15,6 +15,7 @@ const {
 
 const INDENT_SIZE = 2;
 const JS_GLOBALS = {
+  __dirname: "readonly",
   console: "readonly",
   module: "readonly",
   process: "readonly",
@@ -211,6 +212,9 @@ module.exports = {
         ecmaVersion: 2015,
       },
       rules: {
+        // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
+        "jsdoc/require-jsdoc": "off",
+
         // Disable any lingering TypeScript issues
         "@typescript-eslint/no-var-requires": "off",
       },
@@ -274,6 +278,7 @@ module.exports = {
 
     // Don't ignore configuration files
     `!${githubDir}/`,
+    "!.*.cjs",
     "!.*.js",
   ],
 };
