@@ -14,7 +14,6 @@ import * as paths from "../paths.js";
 
 const RUN_MUTATION_TESTING = [
   "language-css",
-  "language-js",
   "mangler-css-variables",
   "mangler-utils",
 ];
