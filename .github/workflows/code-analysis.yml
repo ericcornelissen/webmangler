@@ -1,4 +1,4 @@
-name: Code Analysis
+name: Analyse Source Code
 on:
   push:
     branches:

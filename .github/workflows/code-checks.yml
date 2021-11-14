@@ -1,11 +1,7 @@
 name: Validate Source Code
 on:
-  push:
-    paths:
-      - "packages/**"
-  pull_request:
-    paths:
-      - "packages/**"
+  - push
+  - pull_request
 
 permissions: read-all
 
@@ -30,7 +26,9 @@ jobs:
       - name: Get filters string for all packages
         id: all-filters
         run: |
-          export FILTERS=$(node scripts/ci/get-filters.js all)
+          export FILTERS=$( \
+            node scripts/ci/get-filters.js all ${{ github.ref }}\
+          )
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
@@ -44,7 +42,9 @@ jobs:
       - name: Get filters string for benchmark job
         id: benchmarked-filters
         run: |
-          export FILTERS=$(node scripts/ci/get-filters.js benchmark)
+          export FILTERS=$( \
+            node scripts/ci/get-filters.js benchmark ${{ github.ref }} \
+          )
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
@@ -58,7 +58,9 @@ jobs:
       - name: Get filters string for test job
         id: tested-filters
         run: |
-          export FILTERS=$(node scripts/ci/get-filters.js test)
+          export FILTERS=$( \
+            node scripts/ci/get-filters.js test ${{ github.ref }} \
+          )
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
@@ -141,29 +143,6 @@ jobs:
         run: npm ci
       - name: Compile packages/${{ matrix.package }}
         run: npm run compile --workspace=packages/${{ matrix.package }}
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2.4.0
-        with:
-          fetch-depth: 0
-      - name: Fetch main branch
-        if: ${{ github.ref != 'refs/heads/main' }}
-        run: git fetch origin main:main
-      - name: Get Node.js configuration
-        id: node
-        run: echo ::set-output name=VERSION::$(cat .nvmrc)
-      - name: Install Node.js
-        uses: actions/setup-node@v2.4.1
-        with:
-          node-version: ${{ steps.node.outputs.VERSION }}
-          cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Run linters
-        run: npm run lint
   test:
     name: Test
     runs-on: ubuntu-latest
