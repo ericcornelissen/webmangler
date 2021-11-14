@@ -8,7 +8,7 @@ const {
   packagesExpr,
   packagesList,
   testsDir,
-  testSuffixBenchmark,
+  testSuffixPerformance,
   testSuffixTest,
   testTypePerformance,
   testTypeIntegration,
@@ -21,8 +21,8 @@ let testTypeDir;
 let testTypeSuffix;
 switch (process.env.TEST_TYPE) {
   case testTypePerformance:
-    testTypeDir = "{.,benchmark}";
-    testTypeSuffix = testSuffixBenchmark;
+    testTypeDir = "{.,benchmark,performance}";
+    testTypeSuffix = testSuffixPerformance;
     break;
   case testTypeIntegration:
     testTypeDir = "integration";
@@ -34,7 +34,7 @@ switch (process.env.TEST_TYPE) {
     break;
   case testTypeTests:
   default:
-    testTypeDir = "**";
+    testTypeDir = "{.,common,integration,unit}";
     testTypeSuffix = testSuffixTest;
 }
 

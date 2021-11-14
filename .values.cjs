@@ -1,6 +1,6 @@
 "use strict";
 
-const testSuffixBenchmark = "bench";
+const testSuffixPerformance = "{bench,test}";
 const testSuffixTest = "test";
 
 const testTypeTests = "tests";
@@ -59,7 +59,7 @@ module.exports = {
   packagesList,
 
   // Tests
-  testSuffixBenchmark,
+  testSuffixPerformance,
   testSuffixTest,
   testTypePerformance,
   testTypeIntegration,
