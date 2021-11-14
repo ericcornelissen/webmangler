@@ -15,8 +15,11 @@ import * as paths from "../paths.js";
 main(process.argv);
 
 function main(argv) {
-  const packageCriteria = getPackageCriteria(argv[2]);
-  const filters = getPackageFilters(packageCriteria);
+  const filterFor = argv[2];
+  const isMain = argv[3] === "refs/heads/main";
+
+  const packageCriteria = getPackageCriteria(filterFor);
+  const filters = getPackageFilters(packageCriteria, isMain);
   log.print(filters);
 }
 
@@ -31,12 +34,16 @@ function getPackageCriteria(arg) {
   }
 }
 
-function getPackageFilters(packageCriteria) {
+function getPackageFilters(packageCriteria, isMain) {
   const filters = paths.getPackages()
     .filter(packageCriteria)
-    .map(asPackageFilter)
+    .map(isMain ? asEverythingFilter : asPackageFilter)
     .join("\n");
   return filters;
+}
+
+function asEverythingFilter(packageName) {
+  return `${packageName}: "**"`;
 }
 
 function asPackageFilter(packageName) {

@@ -26,7 +26,9 @@ jobs:
       - name: Get filters string for all packages
         id: all-filters
         run: |
-          export FILTERS=$(node scripts/ci/get-filters.js all)
+          export FILTERS=$( \
+            node scripts/ci/get-filters.js all ${{ github.ref }}\
+          )
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
@@ -40,7 +42,9 @@ jobs:
       - name: Get filters string for benchmark job
         id: benchmarked-filters
         run: |
-          export FILTERS=$(node scripts/ci/get-filters.js benchmark)
+          export FILTERS=$( \
+            node scripts/ci/get-filters.js benchmark ${{ github.ref }} \
+          )
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
@@ -54,7 +58,9 @@ jobs:
       - name: Get filters string for test job
         id: tested-filters
         run: |
-          export FILTERS=$(node scripts/ci/get-filters.js test)
+          export FILTERS=$( \
+            node scripts/ci/get-filters.js test ${{ github.ref }} \
+          )
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
