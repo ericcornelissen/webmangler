@@ -234,3 +234,9 @@ jobs:
         run: npm ci
       - name: Run mutation tests for packages/${{ matrix.package }}
         run: npm run test:mutation -- ${{ matrix.package }}
+      - name: Upload mutation report as artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: mutation-report-${{ matrix.package }}-${{ github.sha }}
+          path: |
+            _reports/mutation
