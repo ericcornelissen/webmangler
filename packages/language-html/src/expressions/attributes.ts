@@ -1,4 +1,7 @@
-import type { MangleExpression } from "@webmangler/types";
+import type {
+  AttributeOptions,
+  MangleExpression,
+} from "@webmangler/types";
 
 import { NestedGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
@@ -46,13 +49,17 @@ function newElementAttributeExpressions(): Iterable<MangleExpression> {
  * will match:
  * - Element attributes (e.g. `data-foo` in `<div data-foo="bar"></div>`).
  *
+ * @param options The {@link AttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
  * @version v0.1.23
  */
-export default function attributeExpressionFactory():
-    Iterable<MangleExpression> {
+function attributeExpressionFactory(
+  options: AttributeOptions, // eslint-disable-line @typescript-eslint/no-unused-vars
+): Iterable<MangleExpression> {
   return [
     ...newElementAttributeExpressions(),
   ];
 }
+
+export default attributeExpressionFactory;

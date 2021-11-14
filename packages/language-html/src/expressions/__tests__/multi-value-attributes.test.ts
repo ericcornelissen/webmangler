@@ -1,4 +1,5 @@
-import type { MultiValueAttributeOptions } from "../../options";
+import type { MultiValueAttributeOptions } from "@webmangler/types";
+
 import type { HtmlElementValuesSets } from "./types";
 
 import {

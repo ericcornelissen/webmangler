@@ -1,10 +1,10 @@
-import type { WebManglerLanguagePlugin } from "@webmangler/types";
 import type {
   CssDeclarationPropertyOptions,
   CssDeclarationValueOptions,
   QuerySelectorOptions,
   SingleValueAttributeOptions,
-} from "../../options";
+  WebManglerLanguagePlugin,
+} from"@webmangler/types";
 
 import { expect } from "chai";
 

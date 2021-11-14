@@ -1,4 +1,5 @@
-import type { QuerySelectorOptions } from "../../options";
+import type { QuerySelectorOptions } from "@webmangler/types";
+
 import type { JsStatementValuesSets } from "./types";
 
 import { generateValueObjectsAll } from "@webmangler/testing";

@@ -1,4 +1,5 @@
-import type { QuerySelectorOptions } from "../../../options";
+import type { QuerySelectorOptions } from "@webmangler/types";
+
 import type { CssRulesetValuesSets } from "../common";
 
 import { generateValueObjectsAll } from "@webmangler/testing";
