@@ -1,4 +1,5 @@
-import type { CssDeclarationPropertyOptions } from "../../options";
+import type { CssDeclarationPropertyOptions } from "@webmangler/types";
+
 import type { JsStatementValuesSets } from "./types";
 
 import { generateValueObjectsAll } from "@webmangler/testing";
