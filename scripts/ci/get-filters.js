@@ -11,6 +11,11 @@ import * as fs from "fs";
 
 import log from "../utilities/log.js";
 import * as paths from "../paths.js";
+import values from "../../.values.cjs";
+
+const {
+  testsDir,
+} = values;
 
 main(process.argv);
 
@@ -26,9 +31,31 @@ function main(argv) {
 function getPackageCriteria(arg) {
   switch (arg) {
   case "performance":
-    return (pkg) => hasFiles(pkg, /\.bench\.ts$/);
+    return (packageName) => hasFiles(
+      packageName,
+      (filePath) => {
+        const benchmarkSuffixExpr = /\.bench\.ts$/;
+        const benchmarkExpr = new RegExp(`${testsDir}/benchmark`);
+        const performanceExpr = new RegExp(`${testsDir}/performance`);
+        return benchmarkSuffixExpr.test(filePath)
+          || benchmarkExpr.test(filePath)
+          || performanceExpr.test(filePath);
+      },
+    );
   case "test":
-    return (pkg) => hasFiles(pkg, /\.test\.ts$/);
+    return (packageName) => hasFiles(
+      packageName,
+      (filePath) => {
+        const testsExpr = new RegExp(`${testsDir}/[^/]+\\.test\\.ts$`);
+        const unitExpr = new RegExp(`${testsDir}/unit`);
+        const integrationExpr = new RegExp(`${testsDir}/integration`);
+        const commonExpr = new RegExp(`${testsDir}/common/[^/]+\\.test\\.ts`);
+        return testsExpr.test(filePath)
+          || unitExpr.test(filePath)
+          || integrationExpr.test(filePath)
+          || commonExpr.test(filePath);
+      },
+    );
   default:
     return () => true;
   }
@@ -55,7 +82,7 @@ function asPackageFilter(packageName) {
   ].join("\n");
 }
 
-function hasFiles(pkg, fileRegExp) {
+function hasFiles(pkg, test) {
   const helper = (folder) => {
     for (const entry of fs.readdirSync(folder)) {
       const entryPath = paths.resolve._(folder, entry);
@@ -64,7 +91,7 @@ function hasFiles(pkg, fileRegExp) {
         const result = helper(entryPath);
         if (result) return result;
       } else {
-        const result = fileRegExp.test(entryPath);
+        const result = test(entryPath);
         if (result) return result;
       }
     }

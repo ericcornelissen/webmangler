@@ -43,7 +43,7 @@ jobs:
         id: performance-filters
         run: |
           export FILTERS=$( \
-            node scripts/ci/get-filters.js benchmark ${{ github.ref }} \
+            node scripts/ci/get-filters.js performance ${{ github.ref }} \
           )
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
