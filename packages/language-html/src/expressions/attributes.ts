@@ -39,6 +39,7 @@ function newElementAttributeExpressions(): Iterable<MangleExpression> {
         )
       `,
       GROUP_MAIN,
+      false,
     ),
   ];
 }
