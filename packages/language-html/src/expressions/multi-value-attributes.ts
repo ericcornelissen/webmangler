@@ -1,5 +1,7 @@
-import type { MangleExpression } from "@webmangler/types";
-import type { MultiValueAttributeOptions } from "../options";
+import type {
+  MangleExpression,
+  MultiValueAttributeOptions,
+} from "@webmangler/types";
 
 import {
   NestedGroupMangleExpression,
@@ -93,7 +95,7 @@ function newUnquotedAttributeValueExpressions(
  * @since v0.1.14
  * @version v0.1.22
  */
-export default function multiValueAttributeExpressionFactory(
+function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,
 ): Iterable<MangleExpression> {
   const attributesPattern = Array.from(options.attributeNames).join("|");
@@ -103,3 +105,5 @@ export default function multiValueAttributeExpressionFactory(
     ...newUnquotedAttributeValueExpressions(attributesPattern),
   ];
 }
+
+export default multiValueAttributeExpressionFactory;

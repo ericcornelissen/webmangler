@@ -1,10 +1,10 @@
-import type { WebManglerLanguagePlugin } from "@webmangler/types";
 import type {
   CssDeclarationPropertyOptions,
   CssDeclarationValueOptions,
   QuerySelectorOptions,
   SingleValueAttributeOptions,
-} from "../../options";
+  WebManglerLanguagePlugin,
+} from"@webmangler/types";
 
 import { expect } from "chai";
 
@@ -16,7 +16,7 @@ suite("The @webmangler/language-css plugin", function() {
   });
 
   test("empty options object", function() {
-    expect(() => new CssLanguagePlugin({})).not.to.throw();
+    expect(() => new CssLanguagePlugin({ })).not.to.throw();
   });
 
   suite("::getEmbeds", function() {
@@ -74,17 +74,19 @@ suite("The @webmangler/language-css plugin", function() {
 
     test("get default languages", function() {
       const plugin = new CssLanguagePlugin();
-      const result = Array.from(plugin.getLanguages());
-      expect(result).to.include.members(DEFAULT_EXTENSIONS);
+      const result = new Set(plugin.getLanguages());
+      expect(result).to.deep.equal(new Set(DEFAULT_EXTENSIONS));
     });
 
     test("get configured languages", function() {
       const cssExtensions = ["less", "sass"];
 
       const plugin = new CssLanguagePlugin({ cssExtensions });
-      const result = Array.from(plugin.getLanguages());
-      expect(result).to.include.members(DEFAULT_EXTENSIONS);
-      expect(result).to.include.members(cssExtensions);
+      const result = new Set(plugin.getLanguages());
+      expect(result).to.deep.equal(new Set([
+        ...DEFAULT_EXTENSIONS,
+        ...cssExtensions,
+      ]));
     });
   });
 });

@@ -27,7 +27,7 @@ suite("HTML - Attribute Expression Factory", function() {
   `;
 
   suiteSetup(function() {
-    expressions = attributeExpressionFactory();
+    expressions = attributeExpressionFactory({ });
   });
 
   test("benchmark validity", function() {

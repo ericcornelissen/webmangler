@@ -1,5 +1,7 @@
-import type { MangleExpression } from "@webmangler/types";
-import type { SingleValueAttributeOptions } from "../options";
+import type {
+  MangleExpression,
+  SingleValueAttributeOptions,
+} from "@webmangler/types";
 
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
@@ -58,7 +60,7 @@ function newAttributeSelectorSingleValueExpression(
  * @since v0.1.14
  * @version v0.1.26
  */
-export default function singleValueAttributeExpressionFactory(
+function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
 ): Iterable<MangleExpression> {
   const attributesPattern = Array.from(options.attributeNames).join("|");
@@ -73,3 +75,5 @@ export default function singleValueAttributeExpressionFactory(
     ),
   ];
 }
+
+export default singleValueAttributeExpressionFactory;

@@ -1,9 +1,9 @@
-import type { WebManglerLanguagePlugin } from "@webmangler/types";
 import type {
   AttributeOptions,
   MultiValueAttributeOptions,
   SingleValueAttributeOptions,
-} from "../options";
+  WebManglerLanguagePlugin,
+} from "@webmangler/types";
 
 import { expect } from "chai";
 
@@ -64,7 +64,7 @@ suite("The @webmangler/language-html plugin", function() {
     });
 
     test("has support for mangling 'attributes'", function() {
-      const options: AttributeOptions = null;
+      const options: AttributeOptions = { };
 
       const result = plugin.getExpressions("attributes", options);
       expect(result).to.have.length.above(0);

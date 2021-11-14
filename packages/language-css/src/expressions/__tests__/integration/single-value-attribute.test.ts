@@ -1,4 +1,5 @@
-import type { SingleValueAttributeOptions } from "../../../options";
+import type { SingleValueAttributeOptions } from "@webmangler/types";
+
 import type { CssRulesetValuesSets } from "../common";
 
 import { generateValueObjectsAll } from "@webmangler/testing";

@@ -1,8 +1,8 @@
-import type { WebManglerLanguagePlugin } from "@webmangler/types";
 import type {
   CssDeclarationPropertyOptions,
   QuerySelectorOptions,
-} from "../options";
+  WebManglerLanguagePlugin,
+} from "@webmangler/types";
 
 import { expect } from "chai";
 

@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import {
   toArrayIfNeeded,
-} from "../helpers";
+} from "../../helpers";
 
 suite("Mangler utils helpers", function() {
   suite("::toArrayIfNeeded", function() {

@@ -1,5 +1,7 @@
-import type { MangleExpression } from "@webmangler/types";
-import type { SingleValueAttributeOptions } from "../options";
+import type {
+  MangleExpression,
+  SingleValueAttributeOptions,
+} from "@webmangler/types";
 
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns, QUOTED_ATTRIBUTE_PATTERN } from "./common";
@@ -22,6 +24,7 @@ function newQuotedValueExpressions(
   valuePrefix: string,
   valueSuffix: string,
 ): Iterable<MangleExpression> {
+  const quoteExpr = `(?<${GROUP_QUOTE}>${patterns.quotes})`;
   return [
     new SingleGroupMangleExpression(
       `
@@ -31,10 +34,7 @@ function newQuotedValueExpressions(
           (?<=
             ${patterns.tagOpen}
             (?:${patterns.attributes})?
-            ${QUOTED_ATTRIBUTE_PATTERN(
-              attributesPattern,
-              `(?<${GROUP_QUOTE}>${patterns.quotes})`,
-            )}
+            ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quoteExpr)}
             ${valuePrefix}
           )
           (?<${GROUP_MAIN}>%s)
@@ -102,7 +102,7 @@ function newUnquotedValueExpressions(
  * @since v0.1.14
  * @version v0.1.22
  */
-export default function singleValueAttributeExpressionFactory(
+function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
 ): Iterable<MangleExpression> {
   const attributesPattern = Array.from(options.attributeNames).join("|");
@@ -114,3 +114,5 @@ export default function singleValueAttributeExpressionFactory(
     ...newUnquotedValueExpressions(attributesPattern, valuePrefix, valueSuffix),
   ];
 }
+
+export default singleValueAttributeExpressionFactory;
