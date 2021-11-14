@@ -1,5 +1,6 @@
 import type {
   TestScenario,
+  TestScenarios,
   TestValues,
   TestValuesPresets,
   TestValuesSets,
@@ -25,6 +26,7 @@ export {
 
 export type {
   TestScenario,
+  TestScenarios,
   TestValues,
   TestValuesPresets,
   TestValuesSets,

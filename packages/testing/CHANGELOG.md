@@ -10,6 +10,8 @@ Versioning].
 
 - Drop Sinon.JS v10 support.
 - Fix return value of `MangleExpressionMock.replaceAll`. ([#190])
+- Add `TestScenarios` type for parameterized tests. ([#199])
+- Deprecate the `TestScenario` type. ([#199])
 
 ## [0.1.5] - 2021-06-15
 
@@ -40,5 +42,6 @@ Versioning].
 - Add interface for structuring generated tests.
 
 [#190]: https://github.com/ericcornelissen/webmangler/pull/190
+[#199]: https://github.com/ericcornelissen/webmangler/pull/199
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

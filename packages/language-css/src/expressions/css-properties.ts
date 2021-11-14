@@ -1,5 +1,7 @@
-import type { MangleExpression } from "@webmangler/types";
-import type { CssDeclarationPropertyOptions } from "../options";
+import type {
+  CssDeclarationPropertyOptions,
+  MangleExpression,
+} from "@webmangler/types";
 
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
@@ -55,7 +57,7 @@ function newCssDeclarationPropertyExpression(
  * @since v0.1.14
  * @version v0.1.24
  */
-export default function cssDeclarationPropertyExpressionFactory(
+function cssDeclarationPropertyExpressionFactory(
   options: CssDeclarationPropertyOptions,
 ): Iterable<MangleExpression> {
   const propertyPrefix = options.prefix ? options.prefix : "";
@@ -65,3 +67,5 @@ export default function cssDeclarationPropertyExpressionFactory(
     ...newCssDeclarationPropertyExpression(propertyPrefix, propertySuffix),
   ];
 }
+
+export default cssDeclarationPropertyExpressionFactory;
