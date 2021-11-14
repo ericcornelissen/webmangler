@@ -42,7 +42,7 @@ function getPackageFilters(packageCriteria) {
 function asPackageFilter(packageName) {
   return [
     `${packageName}:`,
-    "  - .github/workflows/push-checks.yml",
+    "  - .github/workflows/code-checks.yml",
     `  - packages/${packageName}/**`,
     "  - package-lock.json",
   ].join("\n");
