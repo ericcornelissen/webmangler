@@ -11,7 +11,7 @@ const ALL_LOWERCASE_CHARS: CharSet = [
 ];
 
 /**
- * A character set ({@link CharSet}) of all numbers.
+ * A character set ({@link CharSet}) of all numeric characters.
  *
  * @since v0.1.7
  */
@@ -30,7 +30,7 @@ const ALL_UPPERCASE_CHARS: CharSet = [
 ];
 
 /**
- * A character set ({@link CharSet}) of all lowercase an uppercase letters.
+ * A character set ({@link CharSet}) of all lowercase and uppercase letters.
  *
  * @since v0.1.11
  */
@@ -40,9 +40,21 @@ const ALL_LETTER_CHARS: CharSet = [
 ];
 
 /**
+ * A character set ({@link CharSet}) of all lowercase letters, uppercase
+ * letters, and numeric characters.
+ *
+ * @since v0.1.26
+ */
+const ALL_ALPHANUMERIC_CHARS: CharSet = [
+  ...ALL_LETTER_CHARS,
+  ...ALL_NUMBER_CHARS,
+];
+
+/**
  * A character set ({@link CharSet}) of all allowed characters.
  *
  * @since v0.1.16
+ * @deprecated Use `ALL_ALPHANUMERIC_CHARS` instead and add symbols manually.
  */
 const ALL_CHARS: CharSet = [
   ...ALL_LETTER_CHARS,
@@ -51,6 +63,7 @@ const ALL_CHARS: CharSet = [
 ];
 
 export {
+  ALL_ALPHANUMERIC_CHARS,
   ALL_CHARS,
   ALL_LETTER_CHARS,
   ALL_LOWERCASE_CHARS,
