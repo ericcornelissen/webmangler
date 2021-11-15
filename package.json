@@ -33,7 +33,7 @@
     "@types/chai": "4.2.22",
     "@types/lodash": "4.14.176",
     "@types/mocha": "9.0.0",
-    "@types/node": "16.11.6",
+    "@types/node": "16.11.7",
     "@types/sinon": "10.0.6",
     "@types/sinon-chai": "3.2.5",
     "@typescript-eslint/eslint-plugin": "5.3.1",
