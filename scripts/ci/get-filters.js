@@ -17,6 +17,12 @@ const {
   testsDir,
 } = values;
 
+const RUN_MUTATION_TESTING = [
+  "language-css",
+  "mangler-css-variables",
+  "mangler-utils",
+];
+
 main(process.argv);
 
 function main(argv) {
@@ -30,6 +36,8 @@ function main(argv) {
 
 function getPackageCriteria(arg) {
   switch (arg) {
+  case "mutation":
+    return (pkg) => RUN_MUTATION_TESTING.includes(pkg);
   case "performance":
     return (packageName) => hasFiles(
       packageName,
