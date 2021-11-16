@@ -13,6 +13,7 @@
  *   });
  * }
  * @since v0.1.0
+ * @deprecated Use `TestScenarios` instead.
  */
 interface TestScenario<TestCase> {
   /**
@@ -30,6 +31,44 @@ interface TestScenario<TestCase> {
    */
   readonly cases: TestCase[];
 }
+
+/**
+ * A standardized type for defining test scenarios in the _WebMangler_ project.
+ *
+ * @example
+ * interface TestCase {
+ *   readonly input: string;
+ *   readonly expected: string;
+ * };
+ *
+ * const scenarios: TestScenarios<TestCase> = [
+ *   // Expected input-output pairs ...
+ * ];
+ *
+ * for (const { getScenario, testName } of scenarios) {
+ *   test(testName, function() {
+ *     const { input, expected } = getScenario();
+ *     // Test logic ...
+ *   });
+ * }
+ * @since v0.1.6
+ */
+type TestScenarios<T> = Iterable<{
+  /**
+   * Get the input values for the {@link TestScenarios}.
+   *
+   * @returns The input values of the {@link TestScenarios}.
+   * @since v0.1.6
+   */
+  getScenario(): T;
+
+  /**
+   * The name of the {@link TestScenarios}.
+   *
+   * @since v0.1.6
+   */
+  readonly testName: string;
+}>;
 
 /**
  * A {@link TestValues} instance is a collection of values that represent the
@@ -89,8 +128,9 @@ type TestValuesSets<KeyName extends string> = {
   [key in KeyName]?: Iterable<string | undefined>;
 }
 
-export {
+export type {
   TestScenario,
+  TestScenarios,
   TestValues,
   TestValuesPresets,
   TestValuesSets,

@@ -1,5 +1,7 @@
-import type { MangleExpression } from "@webmangler/types";
-import type { QuerySelectorOptions } from "../options";
+import type {
+  MangleExpression,
+  QuerySelectorOptions,
+} from "@webmangler/types";
 
 import {
   NestedGroupMangleExpression,
@@ -38,13 +40,11 @@ function newQuerySelectorExpressions(
     `,
     `
       (?<=
-        ${selectorPrefix ? selectorPrefix :
-          `(?:${quote}|${patterns.allowedBeforeSelector})`}
+        ${selectorPrefix || `(?:${quote}|${patterns.allowedBeforeSelector})`}
       )
       (?<${GROUP_MAIN}>%s)
       (?=
-        ${selectorSuffix ? selectorSuffix :
-          `(?:${quote}|${patterns.allowedAfterSelector})`}
+        ${selectorSuffix || `(?:${quote}|${patterns.allowedAfterSelector})`}
       )
     `,
     GROUP_MAIN,
@@ -92,7 +92,7 @@ function newSelectorAsStandaloneStringExpressions():
  * @since v0.1.14
  * @version v0.1.24
  */
-export default function querySelectorExpressionFactory(
+function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): Iterable<MangleExpression> {
   const result = [
@@ -105,3 +105,5 @@ export default function querySelectorExpressionFactory(
 
   return result;
 }
+
+export default querySelectorExpressionFactory;

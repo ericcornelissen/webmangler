@@ -1,18 +1,24 @@
-import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+import type {
+  CharSet,
+  MangleExpressionOptions,
+  MangleOptions,
+} from "@webmangler/types";
 
-import type { SimpleManglerOptions } from "../simple-mangler.class";
+import type { SimpleManglerOptions } from "../../simple-mangler.class";
 
 import { expect } from "chai";
 
-import SimpleManglerPlugin from "../simple-mangler.class";
-
-class ConcreteSimpleManglerPlugin extends SimpleManglerPlugin {
-  constructor(options: SimpleManglerOptions) {
-    super(options);
-  }
-}
+import initSimpleManglerPlugin from "../../simple-mangler.class";
 
 suite("SimpleManglerPlugin", function() {
+  const SimpleManglerPlugin = initSimpleManglerPlugin({ });
+
+  class ConcreteSimpleManglerPlugin extends SimpleManglerPlugin {
+    constructor(options: SimpleManglerOptions) {
+      super(options);
+    }
+  }
+
   const defaultOptions: SimpleManglerOptions = {
     charSet: ["f", "o", "o", "b", "a", "r"],
     ignorePatterns: [],
@@ -23,38 +29,38 @@ suite("SimpleManglerPlugin", function() {
   };
 
   test("character set", function() {
-    const testCases: CharSet[] = [
+    const testCases: Iterable<CharSet> = [
       ["a", "b"],
       ["1", "2", "3", "a", "b", "c"],
       ["x"],
     ];
 
     for (const charSet of testCases) {
-      const options = Object.assign({}, defaultOptions, { charSet });
+      const options = Object.assign({ }, defaultOptions, { charSet });
 
       const plugin = new ConcreteSimpleManglerPlugin(options);
-      const result = plugin.options();
+      const result = plugin.options() as MangleOptions;
       expect(result.charSet).to.equal(charSet);
     }
   });
 
   test("ignorePatterns", function() {
-    const testCases: (string | string[])[] = [
+    const testCases: Iterable<(string | Iterable<string>)> = [
       "fo+bar",
       ["fo+", "bar"],
     ];
 
     for (const ignorePatterns of testCases) {
-      const options = Object.assign({}, defaultOptions, { ignorePatterns });
+      const options = Object.assign({ }, defaultOptions, { ignorePatterns });
 
       const plugin = new ConcreteSimpleManglerPlugin(options);
-      const result = plugin.options();
+      const result = plugin.options() as MangleOptions;
       expect(result.ignorePatterns).to.equal(ignorePatterns);
     }
   });
 
   test("expression options", function() {
-    const testCases: MangleExpressionOptions<unknown>[][] = [
+    const testCases: Iterable<MangleExpressionOptions<unknown>[]> = [
       [
         {
           name: "foo",
@@ -74,57 +80,57 @@ suite("SimpleManglerPlugin", function() {
     ];
 
     for (const charSet of testCases) {
-      const options = Object.assign({}, defaultOptions, { charSet });
+      const options = Object.assign({ }, defaultOptions, { charSet });
 
       const plugin = new ConcreteSimpleManglerPlugin(options);
-      const result = plugin.options();
+      const result = plugin.options() as MangleOptions;
       expect(result.charSet).to.equal(charSet);
     }
   });
 
   test("patterns", function() {
-    const testCases: (string | string[])[] = [
+    const testCases: Iterable<(string | Iterable<string>)> = [
       "fo+bar",
       ["fo+", "bar"],
     ];
 
     for (const patterns of testCases) {
-      const options = Object.assign({}, defaultOptions, { patterns });
+      const options = Object.assign({ }, defaultOptions, { patterns });
 
       const plugin = new ConcreteSimpleManglerPlugin(options);
-      const result = plugin.options();
+      const result = plugin.options() as MangleOptions;
       expect(result.patterns).to.equal(patterns);
     }
   });
 
   test("prefix", function() {
-    const testCases: string[] = [
+    const testCases: Iterable<string> = [
       "",
       "foo",
       "bar",
     ];
 
     for (const prefix of testCases) {
-      const options = Object.assign({}, defaultOptions, { prefix });
+      const options = Object.assign({ }, defaultOptions, { prefix });
 
       const plugin = new ConcreteSimpleManglerPlugin(options);
-      const result = plugin.options();
+      const result = plugin.options() as MangleOptions;
       expect(result.manglePrefix).to.equal(prefix);
     }
   });
 
   test("reserved", function() {
-    const testCases: string[][] = [
+    const testCases: Iterable<Iterable<string>> = [
       [],
       ["foo", "bar"],
       ["praise", "the", "sun"],
     ];
 
     for (const reserved of testCases) {
-      const options = Object.assign({}, defaultOptions, { reserved });
+      const options = Object.assign({ }, defaultOptions, { reserved });
 
       const plugin = new ConcreteSimpleManglerPlugin(options);
-      const result = plugin.options();
+      const result = plugin.options() as MangleOptions;
       expect(result.reservedNames).to.equal(reserved);
     }
   });

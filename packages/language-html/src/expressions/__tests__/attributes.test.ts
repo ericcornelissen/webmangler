@@ -1,3 +1,5 @@
+import type { AttributeOptions } from "@webmangler/types";
+
 import type { HtmlElementValuesSets } from "./types";
 
 import {
@@ -21,6 +23,7 @@ suite("HTML - Attribute Expression Factory", function() {
   type TestScenario = {
     readonly name: string;
     readonly pattern: string;
+    readonly factoryOptions: AttributeOptions;
     readonly expected: string[];
     getValuesSets(): HtmlElementValuesSets[];
   }
@@ -29,6 +32,7 @@ suite("HTML - Attribute Expression Factory", function() {
     {
       name: "one element, one attribute",
       pattern: "[a-z\\-]+",
+      factoryOptions: { },
       expected: ["id"],
       getValuesSets: () => [
         {
@@ -46,6 +50,7 @@ suite("HTML - Attribute Expression Factory", function() {
     {
       name: "one element, multiple attribute",
       pattern: "[a-z\\-]+",
+      factoryOptions: { },
       expected: ["data-foo", "data-hello"],
       getValuesSets: () => [
         {
@@ -75,6 +80,7 @@ suite("HTML - Attribute Expression Factory", function() {
     {
       name: "multiple elements, one attribute",
       pattern: "[a-z\\-]+",
+      factoryOptions: { },
       expected: ["data-foo", "data-hello"],
       getValuesSets: () => [
         {
@@ -96,8 +102,31 @@ suite("HTML - Attribute Expression Factory", function() {
       ],
     },
     {
+      name: "same attribute with different casing",
+      pattern: "data-[a-z]+",
+      factoryOptions: { },
+      expected: ["data-foo", "data-foo"],
+      getValuesSets: () => [
+        {
+          tag: valuePresets.elements.tag,
+          attributes: [
+            ...buildHtmlAttributes({ name: "data-foo" }),
+          ],
+          content: valuePresets.elements.content,
+        },
+        {
+          tag: valuePresets.elements.tag,
+          attributes: [
+            ...buildHtmlAttributes({ name: "data-FOO" }),
+          ],
+          content: valuePresets.elements.content,
+        },
+      ],
+    },
+    {
       name: "attribute-like comments",
       pattern: "data-foo",
+      factoryOptions: { },
       expected: [],
       getValuesSets: () => {
         const commentWithElementWithAttribute = Array
@@ -135,6 +164,7 @@ suite("HTML - Attribute Expression Factory", function() {
     {
       name: "attribute-like content",
       pattern: "data-foo",
+      factoryOptions: { },
       expected: [],
       getValuesSets: () => [
         {
@@ -152,6 +182,7 @@ suite("HTML - Attribute Expression Factory", function() {
     {
       name: "attribute-like attribute values",
       pattern: "data-[a-z\\-]+",
+      factoryOptions: { },
       expected: ["data-bar"],
       getValuesSets: () => [
         {
@@ -168,6 +199,7 @@ suite("HTML - Attribute Expression Factory", function() {
     {
       name: "element-like attribute values",
       pattern: "data-[a-z\\-]+",
+      factoryOptions: { },
       expected: ["data-bar"],
       getValuesSets: () => [
         {
@@ -185,6 +217,7 @@ suite("HTML - Attribute Expression Factory", function() {
     {
       name: "edge cases",
       pattern: "data-[a-z]+",
+      factoryOptions: { },
       expected: [],
       getValuesSets: () => [
         {
@@ -200,12 +233,12 @@ suite("HTML - Attribute Expression Factory", function() {
   ];
 
   for (const scenario of scenarios) {
-    const { name, pattern, expected, getValuesSets } = scenario;
+    const { name, pattern, factoryOptions, expected, getValuesSets } = scenario;
     test(name, function() {
       const valuesSets = getValuesSets();
       for (const testCase of generateValueObjectsAll(valuesSets)) {
         const input = buildHtmlElements(testCase);
-        const expressions = expressionsFactory();
+        const expressions = expressionsFactory(factoryOptions);
         const matches = getAllMatches(expressions, input, pattern);
         expect(matches).to.have.members(expected, `in \`${input}\``);
       }

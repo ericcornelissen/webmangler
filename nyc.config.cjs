@@ -11,7 +11,7 @@ const {
   reportsDir,
   srcDir,
   tempDir,
-  testSuffixBenchmark,
+  testSuffixPerformance,
   testSuffixTest,
 } = values;
 
@@ -53,7 +53,7 @@ module.exports = {
     `${reportsDir}/`,
     `${tempDir}/`,
     `${dependenciesDir}/`,
-    `${packagesDir}/**/*.{${testSuffixBenchmark},${testSuffixTest}}.ts`,
+    `${packagesDir}/**/*.{${testSuffixPerformance},${testSuffixTest}}.ts`,
     `${packagesDir}/**/${compiledDir}/`,
     ...packagesExclusions,
   ],

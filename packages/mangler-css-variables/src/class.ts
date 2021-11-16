@@ -1,255 +1,114 @@
-import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
-
 import type {
-  CssDeclarationPropertyOptions,
-  CssDeclarationValueOptions,
-  CssVariableManglerOptions,
-} from "./types";
+  CharSet,
+  MangleExpressionOptions,
+  WebManglerPlugin,
+} from "@webmangler/types";
 
-import {
-  ALL_LETTER_CHARS,
-  ALL_NUMBER_CHARS,
-  SimpleManglerPlugin,
-} from "@webmangler/mangler-utils";
+import type { CssVariableManglerOptions } from "./types";
 
-const CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<CssDeclarationPropertyOptions> = {
-  name: "css-declaration-properties",
-  options: {
-    prefix: "--",
-  },
-};
-
-const CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<CssDeclarationValueOptions> = {
-  name: "css-declaration-values",
-  options: {
-    prefix: "var\\s*\\(\\s*--",
-    suffix: "\\s*(,[^\\)]+)?\\)",
-  },
-};
+import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
 /**
- * The CSS variables mangler is a built-in plugin of _WebMangler_ that can be
- * used to mangle CSS variables, e.g. "--color" in `--color: #ABC;`.
- *
- * This mangler can be configured using the {@link CssVariableManglerOptions}.
- *
- * The simplest way to configure this mangler is by specifying a single pattern
- * of CSS variables to mangle, e.g. all lowercase-only CSS variables:
- *
- * ```javascript
- * new CssVariableMangler({ cssVarNamePattern: "[a-z-]+" });
- * ```
- *
- * NOTE: the "--" prefix of CSS variables should not be included in the pattern.
- *
- * For more fine-grained control or easier-to-read patterns, you can specify
- * multiple patterns. For example, to mangle only the CSS variables for colors
- * and fonts (provided you consistently prefix those CSS variables with "clr"
- * and "font" resp.), you can use:
- *
- * ```javascript
- * new CssVariableMangler({ cssVarNamePattern: ["clr-[a-z]+", "font-[a-z]+"] });
- *
- * // Which is equivalent to:
- * new CssVariableMangler({ cssVarNamePattern: "(clr|font)-[a-z]+" });
- * ```
- *
- * If you don't specify any patterns the {@link CssVariableMangler.
- * DEFAULT_PATTERNS} will be used.
- *
- * ## Examples
- *
- * _The following examples assume the usage of the built-in language plugins._
- *
- * ### CSS
- *
- * Using the default configuration (`new CssVariableMangler()`) on the CSS:
- *
- * ```css
- * :root {
- *   --color-red: red;
- *   --color-blue: blue;
- * }
- *
- * p {
- *   background-color: var(--color-blue);
- *   color: var(--color-red);
- * }
- *
- * div {
- *   --color-red: crimson;
- *  color: var(--color-red);
- * }
- * ```
- *
- * Will result in:
- *
- * ```css
- * :root {
- *   --a: red;
- *   --b: blue;
- * }
- *
- * p {
- *   background-color: var(--b);
- *   color: var(--a);
- * }
- *
- * div {
- *   --a: crimson;
- *  color: var(--a);
- * }
- * ```
- *
- * If a prefix of "var-" is used and the name "a" is reserved, the resulting CSS
- * will instead be:
- *
- * ```css
- * :root {
- *   --var-b: red;
- *   --var-c: blue;
- * }
- *
- * p {
- *   background-color: var(--var-c);
- *   color: var(--var-b);
- * }
- *
- * div {
- *   --var-b: crimson;
- *  color: var(--var-b);
- * }
- * ```
- *
- * @since v0.1.0
- * @version v0.1.23
+ * The type of the {@link CssVariableMangler} constructor.
  */
-class CssVariableMangler extends SimpleManglerPlugin {
-  /**
-   * The list of reserved strings that are always reserved because they are
-   * illegal CSS variable names.
-   */
-  private static readonly ALWAYS_RESERVED: string[] = ["([0-9]|-).*"];
+type CssVariableManglerConstructor = new (
+  options?: CssVariableManglerOptions
+) => WebManglerPlugin;
 
+/**
+ * The interface defining the dependencies of the {@link CssVariableMangler}
+ * class.
+ */
+interface CssVariableManglerDependencies {
   /**
-   * The character set used by {@link CssVariableMangler}.
-   */
-  private static readonly CHARACTER_SET: CharSet = [
-    ...ALL_LETTER_CHARS,
-    ...ALL_NUMBER_CHARS,
-    "-", "_",
-  ];
-
-  /**
-   * The default ignore patterns used by a {@link CssVariableMangler}.
-   */
-  private static readonly DEFAULT_IGNORE_PATTERNS: string[] = [];
-
-  /**
-   * The default patterns used by a {@link CssVariableMangler}.
-   */
-  private static readonly DEFAULT_PATTERNS: string[] = ["[a-zA-Z-]+"];
-
-  /**
-   * The default prefix used by a {@link CssVariableMangler}.
-   */
-  private static readonly DEFAULT_PREFIX = "";
-
-  /**
-   * The default reserved names used by a {@link CssVariableMangler}.
-   */
-  private static readonly DEFAULT_RESERVED: string[] = [];
-
-  /**
-   * Instantiate a new {@link CssVariableMangler}.
+   * Get the {@link CharSet} for the {@link CssVariableMangler}.
    *
-   * @param options The {@link CssVariableManglerOptions}.
-   * @since v0.1.0
-   * @version v0.1.23
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The {@link CharSet}.
    */
-  constructor(options: CssVariableManglerOptions={}) {
-    super({
-      charSet: CssVariableMangler.CHARACTER_SET,
-      patterns: CssVariableMangler.getPatterns(options.cssVarNamePattern),
-      ignorePatterns: CssVariableMangler.getIgnorePatterns(
-        options.ignoreCssVarNamePattern,
-      ),
-      reserved: CssVariableMangler.getReserved(options.reservedCssVarNames),
-      prefix: CssVariableMangler.getPrefix(options.keepCssVarPrefix),
-      languageOptions: [
-        CSS_VARIABLE_DECLARATION_EXPRESSION_OPTIONS,
-        CSS_VARIABLE_USAGE_EXPRESSION_OPTIONS,
-      ],
-    });
-  }
+  getCharacterSet(
+    options: Record<never, never>,
+  ): CharSet;
 
   /**
-   * Get either the configured patterns or the default patterns.
+   * Get the ignore patterns for the {@link CssVariableMangler}.
    *
-   * @param cssVarNamePattern The configured patterns.
-   * @returns The patterns to be used.
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The ignore patterns.
    */
-  private static getPatterns(
-    cssVarNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (cssVarNamePattern === undefined) {
-      return CssVariableMangler.DEFAULT_PATTERNS;
-    }
-
-    return cssVarNamePattern;
-  }
+   getIgnorePatterns(options: {
+    ignoreCssVarNamePattern?: string | Iterable<string>;
+  }): string | Iterable<string>;
 
   /**
-   * Get either the configured patterns or the default patterns.
+   * Get the language options for the {@link CssVariableMangler}.
    *
-   * @param ignoreCssVarNamePattern The configured ignore patterns.
-   * @returns The ignore patterns to be used.
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The language options.
    */
-  private static getIgnorePatterns(
-    ignoreCssVarNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (ignoreCssVarNamePattern === undefined) {
-      return CssVariableMangler.DEFAULT_IGNORE_PATTERNS;
-    }
-
-    return ignoreCssVarNamePattern;
-  }
+   getLanguageOptions(
+    options: Record<never, never>,
+  ): Iterable<MangleExpressionOptions<unknown>>;
 
   /**
-   * Get either the configured reserved names or the default reserved names.
+   * Get the patterns for the {@link CssVariableMangler}.
    *
-   * @param reservedCssVarNames The configured reserved names.
-   * @returns The reserved names to be used.
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The patterns.
    */
-  private static getReserved(
-    reservedCssVarNames?: Iterable<string>,
-  ): Iterable<string> {
-    let configured = reservedCssVarNames;
-    if (configured === undefined) {
-      configured = CssVariableMangler.DEFAULT_RESERVED;
-    }
-
-    return [
-      ...CssVariableMangler.ALWAYS_RESERVED,
-      ...configured,
-    ];
-  }
+  getPatterns(options: {
+    cssVarNamePattern?: string | Iterable<string>;
+  }): string | Iterable<string>;
 
   /**
-   * Get either the configured prefix or the default prefix.
+   * Get the mangle prefix for the {@link CssVariableMangler}.
    *
-   * @param keepCssVarPrefix The configured prefix.
-   * @returns The prefix to be used.
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The mangle prefix.
    */
-  private static getPrefix(keepCssVarPrefix?: string): string {
-    if (keepCssVarPrefix === undefined) {
-      return CssVariableMangler.DEFAULT_PREFIX;
-    }
+   getPrefix(options: {
+    keepCssVarPrefix?: string;
+  }): string;
 
-    return keepCssVarPrefix;
-  }
+  /**
+   * Get the reserved names for the {@link CssVariableMangler}.
+   *
+   * @param options The options provided to the {@link CssVariableMangler}.
+   * @returns The reserved names.
+   */
+  getReserved(options: {
+    reservedCssVarNames?: Iterable<string>;
+  }): Iterable<string>;
 }
 
-export default CssVariableMangler;
+/**
+ * Initialize the {@link CssVariableMangler} class with explicit dependencies.
+ *
+ * @param helpers The dependencies of the class.
+ * @returns The {@link CssVariableMangler} class.
+ */
+function initCssVariableMangler(
+  helpers: CssVariableManglerDependencies,
+): CssVariableManglerConstructor {
+  return class CssVariableMangler extends SimpleManglerPlugin {
+    /**
+     * Instantiate a new {@link CssVariableMangler}.
+     *
+     * @param options The {@link CssVariableManglerOptions}.
+     * @since v0.1.0
+     * @version v0.1.23
+     */
+    constructor(options: CssVariableManglerOptions={}) {
+      super({
+        charSet: helpers.getCharacterSet(options),
+        patterns: helpers.getPatterns(options),
+        ignorePatterns: helpers.getIgnorePatterns(options),
+        reserved: helpers.getReserved(options),
+        prefix: helpers.getPrefix(options),
+        languageOptions: helpers.getLanguageOptions(options),
+      });
+    }
+  };
+}
+
+export default initCssVariableMangler;
