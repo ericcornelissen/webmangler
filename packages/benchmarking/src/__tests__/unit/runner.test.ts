@@ -6,7 +6,7 @@ import * as sinonChai from "sinon-chai";
 
 import * as perf from "perf_hooks";
 
-import { doBenchmark } from "../runner";
+import { doBenchmark } from "../../runner";
 
 chaiUse(sinonChai);
 

@@ -6,7 +6,7 @@ import * as sinonChai from "sinon-chai";
 
 import * as os from "os";
 
-import { getRuntimeBudget } from "../budget";
+import { getRuntimeBudget } from "../../budget";
 
 chaiUse(sinonChai);
 
