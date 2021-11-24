@@ -35,6 +35,7 @@ const tsExts = ["ts"];
 const ymlExts = ["yml"];
 
 const eslintBin = path.resolve(paths.nodeModules, ".bin", "eslint");
+const mdlintBin = path.resolve(paths.nodeModules, ".bin", "markdownlint");
 
 let __changedFiles = null; // Cache for git-changed-files result
 
@@ -101,6 +102,7 @@ function getLintersForLanguages(languages) {
     case "md":
       return [
         newEslintConfig(mdExts),
+        newMarkDownLintConfig(mdExts),
       ];
     case "ts":
       return [
@@ -118,6 +120,15 @@ function newEslintConfig(exts) {
   return {
     args: ["--ext", exts.join(",")],
     bin: eslintBin,
+    exts,
+    fixArg: "--fix",
+  };
+}
+
+function newMarkDownLintConfig(exts) {
+  return {
+    args: ["--dot", "--ignore-path", ".gitignore"],
+    bin: mdlintBin,
     exts,
     fixArg: "--fix",
   };
