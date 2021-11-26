@@ -1,6 +1,7 @@
 import type { SimpleManglerOptions } from "./simple-mangler.class";
 
 import {
+  ALL_ALPHANUMERIC_CHARS,
   ALL_CHARS,
   ALL_LETTER_CHARS,
   ALL_LOWERCASE_CHARS,
@@ -42,6 +43,7 @@ const SimpleManglerPlugin = initSimpleManglerPlugin({
 });
 
 export {
+  ALL_ALPHANUMERIC_CHARS,
   ALL_CHARS,
   ALL_LETTER_CHARS,
   ALL_LOWERCASE_CHARS,
