@@ -150,11 +150,26 @@ async function getChangedFiles() {
     const { committedFiles, unCommittedFiles } = await gitChangedFiles({
       baseBranch: "main",
       formats: ["*"],
-      diffFilter: "ACMRTX",
+      diffFilter: "ACDMRTX",
+      showStatus: true,
     });
 
-    __changedFiles = committedFiles.concat(unCommittedFiles);
+    __changedFiles = committedFiles.concat(unCommittedFiles)
+      .filter(notDeletedIn(unCommittedFiles))
+      .map(({ filename }) => filename);
   }
 
   return __changedFiles;
+}
+
+function notDeletedIn(entries) {
+  return (subject) => {
+    for (const entry of entries) {
+      if (subject.filename === entry.filename) {
+        return entry.status !== "Deleted";
+      }
+    }
+
+    return true;
+  };
 }
