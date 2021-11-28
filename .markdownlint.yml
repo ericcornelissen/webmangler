@@ -1,0 +1,3 @@
+default: true
+MD024: # Multiple headings with the same content
+  siblings_only: true
