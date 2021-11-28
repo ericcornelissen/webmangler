@@ -10,6 +10,49 @@ type RegExpMatchGroups = {
 };
 
 /**
+ * The configuration options of a {@link NestedGroupMangleExpression}.
+ *
+ * @since v0.1.25
+ */
+interface NestedGroupMangleExpressionOptions {
+  /**
+   * A generic pattern with a `"%s"` for a specific character pattern.
+   *
+   * NOTE 1: only one `"%s"` is supported.
+   *
+   * @example "(?<=--)(?<GROUP_NAME>%s)(?=--)"
+   * @since v0.1.11
+   */
+  readonly patternTemplate: string;
+
+  /**
+   * A generic pattern with a `"%s"` for a specific character pattern.
+   *
+   * NOTE 1: only one `"%s"` is supported.
+   *
+   * @example "(?<=--)(?<GROUP_NAME>%s)(?=--)"
+   * @since v0.1.11
+   */
+   readonly subPatternTemplate: string;
+
+  /**
+   * The name of a group in `patternTemplate`.
+   *
+   * @example "GROUP_NAME"
+   * @since v0.1.11
+   */
+  readonly groupName: string;
+
+  /**
+   * Should the expression be case sensitive.
+   *
+   * @default true
+   * @since v0.1.24
+   */
+  readonly caseSensitive?: boolean;
+}
+
+/**
  * A {@link NestedGroupMangleExpression} is a {@link MangleExpression}
  * implementation that matches and replaces in one-level nested substrings.
  *
@@ -58,23 +101,33 @@ class NestedGroupMangleExpression implements MangleExpression {
    * NOTE 2: the class assumes the provided group is present in the template. If
    * it is not this class will fail silently.
    *
-   * @param patternTemplate The top-level template.
-   * @param subPatternTemplate The sub template.
-   * @param groupName The name of a group in both pattern templates.
+   * @param params The top-level template.
+   * @param [subPatternTemplate] The sub template.
+   * @param [groupName] The name of a group in both pattern templates.
    * @param [caseSensitive] Should the expression be case sensitive.
    * @since v0.1.12
-   * @version v0.1.24
+   * @version v0.1.25
+   * @deprecated Use first parameter as object for all parameters instead.
    */
   constructor(
-    patternTemplate: string,
-    subPatternTemplate: string,
-    groupName: string,
+    params: string | NestedGroupMangleExpressionOptions,
+    subPatternTemplate = "",
+    groupName = "",
     caseSensitive = true,
   ) {
-    this.patternTemplate = patternTemplate.replace(/\s/g, "");
-    this.subPatternTemplate = subPatternTemplate.replace(/\s/g, "");
-    this.groupName = groupName;
-    this.caseSensitive =  caseSensitive;
+    if (typeof params === "string") {
+      const patternTemplate = params;
+      this.patternTemplate = patternTemplate.replace(/\s/g, "");
+      this.subPatternTemplate = subPatternTemplate.replace(/\s/g, "");
+      this.groupName = groupName;
+      this.caseSensitive =  caseSensitive;
+    } else {
+      this.patternTemplate = params.patternTemplate.replace(/\s/g, "");
+      this.subPatternTemplate = params.subPatternTemplate.replace(/\s/g, "");
+      this.groupName = params.groupName;
+      this.caseSensitive = params.caseSensitive === undefined ?
+        true : params.caseSensitive;
+    }
   }
 
   /**
