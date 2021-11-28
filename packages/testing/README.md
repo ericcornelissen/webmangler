@@ -34,51 +34,54 @@ suite("My test suite", function() {
 The testing utilities provide [TypeScript] types that can help structure your
 tests. The following types are available:
 
-- [TestScenario](#testscenario)
+- [TestScenarios](#testscenarios)
 
-#### `TestScenario`
+#### `TestScenarios`
 
-The `TestScenario` type can be used to group multiple similar test cases
-together to execute them in a single `test()`. The best use case for this type
-is as an array of scenarios that can use the same test logic.
+The `TestScenarios` type provides a common interface for creating parameterized
+tests.
 
 ##### Example
 
 ```ts
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 
 import { makeStringLonger } from "../my-module.ts";
 
 suite("My test suite", function() {
-  type TestCase = {
-    input: string;
-    expected: string;
-  };
+  interface TestCase {
+    readonly input: string;
+    readonly expected: string;
+  }
 
-  const scenarios: TestScenario<TestCase>[] = [
+  const scenarios: TestScenarios<TestCase> = [
     {
-      name: "descriptive scenario name",
-      cases: [
-        {
-          input: "foo",
-          expected: "foobar",
-        },
-        {
-          input: "Hello",
-          expected: "Hello world!",
-        },
-      ],
+      testName: "example 1",
+      getScenario: () => {
+        const original = "foo";
+        return {
+          input: original,
+          expected: `${original}bar`,
+        };
+      },
+    },
+    {
+      testName: "example 2",
+      getScenario: () => {
+        const original = "Hello";
+        return {
+          input: original,
+          expected: `${original} world!`,
+        };
+      },
     },
   ];
 
-  for (const { name, cases } of scenarios) {
+  for (const { testName, getScenario } of scenarios) {
     test(name, function() {
-      for (const testCase of cases) {
-        const { input, expected } = testCase;
-
-        const result = makeStringLonger(input);
-        expect(result).to.equal(expected);
-      }
+      const { input, expected } = getScenario();
+      const result = makeStringLonger(input);
+      expect(result).to.equal(expected);
     });
   }
 });

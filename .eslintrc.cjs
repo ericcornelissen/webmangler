@@ -239,6 +239,7 @@ module.exports = {
     { // Configuration files (YAML)
       files: [
         ".github/**/*.yml",
+        ".markdownlint.yml",
       ],
       extends: [
         "plugin:yml/standard",
@@ -280,5 +281,6 @@ module.exports = {
     `!${githubDir}/`,
     "!.*.cjs",
     "!.*.js",
+    "!.*.yml",
   ],
 };
