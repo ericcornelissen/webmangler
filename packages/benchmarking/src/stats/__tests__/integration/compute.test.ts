@@ -4,7 +4,7 @@ import type { BenchmarkRunStats } from "../../types";
 
 import { expect } from "chai";
 
-import { computeStats } from "../../stats";
+import { computeStats } from "../../index";
 
 suite("Benchmarking stats", function() {
   suite("::computeStats", function() {

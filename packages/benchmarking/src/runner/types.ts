@@ -1,4 +1,4 @@
-import type { BenchmarkRunStats } from "../types";
+import type { BenchmarkRunStats } from "../stats";
 
 /**
  * The minimum required behaviour of functions to benchmark.

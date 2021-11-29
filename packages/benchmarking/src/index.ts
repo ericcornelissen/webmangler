@@ -1,5 +1,5 @@
 import type { BenchmarkCallback, BenchmarkParameters } from "./runner";
-import type { BenchmarkStats } from "./types";
+import type { BenchmarkStats } from "./stats";
 
 import { doBenchmark } from "./runner";
 import { computeStats } from "./stats";
