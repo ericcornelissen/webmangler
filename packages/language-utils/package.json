@@ -1,12 +1,12 @@
 {
   "name": "@webmangler/language-utils",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "Utilities for building WebMangler language plugins",
   "license": "MIT",
-  "main": "./build/index.js",
-  "typings": "./build/index.d.ts",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "exports": {
-    ".": "./build/index.js"
+    ".": "./lib/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "clean": "rm -rf build/ *.tsbuildinfo",
+    "clean": "rm -rf lib/ *.tsbuildinfo",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
