@@ -21,7 +21,7 @@ jobs:
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
       - name: Install Node.js
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v2.5.0
         with:
           node-version: ${{ steps.node.outputs.VERSION }}
       - name: Get filters string for all packages
@@ -114,7 +114,7 @@ jobs:
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
       - name: Install Node.js
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v2.5.0
         with:
           node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
@@ -150,7 +150,7 @@ jobs:
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
       - name: Install Node.js
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v2.5.0
         with:
           node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
@@ -186,7 +186,7 @@ jobs:
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
       - name: Install Node.js
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v2.5.0
         with:
           node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
@@ -226,7 +226,7 @@ jobs:
         id: node
         run: echo ::set-output name=VERSION::$(cat .nvmrc)
       - name: Install Node.js
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v2.5.0
         with:
           node-version: ${{ steps.node.outputs.VERSION }}
           cache: npm
