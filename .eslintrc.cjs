@@ -240,6 +240,13 @@ module.exports = {
       extends: [
         "plugin:yml/standard",
       ],
+      rules: {
+        "yml/no-multiple-empty-lines": ["error", {
+          max: 1,
+          maxEOF: 0,
+          maxBOF: 0,
+        }],
+      },
     },
     { // Documentation Snippets (MarkDown.*)
       files: [
