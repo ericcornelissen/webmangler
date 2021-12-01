@@ -1,56 +1,4 @@
 /**
- * The options for the set of {@link MangleExpression}s that match the property
- * name of CSS declarations.
- *
- * @since v0.1.14
- */
-type CssDeclarationPropertyOptions = {
-  /**
-   * An optional expression of the prefix required on property names that should
-   * be matched.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  prefix?: string;
-
-  /**
-   * An optional expression of the suffix required on property names that should
-   * be matched.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  suffix?: string;
-};
-
-/**
- * The options for the set of {@link MangleExpression}s that match the value of
- * CSS declarations.
- *
- * @since v0.1.14
- */
-type CssDeclarationValueOptions = {
-  /**
-   * An optional expression of the prefix required on values that should be
-   * matched.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  prefix?: string;
-
-  /**
-   * An optional expression of the suffix required on values that should be
-   * matched.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  suffix?: string;
-};
-
-/**
  * The options for _WebMangler_'s built-in CSS variables mangler.
  *
  * @since v0.1.0
@@ -96,7 +44,5 @@ interface CssVariableManglerOptions {
 }
 
 export type {
-  CssDeclarationPropertyOptions,
-  CssDeclarationValueOptions,
   CssVariableManglerOptions,
 };
