@@ -1,23 +1,18 @@
+import type { BenchmarkRunStats } from "../stats";
+
 /**
  * The minimum required behaviour of functions to benchmark.
  *
  * @since v0.1.0
  */
-export type BenchmarkCallback = () => void;
-
-/**
- * The behaviour of a benchmark run setup.
- *
- * @since v0.1.1
- */
-export type BenchmarkSetup = () => void;
+type BenchmarkCallback = () => void;
 
 /**
  * The parameters for benchmarking a function.
  *
  * @since v0.1.1
  */
-export type BenchmarkParameters = {
+type BenchmarkParameters = {
   /**
    * To function to benchmark.
    *
@@ -49,25 +44,15 @@ export type BenchmarkParameters = {
 }
 
 /**
- * The statistics returned when benchmarking.
+ * The behaviour of a benchmark run setup.
  *
- * @since v0.1.0
+ * @since v0.1.1
  */
-export type BenchmarkStats = {
-  /**
-   * The median duration in milliseconds of `n` runs.
-   *
-   * @since v0.1.0
-   */
-  medianDuration: number;
-};
+type BenchmarkSetup = () => void;
 
-/**
- * The statistics of a single function execution.
- */
-export type BenchmarkRunStats = {
-  /**
-   * The duration in milliseconds of a run.
-   */
-  duration: number;
+export type {
+  BenchmarkCallback,
+  BenchmarkParameters,
+  BenchmarkRunStats,
+  BenchmarkSetup,
 };

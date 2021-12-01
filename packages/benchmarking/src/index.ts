@@ -1,9 +1,7 @@
-import type {
-  BenchmarkCallback,
-  BenchmarkParameters,
-  BenchmarkStats,
-} from "./types";
+import type { BenchmarkCallback, BenchmarkParameters } from "./runner";
+import type { BenchmarkStats } from "./stats";
 
+import { getRuntimeBudget } from "./budget";
 import { doBenchmark } from "./runner";
 import { computeStats } from "./stats";
 
@@ -20,12 +18,18 @@ import { computeStats } from "./stats";
  * @since v0.1.0
  * @version v0.1.1
  */
-export function benchmarkFn(params: BenchmarkParameters): BenchmarkStats {
+function benchmarkFn(params: BenchmarkParameters): BenchmarkStats {
   const runsData = doBenchmark(params);
   const results = computeStats(runsData);
   return results;
 }
 
-export { getRuntimeBudget } from "./budget";
+export {
+  benchmarkFn,
+  getRuntimeBudget,
+};
 
-export type { BenchmarkCallback, BenchmarkStats };
+export type {
+  BenchmarkCallback,
+  BenchmarkStats,
+};
