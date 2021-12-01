@@ -18,6 +18,7 @@ const {
 } = values;
 
 const RUN_MUTATION_TESTING = [
+  "benchmarking",
   "language-css",
   "mangler-css-variables",
   "mangler-utils",

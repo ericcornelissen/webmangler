@@ -4,6 +4,10 @@ import * as utils from "../../index";
 
 suite("Exports of @webmangler/manglers-utils", function() {
   suite("Character sets", function() {
+    test("has all alphanumeric characters", function() {
+      expect(utils).to.haveOwnProperty("ALL_ALPHANUMERIC_CHARS");
+    });
+
     test("has all characters", function() {
       expect(utils).to.haveOwnProperty("ALL_CHARS");
     });
@@ -16,7 +20,7 @@ suite("Exports of @webmangler/manglers-utils", function() {
       expect(utils).to.haveOwnProperty("ALL_LOWERCASE_CHARS");
     });
 
-    test("has all numbers", function() {
+    test("has all numeric characters", function() {
       expect(utils).to.haveOwnProperty("ALL_NUMBER_CHARS");
     });
 

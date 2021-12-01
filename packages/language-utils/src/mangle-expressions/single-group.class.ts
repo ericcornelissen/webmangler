@@ -84,7 +84,7 @@ class SingleGroupMangleExpression implements MangleExpression {
    * @param [groupName] The name of a group in `patternTemplate`.
    * @param [caseSensitive] Should the expression be case sensitive.
    * @since v0.1.11
-   * @version v0.1.26
+   * @version v0.1.25
    * @deprecated Use first parameter as object for all parameters instead.
    */
   constructor(

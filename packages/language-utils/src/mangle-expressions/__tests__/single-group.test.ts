@@ -320,11 +320,11 @@ suite("SingleGroupMangleExpression", function() {
             expected,
           } = testCase;
 
-          const subject = new SingleGroupMangleExpression(
+          const subject = new SingleGroupMangleExpression({
             patternTemplate,
-            group,
+            groupName: group,
             caseSensitive,
-          );
+          });
 
           const result = subject.replaceAll(s, replacements);
           expect(result).to.equal(expected);

@@ -33,7 +33,7 @@ interface NestedGroupMangleExpressionOptions {
    * @example "(?<=--)(?<GROUP_NAME>%s)(?=--)"
    * @since v0.1.11
    */
-   readonly subPatternTemplate: string;
+  readonly subPatternTemplate: string;
 
   /**
    * The name of a group in `patternTemplate`.

@@ -28,7 +28,7 @@ module.exports = {
 
   disableTypeChecks: `${packagesDir}/${packagesExpr}/${srcDir}/**/*.ts`,
   checkers: ["typescript"],
-  tsconfigFile: "tsconfig.json",
+  tsconfigFile: "tsconfig.build.json",
 
   reporters: [
     "clear-text",

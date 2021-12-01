@@ -1,6 +1,7 @@
 import { expect } from "chai";
 
 import {
+  ALL_ALPHANUMERIC_CHARS,
   ALL_CHARS,
   ALL_LETTER_CHARS,
   ALL_LOWERCASE_CHARS,
@@ -12,8 +13,26 @@ suite("Character sets", function() {
   const alphabetSize = 26;
   const numbersSize = 10;
 
+  suite("ALL_ALPHANUMERIC_CHARS", function() {
+    test("only contains letters and numbers", function() {
+      const expr = /^[A-Za-z0-9]$/;
+      for (const character of ALL_ALPHANUMERIC_CHARS) {
+        const result = expr.test(character);
+        expect(result, `${character} is not alphanumeric`).to.be.true;
+      }
+    });
+
+    test("contains all letters and numbers", function() {
+      const charactersAsSet = new Set(ALL_ALPHANUMERIC_CHARS);
+      const numberOfCharacters = charactersAsSet.size;
+      expect(numberOfCharacters).to.equal(
+        (2 * alphabetSize) + numbersSize,
+      );
+    });
+  });
+
   suite("ALL_CHARS", function() {
-    test("only contains letters", function() {
+    test("only contains allowed characters", function() {
       const expr = /^[A-Za-z0-9_-]$/;
       for (const character of ALL_CHARS) {
         const result = expr.test(character);
@@ -21,7 +40,7 @@ suite("Character sets", function() {
       }
     });
 
-    test("contains all letters", function() {
+    test("contains each character", function() {
       const charactersAsSet = new Set(ALL_CHARS);
       const numberOfCharacters = charactersAsSet.size;
       expect(numberOfCharacters).to.equal(
@@ -55,7 +74,7 @@ suite("Character sets", function() {
       }
     });
 
-    test("contains all letters", function() {
+    test("contains all lowercase letters", function() {
       const charactersAsSet = new Set(ALL_LOWERCASE_CHARS);
       const numberOfCharacters = charactersAsSet.size;
       expect(numberOfCharacters).to.equal(alphabetSize);
@@ -63,7 +82,7 @@ suite("Character sets", function() {
   });
 
   suite("ALL_NUMBER_CHARS", function() {
-    test("only contains numbers", function() {
+    test("only contains numeric characters", function() {
       const expr = /^[0-9]$/;
       for (const character of ALL_NUMBER_CHARS) {
         const result = expr.test(character);
@@ -71,7 +90,7 @@ suite("Character sets", function() {
       }
     });
 
-    test("contains all letters", function() {
+    test("contains all numeric characters", function() {
       const charactersAsSet = new Set(ALL_NUMBER_CHARS);
       const numberOfCharacters = charactersAsSet.size;
       expect(numberOfCharacters).to.equal(numbersSize);
@@ -87,7 +106,7 @@ suite("Character sets", function() {
       }
     });
 
-    test("contains all letters", function() {
+    test("contains all uppercase letters", function() {
       const charactersAsSet = new Set(ALL_UPPERCASE_CHARS);
       const numberOfCharacters = charactersAsSet.size;
       expect(numberOfCharacters).to.equal(alphabetSize);
