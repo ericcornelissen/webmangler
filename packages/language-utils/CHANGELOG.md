@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Update interface of `MangleExpression` utilities. ([#211])
 
 ## [0.1.24] - 2021-11-29
 
@@ -20,5 +20,6 @@ Versioning].
 
 [#136]: https://github.com/ericcornelissen/webmangler/pull/136
 [#191]: https://github.com/ericcornelissen/webmangler/pull/191
+[#211]: https://github.com/ericcornelissen/webmangler/pull/211
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
