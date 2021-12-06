@@ -5,44 +5,37 @@ import { expect } from "chai";
 
 import { embedContentInContext } from "../common";
 
-import cssDeclarationValueExpressionFactory from "../../css-values";
+import singleValueAttributeExpressionFactory from "../../single-value-attributes";
 
-suite("CSS - CSS Value Expression Factory", function() {
+suite("CSS - Single Value Attribute Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "var-[a-zA-Z0-9-]+";
+  const patterns = "val-[a-zA-Z0-9-]+";
 
-  const contentWithVariables = embedContentInContext(`
-    #foobar {
-      content: var(--var-foobar);
+  const contentWithSingleValueAttribute = embedContentInContext(`
+    input[id="val-bar"] {
+      font-family: sans-serif;
     }
 
-    .foo {
-      content: var(--var-bar);
-    }
-
-    .bar::after {
-      content: var(--var-foo);
+    .foo[for="val-bar"] {
+      content: "bar";
+      color: #123;
     }
   `);
-  const contentWithoutVariables = `
-    #foobar {
-      content: "foobar";
+  const contentWithoutSingleValueAttribute = `
+    body {
+      font-family: sans-serif;
     }
 
-    .foo {
+    .foobar {
       content: "bar";
-    }
-
-    .bar::after {
-      content: "foo";
+      color: #123;
     }
   `;
 
   suiteSetup(function() {
-    expressions = cssDeclarationValueExpressionFactory({
-      prefix: "var\\(--",
-      suffix: "\\)",
+    expressions = singleValueAttributeExpressionFactory({
+      attributeNames: ["id", "for"],
     });
   });
 
@@ -52,11 +45,13 @@ suite("CSS - CSS Value Expression Factory", function() {
 
   test("simple file", function() {
     const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithVariables;
+    const fileContent = contentWithSingleValueAttribute;
 
     let found: string[] = [];
     const result = benchmarkFn({
-      setup: () => { found = []; },
+      setup: () => {
+        found = [];
+      },
       fn: () => {
         for (const expression of expressions) {
           found.push(...expression.findAll(fileContent, patterns));
@@ -70,11 +65,13 @@ suite("CSS - CSS Value Expression Factory", function() {
 
   test("large file", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithVariables.repeat(100);
+    const fileContent = contentWithSingleValueAttribute.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({
-      setup: () => { found = []; },
+      setup: () => {
+        found = [];
+      },
       fn: () => {
         for (const expression of expressions) {
           found.push(...expression.findAll(fileContent, patterns));
@@ -86,13 +83,15 @@ suite("CSS - CSS Value Expression Factory", function() {
     expect(result.medianDuration).to.be.below(budget);
   });
 
-  test("large file without variables", function() {
+  test("large file without single-value attributes", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithoutVariables.repeat(100);
+    const fileContent = contentWithoutSingleValueAttribute.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({
-      setup: () => { found = []; },
+      setup: () => {
+        found = [];
+      },
       fn: () => {
         for (const expression of expressions) {
           found.push(...expression.findAll(fileContent, patterns));
