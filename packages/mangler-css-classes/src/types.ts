@@ -54,54 +54,6 @@ interface CssClassManglerOptions {
   classAttributes?: Iterable<string>;
 }
 
-/**
- * The options for the set of {@link MangleExpression}s that match the values of
- * attributes as a space-separate list of values.
- *
- * @since v0.1.14
- * @version v0.1.17
- */
-type MultiValueAttributeOptions = {
-  /**
-   * The names of attributes to match.
-   *
-   * @since v0.1.14
-   * @version v0.1.17
-   */
-  attributeNames: Iterable<string>;
-};
-
-/**
- * The options for the set of {@link MangleExpression}s that match CSS query
- * selectors.
- *
- * @since v0.1.14
- */
-type QuerySelectorOptions = {
-  /**
-   * The prefix required on the CSS query selector.
-   *
-   * NOTE: it is recommended to only ever use one of `"\\."`, `"#"`, and
-   * `"\\["`.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  prefix?: string;
-
-  /**
-   * The suffix required on the CSS query selector.
-   *
-   * NOTE: it is recommended to only ever use one of `""` and `"\\."`.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  suffix?: string;
-};
-
 export type {
   CssClassManglerOptions,
-  MultiValueAttributeOptions,
-  QuerySelectorOptions,
 };

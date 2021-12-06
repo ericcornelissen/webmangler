@@ -1,6 +1,7 @@
-import type { MangleOptions } from "@webmangler/types";
-
-import type { SingleValueAttributeOptions } from "../types";
+import type {
+  MangleOptions,
+  SingleValueAttributeOptions,
+} from "@webmangler/types";
 
 import { expect } from "chai";
 

@@ -1,10 +1,11 @@
-import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
-
 import type {
-  HtmlIdManglerOptions,
+  CharSet,
   QuerySelectorOptions,
   SingleValueAttributeOptions,
-} from "./types";
+  MangleExpressionOptions,
+} from "@webmangler/types";
+
+import type { HtmlIdManglerOptions } from "./types";
 
 import {
   ALL_LETTER_CHARS,
@@ -14,11 +15,11 @@ import {
 
 const QUERY_SELECTOR_EXPRESSION_OPTIONS:
     MangleExpressionOptions<QuerySelectorOptions> = {
-  name: "query-selectors",
-  options: {
-    prefix: "#",
-  },
-};
+      name: "query-selectors",
+      options: {
+        prefix: "#",
+      },
+    };
 
 /**
  * The HTML ID mangler (or just ID mangler) is a built-in plugin of _WebMangler_

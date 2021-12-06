@@ -1,39 +1,4 @@
 /**
- * The options for the set of {@link MangleExpression}s that match attributes.
- *
- * NOTE: This set of {@link MangleExpression}s is currently not configurable.
- *
- * @since v0.1.14
- */
-type AttributeOptions = null;
-
-/**
- * The options for the set of {@link MangleExpression}s that match the value of
- * CSS declarations.
- *
- * @since v0.1.14
- */
-type CssDeclarationValueOptions = {
-  /**
-   * An optional expression of the prefix required on values that should be
-   * matched.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  prefix?: string;
-
-  /**
-   * An optional expression of the suffix required on values that should be
-   * matched.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  suffix?: string;
-};
-
-/**
  * The options for _WebMangler_'s built-in HTML Attributes mangler.
  *
  * @since v0.1.0
@@ -85,38 +50,6 @@ interface HtmlAttributeManglerOptions {
   keepAttrPrefix?: string;
 }
 
-/**
- * The options for the set of {@link MangleExpression}s that match CSS query
- * selectors.
- *
- * @since v0.1.14
- */
-type QuerySelectorOptions = {
-  /**
-   * The prefix required on the CSS query selector.
-   *
-   * NOTE: it is recommended to only ever use one of `"\\."`, `"#"`, and
-   * `"\\["`.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  prefix?: string;
-
-  /**
-   * The suffix required on the CSS query selector.
-   *
-   * NOTE: it is recommended to only ever use one of `""` and `"\\."`.
-   *
-   * @default `""`
-   * @since v0.1.14
-   */
-  suffix?: string;
-};
-
 export type {
-  AttributeOptions,
-  CssDeclarationValueOptions,
   HtmlAttributeManglerOptions,
-  QuerySelectorOptions,
 };

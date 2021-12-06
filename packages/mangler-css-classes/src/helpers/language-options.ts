@@ -1,9 +1,8 @@
-import type { MangleExpressionOptions } from "@webmangler/types";
-
 import type {
+  MangleExpressionOptions,
   MultiValueAttributeOptions,
   QuerySelectorOptions,
-} from "../types";
+} from "@webmangler/types";
 
 /**
  * A list of the attributes always consider as `class`-like by a {@link
