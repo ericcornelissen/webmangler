@@ -76,8 +76,10 @@ suite("HTML ID Mangler", function() {
         const reserved: string[] = ["foo", "bar"];
 
         const htmlIdMangler = new HtmlIdMangler({ reservedIds: reserved });
-        const result = htmlIdMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ reservedNames: reserved });
+        const _result = htmlIdMangler.options() as MangleOptions;
+        const result = Array.from(_result.reservedNames as Iterable<string>);
+        expect(result).to.include.members(reserved);
+        expect(result).to.have.length(reserved.length);
       });
     });
 

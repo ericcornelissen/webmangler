@@ -1,24 +1,8 @@
-import type { CharSet, MangleExpressionOptions } from "@webmangler/types";
+import type { HtmlIdManglerOptions } from "./types";
 
-import type {
-  HtmlIdManglerOptions,
-  QuerySelectorOptions,
-  SingleValueAttributeOptions,
-} from "./types";
+import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
-import {
-  ALL_LETTER_CHARS,
-  ALL_NUMBER_CHARS,
-  SimpleManglerPlugin,
-} from "@webmangler/mangler-utils";
-
-const QUERY_SELECTOR_EXPRESSION_OPTIONS:
-    MangleExpressionOptions<QuerySelectorOptions> = {
-  name: "query-selectors",
-  options: {
-    prefix: "#",
-  },
-};
+import * as helpers from "./helpers";
 
 /**
  * The HTML ID mangler (or just ID mangler) is a built-in plugin of _WebMangler_
@@ -123,45 +107,6 @@ const QUERY_SELECTOR_EXPRESSION_OPTIONS:
  */
 class HtmlIdMangler extends SimpleManglerPlugin {
   /**
-   * The character set used by {@link HtmlIdMangler}.
-   */
-  private static readonly CHARACTER_SET: CharSet = [
-    ...ALL_LETTER_CHARS,
-    ...ALL_NUMBER_CHARS,
-    "-", "_",
-  ];
-
-  /**
-   * The default ignore patterns used by a {@link HtmlIdMangler}.
-   */
-  private static readonly DEFAULT_IGNORE_PATTERNS: string[] = [];
-
-  /**
-   * The default patterns used by a {@link HtmlIdMangler}.
-   */
-  private static readonly DEFAULT_PATTERNS: string[] = ["id-[a-zA-Z-_]+"];
-
-  /**
-   * The default prefix used by a {@link HtmlIdMangler}.
-   */
-  private static readonly DEFAULT_PREFIX = "";
-
-  /**
-   * The default reserved names used by a {@link HtmlIdMangler}.
-   */
-  private static readonly DEFAULT_RESERVED: string[] = [];
-
-  /**
-   * A list of the attributes always treated as `id` by {@link HtmlIdMangler}.
-   */
-  private static readonly STANDARD_ID_ATTRIBUTES: string[] = ["id", "for"];
-
-  /**
-   * A list of the attributes always treated as URL by {@link HtmlIdMangler}.
-   */
-  private static readonly STANDARD_URL_ATTRIBUTES: string[] = ["href"];
-
-  /**
    * Instantiate a new {@link HtmlIdMangler}.
    *
    * @param options The {@link HtmlIdManglerOptions}.
@@ -170,122 +115,17 @@ class HtmlIdMangler extends SimpleManglerPlugin {
    */
   constructor(options: HtmlIdManglerOptions={}) {
     super({
-      charSet: HtmlIdMangler.CHARACTER_SET,
-      patterns: HtmlIdMangler.getPatterns(options.idNamePattern),
-      ignorePatterns: HtmlIdMangler.getIgnorePatterns(
-        options.ignoreIdNamePattern,
-      ),
-      reserved: HtmlIdMangler.getReserved(options.reservedIds),
-      prefix: HtmlIdMangler.getPrefix(options.keepIdPrefix),
+      charSet: helpers.getCharacterSet(),
+      patterns: helpers.getPatterns(options),
+      ignorePatterns: helpers.getIgnorePatterns(options),
+      reserved: helpers.getReserved(options),
+      prefix: helpers.getPrefix(options),
       languageOptions: [
-        QUERY_SELECTOR_EXPRESSION_OPTIONS,
-        HtmlIdMangler.getIdAttributeExpressionOptions(options.idAttributes),
-        HtmlIdMangler.getUrlAttributeExpressionOptions(options.urlAttributes),
+        helpers.getQuerySelectorExpressionOptions(),
+        helpers.getIdAttributeExpressionOptions(options),
+        helpers.getUrlAttributeExpressionOptions(options),
       ],
     });
-  }
-
-  /**
-   * Get either the configured patterns or the default patterns.
-   *
-   * @param idNamePattern The configured patterns.
-   * @returns The patterns to be used.
-   */
-  private static getPatterns(
-    idNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (idNamePattern === undefined) {
-      return HtmlIdMangler.DEFAULT_PATTERNS;
-    }
-
-    return idNamePattern;
-  }
-
-  /**
-   * Get either the configured patterns or the default patterns.
-   *
-   * @param ignoreIdNamePattern The configured ignore patterns.
-   * @returns The ignore patterns to be used.
-   */
-  private static getIgnorePatterns(
-    ignoreIdNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string> {
-    if (ignoreIdNamePattern === undefined) {
-      return HtmlIdMangler.DEFAULT_IGNORE_PATTERNS;
-    }
-
-    return ignoreIdNamePattern;
-  }
-
-  /**
-   * Get either the configured reserved names or the default reserved names.
-   *
-   * @param reservedIds The configured reserved names.
-   * @returns The reserved names to be used.
-   */
-  private static getReserved(reservedIds?: Iterable<string>): Iterable<string> {
-    if (reservedIds === undefined) {
-      return HtmlIdMangler.DEFAULT_RESERVED;
-    }
-
-    return reservedIds;
-  }
-
-  /**
-   * Get either the configured prefix or the default prefix.
-   *
-   * @param keepIdPrefix The configured prefix.
-   * @returns The prefix to be used.
-   */
-  private static getPrefix(keepIdPrefix?: string): string {
-    if (keepIdPrefix === undefined) {
-      return HtmlIdMangler.DEFAULT_PREFIX;
-    }
-
-    return keepIdPrefix;
-  }
-
-  /**
-   * Get the {@link MangleExpressionOptions} for mangling id-like attributes.
-   * The `id` and `for` attributes are always included.
-   *
-   * @param attributes The attributes to treat as `id`s.
-   * @returns The {@link SingleValueAttributeOptions}.
-   */
-  private static getIdAttributeExpressionOptions(
-    attributes: Iterable<string> = [],
-  ): MangleExpressionOptions<SingleValueAttributeOptions> {
-    return {
-      name: "single-value-attributes",
-      options: {
-        attributeNames: new Set([
-          ...HtmlIdMangler.STANDARD_ID_ATTRIBUTES,
-          ...attributes,
-        ]),
-      },
-    };
-  }
-
-  /**
-   * Get the {@link MangleExpressionOptions} for mangling URL attributes. The
-   * `href` attribute is always included.
-   *
-   * @param attributes The attributes to treat as URLs.
-   * @returns The {@link SingleValueAttributeOptions}.
-   */
-  private static getUrlAttributeExpressionOptions(
-    attributes: Iterable<string> = [],
-  ): MangleExpressionOptions<SingleValueAttributeOptions> {
-    return {
-      name: "single-value-attributes",
-      options: {
-        attributeNames: new Set([
-          ...HtmlIdMangler.STANDARD_URL_ATTRIBUTES,
-          ...attributes,
-        ]),
-        valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\.\\?]*(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?#",
-      },
-    };
   }
 }
 
