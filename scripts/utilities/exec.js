@@ -5,10 +5,18 @@
 
 import * as cp from "child_process";
 
+function tryLogError(error) {
+  if (error.stdout) {
+    const errorMsg = error.stdout.toString();
+    console.error("\n", errorMsg); // eslint-disable-line no-console
+  }
+}
+
 export default function execSync(command, args, options) {
   try {
     cp.execFileSync(command, args, options);
-  } catch (_) {
+  } catch (error) {
+    tryLogError(error);
     process.exit(1);
   }
 }
