@@ -1,10 +1,10 @@
 import type { MangleOptions } from "@webmangler/types";
 
-import type { SingleValueAttributeOptions } from "../types";
+import type { SingleValueAttributeOptions } from "../../types";
 
 import { expect } from "chai";
 
-import HtmlIdMangler from "../class";
+import HtmlIdMangler from "../../class";
 
 suite("HTML ID Mangler", function() {
   suite("Configuration", function() {
