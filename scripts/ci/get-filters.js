@@ -8,6 +8,7 @@
  */
 
 import * as fs from "fs";
+import * as path from "path";
 
 import log from "../utilities/log.js";
 import * as paths from "../paths.js";
@@ -70,7 +71,7 @@ function getPackageCriteria(arg) {
 }
 
 function getPackageFilters(packageCriteria, isMain) {
-  const filters = paths.getPackages()
+  const filters = paths.listPackages()
     .filter(packageCriteria)
     .map(isMain ? asEverythingFilter : asPackageFilter)
     .join("\n");
@@ -93,7 +94,7 @@ function asPackageFilter(packageName) {
 function hasFiles(pkg, test) {
   const helper = (folder) => {
     for (const entry of fs.readdirSync(folder)) {
-      const entryPath = paths.resolve._(folder, entry);
+      const entryPath = path.resolve(folder, entry);
       const stats = fs.statSync(entryPath);
       if (!stats.isFile()) {
         const result = helper(entryPath);
@@ -106,6 +107,6 @@ function hasFiles(pkg, test) {
     return false;
   };
 
-  const packageRoot = paths.resolve.fromPackage(pkg, "src");
+  const packageRoot = path.resolve(paths.packagesDir, pkg, "src");
   return helper(packageRoot);
 }
