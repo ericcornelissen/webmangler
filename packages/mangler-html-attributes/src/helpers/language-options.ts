@@ -1,10 +1,9 @@
-import type { MangleExpressionOptions } from "@webmangler/types";
-
 import type {
   AttributeOptions,
   CssDeclarationValueOptions,
+  MangleExpressionOptions,
   QuerySelectorOptions,
-} from "../types";
+} from "@webmangler/types";
 
 /**
  * Get the {@link MangleExpressionOptions} for mangling attributes.
@@ -15,7 +14,7 @@ function getAttributeExpressionOptions():
     MangleExpressionOptions<AttributeOptions> {
   return {
     name: "attributes",
-    options: null,
+    options: { },
   };
 }
 

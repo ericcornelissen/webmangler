@@ -1,9 +1,8 @@
-import type { MangleExpressionOptions } from "@webmangler/types";
-
 import type {
   CssDeclarationPropertyOptions,
   CssDeclarationValueOptions,
-} from "../types";
+  MangleExpressionOptions,
+} from "@webmangler/types";
 
 /**
  * Get the {@link MangleExpressionOptions} for mangling CSS variable

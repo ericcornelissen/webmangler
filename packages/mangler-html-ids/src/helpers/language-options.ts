@@ -1,9 +1,8 @@
-import type { MangleExpressionOptions } from "@webmangler/types";
-
 import type {
+  MangleExpressionOptions,
   QuerySelectorOptions,
   SingleValueAttributeOptions,
-} from "../types";
+} from "@webmangler/types";
 
 /**
  * A list of the attributes always treated as `id` by {@link HtmlIdMangler}.
