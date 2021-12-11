@@ -5,7 +5,7 @@ import type {
 
 import { expect } from "chai";
 
-import HtmlIdMangler from "../class";
+import HtmlIdMangler from "../../index";
 
 suite("HTML ID Mangler", function() {
   suite("Configuration", function() {
@@ -77,8 +77,10 @@ suite("HTML ID Mangler", function() {
         const reserved: string[] = ["foo", "bar"];
 
         const htmlIdMangler = new HtmlIdMangler({ reservedIds: reserved });
-        const result = htmlIdMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ reservedNames: reserved });
+        const _result = htmlIdMangler.options() as MangleOptions;
+        const result = Array.from(_result.reservedNames as Iterable<string>);
+        expect(result).to.include.members(reserved);
+        expect(result).to.have.length(reserved.length);
       });
     });
 
@@ -107,7 +109,7 @@ suite("HTML ID Mangler", function() {
         mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
         const allLanguageOptions = Array.from(mangleOptions.languageOptions);
-        const languageOptions = allLanguageOptions[1];
+        const languageOptions = allLanguageOptions[0];
         return languageOptions?.options as SingleValueAttributeOptions;
       };
 

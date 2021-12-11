@@ -22,6 +22,7 @@ const RUN_MUTATION_TESTING = [
   "benchmarking",
   "language-css",
   "mangler-css-variables",
+  "mangler-html-ids",
   "mangler-utils",
 ];
 
