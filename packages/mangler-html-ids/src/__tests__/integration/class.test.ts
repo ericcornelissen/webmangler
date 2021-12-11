@@ -5,7 +5,7 @@ import type {
 
 import { expect } from "chai";
 
-import HtmlIdMangler from "../../class";
+import HtmlIdMangler from "../../index";
 
 suite("HTML ID Mangler", function() {
   suite("Configuration", function() {
