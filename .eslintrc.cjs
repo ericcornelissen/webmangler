@@ -215,6 +215,9 @@ module.exports = {
         // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
         "jsdoc/require-jsdoc": "off",
 
+        // See: https://github.com/nodesecurity/eslint-plugin-security#rules
+        "security/detect-non-literal-fs-filename": "off",
+
         // Disable any lingering TypeScript issues
         "@typescript-eslint/no-var-requires": "off",
       },

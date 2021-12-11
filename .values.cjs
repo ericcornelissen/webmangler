@@ -34,7 +34,7 @@ function getAllPackagesAsArray() {
   const fs = require("fs");
   const path = require("path");
   const absPackagesDir = path.resolve(__dirname, "packages");
-  const packagesArray = fs.readdirSync(absPackagesDir); // eslint-disable-line security/detect-non-literal-fs-filename
+  const packagesArray = fs.readdirSync(absPackagesDir);
   return packagesArray;
 }
 
