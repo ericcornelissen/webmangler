@@ -105,3 +105,8 @@ export {
   getQuerySelectorExpressionOptions,
   getUrlAttributeExpressionOptions,
 };
+
+export type {
+  IdAttributeExpressionOptions,
+  UrlAttributeExpressionOptions,
+};

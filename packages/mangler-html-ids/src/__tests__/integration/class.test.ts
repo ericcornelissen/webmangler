@@ -109,7 +109,7 @@ suite("HTML ID Mangler", function() {
         mangleOptions: MangleOptions,
       ): SingleValueAttributeOptions => {
         const allLanguageOptions = Array.from(mangleOptions.languageOptions);
-        const languageOptions = allLanguageOptions[1];
+        const languageOptions = allLanguageOptions[0];
         return languageOptions?.options as SingleValueAttributeOptions;
       };
 

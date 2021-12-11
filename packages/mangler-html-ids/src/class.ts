@@ -120,11 +120,7 @@ class HtmlIdMangler extends SimpleManglerPlugin {
       ignorePatterns: helpers.getIgnorePatterns(options),
       reserved: helpers.getReserved(options),
       prefix: helpers.getPrefix(options),
-      languageOptions: [
-        helpers.getQuerySelectorExpressionOptions(),
-        helpers.getIdAttributeExpressionOptions(options),
-        helpers.getUrlAttributeExpressionOptions(options),
-      ],
+      languageOptions: helpers.getLanguageOptions(options),
     });
   }
 }
