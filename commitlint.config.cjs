@@ -31,17 +31,38 @@ module.exports = {
       2,
       "always",
       [
+        // Use when testing performance or benchmarking.
         "benchmark",
+
+        // Use when no other type is suitable.
         "chore",
+
+        // Use when making changes affecting the CI.
         "ci",
+
+        // Use when changing configuration files.
         "config",
+
+        // Use when changing only documentation, either in a text file or in
+        // source code.
         "docs",
+
+        // Use when adding new functionality.
         "feat",
+
+        // Use when fixing a bug.
         "fix",
+
+        // Use when improving performance.
         "perf",
+
+        // Use when changing code without changing functionality.
         "refactor",
+
+        // Use when reverting a change from an earlier commit.
         "revert",
-        "style",
+
+        // Use when adding new tests or updating existing tests.
         "test",
       ],
     ],

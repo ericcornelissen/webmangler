@@ -35,7 +35,7 @@ main(process.argv.slice(2));
 function main(argv) {
   log.print("Cleaning repository...");
   removeFilesAndFolders(argv);
-  resetTestData(argv);
+  resetTestData();
   cleanPackages(argv);
   log.reprintln("Repository cleaned.");
 }
@@ -50,7 +50,9 @@ function removeFilesAndFolders(argv) {
 
   execSync("rm", [
     "-rf",
-    ...filesAndFoldersToRemove.map(paths.resolve.fromRoot),
+    ...filesAndFoldersToRemove.map(
+      (fileOrFolder) => path.resolve(paths.projectRoot, fileOrFolder),
+    ),
   ]);
 }
 
@@ -65,7 +67,7 @@ function cleanPackages(argv) {
   }
 
   log.reprint("Cleaning packages...");
-  for (const packageName of paths.getPackages()) {
+  for (const packageName of paths.listPackages()) {
     log.reprint(`Cleaning packages/${packageName}...`);
     execSync("npm", ["run", "clean"], {
       cwd: path.resolve(paths.packagesDir, packageName),

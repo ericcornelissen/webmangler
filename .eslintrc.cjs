@@ -15,6 +15,7 @@ const {
 
 const INDENT_SIZE = 2;
 const JS_GLOBALS = {
+  __dirname: "readonly",
   console: "readonly",
   module: "readonly",
   process: "readonly",
@@ -166,7 +167,7 @@ module.exports = {
         "security/detect-child-process": "off",
         "security/detect-non-literal-fs-filename": "off",
 
-        // Disable any lingering TypeScript issues
+        // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-var-requires": "off",
       },
@@ -211,6 +212,12 @@ module.exports = {
         ecmaVersion: 2015,
       },
       rules: {
+        // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
+        "jsdoc/require-jsdoc": "off",
+
+        // See: https://github.com/nodesecurity/eslint-plugin-security#rules
+        "security/detect-non-literal-fs-filename": "off",
+
         // Disable any lingering TypeScript issues
         "@typescript-eslint/no-var-requires": "off",
       },
@@ -282,6 +289,7 @@ module.exports = {
 
     // Don't ignore configuration files
     `!${githubDir}/`,
+    "!.*.cjs",
     "!.*.js",
     "!.*.yml",
   ],

@@ -20,9 +20,9 @@ const MUTATION_FLAG = "--mutation";
 const UNIT_FLAG = "--unit";
 const WATCH_FLAG = "--watch";
 
-const nycBin = path.resolve(paths.nodeModules, ".bin", "nyc");
-const mochaBin = path.resolve(paths.nodeModules, ".bin", "mocha");
-const strykerBin = path.resolve(paths.nodeModules, ".bin", "stryker");
+const nycBin = path.resolve(paths.nodeBin, "nyc");
+const mochaBin = path.resolve(paths.nodeBin, "mocha");
+const strykerBin = path.resolve(paths.nodeBin, "stryker");
 
 main(process.argv, process.env);
 
@@ -35,9 +35,9 @@ function main(argv, env) {
   const testType = getTestType(argv);
 
   if (argv.includes(MUTATION_FLAG)) {
-    compilePackages(undefined, argv);
+    compilePackages(undefined);
   } else {
-    compilePackages(packages, argv);
+    compilePackages(packages);
   }
 
   runTests(cmd, cmdArgs, packages, testType);
@@ -61,7 +61,7 @@ function compilePackages(packagesStr) {
   if (packagesStr !== undefined) {
     packagesList = packagesStr.split(",");
   } else {
-    packagesList = paths.getPackages();
+    packagesList = paths.listPackages();
   }
 
   packagesList.forEach((packageName, i) => {
