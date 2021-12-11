@@ -2,7 +2,7 @@ import type { TestScenarios } from "@webmangler/testing";
 
 import { expect } from "chai";
 
-import SingleGroupMangleExpression from "../single-group.class";
+import SingleGroupMangleExpression from "../../single-group.class";
 
 suite("SingleGroupMangleExpression", function() {
   suite("::findAll", function() {

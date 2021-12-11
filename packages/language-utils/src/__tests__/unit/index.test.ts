@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import * as utils from "../index";
+import * as utils from "../../index";
 
 suite("Exports of @webmangler/languages-utils", function() {
   suite("MangleExpressions", function() {

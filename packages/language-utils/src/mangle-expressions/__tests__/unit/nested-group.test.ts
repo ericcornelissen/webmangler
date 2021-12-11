@@ -2,7 +2,7 @@ import type { TestScenarios } from "@webmangler/testing";
 
 import { expect } from "chai";
 
-import NestedGroupMangleExpression from "../nested-group.class";
+import NestedGroupMangleExpression from "../../nested-group.class";
 
 suite("NestedGroupMangleExpression", function() {
   suite("::findAll", function() {
