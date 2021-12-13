@@ -15,8 +15,6 @@ const {
 
 const INDENT_SIZE = 2;
 const JS_GLOBALS = {
-  __dirname: "readonly",
-  console: "readonly",
   module: "readonly",
   process: "readonly",
   require: "readonly",
@@ -106,6 +104,9 @@ module.exports = {
         "file": "fileoverview",
       },
     },
+  },
+  env: {
+    es6: true,
   },
 
   overrides: [
