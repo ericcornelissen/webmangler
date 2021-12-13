@@ -3,6 +3,9 @@
  * @fileoverview
  * Run tests in the repository. Allows for configuring the type of tests to run
  * as well as which packages to run tests for.
+ *
+ * By default only VCS changed packages are tested, use the `--all` flag to test
+ * all packages.
  */
 
 import fs from "fs";
@@ -10,9 +13,11 @@ import * as path from "path";
 
 import execSync from "./utilities/exec.js";
 import log from "./utilities/log.js";
+import vcs from "./utilities/vcs.js";
 import * as paths from "./paths.js";
 import values from "../.values.cjs";
 
+const ALL_FLAG = "--all";
 const PERFORMANCE_FLAG = "--performance";
 const COVERAGE_FLAG = "--coverage";
 const INTEGRATION_FLAG = "--integration";
@@ -26,16 +31,22 @@ const strykerBin = path.resolve(paths.nodeBin, "stryker");
 
 main(process.argv, process.env);
 
-function main(argv, env) {
+async function main(argv, env) {
   argv = argv.slice(2);
 
   const cmd = getCliCommand(argv);
   const cmdArgs = getCommandArgs(argv);
-  const packages = getPackagesToRun(argv, env);
+  const packages = await getPackagesToRun(argv, env);
   const testType = getTestType(argv);
 
+  if (packages.length === 0) {
+    log.println("No changes to test (specify a package name or use `--all`).");
+    return;
+  }
+
   if (argv.includes(MUTATION_FLAG)) {
-    compilePackages(undefined);
+    const allPackages = paths.listPackages().join(",");
+    compilePackages(allPackages);
   } else {
     compilePackages(packages);
   }
@@ -57,13 +68,7 @@ function runTests(spawnCmd, spawnArgs, TEST_PACKAGES, TEST_TYPE) {
 function compilePackages(packagesStr) {
   log.print("Compiling packages...");
 
-  let packagesList;
-  if (packagesStr !== undefined) {
-    packagesList = packagesStr.split(",");
-  } else {
-    packagesList = paths.listPackages();
-  }
-
+  const packagesList = packagesStr.split(",");
   packagesList.forEach((packageName, i) => {
     log.reprint(`[${i+1}/${packagesList.length}] `);
     log.print(`Compiling packages/${packageName}...`);
@@ -104,15 +109,21 @@ function getCommandArgs(argv) {
   return cliArgs;
 }
 
-function getPackagesToRun(argv, env) {
+async function getPackagesToRun(argv, env) {
   const packagesArgs = argv.filter((arg) => !arg.startsWith("-"));
   if (env.TEST_PACKAGES) {
     const envPackages = env.TEST_PACKAGES.split(",");
     packagesArgs.push(...envPackages);
   }
 
+  if (argv.includes(ALL_FLAG)) {
+    const allPackages = paths.listPackages();
+    return allPackages.join(",");
+  }
+
   if (packagesArgs.length === 0) {
-    return;
+    const changedPackages = await vcs.getChangedPackages();
+    return changedPackages.join(",");
   }
 
   const allPackagesExist = packagesArgs.every((packageName) => {

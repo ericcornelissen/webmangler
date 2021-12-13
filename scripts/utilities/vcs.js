@@ -24,6 +24,21 @@ async function getChangedFiles() {
   return __changedFiles;
 }
 
+async function getChangedPackages() {
+  const changedFiles = await getChangedFiles();
+
+  const changedPackages = new Set();
+  for (const changedFile of changedFiles) {
+    const pathMatch = /packages\/([^/]+)\//.exec(changedFile);
+    if (pathMatch !== null) {
+      const [, packageName] = pathMatch;
+      changedPackages.add(packageName);
+    }
+  }
+
+  return Array.from(changedPackages);
+}
+
 function notDeletedIn(entries) {
   return (subject) => {
     for (const entry of entries) {
@@ -38,4 +53,5 @@ function notDeletedIn(entries) {
 
 export default {
   getChangedFiles,
+  getChangedPackages,
 };
