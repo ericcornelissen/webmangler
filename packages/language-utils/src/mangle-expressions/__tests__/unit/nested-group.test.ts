@@ -48,12 +48,80 @@ suite("NestedGroupMangleExpression", function() {
             expected: ["data-foo", "data-bar"],
           },
           {
+            patternTemplate: "(\\/\\*.*?\\*\\/|(?<g>%s))",
+            subPatternTemplate: "(?<g>%s)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "[a-z]+",
+            s: "/*foobaz*/foobar",
+            expected: ["foobar"],
+          },
+        ],
+      },
+      {
+        testName: "default case sensitivity",
+        getScenario: () => [
+          {
             patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
             subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
             group: "g",
             pattern: "data-[a-z]+",
             s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
             expected: ["data-foo", "data-bar"],
+          },
+          {
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
+            group: "g",
+            pattern: "[A-Za-z]+",
+            s: "var pw = 'Correct Horse Battery Staple';",
+            expected: ["Horse", "Battery"],
+          },
+        ],
+      },
+      {
+        testName: "patterns with newlines",
+        getScenario: () => [
+          {
+            patternTemplate: "(?<=')\n(?<g>[^']*%s[^']*)\n(?=')",
+            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "[a-z]+",
+            s: "var pw = 'correct horse battery staple';",
+            expected: ["horse", "battery"],
+          },
+          {
+            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
+            subPatternTemplate: "(?<=\\s)\n(?<g>%s)\n(?=\\s)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "[a-z]+",
+            s: "var pw = 'correct horse battery staple';",
+            expected: ["horse", "battery"],
+          },
+        ],
+      },
+      {
+        testName: "case sensitive",
+        getScenario: () => [
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "data-[A-Za-z]+",
+            s: "<div data-foo=\"bar\" id=\"3\" data-BAR></div>",
+            expected: ["data-foo", "data-BAR"],
+          },
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "data-[A-Za-z]+",
+            s: "<div data-Foo=\"bar\" id=\"3\" data-Bar></div>",
+            expected: ["data-Foo", "data-Bar"],
           },
         ],
       },
@@ -245,6 +313,47 @@ suite("NestedGroupMangleExpression", function() {
         ],
       },
       {
+        testName: "case sensitive",
+        getScenario: () => [
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: true,
+            replacements: new Map([
+              ["data-FOO", "data-a"],
+              ["data-bar", "data-b"],
+            ]),
+            s: "<div data-FOO=\"bar\" id=\"3\" data-bar></div>",
+            expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
+          },
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: true,
+            replacements: new Map([
+              ["data-foo", "data-a"],
+              ["data-BAR", "data-b"],
+            ]),
+            s: "<div data-foo=\"bar\" id=\"3\" data-BAR></div>",
+            expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
+          },
+          {
+            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: true,
+            replacements: new Map([
+              ["data-FOO", "data-a"],
+              ["data-BAR", "data-b"],
+            ]),
+            s: "<div data-FOO=\"bar\" id=\"3\" data-bar></div>",
+            expected: "<div data-a=\"bar\" id=\"3\" data-bar></div>",
+          },
+        ],
+      },
+      {
         testName: "case insensitive",
         getScenario: () => [
           {
@@ -326,7 +435,7 @@ suite("NestedGroupMangleExpression", function() {
           },
           {
             patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
+            subPatternTemplate: "(?<=\\s)[a-z]+ (?<g>%s)(?=\\s)",
             group: "g",
             caseSensitive: true,
             replacements: new Map(),
