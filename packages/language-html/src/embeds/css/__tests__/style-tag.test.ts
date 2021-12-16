@@ -1,4 +1,4 @@
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 
 import type { TestCase } from "../../__tests__/types";
 
@@ -9,10 +9,10 @@ import { getStyleTagsAsEmbeds } from "../style-tag";
 const EMBED_TYPE_CSS = "css";
 
 suite("HTML CSS Embeds - <style> tag", function() {
-  const scenarios: TestScenario<TestCase>[] = [
+  const scenarios: TestScenarios<TestCase[]> = [
     {
-      name: "sample",
-      cases: [
+      testName: "sample",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -73,8 +73,8 @@ suite("HTML CSS Embeds - <style> tag", function() {
       ],
     },
     {
-      name: "comments",
-      cases: [
+      testName: "comments",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -117,8 +117,43 @@ suite("HTML CSS Embeds - <style> tag", function() {
       ],
     },
     {
-      name: "edge cases, with matches",
-      cases: [
+      testName: "tag casing",
+      getScenario: () => [
+        {
+          file: {
+            type: "html",
+            content: "<STYLE>.foobar { color: red; }</STYLE>",
+          },
+          expected: [
+            {
+              content: ".foobar { color: red; }",
+              type: EMBED_TYPE_CSS,
+              startIndex: 7,
+              endIndex: 30,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<Style>.foobar { color: red; }</Style>",
+          },
+          expected: [
+            {
+              content: ".foobar { color: red; }",
+              type: EMBED_TYPE_CSS,
+              startIndex: 7,
+              endIndex: 30,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      testName: "edge cases, with matches",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -152,8 +187,8 @@ suite("HTML CSS Embeds - <style> tag", function() {
       ],
     },
     {
-      name: "edge cases, without matches",
-      cases: [
+      testName: "edge cases, without matches",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -172,13 +207,13 @@ suite("HTML CSS Embeds - <style> tag", function() {
     },
   ];
 
-  for (const { name, cases } of scenarios) {
-    test(name, function() {
-      for (const testCase of cases) {
+  for (const { getScenario, testName } of scenarios) {
+    test(testName, function() {
+      for (const testCase of getScenario()) {
         const { expected, file } = testCase;
 
         const embeds = getStyleTagsAsEmbeds(file);
-        expect(embeds).to.have.length(expected.length, file.content);
+        expect(embeds).to.have.length(expected.length);
 
         Array.from(embeds).forEach((embed, i) => {
           const expectedEmbed = expected[i];
