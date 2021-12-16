@@ -150,7 +150,7 @@ async function getChangedFiles() {
     const { committedFiles, unCommittedFiles } = await gitChangedFiles({
       baseBranch: "main",
       formats: ["*"],
-      diffFilter: "ACDMRTX",
+      diffFilter: "ACDMTX",
       showStatus: true,
     });
 

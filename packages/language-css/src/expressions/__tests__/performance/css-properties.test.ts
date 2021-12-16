@@ -5,45 +5,46 @@ import { expect } from "chai";
 
 import { embedContentInContext } from "../common";
 
-import querySelectorExpressionFactory from "../../query-selectors";
+import cssDeclarationPropertyExpressionFactory from "../../css-properties";
 
-suite("CSS - Query Selector Expression Factory", function() {
+suite("CSS - CSS Property Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "cls-[a-zA-Z0-9-]+";
+  const patterns = "var-[a-zA-Z0-9-]+";
 
-  const contentWithQuerySelector = embedContentInContext(`
-    body {
-      font-family: sans-serif;
+  const contentWithVariables = embedContentInContext(`
+    :root {
+      --var-font-family: sans-serif;
     }
 
-    .cls-foo[data-bar] {
-      content: attr(data-foo);
+    .foo {
+      --var-color: red;
+      font-family: var(--var-font-family);
     }
 
-    .cls-foo[data-baz]::after {
+    .foo[data-bar]::after {
       content: "bar";
       color: #123;
     }
   `);
-  const contentWithoutQuerySelector = `
+  const contentWithoutVariables = `
     body {
       font-family: sans-serif;
     }
 
-    #foo[data-bar] {
-      content: attr(data-foo);
+    .foo {
+      color: #321;
     }
 
-    #foo[data-baz]::after {
+    #bar::after {
       content: "bar";
       color: #123;
     }
   `;
 
   suiteSetup(function() {
-    expressions = querySelectorExpressionFactory({
-      prefix: "\\.",
+    expressions = cssDeclarationPropertyExpressionFactory({
+      prefix: "--",
     });
   });
 
@@ -53,11 +54,13 @@ suite("CSS - Query Selector Expression Factory", function() {
 
   test("simple file", function() {
     const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithQuerySelector;
+    const fileContent = contentWithVariables;
 
     let found: string[] = [];
     const result = benchmarkFn({
-      setup: () => { found = []; },
+      setup: () => {
+        found = [];
+      },
       fn: () => {
         for (const expression of expressions) {
           found.push(...expression.findAll(fileContent, patterns));
@@ -71,11 +74,13 @@ suite("CSS - Query Selector Expression Factory", function() {
 
   test("large file", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithQuerySelector.repeat(100);
+    const fileContent = contentWithVariables.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({
-      setup: () => { found = []; },
+      setup: () => {
+        found = [];
+      },
       fn: () => {
         for (const expression of expressions) {
           found.push(...expression.findAll(fileContent, patterns));
@@ -87,13 +92,15 @@ suite("CSS - Query Selector Expression Factory", function() {
     expect(result.medianDuration).to.be.below(budget);
   });
 
-  test("large file without query selectors", function() {
+  test("large file without variables", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithoutQuerySelector.repeat(100);
+    const fileContent = contentWithoutVariables.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({
-      setup: () => { found = []; },
+      setup: () => {
+        found = [];
+      },
       fn: () => {
         for (const expression of expressions) {
           found.push(...expression.findAll(fileContent, patterns));
