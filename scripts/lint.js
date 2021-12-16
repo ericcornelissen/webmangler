@@ -10,11 +10,11 @@
  * all files in the project.
  */
 
-import gitChangedFiles from "git-changed-files";
 import * as path from "path";
 
 import execSync from "./utilities/exec.js";
 import log from "./utilities/log.js";
+import vcs from "./utilities/vcs.js";
 import * as paths from "./paths.js";
 
 const ALL_FLAG = "--all";
@@ -36,8 +36,6 @@ const ymlExts = ["yml"];
 
 const eslintBin = path.resolve(paths.nodeBin, "eslint");
 const mdlintBin = path.resolve(paths.nodeBin, "markdownlint");
-
-let __changedFiles = null; // Cache for git-changed-files result
 
 main(process.argv);
 
@@ -138,38 +136,9 @@ async function getFilesToLint(argv, exts) {
   if (argv.includes(ALL_FLAG)) {
     return ["."];
   } else {
-    const changedFiles = await getChangedFiles();
+    const changedFiles = await vcs.getChangedFiles();
     return changedFiles.filter(
       (file) => exts.some((ext) => path.extname(file) === `.${ext}`),
     );
   }
-}
-
-async function getChangedFiles() {
-  if (__changedFiles === null) {
-    const { committedFiles, unCommittedFiles } = await gitChangedFiles({
-      baseBranch: "main",
-      formats: ["*"],
-      diffFilter: "ACDMTX",
-      showStatus: true,
-    });
-
-    __changedFiles = committedFiles.concat(unCommittedFiles)
-      .filter(notDeletedIn(unCommittedFiles))
-      .map(({ filename }) => filename);
-  }
-
-  return __changedFiles;
-}
-
-function notDeletedIn(entries) {
-  return (subject) => {
-    for (const entry of entries) {
-      if (subject.filename === entry.filename) {
-        return entry.status !== "Deleted";
-      }
-    }
-
-    return true;
-  };
 }
