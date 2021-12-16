@@ -88,6 +88,7 @@ suite("JS expression factory test suite string builders", function() {
           "/**/",
           "/* * */",
           "/* / */",
+          "/* \n */",
         ],
       },
       {
@@ -97,6 +98,7 @@ suite("JS expression factory test suite string builders", function() {
           "/*foobar*/",
           "/* * foobar*/",
           "/* / foobar*/",
+          "/* \n foobar*/",
         ],
       },
     ];

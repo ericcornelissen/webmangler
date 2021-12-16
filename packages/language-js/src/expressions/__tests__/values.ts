@@ -27,6 +27,7 @@ const inlineComments: string[] = [
   "/* */",
   "/*foobar*/",
   "/* Hello world! */",
+  "/* \n */",
 ];
 
 /**
@@ -71,7 +72,7 @@ const whitespace: string[] = [
 /**
  * The full list of CSS selector combinators.
  */
- export const selectorCombinators: string[] = [
+export const selectorCombinators: string[] = [
   ...whitespace.filter((s) => s !== ""),
   ",",
   ">",

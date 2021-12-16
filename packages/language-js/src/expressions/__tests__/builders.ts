@@ -48,6 +48,7 @@ export function buildJsInlineComments(commentText: string): string[] {
     `/*${commentText}*/`,
     `/* * ${commentText}*/`,
     `/* / ${commentText}*/`,
+    `/* \n ${commentText}*/`,
   ];
 }
 
