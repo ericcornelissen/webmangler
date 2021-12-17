@@ -4,13 +4,13 @@ import type { WebManglerEmbed } from "@webmangler/types";
 import type {
   EmbedsGetter,
   ExpressionFactory,
-} from "../simple-language-plugin.class";
+} from "../../simple-language-plugin.class";
 
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import SimpleLanguagePlugin from "../simple-language-plugin.class";
+import SimpleLanguagePlugin from "../../simple-language-plugin.class";
 
 chaiUse(sinonChai);
 

@@ -15,8 +15,7 @@ import type {
  * @since v0.1.0
  * @version v0.1.21
  */
-export default abstract class MultiLanguagePlugin
-    implements WebManglerLanguagePlugin {
+abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
   /**
    * the languages supported by the {@link MultiLanguagePlugin}.
    */
@@ -86,3 +85,5 @@ export default abstract class MultiLanguagePlugin
     return this.languages;
   }
 }
+
+export default MultiLanguagePlugin;

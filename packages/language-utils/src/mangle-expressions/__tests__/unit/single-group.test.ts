@@ -2,7 +2,7 @@ import type { TestScenarios } from "@webmangler/testing";
 
 import { expect } from "chai";
 
-import SingleGroupMangleExpression from "../single-group.class";
+import SingleGroupMangleExpression from "../../single-group.class";
 
 suite("SingleGroupMangleExpression", function() {
   suite("::findAll", function() {
@@ -43,12 +43,66 @@ suite("SingleGroupMangleExpression", function() {
             s: "foo-bar",
             expected: ["foo"],
           },
+        ],
+      },
+      {
+        testName: "default case sensitivity",
+        getScenario: () => [
           {
             patternTemplate: "(?<g>%s)(?=\\-)",
             group: "g",
             pattern: "[a-z]+",
             s: "foo-bar",
             expected: ["foo"],
+          },
+          {
+            patternTemplate: "(?<g>%s)",
+            group: "g",
+            pattern: "\\-[A-Za-z]+",
+            s: "foo-bar hello-World",
+            expected: ["-bar", "-World"],
+          },
+        ],
+      },
+      {
+        testName: "pattern with newlines",
+        getScenario: () => [
+          {
+            patternTemplate: "(?<=\\-)\n(?<g>%s)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "[a-z]+",
+            s: "foo-bar",
+            expected: ["bar"],
+          },
+          {
+            patternTemplate: "(?<g>%s)\n(?=\\-)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "[a-z]+",
+            s: "foo-bar",
+            expected: ["foo"],
+          },
+        ],
+      },
+      {
+        testName: "case sensitive",
+        getScenario: () => [
+          {
+            patternTemplate: "(?<=\\-)(?<g>%s)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "[A-Za-z]+",
+            s: "foo-BAR",
+            expected: ["BAR"],
+          },
+          {
+            patternTemplate: "(?<g>%s)(?=\\-)",
+            group: "g",
+            caseSensitive: true,
+            pattern: "[A-Za-z]+",
+            s: "Foo-bar",
+            expected: ["Foo"],
           },
         ],
       },
@@ -211,6 +265,32 @@ suite("SingleGroupMangleExpression", function() {
             ]),
             s: "Hello world! Hey planet!",
             expected: "Hello mundo! Hey planeta!",
+          },
+        ],
+      },
+      {
+        testName: "case sensitive",
+        getScenario: () => [
+          {
+            patternTemplate: "(?<g>%s)",
+            group: "g",
+            caseSensitive: true,
+            replacements: new Map([
+              ["BAR", "b"],
+            ]),
+            s: "foo-BAR",
+            expected: "foo-b",
+          },
+          {
+            patternTemplate: "(?<g>%s)(?=\\!)",
+            group: "g",
+            caseSensitive: true,
+            replacements: new Map([
+              ["World", "mundo"],
+              ["planet", "planeta"],
+            ]),
+            s: "Hello World! Hey PLANET!",
+            expected: "Hello mundo! Hey PLANET!",
           },
         ],
       },

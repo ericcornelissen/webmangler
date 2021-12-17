@@ -11,7 +11,7 @@ import type {
  *
  * @since v0.1.21
  */
-export type EmbedsGetter = (file: WebManglerFile) => Iterable<WebManglerEmbed>;
+type EmbedsGetter = (file: WebManglerFile) => Iterable<WebManglerEmbed>;
 
 /**
  * A function that produces a set of {@link MangleExpression}s given the set's
@@ -20,7 +20,7 @@ export type EmbedsGetter = (file: WebManglerFile) => Iterable<WebManglerEmbed>;
  * @since v0.1.14
  * @version v0.1.17
  */
-export type ExpressionFactory = (options: any) => Iterable<MangleExpression>; // eslint-disable-line @typescript-eslint/no-explicit-any
+type ExpressionFactory = (options: any) => Iterable<MangleExpression>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of
@@ -34,8 +34,7 @@ export type ExpressionFactory = (options: any) => Iterable<MangleExpression>; //
  * @since v0.1.0
  * @version v0.1.21
  */
-export default abstract class SimpleLanguagePlugin
-    implements WebManglerLanguagePlugin {
+abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
   /**
    * The languages, including aliases, that this {@link SimpleLanguagePlugin}
    * supports.
@@ -147,3 +146,10 @@ export default abstract class SimpleLanguagePlugin
     return false;
   }
 }
+
+export default SimpleLanguagePlugin;
+
+export type {
+  EmbedsGetter,
+  ExpressionFactory,
+};
