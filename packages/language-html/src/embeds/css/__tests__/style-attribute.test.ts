@@ -367,8 +367,8 @@ suite("HTML CSS Embeds - Style attribute", function() {
             {
               content: prepareContent("color:red;"),
               type: EMBED_TYPE_CSS,
-              startIndex: 11,
-              endIndex: 21,
+              startIndex: 12,
+              endIndex: 22,
               getRaw(): string {
                 return "color:red;";
               },
@@ -384,8 +384,8 @@ suite("HTML CSS Embeds - Style attribute", function() {
             {
               content: prepareContent("color:red;"),
               type: EMBED_TYPE_CSS,
-              startIndex: 11,
-              endIndex: 21,
+              startIndex: 12,
+              endIndex: 22,
               getRaw(): string {
                 return "color:red;";
               },
