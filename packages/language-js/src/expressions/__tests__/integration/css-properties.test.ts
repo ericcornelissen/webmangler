@@ -1,21 +1,21 @@
 import type { CssDeclarationPropertyOptions } from "@webmangler/types";
 
-import type { JsStatementValuesSets } from "./types";
+import type { JsStatementValuesSets } from "../common";
 
 import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
-import { getAllMatches } from "./test-helpers";
 import {
   buildJsFunctionCall,
   buildJsStatements,
   buildJsInlineComments,
   buildJsLineComment,
   buildJsStrings,
-} from "./builders";
-import { valuePresets } from "./values";
+  getAllMatches,
+  valuePresets,
+} from "../common";
 
-import expressionsFactory from "../css-properties";
+import expressionsFactory from "../../css-properties";
 
 suite("JavaScript - CSS Property Expression Factory", function() {
   type TestScenario = {
