@@ -6,6 +6,7 @@ import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import {
+  buildCssComments,
   buildCssRulesets,
   getAllMatches,
   valuePresets,
@@ -177,14 +178,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       factoryOptions: { },
       expected: ["div"],
       getValuesSets: () => {
-        const commentWithSelector = [
-          "/* header { } */",
-          "/* } footer { } */",
-          "/* main, */",
-          "/* } aside > */",
-          "/* * aside > */",
-          "/* / aside > */",
-        ];
+        const commentWithSelector = buildCssComments("header { }");
 
         return [
           {

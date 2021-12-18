@@ -5,6 +5,26 @@ const DEFAULT_SELECTOR = "div";
 const DEFAULT_VALUE = "red";
 
 /**
+ * Build CSS comments from a string.
+ *
+ * @example
+ * const comments = buildCssComments("foobar");
+ * console.log(comments.length > 0);  // true;
+ * console.log(comments[0]);  // "\/\*foobar\*\/";
+ * @param commentText The comment text.
+ * @returns The text as various CSS comments.
+ */
+export function buildCssComments(commentText: string): string[] {
+  return [
+    `/*${commentText}*/`,
+    `/* ; ${commentText}*/`,
+    `/* * ${commentText}*/`,
+    `/* / ${commentText}*/`,
+    `/* \n ${commentText}*/`,
+  ];
+}
+
+/**
  * Build a syntactically valid CSS declaration from a collection of values.
  *
  * If no `property` is provided the property will be "color". If no `value` is
