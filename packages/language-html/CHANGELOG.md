@@ -8,11 +8,13 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Detect JavaScript embeds regardless of tag casing. ([#225])
+- Detect CSS embeds regardless of tag or attribute casing. ([#225])
 
 ## [0.1.23] - 2021-07-17
 
 - Extract the _Webmangler Core_ HTML language plugin into this package.
 
+[#225]: https://github.com/ericcornelissen/webmangler/pull/225
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
