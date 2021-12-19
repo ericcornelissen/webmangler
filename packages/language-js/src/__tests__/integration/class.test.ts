@@ -20,8 +20,8 @@ suite("The @webmangler/language-js plugin", function() {
   suite("::getEmbeds", function() {
     test("does not throw", function() {
       const file = {
-        type: "css",
-        content: ".foo { color: red; }",
+        type: "js",
+        content: "var x = \"foobar\";",
       };
 
       const plugin = new JavaScriptLanguagePlugin();
