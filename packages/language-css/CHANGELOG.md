@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix unintentional mangling in comments with newlines. ([#226])
 
 ## [0.1.26] - 2021-10-04
 
@@ -34,5 +34,6 @@ Versioning].
 [#151]: https://github.com/ericcornelissen/webmangler/pull/151
 [#156]: https://github.com/ericcornelissen/webmangler/pull/156
 [#173]: https://github.com/ericcornelissen/webmangler/pull/173
+[#226]: https://github.com/ericcornelissen/webmangler/pull/226
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
