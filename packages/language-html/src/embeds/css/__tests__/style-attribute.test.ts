@@ -1,4 +1,4 @@
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 
 import type { TestCase } from "../../__tests__/types";
 
@@ -11,10 +11,10 @@ const EMBED_TYPE_CSS = "css";
 suite("HTML CSS Embeds - Style attribute", function() {
   const prepareContent = (s: string): string => `:root{${s}}`;
 
-  const scenarios: TestScenario<TestCase>[] = [
+  const scenarios: TestScenarios<TestCase[]> = [
     {
-      name: "sample",
-      cases: [
+      testName: "sample",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -180,8 +180,8 @@ suite("HTML CSS Embeds - Style attribute", function() {
       ],
     },
     {
-      name: "no quotes",
-      cases: [
+      testName: "no quotes",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -305,8 +305,8 @@ suite("HTML CSS Embeds - Style attribute", function() {
       ],
     },
     {
-      name: "comments",
-      cases: [
+      testName: "comments",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -356,8 +356,47 @@ suite("HTML CSS Embeds - Style attribute", function() {
       ],
     },
     {
-      name: "edge cases, with matches",
-      cases: [
+      testName: "attribute casing",
+      getScenario: () => [
+        {
+          file: {
+            type: "html",
+            content: "<div STYLE=\"color:red;\">foobar</div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 12,
+              endIndex: 22,
+              getRaw(): string {
+                return "color:red;";
+              },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div Style=\"color:red;\">foobar</div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 12,
+              endIndex: 22,
+              getRaw(): string {
+                return "color:red;";
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      testName: "edge cases, with matches",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -428,8 +467,8 @@ suite("HTML CSS Embeds - Style attribute", function() {
       ],
     },
     {
-      name: "edge cases, without matches",
-      cases: [
+      testName: "edge cases, without matches",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -455,9 +494,9 @@ suite("HTML CSS Embeds - Style attribute", function() {
     },
   ];
 
-  for (const { name, cases } of scenarios) {
-    test(name, function() {
-      for (const testCase of cases) {
+  for (const { getScenario, testName } of scenarios) {
+    test(testName, function() {
+      for (const testCase of getScenario()) {
         const { expected, file } = testCase;
 
         const embeds = getStyleAttributesAsEmbeds(file);

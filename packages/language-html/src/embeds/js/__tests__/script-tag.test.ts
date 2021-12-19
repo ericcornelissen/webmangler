@@ -1,4 +1,4 @@
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 
 import type { TestCase } from "../../__tests__/types";
 
@@ -9,10 +9,10 @@ import { getScriptTagsAsEmbeds } from "../script-tag";
 const EMBED_TYPE_JS = "js";
 
 suite("HTML JavaScript Embeds - <script> tag", function() {
-  const scenarios: TestScenario<TestCase>[] = [
+  const scenarios: TestScenarios<TestCase[]> = [
     {
-      name: "sample",
-      cases: [
+      testName: "sample",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -73,8 +73,8 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
       ],
     },
     {
-      name: "comments",
-      cases: [
+      testName: "comments",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -117,8 +117,43 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
       ],
     },
     {
-      name: "edge cases, with matches",
-      cases: [
+      testName: "tag casing",
+      getScenario: () => [
+        {
+          file: {
+            type: "html",
+            content: "<SCRIPT>var foo = \"bar\";</SCRIPT>",
+          },
+          expected: [
+            {
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<Script>var foo = \"bar\";</Script>",
+          },
+          expected: [
+            {
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      testName: "edge cases, with matches",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -152,8 +187,8 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
       ],
     },
     {
-      name: "edge cases, without matches",
-      cases: [
+      testName: "edge cases, without matches",
+      getScenario: () => [
         {
           file: {
             type: "html",
@@ -172,9 +207,9 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
     },
   ];
 
-  for (const { name, cases } of scenarios) {
-    test(name, function() {
-      for (const testCase of cases) {
+  for (const { getScenario, testName } of scenarios) {
+    test(testName, function() {
+      for (const testCase of getScenario()) {
         const { expected, file } = testCase;
 
         const embeds = getScriptTagsAsEmbeds(file);
