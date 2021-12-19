@@ -3,7 +3,7 @@ import { expect } from "chai";
 import {
   sampleValues,
   selectorCombinators,
-} from "../common";
+} from "../common/values";
 
 import { patterns } from "../../common";
 
