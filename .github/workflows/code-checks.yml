@@ -220,7 +220,7 @@ jobs:
       - name: Run mutation tests for packages/${{ matrix.package }}
         run: npm run test:mutation -- ${{ matrix.package }}
       - name: Upload mutation report as artifact
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v2.3.1
         with:
           name: mutation-report-${{ matrix.package }}-${{ github.sha }}
           path: |
