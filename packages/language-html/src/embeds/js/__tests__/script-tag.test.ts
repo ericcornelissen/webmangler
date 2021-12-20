@@ -85,6 +85,13 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
         {
           file: {
             type: "html",
+            content: "<!-- \n <script>var foo = \"bar\";</script>-->",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
             content: "<!--<script>var foo = \"bar\";</script>-->" +
               "<script>var foo = \"baz\";</script>",
           },

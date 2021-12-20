@@ -11,7 +11,7 @@ import { expect } from "chai";
 import { getAllMatches } from "./test-helpers";
 import {
   buildHtmlAttributes,
-  buildHtmlComment,
+  buildHtmlComments,
   buildHtmlElements,
   buildHtmlElement,
 } from "./builders";
@@ -139,7 +139,7 @@ suite("HTML - Attribute Expression Factory", function() {
             content: [undefined, ""],
           }))
           .map(buildHtmlElement)
-          .map(buildHtmlComment);
+          .flatMap(buildHtmlComments);
 
         return [
           {
@@ -147,7 +147,7 @@ suite("HTML - Attribute Expression Factory", function() {
               "",
               ...commentWithElementWithAttribute,
             ],
-            tag: valuePresets.elements.tag,
+            tag: ["span"],
             attributes: valuePresets.elements.attributes,
             content: [
               "",
