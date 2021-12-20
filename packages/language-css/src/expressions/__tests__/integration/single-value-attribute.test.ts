@@ -7,6 +7,7 @@ import { expect } from "chai";
 
 import {
   attributeSelectorOperators,
+  buildCssComments,
   buildCssRulesets,
   getAllMatches,
   sampleValues,
@@ -174,10 +175,8 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
       expected: [],
       getValuesSets: () => {
         const commentWithAttributeSelector = [
-          "/* [data-foo=\"bar\"] */",
-          "/* [data-foo='bar'] */",
-          "/* * [data-foo='bar'] */",
-          "/* / [data-foo='bar'] */",
+          ...buildCssComments("[data-foo=\"bar\"]"),
+          ...buildCssComments("[data-foo='bar']"),
         ];
 
         return [

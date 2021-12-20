@@ -3,6 +3,7 @@ import type { CssDeclarationValues, CssRulesetValues } from "./types";
 import { expect } from "chai";
 
 import {
+  buildCssComments,
   buildCssDeclaration,
   buildCssDeclarations,
   buildCssRuleset,
@@ -10,6 +11,47 @@ import {
 } from "./builders";
 
 suite("CSS expression factory test suite string builders", function() {
+  suite("::buildCssComments", function() {
+    type TestCase = {
+      expected: string[];
+      input: string;
+      name: string;
+    };
+
+    const testCases: TestCase[] = [
+      {
+        name: "empty string",
+        input: "",
+        expected: [
+          "/**/",
+          "/* ; */",
+          "/* * */",
+          "/* / */",
+          "/* \n */",
+        ],
+      },
+      {
+        name: "non-empty string",
+        input: "foobar",
+        expected: [
+          "/*foobar*/",
+          "/* ; foobar*/",
+          "/* * foobar*/",
+          "/* / foobar*/",
+          "/* \n foobar*/",
+        ],
+      },
+    ];
+
+    for (const testCase of testCases) {
+      const { expected, input, name } = testCase;
+      test(name, function() {
+        const result = buildCssComments(input);
+        expect(result).to.have.all.members(expected);
+      });
+    }
+  });
+
   suite("::buildCssDeclaration", function() {
     const DEFAULT_PROPERTY = "color";
     const DEFAULT_VALUE = "red";

@@ -6,6 +6,7 @@ import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import {
+  buildCssComments,
   buildCssDeclarations,
   buildCssRuleset,
   getAllMatches,
@@ -184,12 +185,7 @@ suite("CSS - CSS Property Expression Factory", function() {
       factoryOptions: { },
       expected: ["content", "font"],
       getValuesSets: () => {
-        const commentWithDeclarations = [
-          "/* color: violet; */",
-          "/* ; color: purple; */",
-          "/* * color: purple; */",
-          "/* / color: purple; */",
-        ];
+        const commentWithDeclarations = buildCssComments("color: violet;");
 
         return [
           {
