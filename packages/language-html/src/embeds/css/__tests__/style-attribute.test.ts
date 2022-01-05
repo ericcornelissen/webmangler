@@ -464,6 +464,21 @@ suite("HTML CSS Embeds - Style attribute", function() {
             },
           ],
         },
+        {
+          file: {
+            type: "html",
+            content: "<!--foo--!><div style=\"color: red;\"><div><!--bar-->",
+          },
+          expected: [
+            {
+              content: prepareContent("color: red;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 23,
+              endIndex: 34,
+              getRaw(): string { return "color: red;"; },
+            },
+          ],
+        },
       ],
     },
     {
@@ -487,6 +502,13 @@ suite("HTML CSS Embeds - Style attribute", function() {
           file: {
             type: "html",
             content: "<divstyle=color:red;><div>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<!--<div style=\"color: red;\"><div>--!>",
           },
           expected: [],
         },

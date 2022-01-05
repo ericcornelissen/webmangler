@@ -184,6 +184,21 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
             },
           ],
         },
+        {
+          file: {
+            type: "html",
+            content: "<!--foo--!><script>var foo = \"bar\";</script><!--bar-->",
+          },
+          expected: [
+            {
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 19,
+              endIndex: 35,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
       ],
     },
     {
@@ -200,6 +215,13 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
           file: {
             type: "html",
             content: "<script></script>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<!--<script>var foo = \"bar\";</script>--!>",
           },
           expected: [],
         },
