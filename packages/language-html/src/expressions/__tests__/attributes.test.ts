@@ -150,8 +150,8 @@ suite("HTML - Attribute Expression Factory", function() {
             tag: ["span"],
             attributes: valuePresets.elements.attributes,
             content: [
+              undefined,
               "",
-              ...commentWithElementWithAttribute,
             ],
             afterClosingTag: [
               "",

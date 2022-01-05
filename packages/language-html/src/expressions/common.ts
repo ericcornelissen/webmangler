@@ -52,7 +52,7 @@ const attributes =
 /**
  * Regular Expression pattern as a string of a comment in HTML.
  */
-const comment = "(?:<!--.*?-->)";
+const comment = "(?:<!--(?:.|\\n|\\r)*?-->)";
 
 /**
  * Regular Expression pattern as a string for quotes in HTML.
