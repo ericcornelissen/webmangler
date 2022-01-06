@@ -26,6 +26,11 @@ function newCheckWebManglerLanguagePlugin(
   return (
     Plugin: WebManglerLanguagePluginConstructor,
   ): [boolean, string] => {
+    for (const check of checks) {
+      const response = check(Plugin);
+      if (response) return [false, response];
+    }
+
     return [true, ""];
   };
 }
