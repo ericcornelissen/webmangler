@@ -151,11 +151,11 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
               "",
               ...commentOfElementWithAttribute,
             ],
-            tag: valuePresets.elements.tag,
+            tag: ["span"],
             attributes: valuePresets.elements.attributes,
             content: [
+              undefined,
               "",
-              ...commentOfElementWithAttribute,
             ],
             afterClosingTag: [
               "",
