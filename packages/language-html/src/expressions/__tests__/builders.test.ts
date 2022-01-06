@@ -4,7 +4,7 @@ import { expect } from "chai";
 
 import {
   buildHtmlAttributes,
-  buildHtmlComment,
+  buildHtmlComments,
   buildHtmlElement,
   buildHtmlElements,
 } from "./builders";
@@ -66,9 +66,9 @@ suite("HTML expression factory test suite string builders", function() {
     }
   });
 
-  suite("::buildHtmlComment", function() {
+  suite("::buildHtmlComments", function() {
     type TestCase = {
-      expected: string;
+      expected: string[];
       input: string;
       name: string;
     };
@@ -77,25 +77,34 @@ suite("HTML expression factory test suite string builders", function() {
       {
         name: "no value",
         input: "",
-        expected: "<!---->",
+        expected: [
+          "<!---->",
+          "<!-- \n -->",
+        ],
       },
       {
         name: "some string",
         input: "foobar",
-        expected: "<!--foobar-->",
+        expected: [
+          "<!--foobar-->",
+          "<!-- \n foobar-->",
+        ],
       },
       {
         name: "some HTML",
         input: "<div>foobar</div>",
-        expected: "<!--<div>foobar</div>-->",
+        expected: [
+          "<!--<div>foobar</div>-->",
+          "<!-- \n <div>foobar</div>-->",
+        ],
       },
     ];
 
     for (const testCase of testCases) {
       const { expected, input, name } = testCase;
       test(name, function() {
-        const result = buildHtmlComment(input);
-        expect(result).to.equal(expected);
+        const result = buildHtmlComments(input);
+        expect(result).to.have.all.members(expected);
       });
     }
   });

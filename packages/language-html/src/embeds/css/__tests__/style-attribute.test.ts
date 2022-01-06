@@ -317,6 +317,13 @@ suite("HTML CSS Embeds - Style attribute", function() {
         {
           file: {
             type: "html",
+            content: "<!-- \n <div style=\"color: red;\"><div>-->",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
             content: "<!--<div style=color:red;><div>-->",
           },
           expected: [],

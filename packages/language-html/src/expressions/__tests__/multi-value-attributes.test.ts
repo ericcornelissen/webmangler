@@ -11,7 +11,7 @@ import { expect } from "chai";
 import { getAllMatches } from "./test-helpers";
 import {
   buildHtmlAttributes,
-  buildHtmlComment,
+  buildHtmlComments,
   buildHtmlElements,
   buildHtmlElement,
 } from "./builders";
@@ -143,7 +143,7 @@ suite("HTML - Multi Value Attribute Expression Factory", function() {
             content: [undefined, ""],
           }))
           .map(buildHtmlElement)
-          .map(buildHtmlComment);
+          .flatMap(buildHtmlComments);
 
         return [
           {

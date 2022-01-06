@@ -85,6 +85,13 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
+            content: "<!-- \n <style>.foobar { color: red; }</style>-->",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
             content: "<!--<style>.foobar { color: red; }</style>-->" +
               "<style>.foobar { color: blue; }</style>",
           },

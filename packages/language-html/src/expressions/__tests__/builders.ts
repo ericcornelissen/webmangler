@@ -46,13 +46,20 @@ export function buildHtmlAttributes(
 }
 
 /**
- * Build a HTML comment from a string.
+ * Build HTML comments from a string.
  *
+ * @example
+ * const comments = buildHtmlComments("foobar");
+ * console.log(comments.length > 0);  // true;
+ * console.log(comments[0]);  // "<!--foobar-->";
  * @param commentText The comment text.
- * @returns The text as a HTML comment.
+ * @returns The text as various HTML comments.
  */
-export function buildHtmlComment(commentText: string): string {
-  return `<!--${commentText}-->`;
+export function buildHtmlComments(commentText: string): string[] {
+  return [
+    `<!--${commentText}-->`,
+    `<!-- \n ${commentText}-->`,
+  ];
 }
 
 /**
