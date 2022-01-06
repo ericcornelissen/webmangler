@@ -44,6 +44,7 @@ const comments: string[] = [
   "<!-- -->",
   "<!--foobar-->",
   "<!-- Hello world! -->",
+  "<!-- \n -->",
 ];
 
 /**
@@ -93,8 +94,8 @@ export const sampleValues = {
  * A collection of preset values for testing the HTML language plugin.
  */
 export const valuePresets: {
-  attributes: HtmlAttributeValuesPresets,
-  elements: HtmlElementValuesPresets,
+  attributes: HtmlAttributeValuesPresets;
+  elements: HtmlElementValuesPresets;
 } = {
   attributes: {
     beforeName: new Set([
