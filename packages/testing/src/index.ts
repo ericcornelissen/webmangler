@@ -15,8 +15,12 @@ import {
   WebManglerPluginMock,
   WebManglerLanguagePluginMock,
 } from "./mocks";
+import {
+  checkWebManglerLanguagePlugin,
+} from "./suites";
 
 export {
+  checkWebManglerLanguagePlugin,
   generateValueObjects,
   generateValueObjectsAll,
   MangleExpressionMock,
