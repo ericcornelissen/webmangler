@@ -1,18 +1,37 @@
 import type { WebManglerCliFile } from "./types";
 
-import { promises as fs } from "fs";
+/**
+ * An object to write files to disk.
+ */
+interface FileSystem {
+  /**
+   * Write a file to disk.
+   *
+   * @param path The path to the file.
+   * @param content The content to write to the file.
+   * @returns A promise resolving on success.
+   */
+  writeFile(path: string, content: string): Promise<void>;
+}
 
 /**
- * Write a list of files to disk.
+ * Create a function to write a collection of files to disk.
  *
- * @param files The files to write.
+ * @param fs A {@link FileSystem}.
+ * @returns A function to write to a collection of files to disk.
  */
-export async function writeFiles(files: WebManglerCliFile[]): Promise<void> {
-  const promises: Promise<void>[] = [];
-  for (const file of files) {
-    const writePromise = fs.writeFile(file.path, file.content);
-    promises.push(writePromise);
-  }
+function createWriteFiles(fs: FileSystem) {
+  return async function(files: Iterable<WebManglerCliFile>): Promise<void> {
+    const promises: Promise<void>[] = [];
+    for (const file of files) {
+      const writePromise = fs.writeFile(file.path, file.content);
+      promises.push(writePromise);
+    }
 
-  await Promise.all(promises);
+    await Promise.all(promises);
+  };
 }
+
+export {
+  createWriteFiles,
+};

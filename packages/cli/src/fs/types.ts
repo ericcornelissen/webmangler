@@ -19,8 +19,8 @@ interface Filters {
 }
 
 /**
- * The _WebMangler_ CLI representation of a File. It extends the {@link
- * ManglerFile} type with a additional fields used by the CLI.
+ * The _WebMangler_ CLI representation of a File. It extends the
+ * {@link ManglerFile} type with a additional fields used by the CLI.
  *
  * @since v0.1.0
  */

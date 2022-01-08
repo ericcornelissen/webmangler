@@ -26,7 +26,7 @@ type WebManglerCliFileParams = {
  *
  * @since v0.1.0
  */
-export default class DefaultWebManglerCliFile implements WebManglerCliFile {
+class DefaultWebManglerCliFile implements WebManglerCliFile {
   /**
    * @inheritDoc
    */
@@ -68,3 +68,5 @@ export default class DefaultWebManglerCliFile implements WebManglerCliFile {
     return this.content.length;
   }
 }
+
+export default DefaultWebManglerCliFile;
