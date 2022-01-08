@@ -1,6 +1,6 @@
 {
   "name": "@webmangler/language-js",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "description": "JavaScript language support for WebMangler",
   "license": "MIT",
   "main": "./lib/index.js",
@@ -28,7 +28,7 @@
     "postpublish": "npm run clean"
   },
   "dependencies": {
-    "@webmangler/language-utils": "^0.1.23",
+    "@webmangler/language-utils": "^0.1.24",
     "@webmangler/types": "^0.1.24"
   },
   "engines": {

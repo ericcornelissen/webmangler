@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.27] - 2022-01-08
+
 - Fix unintentional mangling in comments with newlines. ([#226])
 
 ## [0.1.26] - 2021-10-04
