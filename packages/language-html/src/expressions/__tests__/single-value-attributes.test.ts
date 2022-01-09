@@ -135,7 +135,9 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
         const commentOfElementWithAttribute = Array
           .from(generateValueObjects({
             tag: ["div"],
-            attributes: buildHtmlAttributes({ name: "data-foo", value: "bar" }),
+            attributes: [
+              ...buildHtmlAttributes({ name: "data-foo", value: "bar" }),
+            ],
             content: [undefined, ""],
           }))
           .map(buildHtmlElement)
@@ -150,8 +152,8 @@ suite("HTML - Single Value Attribute Expression Factory", function() {
             tag: ["span"],
             attributes: valuePresets.elements.attributes,
             content: [
+              undefined,
               "",
-              ...commentOfElementWithAttribute,
             ],
             afterClosingTag: [
               "",

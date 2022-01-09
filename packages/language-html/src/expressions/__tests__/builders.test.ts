@@ -80,6 +80,7 @@ suite("HTML expression factory test suite string builders", function() {
         expected: [
           "<!---->",
           "<!-- \n -->",
+          "<!----!>",
         ],
       },
       {
@@ -88,6 +89,7 @@ suite("HTML expression factory test suite string builders", function() {
         expected: [
           "<!--foobar-->",
           "<!-- \n foobar-->",
+          "<!--foobar--!>",
         ],
       },
       {
@@ -96,6 +98,7 @@ suite("HTML expression factory test suite string builders", function() {
         expected: [
           "<!--<div>foobar</div>-->",
           "<!-- \n <div>foobar</div>-->",
+          "<!--<div>foobar</div>--!>",
         ],
       },
     ];

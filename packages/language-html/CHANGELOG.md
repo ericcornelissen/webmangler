@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix unintentional mangling in comments with non-standard syntax. ([#233])
 
 ## [0.1.24] - 2022-01-08
 
@@ -23,5 +23,6 @@ Versioning].
 [#136]: https://github.com/ericcornelissen/webmangler/pull/136
 [#225]: https://github.com/ericcornelissen/webmangler/pull/225
 [#231]: https://github.com/ericcornelissen/webmangler/pull/231
+[#233]: https://github.com/ericcornelissen/webmangler/pull/233
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
