@@ -5,12 +5,12 @@ import { EMBED_TYPE } from "./common";
 /**
  * A regular expression to find style attribute with quoted values in HTML.
  */
-const REGEXP_QUOTED = /(?:<!--(?:.|\n|\r)*?-->|(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*(?<q>"|'))(?<v>[^"']+)(?=\k<q>))/gmi;
+const REGEXP_QUOTED = /(?:<!--(?:.|\n|\r)*?--!?>|(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*(?<q>"|'))(?<v>[^"']+)(?=\k<q>))/gmi;
 
 /**
  * A regular expression to find style attribute with unquoted values in HTML.
  */
-const REGEXP_UNQUOTED = /(?:<!--(?:.|\n|\r)*?-->|(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*)(?<v>[^"'\s/>]+))/gmi;
+const REGEXP_UNQUOTED = /(?:<!--(?:.|\n|\r)*?--!?>|(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*)(?<v>[^"'\s/>]+))/gmi;
 
 /**
  * Convert a {@link REGEXP_QUOTED} or {@link REGEXP_UNQUOTED} match into a
