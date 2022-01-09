@@ -25,7 +25,8 @@ suite("Built-in Language Supports", function() {
 
   test("get languages", function() {
     const subject = new BuiltInLanguagesPlugin();
-    const result = subject.getLanguages();
+    const _result = subject.getLanguages();
+    const result = Array.from(_result);
     expect(result).to.include.members(["css", "js", "html"]);
   });
 });
