@@ -1,19 +1,53 @@
-import type { WebManglerOptions } from "webmangler";
-
-import { cosmiconfigSync } from "cosmiconfig";
+import type { WebManglerOptions } from "@webmangler/types";
 
 import { DEFAULT_CONFIG_PATHS, MODULE_NAME } from "./constants";
-import { DEFAULT_CONFIG } from "./default";
+import { newDefaultConfig } from "./default";
+
+/**
+ * A utility to load configuration.
+ */
+interface Loader {
+  /**
+   * Load a configuration from a specific file.
+   *
+   * @param path The path to load from.
+   * @returns An object with the configuration, or `null`.
+   */
+  load(path: string): { config: unknown; isEmpty?: boolean; } | null;
+
+  /**
+   * Search for a configuration from a list of configured list of paths.
+   *
+   * @returns An object with the configuration, or `null`.
+   */
+  search(): { config: unknown; isEmpty?: boolean; } | null;
+}
+
+/**
+ * Create a new {@link Loader}.
+ *
+ * @param moduleName The name of the CLI module.
+ * @param options Options for the loader.
+ * @returns a {@link Loader}.
+ */
+type NewLoader = (
+  moduleName: string,
+  options?: { searchPlaces: string[]; },
+) => Loader;
 
 /**
  * Get the configuration at the a specified path.
  *
+ * @param loader A {@link Loader}.
  * @param configPath The path o the configuration file.
  * @returns The {@link WebManglerOptions}.
  * @throws If no configuration was found at the specified path.
  */
-function loadSpecificConfiguration(configPath: string): WebManglerOptions {
-  const explorer = cosmiconfigSync(MODULE_NAME);
+function loadSpecificConfiguration(
+  loader: NewLoader,
+  configPath: string,
+): WebManglerOptions {
+  const explorer = loader(MODULE_NAME);
 
   const result = explorer.load(configPath);
   if (result === null || result.isEmpty === true) {
@@ -27,38 +61,38 @@ function loadSpecificConfiguration(configPath: string): WebManglerOptions {
  * Search for configurations at the default configuration paths. If no
  * configuration file is found, the {@Link DEFAULT_CONFIG} is returned.
  *
+ * @param loader A {@link Loader}.
  * @returns The {@link WebManglerOptions}.
  */
-function searchDefaultPaths(): WebManglerOptions {
-  const explorer = cosmiconfigSync(MODULE_NAME, {
+function searchDefaultPaths(loader: NewLoader): WebManglerOptions {
+  const explorer = loader(MODULE_NAME, {
     searchPlaces: DEFAULT_CONFIG_PATHS,
   });
 
   const result = explorer.search();
   if (result === null || result.isEmpty === true) {
-    return DEFAULT_CONFIG;
+    return newDefaultConfig();
   }
 
   return result.config as WebManglerOptions;
 }
 
 /**
- * Get the _WebMangler_ CLI configuration. Either at a specified path, or if
- * that is `undefined`, from one of {@link DEFAULT_CONFIG_PATHS}, or if those
- * don't exist, {@link DEFAULT_CONFIG}.
+ * Create a function to get the _WebMangler_ CLI configuration.
  *
- * @param configPath The path o the configuration file.
- * @returns The {@link WebManglerOptions}.
- * @throws If `configPath` was provided but no configuration was found.
+ * @param newLoader A {@link NewLoader}.
+ * @returns A function to get the _WebMangler_ CLI configuration.
  */
-export function getConfiguration(
-  configPath: string | undefined,
-): WebManglerOptions {
-  if (configPath !== undefined) {
-    return loadSpecificConfiguration(configPath);
-  } else {
-    return searchDefaultPaths();
-  }
+function newGetConfiguration(newLoader: NewLoader) {
+  return (configPath?: string): WebManglerOptions => {
+    if (configPath !== undefined) {
+      return loadSpecificConfiguration(newLoader, configPath);
+    } else {
+      return searchDefaultPaths(newLoader);
+    }
+  };
 }
 
-
+export {
+  newGetConfiguration,
+};
