@@ -18,6 +18,7 @@ async function getChangedFiles() {
 
     __changedFiles = committedFiles.concat(unCommittedFiles)
       .filter(notDeletedIn(unCommittedFiles))
+      .filter(notDeletedIn(committedFiles))
       .map(({ filename }) => filename);
   }
 
