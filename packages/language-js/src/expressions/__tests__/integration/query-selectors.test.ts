@@ -200,6 +200,61 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       },
     },
     {
+      name: "selector string with an extra quote",
+      pattern: "cls-[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: [
+        "cls-bar",
+      ],
+      getValuesSets: () => [
+        {
+          leftHand: valuePresets.leftHand,
+          rightHand: [
+            ...buildJsStrings("[data=\\'foo\"\\'] .cls-bar"),
+            ...buildJsStrings("[data=\\\"foo'\\\"] .cls-bar"),
+            ...buildJsStrings("[data=\\'foo`\\'] .cls-bar"),
+          ],
+        },
+      ],
+    },
+    {
+      name: "unrelated string with an extra quote",
+      pattern: "cls-[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: [
+        "cls-foobar",
+      ],
+      getValuesSets: () => {
+        const stringsWithAQuote = [
+          "\"foo\\\"bar\"",
+          "'foo\\'bar'",
+          "`foo\\`bar`",
+        ];
+
+        return [
+          {
+            beforeStatement: [
+              "",
+              ...stringsWithAQuote,
+            ],
+            leftHand: valuePresets.leftHand,
+            rightHand: [
+              ...buildJsStrings(".cls-foobar")
+                .map(asQuerySelectorAll),
+            ],
+            afterStatement: [
+              "",
+              ...stringsWithAQuote,
+            ],
+          },
+        ];
+      },
+    },
+    {
       name: "no match due to unexpected character",
       pattern: "[a-z]+",
       factoryOptions: { },

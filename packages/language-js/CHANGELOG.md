@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix query selectors not being mangled due to escaped quotes. ([#237])
 
 ## [0.1.25] - 2022-01-08
 
@@ -27,5 +27,6 @@ Versioning].
 [#136]: https://github.com/ericcornelissen/webmangler/pull/136
 [#139]: https://github.com/ericcornelissen/webmangler/pull/139
 [#224]: https://github.com/ericcornelissen/webmangler/pull/224
+[#237]: https://github.com/ericcornelissen/webmangler/pull/237
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
