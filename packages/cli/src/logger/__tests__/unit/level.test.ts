@@ -5,7 +5,7 @@ import {
   isInfo,
   isSilent,
   isWarn,
-} from "../level";
+} from "../../level";
 
 suite("LogLevel", function() {
   test("isDebug", function() {
