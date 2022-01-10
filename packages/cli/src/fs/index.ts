@@ -15,7 +15,6 @@ import { createWriteFiles } from "./write";
  *
  * @param basePath The path to find files at or under.
  * @yields The file(s) at or under `basePath`.
- * @throws if `basePath` does not exist.
  */
 const listFiles = createListFiles(fs, path);
 

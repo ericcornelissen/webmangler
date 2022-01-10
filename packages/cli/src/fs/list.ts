@@ -99,16 +99,20 @@ function createListFiles(fs: FileSystem, path: Path) {
    * @yields Files at or under the `basePath`.
    */
   async function* listFiles(basePath: string): AsyncIterable<string> {
-    await fs.access(basePath);
+    try {
+      await fs.access(basePath);
 
-    const lstat = await fs.lstat(basePath);
-    if (lstat.isFile()) {
-      yield basePath;
-    } else {
-      for (const dirEntry of await fs.readdir(basePath)) {
-        const dirEntryPath = path.resolve(basePath, dirEntry);
-        yield* await listFiles(dirEntryPath);
+      const lstat = await fs.lstat(basePath);
+      if (lstat.isFile()) {
+        yield basePath;
+      } else {
+        for (const dirEntry of await fs.readdir(basePath)) {
+          const dirEntryPath = path.resolve(basePath, dirEntry);
+          yield* await listFiles(dirEntryPath);
+        }
       }
+    } catch (_) {
+      yield* [];
     }
   }
 
