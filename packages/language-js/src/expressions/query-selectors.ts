@@ -30,12 +30,18 @@ function newQuerySelectorExpressions(
         (?:${patterns.comment})
         |
         (?<${GROUP_MAIN}>
-          ${quote}[^${quote}]*
+          ${quote}
+          (?:\\\\${quote}|[^${quote}])*
           %s
-          [^${quote}]*${quote}
+          (?:\\\\${quote}|[^${quote}])*
+          ${quote}
         )
         |
-        (?:${quote}[^${quote}]*${quote})
+        (?:
+          ${quote}
+          (?:\\\\${quote}|[^${quote}])*
+          ${quote}
+        )
       )
     `,
     `
