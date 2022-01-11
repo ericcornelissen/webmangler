@@ -1,5 +1,7 @@
 import { performance } from "perf_hooks";
 
+import  { createTimeCall } from "./timing";
+
 /**
  * Get the duration of a function call in milliseconds as well as its output.
  *
@@ -10,9 +12,8 @@ import { performance } from "perf_hooks";
  * @param fn The function to time.
  * @returns A tuple of the duration and `fn`'s return value.
  */
-export function timeCall<T>(fn: () => T): [number, T] {
-  const tBefore = performance.now();
-  const result = fn();
-  const tAfter = performance.now();
-  return [tAfter - tBefore, result];
-}
+const timeCall = createTimeCall(performance);
+
+export {
+  timeCall,
+};
