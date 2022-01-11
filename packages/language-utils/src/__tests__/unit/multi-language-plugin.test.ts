@@ -212,7 +212,8 @@ suite("MultiLanguagePlugin", function() {
         }
 
         const subject = new ConcreteMultiLanguagePlugin(plugins);
-        const result = subject.getLanguages();
+        const _result = subject.getLanguages();
+        const result = Array.from(_result);
         expect(result).to.deep.equal(expected);
       });
     }

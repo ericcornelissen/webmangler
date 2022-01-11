@@ -31,7 +31,7 @@ import * as helpers from "./helpers";
  *   ],
  * });
  * @since v0.1.0
- * @version v0.1.24
+ * @version v0.1.26
  */
 const JavaScriptLanguagePlugin = initJavaScriptLanguagePlugin({
   getExpressionFactories: helpers.getExpressionFactories,

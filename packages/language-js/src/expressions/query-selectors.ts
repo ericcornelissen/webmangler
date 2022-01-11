@@ -30,12 +30,18 @@ function newQuerySelectorExpressions(
         (?:${patterns.comment})
         |
         (?<${GROUP_MAIN}>
-          ${quote}[^${quote}]*
+          ${quote}
+          (?:\\\\${quote}|[^${quote}])*
           %s
-          [^${quote}]*${quote}
+          (?:\\\\${quote}|[^${quote}])*
+          ${quote}
         )
         |
-        (?:${quote}[^${quote}]*${quote})
+        (?:
+          ${quote}
+          (?:\\\\${quote}|[^${quote}])*
+          ${quote}
+        )
       )
     `,
     `
@@ -90,7 +96,7 @@ function newSelectorAsStandaloneStringExpressions():
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.24
+ * @version v0.1.26
  */
 function querySelectorExpressionFactory(
   options: QuerySelectorOptions,

@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Improve performance of `MultiLanguagePlugin` for many languages. ([#236])
 - Update interface of `MangleExpression` utilities. ([#211])
 
 ## [0.1.24] - 2021-11-29
@@ -21,5 +22,6 @@ Versioning].
 [#136]: https://github.com/ericcornelissen/webmangler/pull/136
 [#191]: https://github.com/ericcornelissen/webmangler/pull/191
 [#211]: https://github.com/ericcornelissen/webmangler/pull/211
+[#236]: https://github.com/ericcornelissen/webmangler/pull/236
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
