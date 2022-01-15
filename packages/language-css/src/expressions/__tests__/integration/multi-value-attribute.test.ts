@@ -7,7 +7,7 @@ import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import {
-  attributeSelectorOperators,
+  buildCssAttributeSelectors,
   buildCssComments,
   buildCssRulesets,
   getAllMatches,
@@ -43,7 +43,7 @@ suite("CSS - Multi Value Attribute Expression Factory", function() {
               ...valuePresets.beforeSelector,
               ...valuePresets.selector,
             ],
-            selector: generateAttributeSelectors("data-foo", "bar"),
+            selector: buildCssAttributeSelectors("data-foo", "bar"),
             afterSelector: valuePresets.afterSelector,
             declarations: valuePresets.declarations,
           },
@@ -67,7 +67,7 @@ suite("CSS - Multi Value Attribute Expression Factory", function() {
               ...valuePresets.beforeSelector,
               ...valuePresets.selector,
             ],
-            selector: generateAttributeSelectors("data-foo", "bar baz"),
+            selector: buildCssAttributeSelectors("data-foo", "bar baz"),
             afterSelector: valuePresets.afterSelector,
             declarations: valuePresets.declarations,
           },
@@ -93,7 +93,7 @@ suite("CSS - Multi Value Attribute Expression Factory", function() {
               ...valuePresets.beforeSelector,
               ...valuePresets.selector,
             ],
-            selector: generateAttributeSelectors("class", "foo bar"),
+            selector: buildCssAttributeSelectors("class", "foo bar"),
             afterSelector: valuePresets.afterSelector,
             declarations: valuePresets.declarations,
           },
@@ -102,7 +102,7 @@ suite("CSS - Multi Value Attribute Expression Factory", function() {
               ...valuePresets.beforeSelector,
               ...valuePresets.selector,
             ],
-            selector: generateAttributeSelectors("alt", "hello world"),
+            selector: buildCssAttributeSelectors("alt", "hello world"),
             afterSelector: valuePresets.afterSelector,
             declarations: valuePresets.declarations,
           },
@@ -125,9 +125,9 @@ suite("CSS - Multi Value Attribute Expression Factory", function() {
         getValuesSets: () => [
           {
             selector: [
-              ...Array.from(generateAttributeSelectors("alt", "foo bar"))
+              ...Array.from(buildCssAttributeSelectors("alt", "foo bar"))
                 .flatMap((selector1) => [
-                  ...Array.from(generateAttributeSelectors("class", "hello world"))
+                  ...Array.from(buildCssAttributeSelectors("class", "hello world"))
                     .flatMap((selector2) => [
                       `${selector1}${selector2}`,
                       ...selectorCombinators.map(
@@ -157,7 +157,7 @@ suite("CSS - Multi Value Attribute Expression Factory", function() {
             beforeRuleset: [
               ...sampleValues.mediaQueries.map((s) => `${s}{`),
             ],
-            selector: generateAttributeSelectors("data-foo", "bar baz"),
+            selector: buildCssAttributeSelectors("data-foo", "bar baz"),
             declarations: valuePresets.declarations,
             afterRuleset: ["}"],
           },
@@ -234,21 +234,3 @@ suite("CSS - Multi Value Attribute Expression Factory", function() {
     });
   }
 });
-
-/**
- * Generate valid attribute value selectors for a given attribute and value.
- *
- * @param attributeName The attribute name to use.
- * @param attributeValue The value to use.
- * @yields Attribute value selectors.
- */
-function* generateAttributeSelectors(
-  attributeName: string,
-  attributeValue: string,
-): IterableIterator<string> {
-  for (const operator of attributeSelectorOperators) {
-    for (const q of ["\"", "'"]) {
-      yield `[${attributeName}${operator}${q}${attributeValue}${q}]`;
-    }
-  }
-}

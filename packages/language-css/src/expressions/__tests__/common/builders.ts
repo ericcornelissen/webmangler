@@ -1,8 +1,29 @@
 import type { CssDeclarationValues, CssRulesetValues } from "./types";
 
+import { attributeSelectorOperators } from "./values";
+
 const DEFAULT_PROPERTY = "color";
 const DEFAULT_SELECTOR = "div";
 const DEFAULT_VALUE = "red";
+
+/**
+ * Generate valid attribute value selectors for a given attribute and value.
+ *
+ * @param attributeName The attribute name to use.
+ * @param attributeValue The value to use.
+ * @yields Valid attribute selectors from the provided name and value.
+ */
+export function *buildCssAttributeSelectors(
+  attributeName: string,
+  attributeValue: string,
+): IterableIterator<string> {
+  const quotes = ["\"", "'"];
+  for (const operator of attributeSelectorOperators) {
+    for (const q of quotes) {
+      yield `[${attributeName}${operator}${q}${attributeValue}${q}]`;
+    }
+  }
+}
 
 /**
  * Build CSS comments from a string.

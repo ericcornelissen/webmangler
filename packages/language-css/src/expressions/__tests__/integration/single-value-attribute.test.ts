@@ -6,7 +6,7 @@ import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
 import {
-  attributeSelectorOperators,
+  buildCssAttributeSelectors,
   buildCssComments,
   buildCssRulesets,
   getAllMatches,
@@ -40,7 +40,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
             ...valuePresets.beforeSelector,
             ...valuePresets.selector,
           ],
-          selector: generateAttributeSelectors("data-foo", "bar"),
+          selector: buildCssAttributeSelectors("data-foo", "bar"),
           afterSelector: valuePresets.afterSelector,
           declarations: valuePresets.declarations,
         },
@@ -60,7 +60,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
             ...valuePresets.beforeSelector,
             ...valuePresets.selector,
           ],
-          selector: generateAttributeSelectors("data-value", "foobar"),
+          selector: buildCssAttributeSelectors("data-value", "foobar"),
           afterSelector: valuePresets.afterSelector,
           declarations: valuePresets.declarations,
         },
@@ -80,7 +80,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
             ...valuePresets.beforeSelector,
             ...valuePresets.selector,
           ],
-          selector: generateAttributeSelectors("data-value", "foobar"),
+          selector: buildCssAttributeSelectors("data-value", "foobar"),
           afterSelector: valuePresets.afterSelector,
           declarations: valuePresets.declarations,
         },
@@ -96,9 +96,9 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
       getValuesSets: () => [
         {
           selector: [
-            ...Array.from(generateAttributeSelectors("data-foo", "bar"))
+            ...Array.from(buildCssAttributeSelectors("data-foo", "bar"))
               .flatMap((selector1) => [
-                ...Array.from(generateAttributeSelectors("data-hello", "world"))
+                ...Array.from(buildCssAttributeSelectors("data-hello", "world"))
                   .flatMap((selector2) => [
                     `${selector1}${selector2}`,
                     ...selectorCombinators.map(
@@ -120,11 +120,11 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
       expected: ["bar", "world"],
       getValuesSets: () => [
         {
-          selector: generateAttributeSelectors("data-foo", "bar"),
+          selector: buildCssAttributeSelectors("data-foo", "bar"),
           declarations: valuePresets.declarations,
         },
         {
-          selector: generateAttributeSelectors("data-hello", "world"),
+          selector: buildCssAttributeSelectors("data-hello", "world"),
           declarations: valuePresets.declarations,
         },
       ],
@@ -141,7 +141,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
           beforeRuleset: [
             ...sampleValues.mediaQueries.map((s) => `${s}{`),
           ],
-          selector: generateAttributeSelectors("data-foo", "bar"),
+          selector: buildCssAttributeSelectors("data-foo", "bar"),
           declarations: valuePresets.declarations,
           afterRuleset: ["}"],
         },
@@ -213,21 +213,3 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
     });
   }
 });
-
-/**
- * Generate valid attribute value selectors for a given attribute and value.
- *
- * @param attributeName The attribute name to use.
- * @param attributeValue The value to use.
- * @yields Attribute value selectors.
- */
-function* generateAttributeSelectors(
-  attributeName: string,
-  attributeValue: string,
-): IterableIterator<string> {
-  for (const operator of attributeSelectorOperators) {
-    for (const q of ["\"", "'"]) {
-      yield `[${attributeName}${operator}${q}${attributeValue}${q}]`;
-    }
-  }
-}
