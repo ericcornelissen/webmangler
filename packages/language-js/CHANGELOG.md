@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.26] - 2022-01-15
+
 - Fix query selectors not being mangled due to escaped quotes. ([#237])
 
 ## [0.1.25] - 2022-01-08

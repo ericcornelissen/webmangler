@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.25] - 2022-01-15
+
 - Improve performance of `MultiLanguagePlugin` for many languages. ([#236])
 - Update interface of `MangleExpression` utilities. ([#211])
 
