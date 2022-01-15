@@ -10,6 +10,17 @@ import type { WebManglerPluginConstructor } from "./types";
 function checkOptions(
   Plugin: WebManglerPluginConstructor,
 ): string | null {
+  try {
+    const plugin = new Plugin();
+
+    const options = plugin.options();
+    if (!options) {
+      return `no options returned by plugin (got ${options})`;
+    }
+  } catch (error) {
+    return `cannot get options from plugin (error: ${error})`;
+  }
+
   return null;
 }
 

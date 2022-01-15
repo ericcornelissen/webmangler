@@ -9,6 +9,18 @@ import type { WebManglerPluginConstructor } from "./types";
 function checkConstructor(
   Plugin: WebManglerPluginConstructor,
 ): string | null {
+  try {
+    new Plugin();
+  } catch (error) {
+    return `plugin initialized without options failed (error: ${error})`;
+  }
+
+  try {
+    new Plugin({ });
+  } catch (error) {
+    return `plugin initialized with empty options failed (error: ${error})`;
+  }
+
   return null;
 }
 
