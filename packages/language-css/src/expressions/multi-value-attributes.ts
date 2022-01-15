@@ -3,6 +3,54 @@ import type {
   MultiValueAttributeOptions,
 } from "@webmangler/types";
 
+import { NestedGroupMangleExpression } from "@webmangler/language-utils";
+import { patterns, QUOTES_ARRAY } from "./common";
+
+const GROUP_MAIN = "main";
+
+/**
+ * Get {@link MangleExpression}s to match multi-value attribute selector values
+ * in CSS, e.g. 'foo' and `bar` in `[class="foo bar"] { }`.
+ *
+ * @param attributesPattern The pattern of attribute names.
+ * @returns The {@link MangleExpression}s to match attribute values in CSS.
+ */
+function newAttributeSelectorMultiValueExpression(
+  attributesPattern: string,
+): Iterable<MangleExpression> {
+  return [
+    ...QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
+      `
+        (?:
+          (?:${patterns.anyString}|${patterns.comment})
+          |
+          (?:
+            \\[\\s*
+            (?:${attributesPattern})\\s*
+            (?:${patterns.attributeOperators})\\s*
+            ${quote}\\s*
+          )
+          (?<${GROUP_MAIN}>
+            (?:[^${quote}]+\\s)?
+            %s
+            (?:\\s[^${quote}]+)?
+          )
+          (?:
+            \\s*${quote}
+            \\s*\\]
+          )
+        )
+      `,
+      `
+        (?<=^|\\s)
+        (?<${GROUP_MAIN}>%s)
+        (?=$|\\s)
+      `,
+      GROUP_MAIN,
+    )),
+  ];
+}
+
 /**
  * Get the set of {@link MangleExpression}s to match multi-value attribute
  * values in CSS. This will match:
@@ -18,7 +66,7 @@ function multiValueAttributeExpressionFactory(
   const attributesPattern = Array.from(options.attributeNames).join("|");
 
   return [
-    // TODO: add expressions
+    ...newAttributeSelectorMultiValueExpression(attributesPattern),
   ];
 }
 
