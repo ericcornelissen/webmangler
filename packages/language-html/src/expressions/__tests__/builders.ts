@@ -59,6 +59,7 @@ export function buildHtmlComments(commentText: string): string[] {
   return [
     `<!--${commentText}-->`,
     `<!-- \n ${commentText}-->`,
+    `<!--${commentText}--!>`,
   ];
 }
 

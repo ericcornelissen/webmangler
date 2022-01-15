@@ -13,6 +13,7 @@ const {
   tempDir,
   testSuffixPerformance,
   testSuffixTest,
+  testsDir,
 } = values;
 
 const packagesExclusions = [];
@@ -54,6 +55,7 @@ module.exports = {
     `${tempDir}/`,
     `${dependenciesDir}/`,
     `${packagesDir}/**/*.{${testSuffixPerformance},${testSuffixTest}}.ts`,
+    `${packagesDir}/**/${testsDir}/common/index.ts`,
     `${packagesDir}/**/${compiledDir}/`,
     ...packagesExclusions,
   ],

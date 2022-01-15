@@ -13,13 +13,13 @@ import type {
  * BuiltInLanguagesPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.21
+ * @version v0.1.25
  */
 abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
   /**
    * the languages supported by the {@link MultiLanguagePlugin}.
    */
-  private readonly languages: string[];
+  private readonly languages: Set<string>;
 
   /**
    * The {@link WebManglerLanguagePlugin}s in the {@link MultiLanguagePlugin}.
@@ -35,11 +35,13 @@ abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
    * @version v0.1.17
    */
   constructor(plugins: Iterable<WebManglerLanguagePlugin>) {
-    this.languages = [];
+    this.languages = new Set();
     this.plugins = plugins;
 
     for (const plugin of plugins) {
-      this.languages.push(...plugin.getLanguages());
+      for (const language of plugin.getLanguages()) {
+        this.languages.add(language);
+      }
     }
   }
 
@@ -79,7 +81,7 @@ abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
    * MultiLanguagePlugin}.
    *
    * @inheritDoc
-   * @version v0.1.17
+   * @version v0.1.25
    */
   getLanguages(): Iterable<string> {
     return this.languages;

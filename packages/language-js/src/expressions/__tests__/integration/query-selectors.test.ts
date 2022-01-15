@@ -1,21 +1,21 @@
 import type { QuerySelectorOptions } from "@webmangler/types";
 
-import type { JsStatementValuesSets } from "./types";
+import type { JsStatementValuesSets } from "../common";
 
 import { generateValueObjectsAll } from "@webmangler/testing";
 import { expect } from "chai";
 
-import { getAllMatches } from "./test-helpers";
 import {
   buildJsFunctionCall,
   buildJsStatements,
   buildJsInlineComments,
   buildJsLineComment,
   buildJsStrings,
-} from "./builders";
-import { valuePresets } from "./values";
+  getAllMatches,
+  valuePresets,
+} from "../common";
 
-import expressionsFactory from "../query-selectors";
+import expressionsFactory from "../../query-selectors";
 
 suite("JavaScript - Query Selector Expression Factory", function() {
   type TestScenario = {
@@ -194,6 +194,61 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               ...buildJsStrings(".bar")
                 .map(asQuerySelectorAll)
                 .map(buildJsLineComment),
+            ],
+          },
+        ];
+      },
+    },
+    {
+      name: "selector string with an extra quote",
+      pattern: "cls-[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: [
+        "cls-bar",
+      ],
+      getValuesSets: () => [
+        {
+          leftHand: valuePresets.leftHand,
+          rightHand: [
+            ...buildJsStrings("[data=\\'foo\"\\'] .cls-bar"),
+            ...buildJsStrings("[data=\\\"foo'\\\"] .cls-bar"),
+            ...buildJsStrings("[data=\\'foo`\\'] .cls-bar"),
+          ],
+        },
+      ],
+    },
+    {
+      name: "unrelated string with an extra quote",
+      pattern: "cls-[a-z]+",
+      factoryOptions: {
+        prefix: "\\.",
+      },
+      expected: [
+        "cls-foobar",
+      ],
+      getValuesSets: () => {
+        const stringsWithAQuote = [
+          "\"foo\\\"bar\"",
+          "'foo\\'bar'",
+          "`foo\\`bar`",
+        ];
+
+        return [
+          {
+            beforeStatement: [
+              "",
+              ...stringsWithAQuote,
+            ],
+            leftHand: valuePresets.leftHand,
+            rightHand: [
+              ...buildJsStrings(".cls-foobar")
+                .map(asQuerySelectorAll),
+            ],
+            afterStatement: [
+              "",
+              ...stringsWithAQuote,
             ],
           },
         ];

@@ -3,9 +3,9 @@ import { expect } from "chai";
 import {
   sampleValues,
   selectorCombinators,
-} from "../values";
+} from "../common";
 
-import { patterns } from "../../common";
+import { patterns, QUOTES_ARRAY } from "../../common";
 
 suite("JavaScript - common expressions", function() {
   suite("Patterns", function() {
@@ -150,6 +150,29 @@ suite("JavaScript - common expressions", function() {
           const result = regExp.test(testCase);
           expect(result).to.equal(false, `in "${testCase}"`);
         }
+      });
+    });
+  });
+
+  suite("Values", function() {
+    suite("::QUOTES_ARRAY", function() {
+      test("contains double quotes", function() {
+        const result = QUOTES_ARRAY.includes("\"");
+        expect(result).to.be.true;
+      });
+
+      test("contains single quote", function() {
+        const result = QUOTES_ARRAY.includes("'");
+        expect(result).to.be.true;
+      });
+
+      test("contains backticks", function() {
+        const result = QUOTES_ARRAY.includes("`");
+        expect(result).to.be.true;
+      });
+
+      test("contains only the expected quotes", function() {
+        expect(QUOTES_ARRAY).to.have.length(3);
       });
     });
   });

@@ -3,28 +3,29 @@ import type { MangleExpression } from "@webmangler/types";
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { expect } from "chai";
 
-import { embedContentInContext } from "./benchmark-helpers";
+import { embedContentInContext } from "../common";
 
-import querySelectorExpressionFactory from "../query-selectors";
+import cssDeclarationPropertyExpressionFactory from "../../css-properties";
 
-suite("JavaScript - Query Selector Expression Factory", function() {
+suite("JavaScript - CSS Property Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "cls-[a-zA-Z0-9-]+";
+  const patterns = "var-[a-zA-Z0-9-]+";
 
-  const contentWithQuerySelector = embedContentInContext(`
-    const div = document.querySelectorAll("div");
-    const foo = document.querySelectorAll(".cls-foo");
-    const bar = document.querySelectorAll("#bar");
+  const contentWithProperties = embedContentInContext(`
+    $element.style.getPropertyValue("--var-color");
+    $element.style.getPropertyValue("--var-font-size");
+    $element.style.getPropertyValue("--margin-left");
   `);
-  const contentWithoutQuerySelector = `
+  const contentWithoutProperties = `
     const foo = "bar";
     const fooEl = document.getElementById(foo);
+    const barEl = document.querySelector(".bar");
   `;
 
   suiteSetup(function() {
-    expressions = querySelectorExpressionFactory({
-      prefix: "\\.",
+    expressions = cssDeclarationPropertyExpressionFactory({
+      prefix: "--",
     });
   });
 
@@ -34,7 +35,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
 
   test("simple file", function() {
     const budget = getRuntimeBudget(0.1);
-    const fileContent = contentWithQuerySelector;
+    const fileContent = contentWithProperties;
 
     let found: string[] = [];
     const result = benchmarkFn({
@@ -52,7 +53,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
 
   test("large file", function() {
     const budget = getRuntimeBudget(3);
-    const fileContent = contentWithQuerySelector.repeat(100);
+    const fileContent = contentWithProperties.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({
@@ -68,9 +69,9 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     expect(result.medianDuration).to.be.below(budget);
   });
 
-  test("large file without query selectors", function() {
+  test("large file without properties", function() {
     const budget = getRuntimeBudget(1);
-    const fileContent = contentWithoutQuerySelector.repeat(100);
+    const fileContent = contentWithoutProperties.repeat(100);
 
     let found: string[] = [];
     const result = benchmarkFn({

@@ -191,6 +191,21 @@ suite("HTML CSS Embeds - <style> tag", function() {
             },
           ],
         },
+        {
+          file: {
+            type: "html",
+            content: "<!--foo--!><style>.foobar { color: red; }</style><!--bar-->",
+          },
+          expected: [
+            {
+              content: ".foobar { color: red; }",
+              type: EMBED_TYPE_CSS,
+              startIndex: 18,
+              endIndex: 41,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
       ],
     },
     {
@@ -207,6 +222,13 @@ suite("HTML CSS Embeds - <style> tag", function() {
           file: {
             type: "html",
             content: "<style></style>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<!--<style>.foobar { color: red; }</style>--!>",
           },
           expected: [],
         },

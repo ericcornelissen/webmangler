@@ -21,6 +21,7 @@ const {
 const RUN_MUTATION_TESTING = [
   "benchmarking",
   "language-css",
+  "language-js",
   "language-utils",
   "mangler-css-variables",
   "mangler-html-ids",
