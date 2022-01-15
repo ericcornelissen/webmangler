@@ -26,6 +26,10 @@ function getExpressionFactories(): Map<string, ExpressionFactory> {
     factories.cssDeclarationValueExpressionFactory,
   );
   expressionFactories.set(
+    "multi-value-attributes",
+    factories.multiValueAttributeExpressionFactory,
+  );
+  expressionFactories.set(
     "query-selectors",
     factories.querySelectorExpressionFactory,
   );
