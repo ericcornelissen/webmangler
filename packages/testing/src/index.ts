@@ -17,10 +17,12 @@ import {
 } from "./mocks";
 import {
   checkWebManglerLanguagePlugin,
+  checkWebManglerPlugin,
 } from "./suites";
 
 export {
   checkWebManglerLanguagePlugin,
+  checkWebManglerPlugin,
   generateValueObjects,
   generateValueObjectsAll,
   MangleExpressionMock,
