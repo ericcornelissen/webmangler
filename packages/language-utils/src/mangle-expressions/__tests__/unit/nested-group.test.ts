@@ -225,35 +225,6 @@ suite("NestedGroupMangleExpression", function() {
           expect(i).to.equal(expected.length, `in ${s}`);
         }
       });
-
-      test(`${testName} (deprecated constructor)`, function() {
-        for (const testCase of getScenario()) {
-          const {
-            patternTemplate,
-            subPatternTemplate,
-            group,
-            caseSensitive,
-            pattern,
-            s,
-            expected,
-          } = testCase;
-
-          const subject = new NestedGroupMangleExpression(
-            patternTemplate,
-            subPatternTemplate,
-            group,
-            caseSensitive,
-          );
-
-          let i = 0;
-          for (const str of subject.findAll(s, pattern)) {
-            expect(str).to.equal(expected[i]);
-            i++;
-          }
-
-          expect(i).to.equal(expected.length, `in ${s}`);
-        }
-      });
     }
   });
 
@@ -498,29 +469,6 @@ suite("NestedGroupMangleExpression", function() {
             groupName: group,
             caseSensitive,
           });
-          const result = subject.replaceAll(s, replacements);
-          expect(result).to.equal(expected);
-        }
-      });
-
-      test(`${testName} (deprecated constructor)`, function() {
-        for (const testCase of getScenario()) {
-          const {
-            patternTemplate,
-            subPatternTemplate,
-            group,
-            caseSensitive,
-            replacements,
-            s,
-            expected,
-          } = testCase;
-
-          const subject = new NestedGroupMangleExpression(
-            patternTemplate,
-            subPatternTemplate,
-            group,
-            caseSensitive,
-          );
           const result = subject.replaceAll(s, replacements);
           expect(result).to.equal(expected);
         }

@@ -19,6 +19,7 @@ interface SingleGroupMangleExpressionOptions {
    * A generic pattern with a `"%s"` for a specific character pattern.
    *
    * NOTE 1: only one `"%s"` is supported.
+   * NOTE 2: whitespace is automatically removed from this template.
    *
    * @example "(?<=--)(?<GROUP_NAME>%s)(?=--)"
    * @since v0.1.11
@@ -27,6 +28,9 @@ interface SingleGroupMangleExpressionOptions {
 
   /**
    * The name of a group in `patternTemplate`.
+   *
+   * NOTE 1: it is assumed the provided group is present in the template. If
+   * this is not true the failure will be silent.
    *
    * @example "GROUP_NAME"
    * @since v0.1.11
@@ -54,7 +58,7 @@ interface SingleGroupMangleExpressionOptions {
  * // matches "bar" in "foo--bar--" and for the replacement "baz" will change it
  * // into "foo--baz--".
  * @since v0.1.11
- * @version v0.1.24
+ * @version v0.1.26
  */
 class SingleGroupMangleExpression implements MangleExpression {
   /**
@@ -76,33 +80,15 @@ class SingleGroupMangleExpression implements MangleExpression {
    * Create an expression from a pattern template with a named group to match
    * and replace.
    *
-   * NOTE 1: whitespace is automatically removed from `patternTemplate`.
-   * NOTE 2: the class assumes the provided group is present in the template. If
-   * it is not this class will fail silently.
-   *
-   * @param params The generic pattern (only one "%s" allowed).
-   * @param [groupName] The name of a group in `patternTemplate`.
-   * @param [caseSensitive] Should the expression be case sensitive.
+   * @param params The {@link SingleGroupMangleExpressionOptions}.
    * @since v0.1.11
-   * @version v0.1.25
-   * @deprecated Use first parameter as object for all parameters instead.
+   * @version v0.1.26
    */
-  constructor(
-    params: string | SingleGroupMangleExpressionOptions,
-    groupName = "",
-    caseSensitive = true,
-  ) {
-    if (typeof params === "string") {
-      const patternTemplate = params;
-      this.patternTemplate = patternTemplate.replace(/\s/g, "");
-      this.groupName = groupName;
-      this.caseSensitive =  caseSensitive;
-    } else {
-      this.patternTemplate = params.patternTemplate.replace(/\s/g, "");
-      this.groupName = params.groupName;
-      this.caseSensitive = params.caseSensitive === undefined ?
-        true : params.caseSensitive;
-    }
+  constructor(params: SingleGroupMangleExpressionOptions) {
+    this.patternTemplate = params.patternTemplate.replace(/\s/g, "");
+    this.groupName = params.groupName;
+    this.caseSensitive = params.caseSensitive === undefined ?
+      true : params.caseSensitive;
   }
 
   /**
