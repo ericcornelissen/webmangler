@@ -1,35 +1,31 @@
 import type { SinonStub } from "sinon";
 
-import type { WebManglerLanguagePluginConstructor } from "../../types";
-
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
 import {
-  newCheckWebManglerLanguagePlugin,
-} from "../../all";
+  newCheckAll,
+} from "../../utils";
 
 chaiUse(sinonChai);
 
-suite("Language plugin checks", function() {
-  suite("::checkConstructor", function() {
-    let checkWebManglerLanguagePlugin:
-      ReturnType<typeof newCheckWebManglerLanguagePlugin>;
+suite("Suite utilities", function() {
+  suite("::checkAll", function() {
+    let checkAll: ReturnType<typeof newCheckAll>;
 
-    let constructor: WebManglerLanguagePluginConstructor;
+    let subject: unknown;
 
     let checkA: SinonStub;
     let checkB: SinonStub;
 
     suiteSetup(function() {
-      constructor =
-        sinon.stub() as unknown as WebManglerLanguagePluginConstructor;
+      subject = sinon.stub();
 
       checkA = sinon.stub();
       checkB = sinon.stub();
 
-      checkWebManglerLanguagePlugin = newCheckWebManglerLanguagePlugin([
+      checkAll = newCheckAll([
         checkA,
         checkB,
       ]);
@@ -41,7 +37,7 @@ suite("Language plugin checks", function() {
     });
 
     test("nothing is invalid", function() {
-      const [valid, msg] = checkWebManglerLanguagePlugin(constructor);
+      const [valid, msg] = checkAll(subject);
       expect(valid).to.be.true;
       expect(msg).to.equal("");
     });
@@ -50,7 +46,7 @@ suite("Language plugin checks", function() {
       const response = "foobar";
       checkA.returns(response);
 
-      const [valid, msg] = checkWebManglerLanguagePlugin(constructor);
+      const [valid, msg] = checkAll(subject);
       expect(valid).to.be.false;
       expect(msg).to.equal(response);
     });
@@ -59,7 +55,7 @@ suite("Language plugin checks", function() {
       const response = "Hello world!";
       checkB.returns(response);
 
-      const [valid, msg] = checkWebManglerLanguagePlugin(constructor);
+      const [valid, msg] = checkAll(subject);
       expect(valid).to.be.false;
       expect(msg).to.equal(response);
     });

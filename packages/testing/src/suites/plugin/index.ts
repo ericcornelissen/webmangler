@@ -1,4 +1,4 @@
-import { newCheckWebManglerPlugin } from "./all";
+import { newCheckAll } from "../utils";
 import { checkConstructor } from "./constructor";
 import { checkOptions } from "./methods";
 
@@ -11,7 +11,7 @@ import { checkOptions } from "./methods";
  * @param Plugin The {@link WebManglerLanguagePlugin} to test.
  * @returns A boolean value indicating validity and an optional message.
  */
-const checkWebManglerPlugin = newCheckWebManglerPlugin([
+const checkWebManglerPlugin = newCheckAll([
   checkConstructor,
   checkOptions,
 ]);
