@@ -36,7 +36,9 @@ suite("Log stats", function() {
       };
 
       logStats(logger, emptyStats);
-      expect(logger.print).not.to.have.been.called;
+      expect(logger.print).to.have.been.calledWith(
+        sinon.match("Nothing was mangled"),
+      );
     });
 
     test("one file in ManglerStats", function() {

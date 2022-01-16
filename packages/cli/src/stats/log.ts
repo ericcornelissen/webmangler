@@ -56,6 +56,7 @@ function logStats(
   const duration: number = roundToTwoDecimalPlaces(stats.duration);
 
   if (stats.files.size === 0) {
+    logger.print(`Nothing was mangled (${duration} ms)`);
     return;
   }
 
