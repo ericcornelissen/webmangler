@@ -1,142 +1,32 @@
-import type { TestScenario } from "@webmangler/testing";
-import type { FileStats, ManglerStats } from "../types";
-import type { WebManglerCliFile } from "../../fs";
+import type { FileStats, ManglerStats } from "../../types";
 
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import FileStatsMock from "../__mocks__/file-stats.mock";
-import WebManglerCliFileMock from "../../fs/__mocks__/file.mock";
-import LoggerMock from "../../logger/__mocks__/logger.mock";
+import FileStatsMock from "../../__mocks__/file-stats.mock";
+import LoggerMock from "../../../logger/__mocks__/logger.mock";
 
-import { computeStats, logStats } from "../index";
+import {
+  logStats,
+} from "../../log";
 
 chaiUse(sinonChai);
 
-suite("Statistics", function() {
-  suite("::computeStats", function() {
-    type TestCase = {
-      expected: {
-        filePath: string,
-        changed: boolean,
-        sizeBefore?: number,
-        sizeAfter?: number,
-      }[],
-      duration: number,
-      inFiles: WebManglerCliFile[],
-      outFiles: WebManglerCliFile[],
-    };
-
-    const scenarios: TestScenario<TestCase>[] = [
-      {
-        name: "sample",
-        cases: [
-          {
-            duration: 1,
-            inFiles: [
-              new WebManglerCliFileMock({
-                path: "foo.bar",
-                originalSize: 3.14,
-              }),
-            ],
-            outFiles: [
-              new WebManglerCliFileMock({
-                path: "foo.bar",
-                size: 2.718,
-              }),
-            ],
-            expected: [
-              {
-                filePath: "foo.bar",
-                changed: true,
-                sizeBefore: 3.14,
-                sizeAfter: 2.718,
-              },
-            ],
-          },
-          {
-            duration: 2,
-            inFiles: [
-              new WebManglerCliFileMock({
-                path: "foo.bar",
-                originalSize: 3.14,
-              }),
-            ],
-            outFiles: [],
-            expected: [
-              {
-                filePath: "foo.bar",
-                changed: false,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "corner cases",
-        cases: [
-          {
-            duration: 0,
-            inFiles: [],
-            outFiles: [],
-            expected: [],
-          },
-        ],
-      },
-    ];
-
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
-          const {
-            duration,
-            inFiles,
-            outFiles,
-            expected,
-          } = testCase;
-
-          const stats = computeStats({
-            duration,
-            inFiles,
-            outFiles,
-          });
-
-          expect(stats.duration).to.equal(duration);
-          expect(stats.files.size).to.equal(expected.length);
-
-          for (const expectedI of expected) {
-            const {
-              filePath,
-              changed,
-              sizeBefore,
-              sizeAfter,
-            } = expectedI;
-
-            const fileStats = stats.files.get(filePath) as FileStats;
-            expect(fileStats).not.to.be.undefined;
-            expect(fileStats.changed).to.equal(changed);
-
-            if (changed) {
-              expect(fileStats.changePercentage).not.to.equal(0);
-              expect(fileStats.sizeBefore).to.equal(sizeBefore);
-              expect(fileStats.sizeAfter).to.equal(sizeAfter);
-            }
-          }
-        }
-      });
-    }
-  });
-
+suite("Log stats", function() {
   suite("::logStats", function() {
     const round = (x: number): number => {
       return Math.round((x + Number.EPSILON) * 100) / 100;
     };
 
-    const loggerMock = new LoggerMock();
+    let logger: LoggerMock;
+
+    suiteSetup(function() {
+      logger = new LoggerMock();
+    });
 
     setup(function() {
-      loggerMock.resetHistory();
+      logger.resetHistory();
     });
 
     test("no files in ManglerStats", function() {
@@ -145,8 +35,8 @@ suite("Statistics", function() {
         files: new Map([]),
       };
 
-      logStats(loggerMock, emptyStats);
-      expect(loggerMock.print).not.to.have.been.called;
+      logStats(logger, emptyStats);
+      expect(logger.print).not.to.have.been.called;
     });
 
     test("one file in ManglerStats", function() {
@@ -157,9 +47,9 @@ suite("Statistics", function() {
         files: new Map([[path, fileStats]]),
       };
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.callCount(3);
-      expect(loggerMock.print).to.have.been.calledWith(sinon.match(path));
+      logStats(logger, stats);
+      expect(logger.print).to.have.callCount(3);
+      expect(logger.print).to.have.been.calledWith(sinon.match(path));
     });
 
     test("multiple files in ManglerStats", function() {
@@ -173,10 +63,10 @@ suite("Statistics", function() {
         files: new Map(entries),
       };
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.callCount(entries.length + 2);
+      logStats(logger, stats);
+      expect(logger.print).to.have.callCount(entries.length + 2);
       for (const [path] of entries) {
-        expect(loggerMock.print).to.have.been.calledWith(sinon.match(path));
+        expect(logger.print).to.have.been.calledWith(sinon.match(path));
       }
     });
 
@@ -189,11 +79,11 @@ suite("Statistics", function() {
         files: new Map(entries),
       };
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.callCount(entries.length + 2);
+      logStats(logger, stats);
+      expect(logger.print).to.have.callCount(entries.length + 2);
       for (const [path] of entries) {
-        expect(loggerMock.print).to.have.been.calledWith(sinon.match(path));
-        expect(loggerMock.print).to.have.been.calledWith(sinon.match("[NOT MANGLED]"));
+        expect(logger.print).to.have.been.calledWith(sinon.match(path));
+        expect(logger.print).to.have.been.calledWith(sinon.match("[NOT MANGLED]"));
       }
     });
 
@@ -215,10 +105,10 @@ suite("Statistics", function() {
         files: new Map(entries),
       };
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.callCount(entries.length + 2);
+      logStats(logger, stats);
+      expect(logger.print).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
-        expect(loggerMock.print).to.have.been.calledWith(
+        expect(logger.print).to.have.been.calledWith(
           sinon.match(`${round(fileStats.changePercentage)}%`),
         );
       }
@@ -235,10 +125,10 @@ suite("Statistics", function() {
         files: new Map(entries),
       };
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.callCount(entries.length + 2);
+      logStats(logger, stats);
+      expect(logger.print).to.have.callCount(entries.length + 2);
       for (const [,] of entries) {
-        expect(loggerMock.print).to.have.been.calledWith(sinon.match("<-0.01%"));
+        expect(logger.print).to.have.been.calledWith(sinon.match("<-0.01%"));
       }
     });
 
@@ -260,10 +150,10 @@ suite("Statistics", function() {
         files: new Map(entries),
       };
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.callCount(entries.length + 2);
+      logStats(logger, stats);
+      expect(logger.print).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
-        expect(loggerMock.print).to.have.been.calledWith(
+        expect(logger.print).to.have.been.calledWith(
           sinon.match(`${round(fileStats.changePercentage)}%`),
         );
       }
@@ -280,10 +170,10 @@ suite("Statistics", function() {
         files: new Map(entries),
       };
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.callCount(entries.length + 2);
+      logStats(logger, stats);
+      expect(logger.print).to.have.callCount(entries.length + 2);
       for (const [,] of entries) {
-        expect(loggerMock.print).to.have.been.calledWith(sinon.match("<+0.01%"));
+        expect(logger.print).to.have.been.calledWith(sinon.match("<+0.01%"));
       }
     });
 
@@ -296,10 +186,10 @@ suite("Statistics", function() {
         files: new Map(entries),
       };
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.callCount(entries.length + 2);
+      logStats(logger, stats);
+      expect(logger.print).to.have.callCount(entries.length + 2);
       for (const [,] of entries) {
-        expect(loggerMock.print).to.have.been.calledWith(sinon.match("0%"));
+        expect(logger.print).to.have.been.calledWith(sinon.match("0%"));
       }
     });
 
@@ -320,9 +210,9 @@ suite("Statistics", function() {
       const sizesAfter = entries.map(([, file]) => file.sizeAfter);
       const sizeAfter = sizesAfter.reduce((total, size) => total + size, 0);
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.been.calledWith(sinon.match("-60%"));
-      expect(loggerMock.print).to.have.been.calledWith(
+      logStats(logger, stats);
+      expect(logger.print).to.have.been.calledWith(sinon.match("-60%"));
+      expect(logger.print).to.have.been.calledWith(
         sinon.match(`${sizeBefore} -> ${sizeAfter}`),
       );
     });
@@ -334,8 +224,8 @@ suite("Statistics", function() {
         files: new Map([["foo.bar", new FileStatsMock(2, 1)]]),
       };
 
-      logStats(loggerMock, stats);
-      expect(loggerMock.print).to.have.been.calledWith(
+      logStats(logger, stats);
+      expect(logger.print).to.have.been.calledWith(
         sinon.match(`${duration} ms`),
       );
     });
