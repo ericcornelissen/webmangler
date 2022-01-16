@@ -51,7 +51,8 @@ export default async function run(
   logger.debug(`found ${inFiles.length} files`);
 
   logger.debug(`mangling ${inFiles.length} files...`);
-  const [duration, outFiles] = timeCall(() => webmangler(inFiles, config));
+  const [duration, result] = timeCall(() => webmangler(inFiles, config));
+  const outFiles = result.files;
   logger.debug(`${outFiles.length} files mangled`);
 
   if (args.stats) {
