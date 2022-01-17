@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- BREAKING: Update the return type of the main `webmangler` function. ([#244])
 
 ## [0.1.24] - 2021-08-22
 
@@ -173,5 +173,6 @@ Versioning].
 
 - Initial release with 4 built-in manglers and 3 built-in supported languages.
 
+[#244]: https://github.com/ericcornelissen/webmangler/pull/244
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

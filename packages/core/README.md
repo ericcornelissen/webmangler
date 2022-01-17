@@ -23,19 +23,19 @@ import { BuiltInLanguagesSupport } from "webmangler/languages";
 import { RecommendedManglers } from "webmangler/manglers";
 
 // Read in the files you want to mangle ...
-const files = [
+const originalFiles = [
   { type: "css", content: "..." },
   { type: "html", content: "..." },
   { type: "js", content: "..." },
 ];
 
 // and run WebMangler.
-const mangledFiles = webmangler(files, {
+const { files } = webmangler(originalFiles, {
   plugins: [new RecommendedManglers()],
   languages: [new BuiltInLanguagesSupport()],
 });
 
-console.log(mangledFiles[0]);
+console.log(files[0]);
 // Outputs:  { type: "css", content: "..." }
 ```
 
