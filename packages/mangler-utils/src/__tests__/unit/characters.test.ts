@@ -2,7 +2,6 @@ import { expect } from "chai";
 
 import {
   ALL_ALPHANUMERIC_CHARS,
-  ALL_CHARS,
   ALL_LETTER_CHARS,
   ALL_LOWERCASE_CHARS,
   ALL_NUMBER_CHARS,
@@ -27,24 +26,6 @@ suite("Character sets", function() {
       const numberOfCharacters = charactersAsSet.size;
       expect(numberOfCharacters).to.equal(
         (2 * alphabetSize) + numbersSize,
-      );
-    });
-  });
-
-  suite("ALL_CHARS", function() {
-    test("only contains allowed characters", function() {
-      const expr = /^[A-Za-z0-9_-]$/;
-      for (const character of ALL_CHARS) {
-        const result = expr.test(character);
-        expect(result, `${character} is not a valid character`).to.be.true;
-      }
-    });
-
-    test("contains each character", function() {
-      const charactersAsSet = new Set(ALL_CHARS);
-      const numberOfCharacters = charactersAsSet.size;
-      expect(numberOfCharacters).to.equal(
-        (2 * alphabetSize) + numbersSize + 2,
       );
     });
   });

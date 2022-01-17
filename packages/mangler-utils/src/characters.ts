@@ -50,21 +50,8 @@ const ALL_ALPHANUMERIC_CHARS: CharSet = [
   ...ALL_NUMBER_CHARS,
 ];
 
-/**
- * A character set ({@link CharSet}) of all allowed characters.
- *
- * @since v0.1.16
- * @deprecated Use `ALL_ALPHANUMERIC_CHARS` instead and add symbols manually.
- */
-const ALL_CHARS: CharSet = [
-  ...ALL_LETTER_CHARS,
-  ...ALL_NUMBER_CHARS,
-  "-", "_",
-];
-
 export {
   ALL_ALPHANUMERIC_CHARS,
-  ALL_CHARS,
   ALL_LETTER_CHARS,
   ALL_LOWERCASE_CHARS,
   ALL_NUMBER_CHARS,
