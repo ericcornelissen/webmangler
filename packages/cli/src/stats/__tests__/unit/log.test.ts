@@ -4,8 +4,8 @@ import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import FileStatsMock from "../../__mocks__/file-stats.mock";
-import LoggerMock from "../../../logger/__mocks__/logger.mock";
+import FileStatsMock from "../common/file-stats.mock";
+import LoggerMock from "../common/logger.mock";
 
 import {
   logStats,

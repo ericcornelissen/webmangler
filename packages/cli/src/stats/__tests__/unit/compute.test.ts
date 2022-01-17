@@ -4,7 +4,7 @@ import type { FileStats } from "../../types";
 
 import { expect } from "chai";
 
-import WebManglerCliFileMock from "../../../fs/__mocks__/file.mock";
+import WebManglerCliFileMock from "../common/file.mock";
 
 import {
   computeStats,

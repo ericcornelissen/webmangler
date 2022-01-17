@@ -6,5 +6,4 @@ queries:
 paths:
   - packages/
 paths-ignore:
-  - "**/__mocks__/**/*"
   - "**/__tests__/**/*"

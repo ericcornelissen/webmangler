@@ -3,8 +3,8 @@ import type { WebManglerCliFile } from "../../../fs";
 
 import { expect } from "chai";
 
-import WebManglerCliFileMock from "../../../fs/__mocks__/file.mock";
-import LoggerMock from "../../../logger/__mocks__/logger.mock";
+import WebManglerCliFileMock from "../common/file.mock";
+import LoggerMock from "../common/logger.mock";
 
 import {
   computeStats,

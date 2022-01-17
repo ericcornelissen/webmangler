@@ -4,7 +4,7 @@ import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import WebManglerCliFileMock from "../../__mocks__/file.mock";
+import WebManglerCliFileMock from "../common/file.mock";
 
 import {
   createWriteFiles,

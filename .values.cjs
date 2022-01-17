@@ -11,7 +11,6 @@ const testTypeUnit = "unit";
 const compiledDir = "{build,lib}";
 const dependenciesDir = "node_modules";
 const githubDir = ".github";
-const mocksDir = "__mocks__";
 const packagesDir = "packages";
 const scriptsDir = "scripts";
 const srcDir = "src";
@@ -43,14 +42,12 @@ module.exports = {
   compiledDir,
   dependenciesDir,
   githubDir,
-  mocksDir,
   packagesDir,
   reportsDir,
   scriptsDir,
   srcDir,
   tempDir,
   testDataDir,
-  testDirs: `{${testsDir},${mocksDir}}`,
   testsDir,
 
   // Computed
