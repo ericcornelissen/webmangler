@@ -1,40 +1,39 @@
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 
 import { expect } from "chai";
-import * as path from "path";
 
-import DefaultWebManglerCliFile from "../file.class";
-
-type TestCase = {
-  content: string;
-  expectedSize: number;
-  expectedType: string;
-  filePath: string;
-};
+import DefaultWebManglerCliFile from "../../file.class";
 
 suite("DefaultWebManglerCliFile", function() {
   const replacementContentString = "not the original string";
   const replacementContentSize = 23;
 
-  const scenarios: TestScenario<TestCase>[] = [
+  interface TestCase {
+    readonly content: string;
+    readonly expectedSize: number;
+    readonly expectedType: string;
+    readonly filePath: string;
+  }
+
+  const scenarios: TestScenarios<TestCase[]> = [
     {
-      name: "Sample",
-      cases: [
+      testName: "Sample",
+      getScenario: () => [
         {
           content: "foobar",
-          filePath: path.resolve(__dirname, "foo.bar"),
+          filePath: "foo.bar",
           expectedSize: 6,
           expectedType: "bar",
         },
         {
           content: "var hello = \"world!\";",
-          filePath: path.resolve(__dirname, "hello-world.js"),
+          filePath: "/path/to/hello-world.js",
           expectedSize: 21,
           expectedType: "js",
         },
         {
           content: replacementContentString,
-          filePath: path.resolve(__dirname, "test.css"),
+          filePath: "/workspace/test.css",
           expectedSize: replacementContentSize,
           expectedType: "css",
         },
@@ -42,9 +41,9 @@ suite("DefaultWebManglerCliFile", function() {
     },
   ];
 
-  for (const { name, cases } of scenarios) {
-    test(name, function() {
-      for (const testCase of cases) {
+  for (const { getScenario, testName } of scenarios) {
+    test(testName, function() {
+      for (const testCase of getScenario()) {
         const {
           content,
           filePath,

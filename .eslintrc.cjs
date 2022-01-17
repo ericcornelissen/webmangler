@@ -10,7 +10,7 @@ const {
   scriptsDir,
   tempDir,
   testDataDir,
-  testDirs,
+  testsDir,
 } = values;
 
 const INDENT_SIZE = 2;
@@ -176,7 +176,7 @@ module.exports = {
     },
     { // Test files
       files: [
-        `${packagesDir}/**/${testDirs}/**/*`,
+        `${packagesDir}/**/${testsDir}/**/*`,
       ],
       plugins: [
         "mocha",
@@ -222,7 +222,9 @@ module.exports = {
         // Disable any lingering TypeScript issues
         "@typescript-eslint/no-var-requires": "off",
       },
-      globals: JS_GLOBALS,
+      globals: Object.assign({}, JS_GLOBALS, {
+        __dirname: "readonly",
+      }),
     },
     { // Configuration files (JSON)
       files: [

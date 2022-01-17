@@ -1,7 +1,3 @@
-import { execFileSync } from "child_process";
-import * as fs from "fs";
-import * as path from "path";
-
 const VERSION_MISSING = "[missing]";
 
 const CLI_DIR = "webmangler-cli";
@@ -10,9 +6,60 @@ const NODE_MODULES_DIR = "node_modules";
 const WEBMANGLER_DIR = "webmangler";
 
 /**
+ * An interface to interact with the file system.
+ */
+interface FileSystem {
+  /**
+   * Check if a file exists at a given path or not.
+   *
+   * @param filepath The file path to check.
+   * @returns `true` if the file exists, `false` otherwise.
+   */
+  existsSync(filepath: string): boolean;
+
+  /**
+   * Read a file at a given path.
+   *
+   * @param filePath The file to read.
+   * @returns The file content as a {@link Buffer}.
+   */
+  readFileSync(filePath: string): Buffer;
+}
+
+/**
+ * An interface to manipulate paths.
+ */
+interface Path {
+  /**
+   * Resolve a list of paths into an absolute path.
+   *
+   * @param args The parts of the path.
+   * @returns An absolute path based on the provided `args`.
+   */
+  resolve(...args: string[]): string;
+}
+
+/**
+ * An interface for information about the current process.
+ */
+interface Process {
+  /**
+   * Get the current working directory (cwd) of the process.
+   *
+   * @returns The current working directory.
+   */
+  cwd(): string;
+}
+
+/**
+ * An interface of a function to run a command.
+ */
+type RunCommand = (cmd: string, args: Iterable<string>) => Buffer;
+
+/**
  * The type representing the programs of which version information is provided.
  */
-type VersionData = {
+interface VersionData {
   /**
    * The version of the _Webmangler_ CLI.
    */
@@ -32,10 +79,16 @@ type VersionData = {
 /**
  * Get the version of the _WebMangler_ CLI dependency as a string.
  *
+ * @param fs A {@link FileSystem}.
+ * @param path A {@link Path}.
  * @param projectRoot The root of the project in which the dependency is.
  * @returns The _WebMangler_ CLI version (e.g. v0.1.1).
  */
-function getWebManglerCliVersion(projectRoot: string): string {
+function getWebManglerCliVersion(
+  fs: FileSystem,
+  path: Path,
+  projectRoot: string,
+): string {
   const manifestFilePath = path.resolve(
     projectRoot,
     NODE_MODULES_DIR,
@@ -55,10 +108,16 @@ function getWebManglerCliVersion(projectRoot: string): string {
 /**
  * Get the version of _WebMangler_ dependency as a string.
  *
+ * @param fs A {@link FileSystem}.
+ * @param path A {@link Path}.
  * @param projectRoot The root of the project in which the dependency is.
  * @returns The _WebMangler_ version (e.g. v0.1.4).
  */
-function getWebManglerVersion(projectRoot: string): string {
+function getWebManglerVersion(
+  fs: FileSystem,
+  path: Path,
+  projectRoot: string,
+): string {
   const manifestFilePath = path.resolve(
     projectRoot,
     NODE_MODULES_DIR,
@@ -78,23 +137,37 @@ function getWebManglerVersion(projectRoot: string): string {
 /**
  * Get the version of NodeJS as a string.
  *
+ * @param run A utility to run commands.
  * @returns The NodeJS version (e.g. v12.16.0).
  */
-function getNodeVersion(): string {
-  return execFileSync("node", ["--version"]).toString();
+function getNodeVersion(run: RunCommand): string {
+  return run("node", ["--version"]).toString();
 }
 
 /**
  * Get the {@link VersionData} relevant to the _WebMangler_ CLI.
  *
+ * @param fs A {@link FileSystem}.
+ * @param path A {@link Path}.
+ * @param process The system process value.
+ * @param run A utility to run commands.
  * @returns The {@link VersionData}.
  */
-export function getVersionsData(): VersionData {
+function getVersionsData(
+  fs: FileSystem,
+  path: Path,
+  process: Process,
+  run: RunCommand,
+): VersionData {
   const projectRoot = process.cwd();
 
   return {
-    cli: getWebManglerCliVersion(projectRoot),
-    core: getWebManglerVersion(projectRoot),
-    node: getNodeVersion(),
+    cli: getWebManglerCliVersion(fs, path, projectRoot),
+    core: getWebManglerVersion(fs, path, projectRoot),
+    node: getNodeVersion(run),
   };
 }
+
+export {
+  getVersionsData,
+};

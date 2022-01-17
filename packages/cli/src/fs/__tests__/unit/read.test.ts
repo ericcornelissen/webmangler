@@ -1,75 +1,95 @@
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 import type { SinonStub } from "sinon";
-import type { Filters } from "../types";
+
+import type { Filters } from "../../types";
 
 import { expect, use as chaiUse } from "chai";
-import * as fs from "fs";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import * as list from "../list";
-import { readFile, readFilesFiltered } from "../read";
+import {
+  createReadFile,
+  createReadFilesFiltered,
+} from "../../read";
 
 chaiUse(sinonChai);
 
 suite("Reading", function() {
-  let fsReadFileStub: SinonStub;
-  let listFilesFilteredStub: SinonStub;
-
-  suiteSetup(function() {
-    fsReadFileStub = sinon.stub(fs.promises, "readFile");
-
-    listFilesFilteredStub = sinon.stub(list, "listFilesFiltered");
-  });
-
-  setup(function() {
-    fsReadFileStub.resolves({ toString: () => "" });
-    fsReadFileStub.resetHistory();
-
-    listFilesFilteredStub.returns([]);
-    listFilesFilteredStub.resetHistory();
-  });
-
   suite("::readFile", function() {
+    let readFile: ReturnType<typeof createReadFile>;
+
+    let fs: {
+      readonly readFile: SinonStub;
+    };
+
+    suiteSetup(function() {
+      fs = {
+        readFile: sinon.stub(),
+      };
+
+      readFile = createReadFile(fs);
+    });
+
+    setup(function() {
+      fs.readFile.resetHistory();
+    });
+
     test("file exists", async function() {
       const filePath = "greetings.txt";
       const content = "Hello world!";
 
-      fsReadFileStub.resolves({ toString: () => content });
+      fs.readFile.resolves({ toString: () => content });
 
       const result = await readFile(filePath);
       expect(result.path).to.equal(filePath);
       expect(result.content).to.equal(content);
-      expect(fsReadFileStub).to.have.callCount(1);
-      expect(fsReadFileStub).to.have.been.calledWith(filePath);
+      expect(fs.readFile).to.have.callCount(1);
+      expect(fs.readFile).to.have.been.calledWith(filePath);
     });
 
     test("file does not exists", async function() {
       const filePath = "foo.bar";
 
-      fsReadFileStub.rejects();
+      fs.readFile.rejects();
 
       try {
         const result = await readFile(filePath);
         expect(result).to.be.undefined;
       } catch (_) {
-        expect(fsReadFileStub).to.have.callCount(1);
-        expect(fsReadFileStub).to.have.been.calledWith(filePath);
+        expect(fs.readFile).to.have.callCount(1);
+        expect(fs.readFile).to.have.been.calledWith(filePath);
       }
     });
   });
 
   suite("::readFilesFiltered", function() {
-    type TestCase = {
+    let readFilesFiltered: ReturnType<typeof createReadFilesFiltered>;
+
+    let listFiles: SinonStub;
+    let readFile: SinonStub;
+
+    suiteSetup(function() {
+      listFiles = sinon.stub();
+      readFile = sinon.stub();
+
+      readFilesFiltered = createReadFilesFiltered(readFile, listFiles);
+    });
+
+    setup(function() {
+      listFiles.resetHistory();
+      readFile.resetHistory();
+    });
+
+    interface TestCase {
       readonly basePaths: string[];
       readonly filters: Filters;
       readonly listedFiles?: string[];
     }
 
-    const scenarios: TestScenario<TestCase>[] = [
+    const scenarios: TestScenarios<TestCase[]> = [
       {
-        name: "no base paths",
-        cases: [
+        testName: "no base paths",
+        getScenario: () => [
           {
             basePaths: [],
             filters: {},
@@ -81,8 +101,8 @@ suite("Reading", function() {
         ],
       },
       {
-        name: "one base path",
-        cases: [
+        testName: "one base path",
+        getScenario: () => [
           {
             basePaths: ["folder"],
             filters: {},
@@ -106,8 +126,8 @@ suite("Reading", function() {
         ],
       },
       {
-        name: "multiple base paths",
-        cases: [
+        testName: "multiple base paths",
+        getScenario: () => [
           {
             basePaths: ["dark", "souls"],
             filters: {},
@@ -132,41 +152,35 @@ suite("Reading", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, async function() {
-        for (const testCase of cases) {
+    for (const { getScenario, testName } of scenarios) {
+      test(testName, async function() {
+        for (const testCase of getScenario()) {
           const {
             basePaths,
             filters,
             listedFiles = [],
           } = testCase;
 
-          listFilesFilteredStub.returns(listedFiles);
+          listFiles.returns(listedFiles);
 
           const result = await readFilesFiltered(basePaths, filters);
           expect(result).to.have.lengthOf(listedFiles.length);
 
-          expect(listFilesFilteredStub).to.have.callCount(1);
-          expect(listFilesFilteredStub).to.have.been.calledWith(
+          expect(listFiles).to.have.callCount(1);
+          expect(listFiles).to.have.been.calledWith(
             basePaths,
             filters,
           );
 
-          expect(fsReadFileStub).to.have.callCount(listedFiles.length);
+          expect(readFile).to.have.callCount(listedFiles.length);
           for (const listedFile of listedFiles) {
-            expect(fsReadFileStub).to.have.been.calledWith(listedFile);
+            expect(readFile).to.have.been.calledWith(listedFile);
           }
 
-          listFilesFilteredStub.resetHistory();
-          fsReadFileStub.resetHistory();
+          listFiles.resetHistory();
+          readFile.resetHistory();
         }
       });
     }
-  });
-
-  suiteTeardown(function() {
-    fsReadFileStub.restore();
-
-    listFilesFilteredStub.restore();
   });
 });

@@ -1,10 +1,10 @@
-import type { FileStats } from "../types";
+import type { FileStats } from "../../types";
 
 const getChangedPercentage = (before: number, after: number): number => {
   return ((after - before) / before) * 100;
 };
 
-export default class FileStatsMock implements FileStats {
+class FileStatsMock implements FileStats {
   changed: boolean;
   changePercentage: number;
   sizeAfter: number;
@@ -22,3 +22,5 @@ export default class FileStatsMock implements FileStats {
     this.sizeAfter = sizeAfter;
   }
 }
+
+export default FileStatsMock;

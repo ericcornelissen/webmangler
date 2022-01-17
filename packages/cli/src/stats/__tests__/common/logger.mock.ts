@@ -1,10 +1,10 @@
 import type { SinonSpy } from "sinon";
 
-import type { Logger, Writer } from "../types";
+import type { Logger, Writer } from "../../../logger";
 
 import * as sinon from "sinon";
 
-export default class LoggerMock implements Logger {
+class LoggerMock implements Logger {
   readonly debug: Writer;
   readonly info: Writer;
   readonly print: Writer;
@@ -24,3 +24,5 @@ export default class LoggerMock implements Logger {
     (this.warn as SinonSpy).resetHistory();
   }
 }
+
+export default LoggerMock;

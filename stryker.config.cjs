@@ -9,7 +9,7 @@ const {
   reportsDir,
   srcDir,
   tempDir,
-  testDirs,
+  testsDir,
 } = values;
 
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
   inPlace: false,
   mutate: [
     `${packagesDir}/${packagesExpr}/${srcDir}/**/*.ts`,
-    `!**/${testDirs}/**/*.ts`,
+    `!**/${testsDir}/**/*.ts`,
   ],
   commandRunner: {
     command: `npm run test -- ${packagesList.join(" ")} --unit`,

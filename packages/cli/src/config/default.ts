@@ -1,4 +1,4 @@
-import type { WebManglerOptions } from "webmangler";
+import type { WebManglerOptions } from "@webmangler/types";
 
 import { BuiltInLanguagesSupport } from "webmangler/languages";
 import { RecommendedManglers } from "webmangler/manglers";
@@ -6,14 +6,21 @@ import { RecommendedManglers } from "webmangler/manglers";
 /**
  * The default configuration for _WebMangler_ used by the _WebMangler_ CLI.
  *
+ * @returns The default {@link WebManglerOptions}.
  * @since v0.1.0
- * @version v0.1.4
+ * @version v0.1.7
  */
-export const DEFAULT_CONFIG: WebManglerOptions = {
-  plugins: [
-    new RecommendedManglers(),
-  ],
-  languages: [
-    new BuiltInLanguagesSupport(),
-  ],
+function newDefaultConfig(): WebManglerOptions {
+  return {
+    plugins: [
+      new RecommendedManglers(),
+    ],
+    languages: [
+      new BuiltInLanguagesSupport(),
+    ],
+  };
+}
+
+export {
+  newDefaultConfig,
 };

@@ -1,6 +1,6 @@
-import type { WebManglerCliFile } from "../types";
+import type { WebManglerCliFile } from "../../../fs";
 
-export default class WebManglerCliFileMock implements WebManglerCliFile {
+class WebManglerCliFileMock implements WebManglerCliFile {
   content: string;
   originalSize: number;
   path: string;
@@ -21,3 +21,5 @@ export default class WebManglerCliFileMock implements WebManglerCliFile {
     this.type = values.type || "";
   }
 }
+
+export default WebManglerCliFileMock;

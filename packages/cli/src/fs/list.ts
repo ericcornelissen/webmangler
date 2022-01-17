@@ -1,7 +1,60 @@
 import type { Filters } from "./types";
 
-import * as fs from "fs";
-import * as path from "path";
+/**
+ * An object representing stats about a file or folder.
+ */
+interface Stats {
+  /**
+   * Check if this is a file or not.
+   *
+   * @returns `true` if it is a file, `false` otherwise.
+   */
+  isFile(): boolean;
+}
+
+/**
+ * An object to get information about files and folders.
+ */
+interface FileSystem {
+  /**
+   * Check if a file or folder exists/is accessible.
+   *
+   * @param fileOrFolderPath The path of the file or folder.
+   * @returns Nothing if the file or folder is accessible.
+   * @throws If the file or folder is not accessible.
+   */
+  access(fileOrFolderPath: string): Promise<void>;
+
+  /**
+   * Get {@link Stats} for a file or folder.
+   *
+   * @param fileOrFolderPath The path of the file or folder.
+   * @returns The {@link Stats} of the file or folder at `fileOrFolderPath`.
+   */
+  lstat(fileOrFolderPath: string): Promise<Stats>;
+
+  /**
+   * Get the contents of a folder.
+   *
+   * @param folderPath The path of the folder.
+   * @returns A {@link Promise} resolving to a list of files and folders.
+   */
+  readdir(folderPath: string): Promise<Iterable<string>>;
+}
+
+/**
+ * An object to operate on file system paths.
+ */
+interface Path {
+  /**
+   * Resolve a path to a full path.
+   *
+   * @param basePath The base path.
+   * @param subPath A sub path.
+   * @returns The full path.
+   */
+  resolve(basePath: string, subPath: string): string;
+}
 
 /**
  * Find out if a file has any of a set of extensions.
@@ -31,53 +84,70 @@ function hasSomeExtension(
 }
 
 /**
- * List the files at or under a path, folders *are* processed recursively.
+ * Create a function to list the files at or under a path, folders *are*
+ * processed recursively.
  *
- * The provided path can be both a file or folder.
- *
- * @param basePath The path to find files at or under.
- * @yields The file(s) at or under `basePath`.
- * @throws if `basePath` does not exist.
+ * @param fs A {@link FileSystem}.
+ * @param path A {@link Path}.
+ * @returns A function to list files at or under a specific path.
  */
-export function* listFiles(basePath: string): Iterable<string> {
-  const exists = fs.existsSync(basePath);
-  if (!exists) {
-    throw new Error(`'${basePath}' does not exist`);
-  }
+function createListFiles(fs: FileSystem, path: Path) {
+  /**
+   * List the files at or under a path, folders *are* processed recursively.
+   *
+   * @param basePath The path to list files for.
+   * @yields Files at or under the `basePath`.
+   */
+  async function* listFiles(basePath: string): AsyncIterable<string> {
+    try {
+      await fs.access(basePath);
 
-  const lstat = fs.lstatSync(basePath);
-  if (lstat.isFile()) {
-    yield basePath;
-  } else {
-    for (const dirEntry of fs.readdirSync(basePath)) {
-      const dirEntryPath =  path.resolve(basePath, dirEntry);
-      yield* listFiles(dirEntryPath);
+      const lstat = await fs.lstat(basePath);
+      if (lstat.isFile()) {
+        yield basePath;
+      } else {
+        for (const dirEntry of await fs.readdir(basePath)) {
+          const dirEntryPath = path.resolve(basePath, dirEntry);
+          yield* await listFiles(dirEntryPath);
+        }
+      }
+    } catch (_) {
+      yield* [];
     }
   }
+
+  return listFiles;
 }
 
 /**
- * List the files at or under a path, folders *are* processed recursively and
- * filter out files based on the specified {@link Filters}.
+ * Create a function to list the files at or under a path, folders *are*
+ * processed recursively and filter out files based on the specified
+ * {@link Filters}.
  *
- * The provided path can be both a file or folder.
- *
- * @param basePaths The path(s) to find files at or under.
- * @param filters The {@link Filters}.
- * @yields The file(s) at or under each basePath.
+ * @param listFiles A function to list files for a specific path.
+ * @returns A function to list files at or under specific path(s).
  */
-export function* listFilesFiltered(
-  basePaths: string[],
-  filters: Filters,
-): Iterable<string> {
-  for (const basePath of basePaths) {
-    for (const filePath of listFiles(basePath)) {
-      const extensions = filters.extensions;
-      if (!hasSomeExtension(filePath, extensions)) {
-        continue;
-      }
+function createListFilesFiltered(
+  listFiles: (basePath: string) => AsyncIterable<string>,
+) {
+  return async function*(
+    basePaths: Iterable<string>,
+    filters: Filters,
+  ): AsyncIterable<string> {
+    for (const basePath of basePaths) {
+      for await (const filePath of listFiles(basePath)) {
+        const extensions = filters.extensions;
+        if (!hasSomeExtension(filePath, extensions)) {
+          continue;
+        }
 
-      yield filePath;
+        yield filePath;
+      }
     }
-  }
+  };
 }
+
+export {
+  createListFiles,
+  createListFilesFiltered,
+};

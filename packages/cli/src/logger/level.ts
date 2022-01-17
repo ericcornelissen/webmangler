@@ -37,7 +37,7 @@ const LEVEL_DEBUG: LogLevel = 2;
  * @param level The log level of interest.
  * @returns `true` if `level` is debug, `false` otherwise.
  */
-export function isDebug(level: LogLevel): boolean {
+function isDebug(level: LogLevel): boolean {
   return level >= LEVEL_DEBUG;
 }
 
@@ -47,7 +47,7 @@ export function isDebug(level: LogLevel): boolean {
  * @param level The log level of interest.
  * @returns `true` if `level` is info, `false` otherwise.
  */
-export function isInfo(level: LogLevel): boolean {
+function isInfo(level: LogLevel): boolean {
   return level >= LEVEL_INFO;
 }
 
@@ -57,7 +57,7 @@ export function isInfo(level: LogLevel): boolean {
  * @param level The log level of interest.
  * @returns `true` if `level` is silent, `false` otherwise.
  */
-export function isSilent(level: LogLevel): boolean {
+function isSilent(level: LogLevel): boolean {
   return level <= LEVEL_SILENT;
 }
 
@@ -67,9 +67,16 @@ export function isSilent(level: LogLevel): boolean {
  * @param level The log level of interest.
  * @returns `true` if `level` is warn, `false` otherwise.
  */
-export function isWarn(level: LogLevel): boolean {
+function isWarn(level: LogLevel): boolean {
   return level >= LEVEL_WARN;
 }
+
+export {
+  isDebug,
+  isInfo,
+  isSilent,
+  isWarn,
+};
 
 export type {
   LogLevel,
