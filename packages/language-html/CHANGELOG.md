@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.25] - 2022-01-17
+
 - Fix finding when embeds with non-standard closing tags. ([#241])
 - Fix unintentional mangling in comments with non-standard syntax. ([#233])
 

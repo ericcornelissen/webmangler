@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.26] - 2022-01-17
+
 - Add `ALL_ALPHANUMERIC_CHARS` character sets. ([#210])
 
 ## [0.1.25] - 2021-10-30

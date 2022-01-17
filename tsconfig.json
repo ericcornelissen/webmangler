@@ -24,7 +24,7 @@
       "@webmangler/mangler-html-attributes": ["packages/mangler-html-attributes/build"],
       "@webmangler/mangler-html-ids": ["packages/mangler-html-ids/build"],
       "@webmangler/mangler-utils": ["packages/mangler-utils/lib"],
-      "@webmangler/testing": ["packages/testing/build"],
+      "@webmangler/testing": ["packages/testing/lib"],
       "@webmangler/types": ["packages/types/lib"],
       "webmangler": ["packages/core/build"],
       "webmangler/languages": ["packages/core/build/languages"],
