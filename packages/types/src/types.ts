@@ -78,7 +78,10 @@ interface MangleExpression {
    * @returns The string with the patterns replaced.
    * @since v0.1.11
    */
-  replaceAll(s: string, replacements: Map<string, string>): string;
+  replaceAll(
+    s: string,
+    replacements: ReadonlyMap<string, string>,
+  ): string;
 }
 
 /**
@@ -101,7 +104,7 @@ interface MangleExpressionOptions<T> {
    *
    * @since v0.1.14
    */
-  readonly name: string
+  readonly name: string;
 
   /**
    * The configuration for the set of {@link MangleExpression}s.
@@ -219,7 +222,7 @@ interface WebManglerLanguagePlugin {
   getExpressions(
     name: string,
     options: unknown,
-  ): Map<string, Iterable<MangleExpression>>;
+  ): ReadonlyMap<string, Iterable<MangleExpression>>;
 
   /**
    * Get a list of the languages supported by the {@link
