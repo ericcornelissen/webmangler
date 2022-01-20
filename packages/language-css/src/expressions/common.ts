@@ -1,4 +1,9 @@
 /**
+ * Array of characters that are quotes in CSS.
+ */
+export const QUOTES_ARRAY = ["\"", "'"];
+
+/**
  * Regular Expression pattern as a string of ways to combine query selectors in
  * CSS.
  */
