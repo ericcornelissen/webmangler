@@ -30,6 +30,7 @@ suite("Configuration loader", function() {
   });
 
   suite("With a configuration path", function() {
+    const errorExpr = /^No configuration file found at/;
     const configPath = "./webmangler.config.js";
 
     setup(function() {
@@ -53,13 +54,13 @@ suite("Configuration loader", function() {
         isEmpty: true,
       });
 
-      expect(() => getConfiguration(configPath)).to.throw();
+      expect(() => getConfiguration(configPath)).to.throw(errorExpr);
     });
 
     test("configuration file does not exist", function() {
       loader.load.returns(null);
 
-      expect(() => getConfiguration(configPath)).to.throw();
+      expect(() => getConfiguration(configPath)).to.throw(errorExpr);
     });
   });
 

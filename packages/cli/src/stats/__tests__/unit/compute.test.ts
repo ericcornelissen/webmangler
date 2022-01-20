@@ -73,6 +73,39 @@ suite("Compute stats", function() {
               },
             ],
           },
+          {
+            input: {
+              duration: 2,
+              inFiles: [
+                new WebManglerCliFileMock({
+                  path: "foo.bar",
+                  originalSize: 3.14,
+                }),
+                new WebManglerCliFileMock({
+                  path: "foo.baz",
+                  originalSize: 3.14,
+                }),
+              ],
+              outFiles: [
+                new WebManglerCliFileMock({
+                  path: "foo.bar",
+                  size: 2.718,
+                }),
+              ],
+            },
+            expected: [
+              {
+                filePath: "foo.bar",
+                changed: true,
+                sizeBefore: 3.14,
+                sizeAfter: 2.718,
+              },
+              {
+                filePath: "foo.baz",
+                changed: false,
+              },
+            ],
+          },
         ],
       },
       {
