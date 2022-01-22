@@ -25,8 +25,8 @@ function newAttributeSelectorSingleValueExpression(
   valueSuffix: string,
 ): Iterable<MangleExpression> {
   return [
-    new SingleGroupMangleExpression(
-      `
+    new SingleGroupMangleExpression({
+      patternTemplate: `
         (?:
           (?:${patterns.anyString}|${patterns.comment})
           |
@@ -45,8 +45,8 @@ function newAttributeSelectorSingleValueExpression(
           )
         )
       `,
-      GROUP_MAIN,
-    ),
+      groupName: GROUP_MAIN,
+    }),
   ];
 }
 

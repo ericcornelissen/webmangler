@@ -21,8 +21,8 @@ function newCssDeclarationValueExpression(
   valueSuffix: string,
 ): Iterable<MangleExpression> {
   return [
-    new SingleGroupMangleExpression(
-      `
+    new SingleGroupMangleExpression({
+      patternTemplate: `
         (?:
           (?:${patterns.anyString}|${patterns.comment})
           |
@@ -49,8 +49,8 @@ function newCssDeclarationValueExpression(
           )
         )
       `,
-      GROUP_MAIN,
-    ),
+      groupName: GROUP_MAIN,
+    }),
   ];
 }
 
