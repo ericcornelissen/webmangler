@@ -8,10 +8,6 @@ suite("Exports of @webmangler/manglers-utils", function() {
       expect(utils).to.haveOwnProperty("ALL_ALPHANUMERIC_CHARS");
     });
 
-    test("has all characters", function() {
-      expect(utils).to.haveOwnProperty("ALL_CHARS");
-    });
-
     test("has all letters", function() {
       expect(utils).to.haveOwnProperty("ALL_LETTER_CHARS");
     });
