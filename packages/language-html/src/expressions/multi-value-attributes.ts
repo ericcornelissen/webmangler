@@ -21,8 +21,8 @@ const GROUP_MAIN = "main";
 function newElementAttributeMultiValueExpressions(
   attributesPattern: string,
 ): Iterable<MangleExpression> {
-  return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
-    `
+  return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression({
+    patternTemplate: `
       (?:
         (?:${patterns.comment})
         |
@@ -43,13 +43,13 @@ function newElementAttributeMultiValueExpressions(
         )
       )
     `,
-    `
+    subPatternTemplate: `
       (?<=^|\\s)
       (?<${GROUP_MAIN}>%s)
       (?=$|\\s)
     `,
-    GROUP_MAIN,
-  ));
+    groupName: GROUP_MAIN,
+  }));
 }
 
 /**
@@ -63,8 +63,8 @@ function newUnquotedAttributeValueExpressions(
   attributesPattern: string,
 ): Iterable<MangleExpression> {
   return [
-    new SingleGroupMangleExpression(
-      `
+    new SingleGroupMangleExpression({
+      patternTemplate: `
         (?:
           (?:${patterns.comment})
           |
@@ -80,8 +80,8 @@ function newUnquotedAttributeValueExpressions(
           )
         )
       `,
-      GROUP_MAIN,
-    ),
+      groupName: GROUP_MAIN,
+    }),
   ];
 }
 

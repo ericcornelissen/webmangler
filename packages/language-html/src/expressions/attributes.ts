@@ -16,8 +16,8 @@ const GROUP_MAIN = "main";
  */
 function newElementAttributeExpressions(): Iterable<MangleExpression> {
   return [
-    new NestedGroupMangleExpression(
-      `
+    new NestedGroupMangleExpression({
+      patternTemplate: `
         (?:
           (?:${patterns.comment}|${patterns.anyString})
           |
@@ -29,7 +29,7 @@ function newElementAttributeExpressions(): Iterable<MangleExpression> {
           (?=${patterns.afterAttributeName})
         )
       `,
-      `
+      subPatternTemplate: `
         (?:
           (?:${patterns.anyString})
           |
@@ -38,9 +38,9 @@ function newElementAttributeExpressions(): Iterable<MangleExpression> {
           (?=${patterns.afterAttributeName}|$)
         )
       `,
-      GROUP_MAIN,
-      false,
-    ),
+      groupName: GROUP_MAIN,
+      caseSensitive: false,
+    }),
   ];
 }
 
