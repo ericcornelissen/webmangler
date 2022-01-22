@@ -29,6 +29,12 @@ if (process.env.TEST_PACKAGES !== undefined) {
   }
 }
 
+const packagesCoverageExclusions = [];
+if (packagesList.includes("cli")) {
+  packagesCoverageExclusions.push(`${packagesDir}/cli/${srcDir}/index.ts`);
+  packagesCoverageExclusions.push(`${packagesDir}/cli/${srcDir}/main.ts`);
+}
+
 function getAllPackagesAsArray() {
   const fs = require("fs");
   const path = require("path");
@@ -52,6 +58,7 @@ module.exports = {
 
   // Computed
   getAllPackagesAsArray,
+  packagesCoverageExclusions,
   packagesExpr,
   packagesList,
 
