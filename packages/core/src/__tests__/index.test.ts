@@ -25,7 +25,7 @@ suite("Webmangler core", function() {
         languages: [new BuiltInLanguagesSupport()],
       });
 
-      expect(result).to.have.lengthOf(files.length);
+      expect(result.files).to.have.lengthOf(files.length);
     });
   });
 });

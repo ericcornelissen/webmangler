@@ -66,10 +66,10 @@ function getExpressions(
  * @since v0.1.0
  * @version v0.1.21
  */
-export default function webmangler<Files extends Iterable<WebManglerFile>>(
+function webmangler<Files extends Iterable<WebManglerFile>>(
   files: Files,
   options: WebManglerOptions,
-): Files {
+): { files: Files; } {
   const embedsMap = getEmbeds(files, options.languages);
 
   const filesAndEmbeds = Array.from(files);
@@ -86,8 +86,10 @@ export default function webmangler<Files extends Iterable<WebManglerFile>>(
   }
 
   embedsMap.forEach(reEmbed);
-  return files;
+  return { files };
 }
+
+export default webmangler;
 
 export type {
   WebManglerFile,
