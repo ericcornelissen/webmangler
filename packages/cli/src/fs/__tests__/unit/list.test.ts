@@ -120,6 +120,23 @@ suite("Listing", function() {
           },
         ],
       },
+      {
+        testName: "file missing",
+        getScenario: () => [
+          {
+            basePath: "foo",
+            expectedFiles: ["foo/bar"],
+            expectThrows: false,
+            lstatMap: new Map([
+              ["foo", "folder"],
+              ["foo/bar", "file"],
+            ]),
+            readdirMap: new Map([
+              ["foo", ["bar", "baz"]],
+            ]),
+          },
+        ],
+      },
     ];
 
     for (const { getScenario, testName } of scenarios) {
@@ -132,6 +149,11 @@ suite("Listing", function() {
             readdirMap,
           } = testCase;
 
+          fs.access.callsFake((filePath) => {
+            if (!lstatMap.has(filePath)) {
+              throw new Error(`No file at ${filePath}`);
+            }
+          });
           fs.lstat.callsFake((filePath) => {
             const lstat = lstatMap.get(filePath);
             return {

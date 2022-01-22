@@ -113,7 +113,11 @@ suite("Log stats", function() {
         expect(logger.print).to.have.been.calledWith(
           sinon.match(`${round(fileStats.changePercentage)}%`),
         );
+        expect(logger.print).to.have.been.calledWith(
+          sinon.match(`(${fileStats.sizeBefore} -> ${fileStats.sizeAfter})`),
+        );
       }
+      expect(logger.print).not.to.have.been.calledWith(sinon.match("<-0.01%"));
     });
 
     test("negative percentage between 0 and -0.01", function() {
@@ -129,12 +133,15 @@ suite("Log stats", function() {
 
       logStats(logger, stats);
       expect(logger.print).to.have.callCount(entries.length + 2);
-      for (const [,] of entries) {
+      for (const [, fileStats] of entries) {
         expect(logger.print).to.have.been.calledWith(sinon.match("<-0.01%"));
+        expect(logger.print).to.have.been.calledWith(
+          sinon.match(`(${fileStats.sizeBefore} -> ${fileStats.sizeAfter})`),
+        );
       }
     });
 
-    test("negative percentage between 0.01 and 100", function() {
+    test("positive percentage between 0.01 and 100", function() {
       const entries: [string, FileStats][] = [
         ["correct.txt", new FileStatsMock(0, 1, 0.01)],
         ["horse.txt", new FileStatsMock(0, 1, 0.1)],
@@ -158,7 +165,11 @@ suite("Log stats", function() {
         expect(logger.print).to.have.been.calledWith(
           sinon.match(`${round(fileStats.changePercentage)}%`),
         );
+        expect(logger.print).to.have.been.calledWith(
+          sinon.match(`(${fileStats.sizeBefore} -> ${fileStats.sizeAfter})`),
+        );
       }
+      expect(logger.print).not.to.have.been.calledWith(sinon.match("<+0.01%"));
     });
 
     test("positive percentage between 0 and 0.01", function() {
@@ -174,8 +185,11 @@ suite("Log stats", function() {
 
       logStats(logger, stats);
       expect(logger.print).to.have.callCount(entries.length + 2);
-      for (const [,] of entries) {
+      for (const [, fileStats] of entries) {
         expect(logger.print).to.have.been.calledWith(sinon.match("<+0.01%"));
+        expect(logger.print).to.have.been.calledWith(
+          sinon.match(`(${fileStats.sizeBefore} -> ${fileStats.sizeAfter})`),
+        );
       }
     });
 
@@ -215,7 +229,7 @@ suite("Log stats", function() {
       logStats(logger, stats);
       expect(logger.print).to.have.been.calledWith(sinon.match("-60%"));
       expect(logger.print).to.have.been.calledWith(
-        sinon.match(`${sizeBefore} -> ${sizeAfter}`),
+        sinon.match(`(${sizeBefore} -> ${sizeAfter})`),
       );
     });
 

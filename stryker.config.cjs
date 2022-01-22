@@ -3,6 +3,7 @@
 const values = require("./.values.cjs");
 
 const {
+  packagesCoverageExclusions,
   packagesDir,
   packagesExpr,
   packagesList,
@@ -18,6 +19,7 @@ module.exports = {
   mutate: [
     `${packagesDir}/${packagesExpr}/${srcDir}/**/*.ts`,
     `!**/${testsDir}/**/*.ts`,
+    ...packagesCoverageExclusions.map((exclusion) => `!${exclusion}`),
   ],
   commandRunner: {
     command: `npm run test -- ${packagesList.join(" ")} --unit`,
