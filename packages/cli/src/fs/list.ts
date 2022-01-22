@@ -112,7 +112,7 @@ function createListFiles(fs: FileSystem, path: Path) {
         }
       }
     } catch (_) {
-      yield* [];
+      // Nothing to do here
     }
   }
 
