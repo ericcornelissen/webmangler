@@ -19,8 +19,8 @@ function newAttributeSelectorMultiValueExpression(
   attributesPattern: string,
 ): Iterable<MangleExpression> {
   return [
-    ...QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
-      `
+    ...QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression({
+      patternTemplate: `
         (?:
           (?:${patterns.anyString}|${patterns.comment})
           |
@@ -41,13 +41,13 @@ function newAttributeSelectorMultiValueExpression(
           )
         )
       `,
-      `
+      subPatternTemplate: `
         (?<=^|\\s)
         (?<${GROUP_MAIN}>%s)
         (?=$|\\s)
       `,
-      GROUP_MAIN,
-    )),
+      groupName: GROUP_MAIN,
+    })),
   ];
 }
 
