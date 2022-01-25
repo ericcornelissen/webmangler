@@ -9,6 +9,8 @@ Versioning].
 ## [Unreleased]
 
 - Support more top-level matching patterns in NestedMangleExpression. ([#246])
+- Use `ReadonlyMap` in all `MangleExpression` and `WebManglerLanguagePlugin`
+  implementations. ([#248])
 
 ## [0.1.25] - 2022-01-15
 
@@ -28,5 +30,6 @@ Versioning].
 [#211]: https://github.com/ericcornelissen/webmangler/pull/211
 [#236]: https://github.com/ericcornelissen/webmangler/pull/236
 [#246]: https://github.com/ericcornelissen/webmangler/pull/246
+[#248]: https://github.com/ericcornelissen/webmangler/pull/248
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

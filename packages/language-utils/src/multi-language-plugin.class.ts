@@ -6,14 +6,15 @@ import type {
 } from "@webmangler/types";
 
 /**
- * The {@link MultiLanguagePlugin} class is a utility to create a {@link
- * WebManglerLanguagePlugin} that provides multiple language plugins in one.
+ * The {@link MultiLanguagePlugin} class is a utility to create a
+ * {@link WebManglerLanguagePlugin} that provides multiple language plugins in
+ * one.
  *
- * {@link MultiLanguagePlugin} is used to implement the {@link
- * BuiltInLanguagesPlugin}.
+ * {@link MultiLanguagePlugin} is used to implement the
+ * {@link BuiltInLanguagesPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.25
+ * @version v0.1.26
  */
 abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
   /**
@@ -61,7 +62,7 @@ abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
 
   /**
    * @inheritDoc
-   * @version v0.1.17
+   * @version v0.1.26
    */
   getExpressions(
     name: string,

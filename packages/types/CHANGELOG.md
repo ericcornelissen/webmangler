@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Use `ReadonlyMap` type to force immutable `Map`s in implementations. ([#248])
 
 ## [0.1.24] - 2021-10-30
 
@@ -20,5 +20,6 @@ Versioning].
 
 [#136]: https://github.com/ericcornelissen/webmangler/pull/136
 [#185]: https://github.com/ericcornelissen/webmangler/pull/185
+[#248]: https://github.com/ericcornelissen/webmangler/pull/248
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
