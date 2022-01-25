@@ -1,41 +1,66 @@
 import type { Filters, WebManglerCliFile } from "./types";
 
-import * as fs from "fs";
-
 import File from "./file.class";
-import { listFilesFiltered } from "./list";
 
 /**
- * Read a file from disk.
- *
- * @param filePath The path of the file to read.
- * @returns A {@link WebManglerCliFile} for the file at `filePath`.
+ * An object to read files from disk.
  */
-export async function readFile(filePath: string): Promise<WebManglerCliFile> {
-  const fileBuffer = await fs.promises.readFile(filePath);
-  return new File({
-    content: fileBuffer.toString(),
-    filePath: filePath,
-  });
+interface FileSystem {
+  /**
+   * Write a file from disk.
+   *
+   * @param path The path to the file.
+   * @returns A promise resolving to a {@link Buffer} of the file contents.
+   */
+  readFile(path: string): Promise<Buffer>;
 }
 
 /**
- * Read files from disk, folders are read recursively.
+ * Create a function to read a file from disk.
  *
- * @param basePaths The path(s) to find files at or under.
- * @param filters The extensions to consider.
- * @returns A {@link WebManglerCliFile} for all files under `basePath`.
+ * @param fs A {@link FileSystem}.
+ * @returns A function to read a file from disk.
  */
-export async function readFilesFiltered(
-  basePaths: string[],
-  filters: Filters,
+function createReadFile(fs: FileSystem) {
+  return async function(filePath: string): Promise<WebManglerCliFile> {
+    const fileBuffer = await fs.readFile(filePath);
+    return new File({
+      content: fileBuffer.toString(),
+      filePath: filePath,
+    });
+  };
+}
+
+/**
+ * Create a function to read a collection of files from disk.
+ *
+ * @param readFile A function to read a file.
+ * @param listFilesFiltered A function to iterate over files, filtered.
+ * @returns A function read a collection of files from disk.
+ */
+function createReadFilesFiltered(
+  readFile: ReturnType<typeof createReadFile>,
+  listFilesFiltered: (
+    paths: Iterable<string>,
+    filters: Filters
+  ) => AsyncIterable<string>,
+) {
+  return async function(
+    basePaths: string[],
+    filters: Filters,
   ): Promise<WebManglerCliFile[]> {
-  const filePromises: Promise<WebManglerCliFile>[] = [];
-  for (const filePath of listFilesFiltered(basePaths, filters)) {
-    const filePromise = readFile(filePath);
-    filePromises.push(filePromise);
-  }
+    const filePromises: Promise<WebManglerCliFile>[] = [];
+    for await (const filePath of listFilesFiltered(basePaths, filters)) {
+      const filePromise = readFile(filePath);
+      filePromises.push(filePromise);
+    }
 
-  const files = await Promise.all(filePromises);
-  return files;
+    const files = await Promise.all(filePromises);
+    return files;
+  };
 }
+
+export {
+  createReadFile,
+  createReadFilesFiltered,
+};

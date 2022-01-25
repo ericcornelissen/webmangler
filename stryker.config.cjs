@@ -3,13 +3,14 @@
 const values = require("./.values.cjs");
 
 const {
+  packagesCoverageExclusions,
   packagesDir,
   packagesExpr,
   packagesList,
   reportsDir,
   srcDir,
   tempDir,
-  testDirs,
+  testsDir,
 } = values;
 
 module.exports = {
@@ -17,7 +18,8 @@ module.exports = {
   inPlace: false,
   mutate: [
     `${packagesDir}/${packagesExpr}/${srcDir}/**/*.ts`,
-    `!**/${testDirs}/**/*.ts`,
+    `!**/${testsDir}/**/*.ts`,
+    ...packagesCoverageExclusions.map((exclusion) => `!${exclusion}`),
   ],
   commandRunner: {
     command: `npm run test -- ${packagesList.join(" ")} --unit`,

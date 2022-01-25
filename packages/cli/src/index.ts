@@ -4,12 +4,15 @@
 
 import type { WebManglerCliArgs } from "./types";
 
+import { execFileSync } from "child_process";
+import * as fs from "fs";
+import * as path from "path";
 import yargs from "yargs";
 
 import { getVersionsData } from "./version";
 import run from "./main";
 
-const versionData = getVersionsData();
+const versionData = getVersionsData(fs, path, process, execFileSync);
 const versionMessage = `WebMangler CLI : ${versionData.cli}
 WebMangler     : ${versionData.core}
 NodeJS         : ${versionData.node}`;

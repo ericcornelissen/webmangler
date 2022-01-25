@@ -1,6 +1,6 @@
 {
   "name": "@webmangler/mangler-utils",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "description": "Utilities for building WebMangler mangle plugins",
   "license": "MIT",
   "main": "./lib/index.js",

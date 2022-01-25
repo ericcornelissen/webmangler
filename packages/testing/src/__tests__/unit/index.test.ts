@@ -3,6 +3,14 @@ import { expect } from "chai";
 import * as testing from "../../index";
 
 suite("Package exports", function() {
+  test("has checkWebManglerLanguagePlugin", function() {
+    expect(testing).to.haveOwnProperty("checkWebManglerLanguagePlugin");
+  });
+
+  test("has checkWebManglerPlugin", function() {
+    expect(testing).to.haveOwnProperty("checkWebManglerPlugin");
+  });
+
   test("has generateValueObjects", function() {
     expect(testing).to.haveOwnProperty("generateValueObjects");
   });

@@ -22,8 +22,8 @@ function newPropertyAsStandaloneStringExpressions(
   propertySuffix: string,
 ): Iterable<MangleExpression> {
   return [
-    new SingleGroupMangleExpression(
-      `
+    new SingleGroupMangleExpression({
+      patternTemplate: `
         (?:
           (?:${patterns.comment})
           |
@@ -40,8 +40,8 @@ function newPropertyAsStandaloneStringExpressions(
           )
         )
       `,
-      GROUP_MAIN,
-    ),
+      groupName: GROUP_MAIN,
+    }),
   ];
 }
 

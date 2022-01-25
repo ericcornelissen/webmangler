@@ -164,7 +164,7 @@ class NestedGroupMangleExpression implements MangleExpression {
       const groups = args[args.length - 1] as RegExpMatchGroups;
       if (this.didMatch(groups)) {
         const subStr = groups[this.groupName];
-        return subStr.replace(regExpSub, (
+        const newSubStr = subStr.replace(regExpSub, (
           subMatch: string,
           ...subArgs: unknown[]
         ): string => {
@@ -180,6 +180,7 @@ class NestedGroupMangleExpression implements MangleExpression {
             return subMatch;
           }
         });
+        return match.replace(subStr, newSubStr);
       } else {
         return match;
       }

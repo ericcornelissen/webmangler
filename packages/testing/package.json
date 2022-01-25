@@ -1,10 +1,10 @@
 {
   "name": "@webmangler/testing",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "WebMangler testing utilities",
   "license": "Unlicense",
-  "main": "./build/index.js",
-  "typings": "./build/index.d.ts",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/ericcornelissen/webmangler",
@@ -19,7 +19,7 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "clean": "rm -rf build/ *.tsbuildinfo",
+    "clean": "rm -rf lib/ *.tsbuildinfo",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"

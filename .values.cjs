@@ -11,7 +11,6 @@ const testTypeUnit = "unit";
 const compiledDir = "{build,lib}";
 const dependenciesDir = "node_modules";
 const githubDir = ".github";
-const mocksDir = "__mocks__";
 const packagesDir = "packages";
 const scriptsDir = "scripts";
 const srcDir = "src";
@@ -30,6 +29,12 @@ if (process.env.TEST_PACKAGES !== undefined) {
   }
 }
 
+const packagesCoverageExclusions = [];
+if (packagesList.includes("cli")) {
+  packagesCoverageExclusions.push(`${packagesDir}/cli/${srcDir}/index.ts`);
+  packagesCoverageExclusions.push(`${packagesDir}/cli/${srcDir}/main.ts`);
+}
+
 function getAllPackagesAsArray() {
   const fs = require("fs");
   const path = require("path");
@@ -43,18 +48,17 @@ module.exports = {
   compiledDir,
   dependenciesDir,
   githubDir,
-  mocksDir,
   packagesDir,
   reportsDir,
   scriptsDir,
   srcDir,
   tempDir,
   testDataDir,
-  testDirs: `{${testsDir},${mocksDir}}`,
   testsDir,
 
   // Computed
   getAllPackagesAsArray,
+  packagesCoverageExclusions,
   packagesExpr,
   packagesList,
 

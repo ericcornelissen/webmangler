@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- BREAKING: Remove `ALL_CHARS` character set. ([#247])
+
+## [0.1.26] - 2022-01-17
+
 - Add `ALL_ALPHANUMERIC_CHARS` character sets. ([#210])
 
 ## [0.1.25] - 2021-10-30
@@ -26,5 +30,6 @@ Versioning].
 [#159]: https://github.com/ericcornelissen/webmangler/pull/159
 [#182]: https://github.com/ericcornelissen/webmangler/pull/182
 [#210]: https://github.com/ericcornelissen/webmangler/pull/210
+[#247]: https://github.com/ericcornelissen/webmangler/pull/247
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

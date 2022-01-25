@@ -281,6 +281,18 @@ suite("NestedGroupMangleExpression", function() {
             s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
             expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
           },
+          {
+            patternTemplate: "(?<=\\<)[a-z]+\\s(?<g>[^>]*%s[^>]*)(?=\\>)",
+            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
+            group: "g",
+            caseSensitive: true,
+            replacements: new Map([
+              ["data-foo", "data-a"],
+              ["data-bar", "data-b"],
+            ]),
+            s: "<div data-foo=\"bar\" data-bar=\"foo\"></div>",
+            expected: "<div data-a=\"bar\" data-b=\"foo\"></div>",
+          },
         ],
       },
       {

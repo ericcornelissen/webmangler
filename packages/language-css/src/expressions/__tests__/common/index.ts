@@ -10,6 +10,7 @@ import {
   embedContentInContext,
 } from "./benchmark-helpers";
 import {
+  buildCssAttributeSelectors,
   buildCssComments,
   buildCssDeclarations,
   buildCssRuleset,
@@ -27,6 +28,7 @@ import {
 
 export {
   attributeSelectorOperators,
+  buildCssAttributeSelectors,
   buildCssComments,
   buildCssDeclarations,
   buildCssRuleset,

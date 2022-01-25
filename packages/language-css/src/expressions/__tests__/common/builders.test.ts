@@ -1,8 +1,11 @@
+import type { TestScenarios } from "@webmangler/testing";
+
 import type { CssDeclarationValues, CssRulesetValues } from "./types";
 
 import { expect } from "chai";
 
 import {
+  buildCssAttributeSelectors,
   buildCssComments,
   buildCssDeclaration,
   buildCssDeclarations,
@@ -11,6 +14,71 @@ import {
 } from "./builders";
 
 suite("CSS expression factory test suite string builders", function() {
+  suite("::buildCssAttributeSelectors", function() {
+    interface TestCase {
+      readonly attributeName: string;
+      readonly attributeValue: string;
+      readonly expected: string[];
+    }
+
+    const scenarios: TestScenarios<TestCase> = [
+      {
+        testName: "value without whitespace",
+        getScenario: () => ({
+          attributeName: "hello",
+          attributeValue: "world",
+          expected: [
+            "[hello=\"world\"]",
+            "[hello~=\"world\"]",
+            "[hello|=\"world\"]",
+            "[hello^=\"world\"]",
+            "[hello$=\"world\"]",
+            "[hello*=\"world\"]",
+            "[hello='world']",
+            "[hello~='world']",
+            "[hello|='world']",
+            "[hello^='world']",
+            "[hello$='world']",
+            "[hello*='world']",
+          ],
+        }),
+      },
+      {
+        testName: "value with whitespace",
+        getScenario: () => ({
+          attributeName: "foo",
+          attributeValue: "bar baz",
+          expected: [
+            "[foo=\"bar baz\"]",
+            "[foo~=\"bar baz\"]",
+            "[foo|=\"bar baz\"]",
+            "[foo^=\"bar baz\"]",
+            "[foo$=\"bar baz\"]",
+            "[foo*=\"bar baz\"]",
+            "[foo='bar baz']",
+            "[foo~='bar baz']",
+            "[foo|='bar baz']",
+            "[foo^='bar baz']",
+            "[foo$='bar baz']",
+            "[foo*='bar baz']",
+          ],
+        }),
+      },
+    ];
+
+    for (const { getScenario, testName } of scenarios) {
+      test(testName, function() {
+        const { attributeName, attributeValue, expected } = getScenario();
+        const _result = buildCssAttributeSelectors(
+          attributeName,
+          attributeValue,
+        );
+        const result = Array.from(_result);
+        expect(result).to.have.all.members(expected);
+      });
+    }
+  });
+
   suite("::buildCssComments", function() {
     type TestCase = {
       expected: string[];

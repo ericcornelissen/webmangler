@@ -24,8 +24,8 @@ function newQuerySelectorExpressions(
   selectorPrefix?: string,
   selectorSuffix?: string,
 ): Iterable<MangleExpression> {
-  return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression(
-    `
+  return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression({
+    patternTemplate: `
       (?:
         (?:${patterns.comment})
         |
@@ -44,7 +44,7 @@ function newQuerySelectorExpressions(
         )
       )
     `,
-    `
+    subPatternTemplate: `
       (?<=
         ${selectorPrefix || `(?:${quote}|${patterns.allowedBeforeSelector})`}
       )
@@ -53,8 +53,8 @@ function newQuerySelectorExpressions(
         ${selectorSuffix || `(?:${quote}|${patterns.allowedAfterSelector})`}
       )
     `,
-    GROUP_MAIN,
-  ));
+    groupName: GROUP_MAIN,
+  }));
 }
 
 /**
@@ -66,8 +66,8 @@ function newQuerySelectorExpressions(
 function newSelectorAsStandaloneStringExpressions():
     Iterable<MangleExpression> {
   return [
-    new SingleGroupMangleExpression(
-      `
+    new SingleGroupMangleExpression({
+      patternTemplate: `
         (?:
           (?:${patterns.comment})
           |
@@ -82,8 +82,8 @@ function newSelectorAsStandaloneStringExpressions():
           )
         )
       `,
-      GROUP_MAIN,
-    ),
+      groupName: GROUP_MAIN,
+    }),
   ];
 }
 

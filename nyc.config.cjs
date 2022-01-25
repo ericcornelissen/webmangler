@@ -5,22 +5,15 @@ const values = require("./.values.cjs");
 const {
   dependenciesDir,
   compiledDir,
+  packagesCoverageExclusions,
   packagesDir,
   packagesExpr,
-  packagesList,
   reportsDir,
-  srcDir,
   tempDir,
   testSuffixPerformance,
   testSuffixTest,
   testsDir,
 } = values;
-
-const packagesExclusions = [];
-if (packagesList.includes("cli")) {
-  packagesExclusions.push(`${packagesDir}/cli/${srcDir}/index.ts`);
-  packagesExclusions.push(`${packagesDir}/cli/${srcDir}/main.ts`);
-}
 
 module.exports = {
   all: true,
@@ -57,7 +50,7 @@ module.exports = {
     `${packagesDir}/**/*.{${testSuffixPerformance},${testSuffixTest}}.ts`,
     `${packagesDir}/**/${testsDir}/common/index.ts`,
     `${packagesDir}/**/${compiledDir}/`,
-    ...packagesExclusions,
+    ...packagesCoverageExclusions,
   ],
 
   reportDir: `./${reportsDir}/coverage`,

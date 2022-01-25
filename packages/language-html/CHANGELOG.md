@@ -8,6 +8,11 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.25] - 2022-01-17
+
+- Fix finding when embeds with non-standard closing tags. ([#241])
 - Fix unintentional mangling in comments with non-standard syntax. ([#233])
 
 ## [0.1.24] - 2022-01-08
@@ -24,5 +29,6 @@ Versioning].
 [#225]: https://github.com/ericcornelissen/webmangler/pull/225
 [#231]: https://github.com/ericcornelissen/webmangler/pull/231
 [#233]: https://github.com/ericcornelissen/webmangler/pull/233
+[#241]: https://github.com/ericcornelissen/webmangler/pull/241
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

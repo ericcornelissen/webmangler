@@ -26,8 +26,8 @@ function newQuotedValueExpressions(
 ): Iterable<MangleExpression> {
   const quoteExpr = `(?<${GROUP_QUOTE}>${patterns.quotes})`;
   return [
-    new SingleGroupMangleExpression(
-      `
+    new SingleGroupMangleExpression({
+      patternTemplate: `
         (?:
           (?:${patterns.comment})
           |
@@ -46,8 +46,8 @@ function newQuotedValueExpressions(
           )
         )
       `,
-      GROUP_MAIN,
-    ),
+      groupName: GROUP_MAIN,
+    }),
   ];
 }
 
@@ -67,8 +67,8 @@ function newUnquotedValueExpressions(
   valueSuffix: string,
 ): Iterable<MangleExpression> {
   return [
-    new SingleGroupMangleExpression(
-      `
+    new SingleGroupMangleExpression({
+      patternTemplate: `
         (?:
           (?:${patterns.comment})
           |
@@ -86,8 +86,8 @@ function newUnquotedValueExpressions(
           )
         )
       `,
-      GROUP_MAIN,
-    ),
+      groupName: GROUP_MAIN,
+    }),
   ];
 }
 

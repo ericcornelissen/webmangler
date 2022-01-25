@@ -3,7 +3,7 @@
  *
  * @since v0.1.0
  */
-export const DEFAULT_CONFIG_PATHS: string[] = [
+const DEFAULT_CONFIG_PATHS: string[] = [
   // ".webmanglerrc.json", JSON not yet supported
   // ".webmanglerrc.yml", YAML not yet supported
   ".webmanglerrc.js",
@@ -16,4 +16,9 @@ export const DEFAULT_CONFIG_PATHS: string[] = [
  *
  * @since v0.1.4
  */
-export const MODULE_NAME = "webmangler";
+const MODULE_NAME = "webmangler";
+
+export {
+  DEFAULT_CONFIG_PATHS,
+  MODULE_NAME,
+};
