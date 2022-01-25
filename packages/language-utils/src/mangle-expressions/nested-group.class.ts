@@ -166,7 +166,7 @@ class NestedGroupMangleExpression implements MangleExpression {
    */
   public replaceAll(
     str: string,
-    replacements: Map<string, string>,
+    replacements: ReadonlyMap<string, string>,
   ): string {
     if (replacements.size === 0) {
       return str;

@@ -103,7 +103,7 @@ abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
   getExpressions(
     name: string,
     options: unknown,
-  ): Map<string, Iterable<MangleExpression>> {
+  ): ReadonlyMap<string, Iterable<MangleExpression>> {
     const map: Map<string, Iterable<MangleExpression>> = new Map();
 
     const expressionFactory = this.expressionFactories.get(name);

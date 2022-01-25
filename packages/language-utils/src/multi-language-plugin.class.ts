@@ -66,7 +66,7 @@ abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
   getExpressions(
     name: string,
     options: unknown,
-  ): Map<string, Iterable<MangleExpression>> {
+  ): ReadonlyMap<string, Iterable<MangleExpression>> {
     const result: Map<string, Iterable<MangleExpression>> = new Map();
     for (const plugin of this.plugins) {
       const pluginExpressions = plugin.getExpressions(name, options);

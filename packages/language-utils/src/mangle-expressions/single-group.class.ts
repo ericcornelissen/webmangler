@@ -130,7 +130,10 @@ class SingleGroupMangleExpression implements MangleExpression {
    * @since v0.1.11
    * @version v0.1.24
    */
-  public replaceAll(s: string, replacements: Map<string, string>): string {
+  public replaceAll(
+    s: string,
+    replacements: ReadonlyMap<string, string>,
+  ): string {
     if (replacements.size === 0) {
       return s;
     }
