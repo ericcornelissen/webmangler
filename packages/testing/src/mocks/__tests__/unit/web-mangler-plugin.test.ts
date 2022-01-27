@@ -29,20 +29,15 @@ suite("::initWebManglerPluginMock", function() {
   suite("No inputs provided", function() {
     let subject: WebManglerPlugin;
 
-    let firstCreatedStub: { returns: SinonStub; };
+    let createdOptionsStub: SinonStub;
 
     suiteSetup(function() {
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdOptionsStub = sinon.stub();
 
-      createStub.onFirstCall().returns(firstCreatedStub);
+      createStub.onFirstCall().returns(createdOptionsStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-
       subject = new WebManglerPluginMock();
     });
 
@@ -50,15 +45,13 @@ suite("::initWebManglerPluginMock", function() {
       expect(createStub).to.have.callCount(1);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.object,
-      );
+    test("the `options` method value", function() {
+      expect(subject.options).to.equal(createdOptionsStub);
     });
 
-    test("the `options` method value", function() {
-      expect(subject.options).to.equal(firstCreatedStub);
+    test("the `options` return value", function() {
+      const result = subject.options();
+      expect(result).to.deep.equal({});
     });
 
     suiteTeardown(function() {

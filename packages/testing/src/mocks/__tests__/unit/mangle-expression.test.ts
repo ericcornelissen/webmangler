@@ -35,28 +35,18 @@ suite("::initMangleExpressionMock", function() {
   suite("No inputs provided", function() {
     let subject: MangleExpression;
 
-    let firstCreatedStub: { returns: SinonStub; };
-    let secondCreatedStub: { returns: SinonStub; };
+    let createdFindAllStub: SinonStub;
+    let createdReplaceAllStub: SinonStub;
 
     suiteSetup(function() {
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdFindAllStub = sinon.stub();
+      createdReplaceAllStub = sinon.stub();
 
-      secondCreatedStub = {
-        returns: sinon.stub(),
-      };
-      secondCreatedStub.returns.returns(secondCreatedStub);
-
-      createStub.onFirstCall().returns(firstCreatedStub);
-      createStub.onSecondCall().returns(secondCreatedStub);
+      createStub.onFirstCall().returns(createdFindAllStub);
+      createStub.onSecondCall().returns(createdReplaceAllStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-      secondCreatedStub.returns.resetHistory();
-
       subject = new MangleExpressionMock();
     });
 
@@ -64,26 +54,22 @@ suite("::initMangleExpressionMock", function() {
       expect(createStub).to.have.callCount(2);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
-    });
-
-    test("the second created stub", function() {
-      expect(secondCreatedStub.returns).to.have.callCount(1);
-      expect(secondCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.string,
-      );
-    });
-
     test("the `findAll` method value", function() {
-      expect(subject.findAll).to.equal(firstCreatedStub);
+      expect(subject.findAll).to.equal(createdFindAllStub);
+    });
+
+    test("the `findAll` return value", function() {
+      const result = subject.findAll("foo", "bar");
+      expect(result).to.deep.equal([]);
     });
 
     test("the `replaceAll` method value", function() {
-      expect(subject.replaceAll).to.equal(secondCreatedStub);
+      expect(subject.replaceAll).to.equal(createdReplaceAllStub);
+    });
+
+    test("the `replaceAll` return value", function() {
+      const result = subject.replaceAll("foo", new Map());
+      expect(result).to.equal("");
     });
 
     suiteTeardown(function() {
@@ -95,22 +81,17 @@ suite("::initMangleExpressionMock", function() {
     let subject: MangleExpression;
 
     let findAll: SinonStub;
-    let firstCreatedStub: { returns: SinonStub; };
+    let createdReplaceAllStub: SinonStub;
 
     suiteSetup(function() {
       findAll = sinon.stub();
 
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdReplaceAllStub = sinon.stub();
 
-      createStub.onFirstCall().returns(firstCreatedStub);
+      createStub.onFirstCall().returns(createdReplaceAllStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-
       subject = new MangleExpressionMock({ findAll });
     });
 
@@ -118,19 +99,17 @@ suite("::initMangleExpressionMock", function() {
       expect(createStub).to.have.callCount(1);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.string,
-      );
-    });
-
     test("the `findAll` method value", function() {
       expect(subject.findAll).to.equal(findAll);
     });
 
     test("the `replaceAll` method value", function() {
-      expect(subject.replaceAll).to.equal(firstCreatedStub);
+      expect(subject.replaceAll).to.equal(createdReplaceAllStub);
+    });
+
+    test("the `replaceAll` return value", function() {
+      const result = subject.replaceAll("foo", new Map());
+      expect(result).to.equal("");
     });
 
     suiteTeardown(function() {
@@ -142,22 +121,17 @@ suite("::initMangleExpressionMock", function() {
     let subject: MangleExpression;
 
     let replaceAll: SinonStub;
-    let firstCreatedStub: { returns: SinonStub; };
+    let createdFindAllStub: SinonStub;
 
     suiteSetup(function() {
       replaceAll = sinon.stub();
 
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdFindAllStub = sinon.stub();
 
-      createStub.onFirstCall().returns(firstCreatedStub);
+      createStub.onFirstCall().returns(createdFindAllStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-
       subject = new MangleExpressionMock({ replaceAll });
     });
 
@@ -165,15 +139,13 @@ suite("::initMangleExpressionMock", function() {
       expect(createStub).to.have.callCount(1);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
+    test("the `findAll` method value", function() {
+      expect(subject.findAll).to.equal(createdFindAllStub);
     });
 
-    test("the `findAll` method value", function() {
-      expect(subject.findAll).to.equal(firstCreatedStub);
+    test("the `findAll` return value", function() {
+      const result = subject.findAll("foo", "bar");
+      expect(result).to.deep.equal([]);
     });
 
     test("the `replaceAll` method value", function() {

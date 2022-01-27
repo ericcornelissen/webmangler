@@ -15,7 +15,6 @@ interface WebManglerLanguagePluginMockDependencies {
 function initWebManglerLanguagePluginMock({
   createStub,
 }: WebManglerLanguagePluginMockDependencies) {
-  let id = 0;
   return class WebManglerLanguagePluginMock {
     /**
      * The `getEmbeds` method of the mock.
@@ -47,17 +46,18 @@ function initWebManglerLanguagePluginMock({
      * @param [stubs.getExpressions] A {@link Stub} for `getExpressions`.
      * @param [stubs.getLanguages] A {@link Stub} for `getLanguages`.
      * @since v0.1.5
+     * @version v0.1.7
      */
     constructor(stubs?: {
       getEmbeds?: Stub;
       getExpressions?: Stub;
       getLanguages?: Stub;
     }) {
-      this.getEmbeds = stubs?.getEmbeds || createStub().returns([id++]);
+      this.getEmbeds = stubs?.getEmbeds || createStub().returns([]);
       this.getExpressions = stubs?.getExpressions || createStub().returns(
-        new Map([[id++, id++]]),
+        new Map(),
       );
-      this.getLanguages = stubs?.getLanguages || createStub().returns([id++]);
+      this.getLanguages = stubs?.getLanguages || createStub().returns([]);
     }
   };
 }

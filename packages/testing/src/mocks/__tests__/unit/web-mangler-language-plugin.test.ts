@@ -10,6 +10,10 @@ import initWebManglerLanguagePluginMock from "../../web-mangler-language-plugin"
 chaiUse(sinonChai);
 
 suite("::initWebManglerLanguagePluginMock", function() {
+  const expressionName = "Hello world!";
+  const expressionOptions = { };
+  const file = { content: "foo", type: "bar" };
+
   let WebManglerLanguagePluginMock: ReturnType<
     typeof initWebManglerLanguagePluginMock
   >;
@@ -31,36 +35,21 @@ suite("::initWebManglerLanguagePluginMock", function() {
   suite("No inputs provided", function() {
     let subject: WebManglerLanguagePlugin;
 
-    let firstCreatedStub: { returns: SinonStub; };
-    let secondCreatedStub: { returns: SinonStub; };
-    let thirdCreatedStub: { returns: SinonStub; };
+    let createdGetEmbedsStub: SinonStub;
+    let createdGetExpressionStub: SinonStub;
+    let createdGetLanguagesStub: SinonStub;
 
     suiteSetup(function() {
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdGetEmbedsStub = sinon.stub();
+      createdGetExpressionStub = sinon.stub();
+      createdGetLanguagesStub = sinon.stub();
 
-      secondCreatedStub = {
-        returns: sinon.stub(),
-      };
-      secondCreatedStub.returns.returns(secondCreatedStub);
-
-      thirdCreatedStub = {
-        returns: sinon.stub(),
-      };
-      thirdCreatedStub.returns.returns(thirdCreatedStub);
-
-      createStub.onFirstCall().returns(firstCreatedStub);
-      createStub.onSecondCall().returns(secondCreatedStub);
-      createStub.onThirdCall().returns(thirdCreatedStub);
+      createStub.onFirstCall().returns(createdGetEmbedsStub);
+      createStub.onSecondCall().returns(createdGetExpressionStub);
+      createStub.onThirdCall().returns(createdGetLanguagesStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-      secondCreatedStub.returns.resetHistory();
-      thirdCreatedStub.returns.resetHistory();
-
       subject = new WebManglerLanguagePluginMock();
     });
 
@@ -68,37 +57,31 @@ suite("::initWebManglerLanguagePluginMock", function() {
       expect(createStub).to.have.callCount(3);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
-    });
-
-    test("the second created stub", function() {
-      expect(secondCreatedStub.returns).to.have.callCount(1);
-      expect(secondCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.map,
-      );
-    });
-
-    test("the third created stub", function() {
-      expect(thirdCreatedStub.returns).to.have.callCount(1);
-      expect(thirdCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
-    });
-
     test("the `getEmbeds` method value", function() {
-      expect(subject.getEmbeds).to.equal(firstCreatedStub);
+      expect(subject.getEmbeds).to.equal(createdGetEmbedsStub);
+    });
+
+    test("the `getEmbeds` return value", function() {
+      const result = subject.getEmbeds(file);
+      expect(result).to.deep.equal([]);
     });
 
     test("the `getExpressions` method value", function() {
-      expect(subject.getExpressions).to.equal(secondCreatedStub);
+      expect(subject.getExpressions).to.equal(createdGetExpressionStub);
+    });
+
+    test("the `getExpressions` return value", function() {
+      const result = subject.getExpressions(expressionName, expressionOptions);
+      expect(result).to.deep.equal(new Map());
     });
 
     test("the `getLanguages` method value", function() {
-      expect(subject.getLanguages).to.equal(thirdCreatedStub);
+      expect(subject.getLanguages).to.equal(createdGetLanguagesStub);
+    });
+
+    test("the `getLanguages` return value", function() {
+      const result = subject.getLanguages();
+      expect(result).to.deep.equal([]);
     });
 
     suiteTeardown(function() {
@@ -110,30 +93,20 @@ suite("::initWebManglerLanguagePluginMock", function() {
     let subject: WebManglerLanguagePlugin;
 
     let getEmbeds: SinonStub;
-    let firstCreatedStub: { returns: SinonStub; };
-    let secondCreatedStub: { returns: SinonStub; };
+    let createdGetExpressionStub: SinonStub;
+    let createdGetLanguagesStub: SinonStub;
 
     suiteSetup(function() {
       getEmbeds = sinon.stub();
 
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdGetExpressionStub = sinon.stub();
+      createdGetLanguagesStub = sinon.stub();
 
-      secondCreatedStub = {
-        returns: sinon.stub(),
-      };
-      secondCreatedStub.returns.returns(secondCreatedStub);
-
-      createStub.onFirstCall().returns(firstCreatedStub);
-      createStub.onSecondCall().returns(secondCreatedStub);
+      createStub.onFirstCall().returns(createdGetExpressionStub);
+      createStub.onSecondCall().returns(createdGetLanguagesStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-      secondCreatedStub.returns.resetHistory();
-
       subject = new WebManglerLanguagePluginMock({ getEmbeds });
     });
 
@@ -141,30 +114,26 @@ suite("::initWebManglerLanguagePluginMock", function() {
       expect(createStub).to.have.callCount(2);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.map,
-      );
-    });
-
-    test("the second created stub", function() {
-      expect(secondCreatedStub.returns).to.have.callCount(1);
-      expect(secondCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
-    });
-
     test("the `getEmbeds` method value", function() {
       expect(subject.getEmbeds).to.equal(getEmbeds);
     });
 
     test("the `getExpressions` method value", function() {
-      expect(subject.getExpressions).to.equal(firstCreatedStub);
+      expect(subject.getExpressions).to.equal(createdGetExpressionStub);
+    });
+
+    test("the `getExpressions` return value", function() {
+      const result = subject.getExpressions(expressionName, expressionOptions);
+      expect(result).to.deep.equal(new Map());
     });
 
     test("the `getLanguages` method value", function() {
-      expect(subject.getLanguages).to.equal(secondCreatedStub);
+      expect(subject.getLanguages).to.equal(createdGetLanguagesStub);
+    });
+
+    test("the `getLanguages` return value", function() {
+      const result = subject.getLanguages();
+      expect(result).to.deep.equal([]);
     });
 
     suiteTeardown(function() {
@@ -176,30 +145,20 @@ suite("::initWebManglerLanguagePluginMock", function() {
     let subject: WebManglerLanguagePlugin;
 
     let getExpressions: SinonStub;
-    let firstCreatedStub: { returns: SinonStub; };
-    let secondCreatedStub: { returns: SinonStub; };
+    let createdGetEmbedsStub: SinonStub;
+    let createdGetLanguagesStub: SinonStub;
 
     suiteSetup(function() {
       getExpressions = sinon.stub();
 
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdGetEmbedsStub = sinon.stub();
+      createdGetLanguagesStub = sinon.stub();
 
-      secondCreatedStub = {
-        returns: sinon.stub(),
-      };
-      secondCreatedStub.returns.returns(secondCreatedStub);
-
-      createStub.onFirstCall().returns(firstCreatedStub);
-      createStub.onSecondCall().returns(secondCreatedStub);
+      createStub.onFirstCall().returns(createdGetEmbedsStub);
+      createStub.onSecondCall().returns(createdGetLanguagesStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-      secondCreatedStub.returns.resetHistory();
-
       subject = new WebManglerLanguagePluginMock({ getExpressions });
     });
 
@@ -207,22 +166,13 @@ suite("::initWebManglerLanguagePluginMock", function() {
       expect(createStub).to.have.callCount(2);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
-    });
-
-    test("the second created stub", function() {
-      expect(secondCreatedStub.returns).to.have.callCount(1);
-      expect(secondCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
-    });
-
     test("the `getEmbeds` method value", function() {
-      expect(subject.getEmbeds).to.equal(firstCreatedStub);
+      expect(subject.getEmbeds).to.equal(createdGetEmbedsStub);
+    });
+
+    test("the `getEmbeds` return value", function() {
+      const result = subject.getEmbeds(file);
+      expect(result).to.deep.equal([]);
     });
 
     test("the `getExpressions` method value", function() {
@@ -230,7 +180,12 @@ suite("::initWebManglerLanguagePluginMock", function() {
     });
 
     test("the `getLanguages` method value", function() {
-      expect(subject.getLanguages).to.equal(secondCreatedStub);
+      expect(subject.getLanguages).to.equal(createdGetLanguagesStub);
+    });
+
+    test("the `getLanguages` return value", function() {
+      const result = subject.getLanguages();
+      expect(result).to.deep.equal([]);
     });
 
     suiteTeardown(function() {
@@ -242,30 +197,20 @@ suite("::initWebManglerLanguagePluginMock", function() {
     let subject: WebManglerLanguagePlugin;
 
     let getLanguages: SinonStub;
-    let firstCreatedStub: { returns: SinonStub; };
-    let secondCreatedStub: { returns: SinonStub; };
+    let createdGetEmbedsStub: SinonStub;
+    let createdGetExpressionStub: SinonStub;
 
     suiteSetup(function() {
       getLanguages = sinon.stub();
 
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdGetEmbedsStub = sinon.stub();
+      createdGetExpressionStub = sinon.stub();
 
-      secondCreatedStub = {
-        returns: sinon.stub(),
-      };
-      secondCreatedStub.returns.returns(secondCreatedStub);
-
-      createStub.onFirstCall().returns(firstCreatedStub);
-      createStub.onSecondCall().returns(secondCreatedStub);
+      createStub.onFirstCall().returns(createdGetEmbedsStub);
+      createStub.onSecondCall().returns(createdGetExpressionStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-      secondCreatedStub.returns.resetHistory();
-
       subject = new WebManglerLanguagePluginMock({ getLanguages });
     });
 
@@ -273,26 +218,22 @@ suite("::initWebManglerLanguagePluginMock", function() {
       expect(createStub).to.have.callCount(2);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
-    });
-
-    test("the second created stub", function() {
-      expect(secondCreatedStub.returns).to.have.callCount(1);
-      expect(secondCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.map,
-      );
-    });
-
     test("the `getEmbeds` method value", function() {
-      expect(subject.getEmbeds).to.equal(firstCreatedStub);
+      expect(subject.getEmbeds).to.equal(createdGetEmbedsStub);
+    });
+
+    test("the `getEmbeds` return value", function() {
+      const result = subject.getEmbeds(file);
+      expect(result).to.deep.equal([]);
     });
 
     test("the `getExpressions` method value", function() {
-      expect(subject.getExpressions).to.equal(secondCreatedStub);
+      expect(subject.getExpressions).to.equal(createdGetExpressionStub);
+    });
+
+    test("the `getExpressions` return value", function() {
+      const result = subject.getExpressions(expressionName, expressionOptions);
+      expect(result).to.deep.equal(new Map());
     });
 
     test("the `getLanguages` method value", function() {
@@ -309,23 +250,18 @@ suite("::initWebManglerLanguagePluginMock", function() {
 
     let getEmbeds: SinonStub;
     let getExpressions: SinonStub;
-    let firstCreatedStub: { returns: SinonStub; };
+    let createdGetLanguagesStub: SinonStub;
 
     suiteSetup(function() {
       getEmbeds = sinon.stub();
       getExpressions = sinon.stub();
 
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdGetLanguagesStub = sinon.stub();
 
-      createStub.onFirstCall().returns(firstCreatedStub);
+      createStub.onFirstCall().returns(createdGetLanguagesStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-
       subject = new WebManglerLanguagePluginMock({
         getEmbeds,
         getExpressions,
@@ -334,13 +270,6 @@ suite("::initWebManglerLanguagePluginMock", function() {
 
     test("call count of createStub", function() {
       expect(createStub).to.have.callCount(1);
-    });
-
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
     });
 
     test("the `getEmbeds` method value", function() {
@@ -352,7 +281,12 @@ suite("::initWebManglerLanguagePluginMock", function() {
     });
 
     test("the `getLanguages` method value", function() {
-      expect(subject.getLanguages).to.equal(firstCreatedStub);
+      expect(subject.getLanguages).to.equal(createdGetLanguagesStub);
+    });
+
+    test("the `getLanguages` return value", function() {
+      const result = subject.getLanguages();
+      expect(result).to.deep.equal([]);
     });
 
     suiteTeardown(function() {
@@ -365,23 +299,18 @@ suite("::initWebManglerLanguagePluginMock", function() {
 
     let getEmbeds: SinonStub;
     let getLanguages: SinonStub;
-    let firstCreatedStub: { returns: SinonStub; };
+    let createdGetExpressionStub: SinonStub;
 
     suiteSetup(function() {
       getEmbeds = sinon.stub();
       getLanguages = sinon.stub();
 
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdGetExpressionStub = sinon.stub();
 
-      createStub.onFirstCall().returns(firstCreatedStub);
+      createStub.onFirstCall().returns(createdGetExpressionStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-
       subject = new WebManglerLanguagePluginMock({
         getEmbeds,
         getLanguages,
@@ -392,19 +321,17 @@ suite("::initWebManglerLanguagePluginMock", function() {
       expect(createStub).to.have.callCount(1);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.map,
-      );
-    });
-
     test("the `getEmbeds` method value", function() {
       expect(subject.getEmbeds).to.equal(getEmbeds);
     });
 
     test("the `getExpressions` method value", function() {
-      expect(subject.getExpressions).to.equal(firstCreatedStub);
+      expect(subject.getExpressions).to.equal(createdGetExpressionStub);
+    });
+
+    test("the `getExpressions` return value", function() {
+      const result = subject.getExpressions(expressionName, expressionOptions);
+      expect(result).to.deep.equal(new Map());
     });
 
     test("the `getLanguages` method value", function() {
@@ -421,23 +348,18 @@ suite("::initWebManglerLanguagePluginMock", function() {
 
     let getExpressions: SinonStub;
     let getLanguages: SinonStub;
-    let firstCreatedStub: { returns: SinonStub; };
+    let createdGetEmbedsStub: SinonStub;
 
     suiteSetup(function() {
       getExpressions = sinon.stub();
       getLanguages = sinon.stub();
 
-      firstCreatedStub = {
-        returns: sinon.stub(),
-      };
-      firstCreatedStub.returns.returns(firstCreatedStub);
+      createdGetEmbedsStub = sinon.stub();
 
-      createStub.onFirstCall().returns(firstCreatedStub);
+      createStub.onFirstCall().returns(createdGetEmbedsStub);
     });
 
     setup(function() {
-      firstCreatedStub.returns.resetHistory();
-
       subject = new WebManglerLanguagePluginMock({
         getExpressions,
         getLanguages,
@@ -448,15 +370,13 @@ suite("::initWebManglerLanguagePluginMock", function() {
       expect(createStub).to.have.callCount(1);
     });
 
-    test("the first created stub", function() {
-      expect(firstCreatedStub.returns).to.have.callCount(1);
-      expect(firstCreatedStub.returns).to.have.been.calledWithExactly(
-        sinon.match.array,
-      );
+    test("the `getEmbeds` method value", function() {
+      expect(subject.getEmbeds).to.equal(createdGetEmbedsStub);
     });
 
-    test("the `getEmbeds` method value", function() {
-      expect(subject.getEmbeds).to.equal(firstCreatedStub);
+    test("the `getEmbeds` return value", function() {
+      const result = subject.getEmbeds(file);
+      expect(result).to.deep.equal([]);
     });
 
     test("the `getExpressions` method value", function() {

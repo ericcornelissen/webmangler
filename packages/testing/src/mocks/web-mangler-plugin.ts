@@ -14,7 +14,6 @@ interface WebManglerPluginMockDependencies {
 function initWebManglerPluginMock({
   createStub,
 }: WebManglerPluginMockDependencies) {
-  let id = 0;
   return class WebManglerPluginMock {
     /**
      * The `options` method of the mock.
@@ -30,14 +29,14 @@ function initWebManglerPluginMock({
      * @param [stubs] The {@link Stub}s for this mock.
      * @param [stubs.options] A {@link Stub} for `options`.
      * @since v0.1.5
+     * @version v0.1.7
      */
     constructor(stubs?: {
       options?: Stub;
     }) {
-      this.options = stubs?.options || createStub().returns({ id: id++ });
+      this.options = stubs?.options || createStub().returns({});
     }
   };
 }
 
 export default initWebManglerPluginMock;
-
