@@ -66,7 +66,7 @@ interface NestedGroupMangleExpressionOptions {
  * // and for the replacements "horse->zebra" and "battery->cell" will change it
  * // into "var pw = 'correct zebra cell staple';"
  * @since v0.1.12
- * @version v0.1.24
+ * @version v0.1.26
  */
 class NestedGroupMangleExpression implements MangleExpression {
   /**
@@ -162,11 +162,11 @@ class NestedGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.12
-   * @version v0.1.24
+   * @version v0.1.26
    */
   public replaceAll(
     str: string,
-    replacements: Map<string, string>,
+    replacements: ReadonlyMap<string, string>,
   ): string {
     if (replacements.size === 0) {
       return str;

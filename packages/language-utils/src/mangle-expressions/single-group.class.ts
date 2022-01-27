@@ -54,7 +54,7 @@ interface SingleGroupMangleExpressionOptions {
  * // matches "bar" in "foo--bar--" and for the replacement "baz" will change it
  * // into "foo--baz--".
  * @since v0.1.11
- * @version v0.1.24
+ * @version v0.1.26
  */
 class SingleGroupMangleExpression implements MangleExpression {
   /**
@@ -128,9 +128,12 @@ class SingleGroupMangleExpression implements MangleExpression {
   /**
    * @inheritdoc
    * @since v0.1.11
-   * @version v0.1.24
+   * @version v0.1.26
    */
-  public replaceAll(s: string, replacements: Map<string, string>): string {
+  public replaceAll(
+    s: string,
+    replacements: ReadonlyMap<string, string>,
+  ): string {
     if (replacements.size === 0) {
       return s;
     }

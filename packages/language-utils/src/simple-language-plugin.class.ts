@@ -28,11 +28,11 @@ type ExpressionFactory = (options: any) => Iterable<MangleExpression>; // eslint
  * map of manglers to {@link MangleExpression}.
  *
  * It is recommended to extend this class - or {@link MultiLanguagePlugin},
- * depending on your needs - if you're implementing a {@link
- * WebManglerLanguagePlugin}.
+ * depending on your needs - if you're implementing a
+ * {@link WebManglerLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.21
+ * @version v0.1.26
  */
 abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
   /**
@@ -98,12 +98,12 @@ abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
 
   /**
    * @inheritDoc
-   * @version v0.1.17
+   * @version v0.1.26
    */
   getExpressions(
     name: string,
     options: unknown,
-  ): Map<string, Iterable<MangleExpression>> {
+  ): ReadonlyMap<string, Iterable<MangleExpression>> {
     const map: Map<string, Iterable<MangleExpression>> = new Map();
 
     const expressionFactory = this.expressionFactories.get(name);

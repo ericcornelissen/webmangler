@@ -57,7 +57,7 @@ interface MangleEngineOptions {
  * replace strings to be mangled that match custom patterns.
  *
  * @since v0.1.0
- * @version v0.1.21
+ * @version v0.1.25
  */
 interface MangleExpression {
   /**
@@ -77,8 +77,12 @@ interface MangleExpression {
    * @param replacements The mapping of strings to replace.
    * @returns The string with the patterns replaced.
    * @since v0.1.11
+   * @version v0.1.25
    */
-  replaceAll(s: string, replacements: Map<string, string>): string;
+  replaceAll(
+    s: string,
+    replacements: ReadonlyMap<string, string>,
+  ): string;
 }
 
 /**
@@ -101,7 +105,7 @@ interface MangleExpressionOptions<T> {
    *
    * @since v0.1.14
    */
-  readonly name: string
+  readonly name: string;
 
   /**
    * The configuration for the set of {@link MangleExpression}s.
@@ -195,7 +199,7 @@ interface WebManglerFile {
  * The interface that every language plugin for _WebMangler_ must implement.
  *
  * @since v0.1.0
- * @version v0.1.21
+ * @version v0.1.25
  */
 interface WebManglerLanguagePlugin {
   /**
@@ -215,11 +219,12 @@ interface WebManglerLanguagePlugin {
    * @param options The options for the set of {@link MangleExpression}s.
    * @returns The {@link MangleExpression}s for every supported language.
    * @since v0.1.16
+   * @version v0.1.25
    */
   getExpressions(
     name: string,
     options: unknown,
-  ): Map<string, Iterable<MangleExpression>>;
+  ): ReadonlyMap<string, Iterable<MangleExpression>>;
 
   /**
    * Get a list of the languages supported by the {@link
