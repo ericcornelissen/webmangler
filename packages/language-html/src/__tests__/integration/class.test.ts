@@ -7,7 +7,7 @@ import type {
 
 import { expect } from "chai";
 
-import HtmlLanguagePlugin from "../index";
+import HtmlLanguagePlugin from "../../index";
 
 suite("The @webmangler/language-html plugin", function() {
   test("no argument", function() {
