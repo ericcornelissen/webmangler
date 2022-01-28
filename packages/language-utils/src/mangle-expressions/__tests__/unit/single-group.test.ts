@@ -5,10 +5,19 @@ import { expect } from "chai";
 import SingleGroupMangleExpression from "../../single-group.class";
 
 suite("SingleGroupMangleExpression", function() {
+  test("without the capturing group", function() {
+    const expectedMessage = "Missing CAPTURE_GROUP from patternTemplate";
+
+    expect(() => {
+      new SingleGroupMangleExpression({
+        patternTemplate: "",
+      });
+    }).to.throw(expectedMessage);
+  });
+
   suite("::findAll", function() {
     type TestCase = Iterable<{
       patternTemplate: string;
-      group: string;
       caseSensitive?: boolean;
       pattern: string;
       s: string;
@@ -20,24 +29,27 @@ suite("SingleGroupMangleExpression", function() {
         testName: "sample",
         getScenario: () => [
           {
-            patternTemplate: "(?<g>%s)",
-            group: "g",
+            patternTemplate: SingleGroupMangleExpression.CAPTURE_GROUP,
             caseSensitive: true,
             pattern: "\\-[a-z]+",
             s: "foo-bar",
             expected: ["-bar"],
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "foo-bar",
             expected: ["bar"],
           },
           {
-            patternTemplate: "(?<g>%s)(?=\\-)",
-            group: "g",
+            patternTemplate: `
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              (?=\\-)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "foo-bar",
@@ -49,15 +61,16 @@ suite("SingleGroupMangleExpression", function() {
         testName: "default case sensitivity",
         getScenario: () => [
           {
-            patternTemplate: "(?<g>%s)(?=\\-)",
-            group: "g",
+            patternTemplate: `
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              (?=\\-)
+            `.replace(/\s/g, ""),
             pattern: "[a-z]+",
             s: "foo-bar",
             expected: ["foo"],
           },
           {
-            patternTemplate: "(?<g>%s)",
-            group: "g",
+            patternTemplate: SingleGroupMangleExpression.CAPTURE_GROUP,
             pattern: "\\-[A-Za-z]+",
             s: "foo-bar hello-World",
             expected: ["-bar", "-World"],
@@ -68,16 +81,20 @@ suite("SingleGroupMangleExpression", function() {
         testName: "pattern with newlines",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\-)\n(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `,
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "foo-bar",
             expected: ["bar"],
           },
           {
-            patternTemplate: "(?<g>%s)\n(?=\\-)",
-            group: "g",
+            patternTemplate: `
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              (?=\\-)
+            `,
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "foo-bar",
@@ -89,16 +106,20 @@ suite("SingleGroupMangleExpression", function() {
         testName: "case sensitive",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[A-Za-z]+",
             s: "foo-BAR",
             expected: ["BAR"],
           },
           {
-            patternTemplate: "(?<g>%s)(?=\\-)",
-            group: "g",
+            patternTemplate: `
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              (?=\\-)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[A-Za-z]+",
             s: "Foo-bar",
@@ -110,16 +131,20 @@ suite("SingleGroupMangleExpression", function() {
         testName: "case insensitive",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: false,
             pattern: "[a-z]+",
             s: "foo-BAR",
             expected: ["bar"],
           },
           {
-            patternTemplate: "(?<g>%s)(?=\\-)",
-            group: "g",
+            patternTemplate: `
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              (?=\\-)
+            `.replace(/\s/g, ""),
             caseSensitive: false,
             pattern: "[a-z]+",
             s: "Foo-bar",
@@ -128,11 +153,16 @@ suite("SingleGroupMangleExpression", function() {
         ],
       },
       {
-        testName: "missing group",
+        testName: "matching another group",
         getScenario: () => [
           {
-            patternTemplate: "(?<g>foo%s)",
-            group: "f",
+            patternTemplate: `
+              (?:
+                (?:foobar)
+                |
+                ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              )
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "foobar",
@@ -144,16 +174,20 @@ suite("SingleGroupMangleExpression", function() {
         testName: "corner cases",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "",
             expected: [],
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "var m = new Map();",
@@ -168,7 +202,6 @@ suite("SingleGroupMangleExpression", function() {
         for (const testCase of getScenario()) {
           const {
             patternTemplate,
-            group,
             caseSensitive,
             pattern,
             s,
@@ -177,7 +210,37 @@ suite("SingleGroupMangleExpression", function() {
 
           const subject = new SingleGroupMangleExpression({
             patternTemplate,
-            groupName: group,
+            caseSensitive,
+          });
+
+          let i = 0;
+          for (const str of subject.findAll(s, pattern)) {
+            expect(str).to.equal(expected[i]);
+            i++;
+          }
+
+          expect(i).to.equal(expected.length);
+        }
+      });
+
+      test(`${testName}, with groupName`, function() {
+        for (const testCase of getScenario()) {
+          const {
+            patternTemplate,
+            caseSensitive,
+            pattern,
+            s,
+            expected,
+          } = testCase;
+
+          const groupName = "g";
+
+          const subject = new SingleGroupMangleExpression({
+            patternTemplate: patternTemplate.replace(
+              SingleGroupMangleExpression.CAPTURE_GROUP,
+              `(?<${groupName}>%s)`,
+            ),
+            groupName,
             caseSensitive,
           });
 
@@ -196,7 +259,6 @@ suite("SingleGroupMangleExpression", function() {
   suite("::replaceAll", function() {
     type TestCase = Iterable<{
       patternTemplate: string;
-      group: string;
       caseSensitive: boolean;
       replacements: Map<string, string>;
       s: string;
@@ -208,8 +270,7 @@ suite("SingleGroupMangleExpression", function() {
         testName: "sample",
         getScenario: () => [
           {
-            patternTemplate: "(?<g>%s)",
-            group: "g",
+            patternTemplate: SingleGroupMangleExpression.CAPTURE_GROUP,
             caseSensitive: true,
             replacements: new Map([
               ["bar", "baz"],
@@ -218,8 +279,10 @@ suite("SingleGroupMangleExpression", function() {
             expected: "foo-baz",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["foo", "oof"],
@@ -229,8 +292,10 @@ suite("SingleGroupMangleExpression", function() {
             expected: "foo-baz",
           },
           {
-            patternTemplate: "(?<g>%s)(?=\\!)",
-            group: "g",
+            patternTemplate: `
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              (?=\\!)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["world", "mundo"],
@@ -245,8 +310,7 @@ suite("SingleGroupMangleExpression", function() {
         testName: "case sensitive",
         getScenario: () => [
           {
-            patternTemplate: "(?<g>%s)",
-            group: "g",
+            patternTemplate: SingleGroupMangleExpression.CAPTURE_GROUP,
             caseSensitive: true,
             replacements: new Map([
               ["BAR", "b"],
@@ -255,8 +319,10 @@ suite("SingleGroupMangleExpression", function() {
             expected: "foo-b",
           },
           {
-            patternTemplate: "(?<g>%s)(?=\\!)",
-            group: "g",
+            patternTemplate: `
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              (?=\\!)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["World", "mundo"],
@@ -271,8 +337,7 @@ suite("SingleGroupMangleExpression", function() {
         testName: "case insensitive",
         getScenario: () => [
           {
-            patternTemplate: "(?<g>%s)",
-            group: "g",
+            patternTemplate: SingleGroupMangleExpression.CAPTURE_GROUP,
             caseSensitive: false,
             replacements: new Map([
               ["bar", "baz"],
@@ -281,8 +346,10 @@ suite("SingleGroupMangleExpression", function() {
             expected: "foo-baz",
           },
           {
-            patternTemplate: "(?<g>%s)(?=\\!)",
-            group: "g",
+            patternTemplate: `
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              (?=\\!)
+            `.replace(/\s/g, ""),
             caseSensitive: false,
             replacements: new Map([
               ["world", "mundo"],
@@ -294,11 +361,16 @@ suite("SingleGroupMangleExpression", function() {
         ],
       },
       {
-        testName: "missing group",
+        testName: "matching another group",
         getScenario: () => [
           {
-            patternTemplate: "(?<g>%s)",
-            group: "f",
+            patternTemplate: `
+              (?:
+                (?:foobar)
+                |
+                ${SingleGroupMangleExpression.CAPTURE_GROUP}
+              )
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["foobar", "foobaz"],
@@ -312,24 +384,30 @@ suite("SingleGroupMangleExpression", function() {
         testName: "corner cases",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map(),
             s: "",
             expected: "",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map(),
             s: "foo-bar",
             expected: "foo-bar",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
@@ -338,8 +416,10 @@ suite("SingleGroupMangleExpression", function() {
             expected: "",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
@@ -348,8 +428,10 @@ suite("SingleGroupMangleExpression", function() {
             expected: "",
           },
           {
-            patternTemplate: "(?<=\\-)(?<g>%s)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\-)
+              ${SingleGroupMangleExpression.CAPTURE_GROUP}
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
@@ -366,7 +448,6 @@ suite("SingleGroupMangleExpression", function() {
         for (const testCase of getScenario()) {
           const {
             patternTemplate,
-            group,
             caseSensitive,
             replacements,
             s,
@@ -375,7 +456,32 @@ suite("SingleGroupMangleExpression", function() {
 
           const subject = new SingleGroupMangleExpression({
             patternTemplate,
-            groupName: group,
+            caseSensitive,
+          });
+
+          const result = subject.replaceAll(s, replacements);
+          expect(result).to.equal(expected);
+        }
+      });
+
+      test(`${testName}, with groupName`, function() {
+        for (const testCase of getScenario()) {
+          const {
+            patternTemplate,
+            caseSensitive,
+            replacements,
+            s,
+            expected,
+          } = testCase;
+
+          const groupName = "g";
+
+          const subject = new SingleGroupMangleExpression({
+            patternTemplate: patternTemplate.replace(
+              SingleGroupMangleExpression.CAPTURE_GROUP,
+              `(?<${groupName}>%s)`,
+            ),
+            groupName,
             caseSensitive,
           });
 

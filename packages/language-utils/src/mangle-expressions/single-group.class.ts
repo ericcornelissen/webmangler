@@ -13,16 +13,27 @@ type RegExpMatchGroups = {
  * The configuration options of a {@link SingleGroupMangleExpression}.
  *
  * @since v0.1.25
+ * @version v0.1.27
  */
 interface SingleGroupMangleExpressionOptions {
   /**
-   * A generic pattern with a `"%s"` for a specific character pattern.
+   * A string representing a regular expression to find and replace substrings
+   * of a string. The string must contain the
+   * {@link SingleGroupMangleExpression.CAPTURE_GROUP} value, an error will be
+   * throw (if no {@link SingleGroupMangleExpressionOptions.groupName} is
+   * provided) if omitted.
    *
-   * NOTE 1: only one `"%s"` is supported.
-   * NOTE 2: whitespace is automatically removed from this template.
+   * Note, the regular expression is not allowed to contain a capturing group
+   * with the name {@link GROUP_FIND_AND_REPLACE}.
    *
-   * @example "(?<=--)(?<GROUP_NAME>%s)(?=--)"
+   * @example
+   * `
+   *   (?<=--)
+   *   ${SingleGroupMangleExpression.CAPTURE_GROUP}
+   *   (?=--)
+   * `
    * @since v0.1.11
+   * @version v0.1.27
    */
   readonly patternTemplate: string;
 
@@ -34,8 +45,9 @@ interface SingleGroupMangleExpressionOptions {
    *
    * @example "GROUP_NAME"
    * @since v0.1.11
+   * @deprecated Use `SingleGroupMangleExpression.CAPTURE_GROUP` instead.
    */
-  readonly groupName: string;
+  readonly groupName?: string;
 
   /**
    * Should the expression be case sensitive.
@@ -47,20 +59,34 @@ interface SingleGroupMangleExpressionOptions {
 }
 
 /**
+ * The name of the capturing group in a template that will be found and
+ * replaced.
+ */
+const GROUP_FIND_AND_REPLACE = "SingleGroupMangleExpressionCapturingGroup";
+
+/**
  * A {@link SingleGroupMangleExpression} is a {@link MangleExpression}
  * implementation that matches and replaces based on a single named group.
  *
  * @example
- * new SingleGroupMangleExpression(
- *   "(?<=--)(?<GROUP_NAME>%s)(?=--)",
- *   "GROUP_NAME",
- * );
+ * new SingleGroupMangleExpression({
+ *   patternTemplate: `
+ *     (?<=--)
+ *     ${SingleGroupMangleExpression.CAPTURE_GROUP}
+ *     (?=--)
+ *   `,
+ * });
  * // matches "bar" in "foo--bar--" and for the replacement "baz" will change it
  * // into "foo--baz--".
  * @since v0.1.11
- * @version v0.1.26
+ * @version v0.1.27
  */
 class SingleGroupMangleExpression implements MangleExpression {
+  /**
+   * The capturing group to be found and replaced.
+   */
+  public static readonly CAPTURE_GROUP: string = "";
+
   /**
    * The template string to use as (generic) pattern.
    */
@@ -81,12 +107,13 @@ class SingleGroupMangleExpression implements MangleExpression {
    * and replace.
    *
    * @param params The {@link SingleGroupMangleExpressionOptions}.
+   * @throws If {@link SingleGroupMangleExpression.CAPTURE_GROUP} is missing.
    * @since v0.1.11
-   * @version v0.1.26
+   * @version v0.1.27
    */
   constructor(params: SingleGroupMangleExpressionOptions) {
     this.patternTemplate = params.patternTemplate.replace(/\s/g, "");
-    this.groupName = params.groupName;
+    this.groupName = params.groupName || GROUP_FIND_AND_REPLACE;
     this.caseSensitive = params.caseSensitive === undefined ?
       true : params.caseSensitive;
   }
