@@ -19,6 +19,8 @@ interface NestedGroupMangleExpressionOptions {
    * A generic pattern with a `"%s"` for a specific character pattern.
    *
    * NOTE 1: only one `"%s"` is supported.
+   * NOTE 2: whitespace is automatically removed from this template.
+   *
    *
    * @example "(?<=--)(?<GROUP_NAME>%s)(?=--)"
    * @since v0.1.11
@@ -29,6 +31,7 @@ interface NestedGroupMangleExpressionOptions {
    * A generic pattern with a `"%s"` for a specific character pattern.
    *
    * NOTE 1: only one `"%s"` is supported.
+   * NOTE 2: whitespace is automatically removed from this template.
    *
    * @example "(?<=--)(?<GROUP_NAME>%s)(?=--)"
    * @since v0.1.11
@@ -37,6 +40,9 @@ interface NestedGroupMangleExpressionOptions {
 
   /**
    * The name of a group in `patternTemplate`.
+   *
+   * NOTE 1: it is assumed the provided group is present in the both templates.
+   * If this is not true the failure will be silent.
    *
    * @example "GROUP_NAME"
    * @since v0.1.11
@@ -97,37 +103,16 @@ class NestedGroupMangleExpression implements MangleExpression {
    * Create an expression from a top-level pattern an sub pattern with a single
    * named group to match and replace.
    *
-   * NOTE 1: whitespace is automatically removed from both templates.
-   * NOTE 2: the class assumes the provided group is present in the template. If
-   * it is not this class will fail silently.
-   *
-   * @param params The top-level template.
-   * @param [subPatternTemplate] The sub template.
-   * @param [groupName] The name of a group in both pattern templates.
-   * @param [caseSensitive] Should the expression be case sensitive.
+   * @param params The {@link NestedGroupMangleExpressionOptions}.
    * @since v0.1.12
-   * @version v0.1.25
-   * @deprecated Use first parameter as object for all parameters instead.
+   * @version v0.1.26
    */
-  constructor(
-    params: string | NestedGroupMangleExpressionOptions,
-    subPatternTemplate = "",
-    groupName = "",
-    caseSensitive = true,
-  ) {
-    if (typeof params === "string") {
-      const patternTemplate = params;
-      this.patternTemplate = patternTemplate.replace(/\s/g, "");
-      this.subPatternTemplate = subPatternTemplate.replace(/\s/g, "");
-      this.groupName = groupName;
-      this.caseSensitive =  caseSensitive;
-    } else {
-      this.patternTemplate = params.patternTemplate.replace(/\s/g, "");
-      this.subPatternTemplate = params.subPatternTemplate.replace(/\s/g, "");
-      this.groupName = params.groupName;
-      this.caseSensitive = params.caseSensitive === undefined ?
-        true : params.caseSensitive;
-    }
+  constructor(params: NestedGroupMangleExpressionOptions) {
+    this.patternTemplate = params.patternTemplate.replace(/\s/g, "");
+    this.subPatternTemplate = params.subPatternTemplate.replace(/\s/g, "");
+    this.groupName = params.groupName;
+    this.caseSensitive = params.caseSensitive === undefined ?
+      true : params.caseSensitive;
   }
 
   /**

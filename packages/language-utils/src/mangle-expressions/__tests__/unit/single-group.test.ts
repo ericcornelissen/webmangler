@@ -190,33 +190,6 @@ suite("SingleGroupMangleExpression", function() {
           expect(i).to.equal(expected.length);
         }
       });
-
-      test(`${testName} (deprecated constructor)`, function() {
-        for (const testCase of getScenario()) {
-          const {
-            patternTemplate,
-            group,
-            caseSensitive,
-            pattern,
-            s,
-            expected,
-          } = testCase;
-
-          const subject = new SingleGroupMangleExpression(
-            patternTemplate,
-            group,
-            caseSensitive,
-          );
-
-          let i = 0;
-          for (const str of subject.findAll(s, pattern)) {
-            expect(str).to.equal(expected[i]);
-            i++;
-          }
-
-          expect(i).to.equal(expected.length);
-        }
-      });
     }
   });
 
@@ -405,28 +378,6 @@ suite("SingleGroupMangleExpression", function() {
             groupName: group,
             caseSensitive,
           });
-
-          const result = subject.replaceAll(s, replacements);
-          expect(result).to.equal(expected);
-        }
-      });
-
-      test(`${testName} (deprecated constructor)`, function() {
-        for (const testCase of getScenario()) {
-          const {
-            patternTemplate,
-            group,
-            caseSensitive,
-            replacements,
-            s,
-            expected,
-          } = testCase;
-
-          const subject = new SingleGroupMangleExpression(
-            patternTemplate,
-            group,
-            caseSensitive,
-          );
 
           const result = subject.replaceAll(s, replacements);
           expect(result).to.equal(expected);

@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Drop support for deprecated `MangleExpression` constructors. ([#243])
 - Support more top-level matching patterns in NestedMangleExpression. ([#246])
 - Use `ReadonlyMap` in all `MangleExpression` and `WebManglerLanguagePlugin`
   implementations. ([#248])
@@ -29,6 +30,7 @@ Versioning].
 [#191]: https://github.com/ericcornelissen/webmangler/pull/191
 [#211]: https://github.com/ericcornelissen/webmangler/pull/211
 [#236]: https://github.com/ericcornelissen/webmangler/pull/236
+[#243]: https://github.com/ericcornelissen/webmangler/pull/243
 [#246]: https://github.com/ericcornelissen/webmangler/pull/246
 [#248]: https://github.com/ericcornelissen/webmangler/pull/248
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
