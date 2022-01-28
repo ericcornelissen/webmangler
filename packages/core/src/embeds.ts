@@ -1,11 +1,9 @@
-import type { CharSet } from "./characters";
 import type {
   WebManglerEmbed,
   WebManglerFile,
   WebManglerLanguagePlugin,
 } from "./types";
 
-import { ALL_LETTER_CHARS, ALL_NUMBER_CHARS } from "./characters";
 import NameGenerator from "./name-generator.class";
 
 type EmbedsMap = Map<WebManglerFile, Iterable<IdentifiableWebManglerEmbed>>;
@@ -23,14 +21,6 @@ export interface IdentifiableWebManglerEmbed extends WebManglerEmbed {
    */
   readonly id: string;
 }
-
-/**
- * The {@link CharSet} used to generate unique identifiers for embed locations.
- */
-const idCharSet: CharSet = [
-  ...ALL_LETTER_CHARS,
-  ...ALL_NUMBER_CHARS,
-];
 
 /**
  * The prefix for all WebMangler embed identifiers.
@@ -56,7 +46,7 @@ function compareStartIndex(a: WebManglerEmbed, b: WebManglerEmbed): number {
  * @returns A unique string that does not appear in `s`.
  */
 function generateUniqueString(s: string): string {
-  const nameGenerator = new NameGenerator({ charSet: idCharSet });
+  const nameGenerator = new NameGenerator({ });
 
   let id = nameGenerator.nextName();
   while (s.includes(id)) {

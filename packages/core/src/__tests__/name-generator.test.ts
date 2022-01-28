@@ -1,35 +1,48 @@
-import type { TestScenario } from "@webmangler/testing";
-import type { CharSet } from "../characters";
+import type { TestScenarios } from "@webmangler/testing";
+import type { CharSet } from "@webmangler/types";
 
 import { expect } from "chai";
 
-import {
-  ALL_LOWERCASE_CHARS,
-  ALL_NUMBER_CHARS,
-  ALL_UPPERCASE_CHARS,
-} from "../characters";
 import NameGenerator from "../name-generator.class";
 
 interface TestCase {
   charSet?: CharSet;
   reserved?: string[];
   samples: {
-    inc: number,
-    expected: string
+    inc: number;
+    expected: string;
   }[];
 }
 
+const ALL_LOWERCASE_CHARS: CharSet = [
+  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+  "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+];
+
+const ALL_NUMBER_CHARS: CharSet = [
+  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+];
+
+const ALL_UPPERCASE_CHARS: CharSet = [
+  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+  "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+];
+
 suite("NameGenerator", function() {
-  const defaultCharsetArray = Array.from(ALL_LOWERCASE_CHARS);
+  const defaultCharsetArray = [
+    ...ALL_LOWERCASE_CHARS,
+    ...ALL_UPPERCASE_CHARS,
+    ...ALL_NUMBER_CHARS,
+  ];
 
   const allLowercaseCharsArray = Array.from(ALL_LOWERCASE_CHARS);
   const allNumberCharsArray = Array.from(ALL_NUMBER_CHARS);
   const allUppercaseCharsArray = Array.from(ALL_UPPERCASE_CHARS);
 
-  const reservedScenarios: TestScenario<TestCase>[] = [
+  const reservedScenarios: TestScenarios<TestCase[]> = [
     {
-      name: "no reserved",
-      cases: [
+      testName: "no reserved",
+      getScenario: () => [
         {
           samples: [
             ...defaultCharsetArray.map((char) => {
@@ -37,14 +50,14 @@ suite("NameGenerator", function() {
             }),
             { inc: 0, expected: "aa" },
             { inc: 0, expected: "ab" },
-            { inc: defaultCharsetArray.length - 3, expected: "az" },
+            { inc: defaultCharsetArray.length - 3, expected: "a9" },
             { inc: 0, expected: "ba" },
           ],
         },
         {
           samples: [
-            { inc: defaultCharsetArray.length**2, expected: "za" },
-            { inc: defaultCharsetArray.length - 2, expected: "zz" },
+            { inc: defaultCharsetArray.length**2, expected: "9a" },
+            { inc: defaultCharsetArray.length - 2, expected: "99" },
             { inc: 0, expected: "aaa" },
             { inc: 0, expected: "aab" },
           ],
@@ -84,8 +97,8 @@ suite("NameGenerator", function() {
       ],
     },
     {
-      name: "reserved strings",
-      cases: [
+      testName: "reserved strings",
+      getScenario: () => [
         {
           reserved: ["a"],
           samples: [
@@ -128,8 +141,8 @@ suite("NameGenerator", function() {
       ],
     },
     {
-      name: "reserved patterns",
-      cases: [
+      testName: "reserved patterns",
+      getScenario: () => [
         {
           reserved: ["a.*"],
           samples: [
@@ -185,8 +198,8 @@ suite("NameGenerator", function() {
       ],
     },
     {
-      name: "reserved strings & patterns",
-      cases: [
+      testName: "reserved strings & patterns",
+      getScenario: () => [
         {
           reserved: ["a.*", "c"],
           samples: [
@@ -228,8 +241,8 @@ suite("NameGenerator", function() {
       ],
     },
     {
-      name: "duplicate characters",
-      cases: [
+      testName: "duplicate characters",
+      getScenario: () => [
         {
           charSet: ["a", "b", "c", "a"],
           samples: [
@@ -255,9 +268,9 @@ suite("NameGenerator", function() {
     },
   ];
 
-  for (const { name, cases } of reservedScenarios) {
-    test(name, function() {
-      for (const testCase of cases) {
+  for (const { getScenario, testName } of reservedScenarios) {
+    test(testName, function() {
+      for (const testCase of getScenario()) {
         const { charSet: _charSet, reserved, samples } = testCase;
         const charSet = _charSet || defaultCharsetArray;
         expect(charSet).to.have.length.above(3);

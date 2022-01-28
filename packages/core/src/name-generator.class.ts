@@ -1,6 +1,4 @@
-import type { Char, CharSet } from "./characters";
-
-import { ALL_LOWERCASE_CHARS } from "./characters";
+import type { Char, CharSet } from "@webmangler/types";
 
 /**
  * The options for a {@link NameGenerator}.
@@ -36,7 +34,13 @@ export default class NameGenerator {
   /**
    * The default set of characters used by {@link @NameGenerator}s.
    */
-  private static readonly DEFAULT_CHARSET: CharSet = ALL_LOWERCASE_CHARS;
+  private static readonly DEFAULT_CHARSET: CharSet = [
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+    "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
+    "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+    "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7",
+    "8", "9",
+  ];
 
   /**
    * The list of reserved names and patterns.
