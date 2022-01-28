@@ -27,6 +27,7 @@ const RUN_MUTATION_TESTING = [
   "mangler-css-variables",
   "mangler-html-ids",
   "mangler-utils",
+  "testing",
 ];
 
 main(process.argv);
