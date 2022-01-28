@@ -6,9 +6,9 @@ import { expect } from "chai";
 import {
   embedContentInBody,
   embedContentInContext,
-} from "../../__tests__/benchmark-helpers";
+} from "../common";
 
-import attributeExpressionFactory from "../attributes";
+import expressionsFactory from "../../attributes";
 
 suite("HTML - Attribute Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
@@ -27,7 +27,7 @@ suite("HTML - Attribute Expression Factory", function() {
   `;
 
   suiteSetup(function() {
-    expressions = attributeExpressionFactory({ });
+    expressions = expressionsFactory({ });
   });
 
   test("benchmark validity", function() {

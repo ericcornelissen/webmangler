@@ -1,6 +1,6 @@
 import type { MultiValueAttributeOptions } from "@webmangler/types";
 
-import type { HtmlElementValuesSets } from "./types";
+import type { HtmlElementValuesSets } from "../common";
 
 import {
   generateValueObjects,
@@ -8,16 +8,16 @@ import {
 } from "@webmangler/testing";
 import { expect } from "chai";
 
-import { getAllMatches } from "./test-helpers";
 import {
   buildHtmlAttributes,
   buildHtmlComments,
   buildHtmlElements,
   buildHtmlElement,
-} from "./builders";
-import { valuePresets } from "./values";
+  getAllMatches,
+  valuePresets,
+} from "../common";
 
-import expressionsFactory from "../multi-value-attributes";
+import expressionsFactory from "../../multi-value-attributes";
 
 suite("HTML - Multi Value Attribute Expression Factory", function() {
   type TestScenario = {

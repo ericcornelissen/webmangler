@@ -1,8 +1,8 @@
 import { expect } from "chai";
 
-import { sampleValues } from "./values";
+import { sampleValues } from "../common";
 
-import { patterns } from "../common";
+import { patterns } from "../../common";
 
 suite("HTML - common expressions", function() {
   suite("Patterns", function() {
