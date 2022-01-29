@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.25] - 2022-01-29
+
 - BREAKING: Update the return type of the main `webmangler` function. ([#244])
 
 ## [0.1.24] - 2021-08-22

@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.27] - 2022-01-29
+
 - BREAKING: Remove `ALL_CHARS` character set. ([#247])
 
 ## [0.1.26] - 2022-01-17

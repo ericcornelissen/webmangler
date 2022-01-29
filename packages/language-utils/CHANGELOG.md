@@ -8,8 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
-- Drop support for deprecated `MangleExpression` constructors. ([#243])
-- Support more top-level matching patterns in NestedMangleExpression. ([#246])
+- _No changes yet_
+
+## [0.1.26] - 2022-01-29
+
+- BREAKING: Drop deprecated `MangleExpression` constructors. ([#243])
+- Support more top-level matching patterns in `NestedMangleExpression`. ([#246])
 - Use `ReadonlyMap` in all `MangleExpression` and `WebManglerLanguagePlugin`
   implementations. ([#248])
 
