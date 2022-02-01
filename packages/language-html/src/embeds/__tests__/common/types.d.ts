@@ -1,6 +1,10 @@
 import type { WebManglerEmbed, WebManglerFile } from "@webmangler/types";
 
-export type TestCase = {
+interface TestCase {
   file: WebManglerFile;
   expected: WebManglerEmbed[];
 }
+
+export type {
+  TestCase,
+};

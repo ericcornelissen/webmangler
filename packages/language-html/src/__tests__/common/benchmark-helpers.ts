@@ -6,7 +6,7 @@ const longDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit
  * @param content The content to embed.
  * @returns A full HTML page.
  */
-export function embedContentInBody(content: string): string {
+function embedContentInBody(content: string): string {
   return `
     <html>
       <head>
@@ -26,7 +26,7 @@ export function embedContentInBody(content: string): string {
  * @param content The content to embed.
  * @returns A snippet of HTML.
  */
-export function embedContentInContext(content: string): string {
+function embedContentInContext(content: string): string {
   return `
     <header>
       <img alt="${longDescription}" src="foobar.jpg"/>
@@ -42,3 +42,8 @@ export function embedContentInContext(content: string): string {
     </footer>
   `;
 }
+
+export {
+  embedContentInBody,
+  embedContentInContext,
+};

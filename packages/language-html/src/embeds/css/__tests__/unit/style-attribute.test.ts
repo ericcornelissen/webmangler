@@ -1,10 +1,10 @@
 import type { TestScenarios } from "@webmangler/testing";
 
-import type { TestCase } from "../../__tests__/types";
+import type { TestCase } from "../common";
 
 import { expect } from "chai";
 
-import { getStyleAttributesAsEmbeds } from "../style-attribute";
+import { getStyleAttributesAsEmbeds } from "../../style-attribute";
 
 const EMBED_TYPE_CSS = "css";
 

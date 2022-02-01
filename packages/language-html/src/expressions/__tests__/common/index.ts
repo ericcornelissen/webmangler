@@ -10,7 +10,7 @@ import type {
 import {
   embedContentInBody,
   embedContentInContext,
-} from "../../../__tests__/benchmark-helpers";
+} from "../../../__tests__/common/benchmark-helpers";
 import {
   buildHtmlAttributes,
   buildHtmlComments,

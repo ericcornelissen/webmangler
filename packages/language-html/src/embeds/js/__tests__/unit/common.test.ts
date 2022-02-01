@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import * as common from "../common";
+import * as common from "../../common";
 
 suite("HTML JavaScript Embeds - Common", function() {
   test("embed type", function() {

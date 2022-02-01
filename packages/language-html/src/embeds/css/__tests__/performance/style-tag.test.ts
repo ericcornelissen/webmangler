@@ -6,9 +6,9 @@ import { expect } from "chai";
 import {
   embedContentInBody,
   embedContentInContext,
-} from "../../../__tests__/benchmark-helpers";
+} from "../common";
 
-import { getStyleTagsAsEmbeds } from "../style-tag";
+import { getStyleTagsAsEmbeds } from "../../style-tag";
 
 suite("CSS - Embeds - Find <style> Tag Embeds", function() {
   const contentWithStyleTags = embedContentInContext(`

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import embeddedJsFinders from "../js";
+import embeddedJsFinders from "../../index";
 
 suite("HTML JavaScript Embeds", function() {
   test("exported values", function() {

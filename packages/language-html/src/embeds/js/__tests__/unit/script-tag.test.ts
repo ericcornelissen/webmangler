@@ -1,14 +1,14 @@
 import type { TestScenarios } from "@webmangler/testing";
 
-import type { TestCase } from "../../__tests__/types";
+import type { TestCase } from "../common";
 
 import { expect } from "chai";
 
-import { getStyleTagsAsEmbeds } from "../style-tag";
+import { getScriptTagsAsEmbeds } from "../../script-tag";
 
-const EMBED_TYPE_CSS = "css";
+const EMBED_TYPE_JS = "js";
 
-suite("HTML CSS Embeds - <style> tag", function() {
+suite("HTML JavaScript Embeds - <script> tag", function() {
   const scenarios: TestScenarios<TestCase[]> = [
     {
       testName: "sample",
@@ -16,14 +16,14 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<style>.foobar { color: red; }</style>",
+            content: "<script>var foo = \"bar\";</script>",
           },
           expected: [
             {
-              content: ".foobar { color: red; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 7,
-              endIndex: 30,
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
               getRaw(): string { return this.content; },
             },
           ],
@@ -31,14 +31,14 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<style type=\"text/css\">.foobar { color: red; }</style>",
+            content: "<script id=\"foobar\">var foo = \"bar\";</script>",
           },
           expected: [
             {
-              content: ".foobar { color: red; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 23,
-              endIndex: 46,
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 20,
+              endIndex: 36,
               getRaw(): string { return this.content; },
             },
           ],
@@ -48,24 +48,24 @@ suite("HTML CSS Embeds - <style> tag", function() {
             type: "html",
             content: "<html>" +
               "<head>" +
-              "<style>.foo { color: red; }</style>" +
-              "<style>.bar { font: serif; }</style>" +
+              "<script>var foo = \"bar\";</script>" +
+              "<script>var hello = \"world\";</script>" +
               "</head>" +
               "</html>",
           },
           expected: [
             {
-              content: ".foo { color: red; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 19,
-              endIndex: 39,
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 20,
+              endIndex: 36,
               getRaw(): string { return this.content; },
             },
             {
-              content: ".bar { font: serif; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 54,
-              endIndex: 75,
+              content: "var hello = \"world\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 53,
+              endIndex: 73,
               getRaw(): string { return this.content; },
             },
           ],
@@ -78,29 +78,29 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<!--<style>.foobar { color: red; }</style>-->",
+            content: "<!--<script>var foo = \"bar\";</script>-->",
           },
           expected: [],
         },
         {
           file: {
             type: "html",
-            content: "<!-- \n <style>.foobar { color: red; }</style>-->",
+            content: "<!-- \n <script>var foo = \"bar\";</script>-->",
           },
           expected: [],
         },
         {
           file: {
             type: "html",
-            content: "<!--<style>.foobar { color: red; }</style>-->" +
-              "<style>.foobar { color: blue; }</style>",
+            content: "<!--<script>var foo = \"bar\";</script>-->" +
+              "<script>var foo = \"baz\";</script>",
           },
           expected: [
             {
-              content: ".foobar { color: blue; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 52,
-              endIndex: 76,
+              content: "var foo = \"baz\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 48,
+              endIndex: 64,
               getRaw(): string { return this.content; },
             },
           ],
@@ -108,15 +108,15 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<style>.foobar { color: red; }</style>" +
-             "<!--<style>.foobar { color: blue; }</style>-->",
+            content: "<script>var foo = \"bar\";</script>" +
+             "<!--<script>var foo = \"baz\";</script>-->",
           },
           expected: [
             {
-              content: ".foobar { color: red; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 7,
-              endIndex: 30,
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
               getRaw(): string { return this.content; },
             },
           ],
@@ -129,14 +129,14 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<STYLE>.foobar { color: red; }</STYLE>",
+            content: "<SCRIPT>var foo = \"bar\";</SCRIPT>",
           },
           expected: [
             {
-              content: ".foobar { color: red; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 7,
-              endIndex: 30,
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
               getRaw(): string { return this.content; },
             },
           ],
@@ -144,14 +144,14 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<Style>.foobar { color: red; }</Style>",
+            content: "<Script>var foo = \"bar\";</Script>",
           },
           expected: [
             {
-              content: ".foobar { color: red; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 7,
-              endIndex: 30,
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
               getRaw(): string { return this.content; },
             },
           ],
@@ -164,29 +164,14 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<style> </style>",
+            content: "<script> </script>",
           },
           expected: [
             {
               content: " ",
-              type: EMBED_TYPE_CSS,
-              startIndex: 7,
-              endIndex: 8,
-              getRaw(): string { return this.content; },
-            },
-          ],
-        },
-        {
-          file: {
-            type: "html",
-            content: "< style>.foobar { color: red; }</style>",
-          },
-          expected: [
-            {
-              content: ".foobar { color: red; }",
-              type: EMBED_TYPE_CSS,
+              type: EMBED_TYPE_JS,
               startIndex: 8,
-              endIndex: 31,
+              endIndex: 9,
               getRaw(): string { return this.content; },
             },
           ],
@@ -194,14 +179,14 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<style>.foobar { color: red; }</style hello=\"world\">",
+            content: "< script>var foo = \"bar\";</script>",
           },
           expected: [
             {
-              content: ".foobar { color: red; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 7,
-              endIndex: 30,
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 9,
+              endIndex: 25,
               getRaw(): string { return this.content; },
             },
           ],
@@ -209,14 +194,29 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<!--foo--!><style>.foobar { color: red; }</style><!--bar-->",
+            content: "<script>var foo = \"bar\";</script hello=\"world\">",
           },
           expected: [
             {
-              content: ".foobar { color: red; }",
-              type: EMBED_TYPE_CSS,
-              startIndex: 18,
-              endIndex: 41,
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<!--foo--!><script>var foo = \"bar\";</script><!--bar-->",
+          },
+          expected: [
+            {
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 19,
+              endIndex: 35,
               getRaw(): string { return this.content; },
             },
           ],
@@ -236,14 +236,14 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<style></style>",
+            content: "<script></script>",
           },
           expected: [],
         },
         {
           file: {
             type: "html",
-            content: "<!--<style>.foobar { color: red; }</style>--!>",
+            content: "<!--<script>var foo = \"bar\";</script>--!>",
           },
           expected: [],
         },
@@ -256,7 +256,7 @@ suite("HTML CSS Embeds - <style> tag", function() {
       for (const testCase of getScenario()) {
         const { expected, file } = testCase;
 
-        const embeds = getStyleTagsAsEmbeds(file);
+        const embeds = getScriptTagsAsEmbeds(file);
         expect(embeds).to.have.length(expected.length);
 
         Array.from(embeds).forEach((embed, i) => {

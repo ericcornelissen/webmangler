@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import embeddedCssFinders from "../css";
+import embeddedCssFinders from "../../index";
 
 suite("HTML CSS Embeds", function() {
   test("exported values", function() {

@@ -1,4 +1,4 @@
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 
 import { expect } from "chai";
 
@@ -12,10 +12,10 @@ type TestCase = {
 }
 
 suite("HTML Benchmark Helpers", function() {
-  const scenarios: TestScenario<TestCase>[] = [
+  const scenarios: TestScenarios<TestCase[]> = [
     {
-      name: "sample",
-      cases: [
+      testName: "sample",
+      getScenario: () => [
         {
           input: "<div class=\"hello world\"></div>",
         },
@@ -34,9 +34,9 @@ suite("HTML Benchmark Helpers", function() {
   ];
 
   suite("::embedContentInBody", function() {
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
+    for (const { getScenario, testName } of scenarios) {
+      test(testName, function() {
+        for (const testCase of getScenario()) {
           const { input } = testCase;
 
           const result = embedContentInBody(input);
@@ -47,9 +47,9 @@ suite("HTML Benchmark Helpers", function() {
   });
 
   suite("::embedContentInContext", function() {
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
+    for (const { getScenario, testName } of scenarios) {
+      test(testName, function() {
+        for (const testCase of getScenario()) {
           const { input } = testCase;
 
           const result = embedContentInContext(input);
