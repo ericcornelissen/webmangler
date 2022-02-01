@@ -7,6 +7,7 @@
 import * as path from "path";
 
 import execSync from "./utilities/exec.js";
+import { checkFlags } from "./utilities/flags.js";
 import log from "./utilities/log.js";
 import * as paths from "./paths.js";
 import values from "../.values.cjs";
@@ -35,6 +36,8 @@ const HARD_DELETE_ONLY = [
 main(process.argv.slice(2));
 
 function main(argv) {
+  checkFlags(Object.values(FLAGS), argv);
+
   log.print("Cleaning repository...");
   removeFilesAndFolders(argv);
   resetTestData();

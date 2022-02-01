@@ -12,6 +12,7 @@ import fs from "fs";
 import * as path from "path";
 
 import execSync from "./utilities/exec.js";
+import { checkFlags } from "./utilities/flags.js";
 import log from "./utilities/log.js";
 import vcs from "./utilities/vcs.js";
 import * as paths from "./paths.js";
@@ -27,15 +28,14 @@ const FLAGS = {
   WATCH: "--watch",
 };
 
-
 const nycBin = path.resolve(paths.nodeBin, "nyc");
 const mochaBin = path.resolve(paths.nodeBin, "mocha");
 const strykerBin = path.resolve(paths.nodeBin, "stryker");
 
-main(process.argv, process.env);
+main(process.argv.slice(2), process.env);
 
 async function main(argv, env) {
-  argv = argv.slice(2);
+  checkFlags(Object.values(FLAGS), argv);
 
   const cmd = getCliCommand(argv);
   const cmdArgs = getCommandArgs(argv);

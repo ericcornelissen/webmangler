@@ -13,6 +13,7 @@
 import * as path from "path";
 
 import execSync from "./utilities/exec.js";
+import { checkFlags } from "./utilities/flags.js";
 import log from "./utilities/log.js";
 import vcs from "./utilities/vcs.js";
 import * as paths from "./paths.js";
@@ -39,10 +40,10 @@ const ymlExts = ["yml"];
 const eslintBin = path.resolve(paths.nodeBin, "eslint");
 const mdlintBin = path.resolve(paths.nodeBin, "markdownlint");
 
-main(process.argv);
+main(process.argv.slice(2));
 
 async function main(argv) {
-  argv = argv.slice(2);
+  checkFlags(Object.values(FLAGS), argv);
 
   log.print("Initializing Linter...");
   const languages = getLanguagesToLint(argv);
