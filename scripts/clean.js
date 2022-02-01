@@ -17,7 +17,9 @@ const {
   testDataDir,
 } = values;
 
-const HARD_FLAG = "--hard";
+const FLAGS = {
+  HARD: "--hard",
+};
 
 const ALWAYS_DELETE = [
   `${tempDir}/`,
@@ -44,7 +46,7 @@ function removeFilesAndFolders(argv) {
   log.reprint("Removing generated files & folders...");
 
   const filesAndFoldersToRemove = ALWAYS_DELETE;
-  if (argv.includes(HARD_FLAG)) {
+  if (argv.includes(FLAGS.HARD)) {
     filesAndFoldersToRemove.push(...HARD_DELETE_ONLY);
   }
 
@@ -62,7 +64,7 @@ function resetTestData() {
 }
 
 function cleanPackages(argv) {
-  if (!argv.includes(HARD_FLAG)) {
+  if (!argv.includes(FLAGS.HARD)) {
     return;
   }
 

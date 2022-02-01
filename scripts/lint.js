@@ -17,8 +17,10 @@ import log from "./utilities/log.js";
 import vcs from "./utilities/vcs.js";
 import * as paths from "./paths.js";
 
-const ALL_FLAG = "--all";
-const FORMAT_FLAG = "--format";
+const FLAGS = {
+  ALL: "--all",
+  FORMAT: "--format",
+};
 
 const SUPPORTED_LANGUAGES = [
   "js",
@@ -61,7 +63,7 @@ async function runLinter(argv, linter) {
       ...filesToLint,
     ];
 
-    if (argv.includes(FORMAT_FLAG)) {
+    if (argv.includes(FLAGS.FORMAT)) {
       args.push(linter.fixArg);
     }
 
@@ -133,7 +135,7 @@ function newMarkDownLintConfig(exts) {
 }
 
 async function getFilesToLint(argv, exts) {
-  if (argv.includes(ALL_FLAG)) {
+  if (argv.includes(FLAGS.ALL)) {
     return ["."];
   } else {
     const changedFiles = await vcs.getChangedFiles();
