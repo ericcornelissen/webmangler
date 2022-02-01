@@ -4,23 +4,25 @@ import type { Char, CharSet } from "@webmangler/types";
  * The options for a {@link NameGenerator}.
  *
  * @since v0.1.24
+ * @version v0.1.26
  */
-type NameGeneratorOptions = {
+interface NameGeneratorOptions {
   /**
-   * One or more reserved names and/or expressions for the {@link
-   * NameGenerator}.
+   * One or more reserved names and/or expressions for the
+   * {@link NameGenerator}.
    *
    * @since v0.1.0
-   * @version v0.1.7
+   * @version v0.1.26
    */
-  reservedNames?: Iterable<string>;
+  readonly reservedNames?: Iterable<string>;
 
   /**
    * The {@link CharSet} to be used by the {@link NameGenerator}.
    *
    * @since v0.1.7
+   * @version v0.1.26
    */
-  charSet?: CharSet;
+  readonly charSet: CharSet;
 }
 
 /**
@@ -28,20 +30,9 @@ type NameGeneratorOptions = {
  * and unique strings.
  *
  * @since v0.1.0
- * @version v0.1.18
+ * @version v0.1.26
  */
-export default class NameGenerator {
-  /**
-   * The default set of characters used by {@link @NameGenerator}s.
-   */
-  private static readonly DEFAULT_CHARSET: CharSet = [
-    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-    "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
-    "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
-    "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7",
-    "8", "9",
-  ];
-
+class NameGenerator {
   /**
    * The list of reserved names and patterns.
    */
@@ -87,7 +78,7 @@ export default class NameGenerator {
    */
   constructor(options: NameGeneratorOptions) {
     const reserved = options.reservedNames || [];
-    const charSet = options.charSet || NameGenerator.DEFAULT_CHARSET;
+    const charSet = options.charSet;
 
     const charSetNoDuplicates = new Set(charSet);
     if (charSetNoDuplicates.size === 0) {
@@ -176,3 +167,5 @@ export default class NameGenerator {
     return this.charList[nextCharIndex];
   }
 }
+
+export default NameGenerator;
