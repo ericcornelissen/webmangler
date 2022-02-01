@@ -14,7 +14,6 @@ interface MangleExpressionMockDependencies {
 function initMangleExpressionMock({
   createStub,
 }: MangleExpressionMockDependencies) {
-  let id = 0;
   return class MangleExpressionMock {
     /**
      * The `findAll` method of the mock.
@@ -38,13 +37,14 @@ function initMangleExpressionMock({
      * @param [stubs.findAll] A {@link Stub} for `findAll`.
      * @param [stubs.replaceAll] A {@link Stub} for `replaceAll`.
      * @since v0.1.5
+     * @version v0.1.7
      */
     constructor(stubs?: {
       findAll?: Stub;
       replaceAll?: Stub;
     }) {
-      this.findAll = stubs?.findAll || createStub().returns([id++]);
-      this.replaceAll = stubs?.replaceAll || createStub().returns(`${id++}`);
+      this.findAll = stubs?.findAll || createStub().returns([]);
+      this.replaceAll = stubs?.replaceAll || createStub().returns("");
     }
   };
 }

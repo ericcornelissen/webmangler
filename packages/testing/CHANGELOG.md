@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Mocks no longer return per-instance unique values. ([#253])
 
 ## [0.1.6] - 2022-01-17
 
@@ -53,6 +53,7 @@ Versioning].
 [#190]: https://github.com/ericcornelissen/webmangler/pull/190
 [#199]: https://github.com/ericcornelissen/webmangler/pull/199
 [#234]: https://github.com/ericcornelissen/webmangler/pull/234
+[#253]: https://github.com/ericcornelissen/webmangler/pull/253
 [56b0fb6]: https://github.com/ericcornelissen/webmangler/commit/56b0fb6c3755d84d556c528610dc7387d6327b47
 [6175995]: https://github.com/ericcornelissen/webmangler/commit/617599564ec741f4b5a6ca0f47295f3db1817fb5
 [775c343]: https://github.com/ericcornelissen/webmangler/commit/775c34321bad41e9171b70ed5a33d72d793bf0f6
