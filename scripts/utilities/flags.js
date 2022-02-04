@@ -3,6 +3,10 @@
  * Provides a collection of functions to work with CLI flags.
  */
 
+import process from "process";
+
+import log from "./log.js";
+
 function isFlag(arg) {
   return arg.startsWith("--");
 }
@@ -14,7 +18,8 @@ function checkFlags(supportedFlags, providedArgs) {
     }
 
     if (!supportedFlags.includes(arg)) {
-      throw new Error(`Unsupported flag '${arg}'`);
+      log.println(`Error: Unsupported flag '${arg}'`);
+      process.exit(1);
     }
   }
 
