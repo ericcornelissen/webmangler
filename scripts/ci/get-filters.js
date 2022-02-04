@@ -48,14 +48,7 @@ function getPackageCriteria(arg) {
   case "performance":
     return (packageName) => hasFiles(
       packageName,
-      (filePath) => {
-        const benchmarkSuffixExpr = /\.bench\.ts$/;
-        const benchmarkExpr = new RegExp(`${testsDir}/benchmark`);
-        const performanceExpr = new RegExp(`${testsDir}/performance`);
-        return benchmarkSuffixExpr.test(filePath)
-          || benchmarkExpr.test(filePath)
-          || performanceExpr.test(filePath);
-      },
+      (filePath) => filePath.includes(`${testsDir}/performance`),
     );
   case "test":
     return (packageName) => hasFiles(
