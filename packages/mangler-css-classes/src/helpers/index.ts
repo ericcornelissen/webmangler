@@ -1,3 +1,4 @@
+import { getCharacterSet } from "./characters";
 import {
   getClassAttributeExpressionOptions,
   getQuerySelectorExpressionOptions,
@@ -7,6 +8,7 @@ import { getPrefix } from "./prefix";
 import { getReserved } from "./reserved";
 
 export {
+  getCharacterSet,
   getClassAttributeExpressionOptions,
   getIgnorePatterns,
   getPatterns,
