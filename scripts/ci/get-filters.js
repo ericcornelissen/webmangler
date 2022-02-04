@@ -24,6 +24,7 @@ const RUN_MUTATION_TESTING = [
   "language-css",
   "language-js",
   "language-utils",
+  "mangler-css-classes",
   "mangler-css-variables",
   "mangler-html-ids",
   "mangler-utils",
