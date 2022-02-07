@@ -16,6 +16,9 @@ import values from "../../.values.cjs";
 
 const {
   testsDir,
+  testDirIntegration,
+  testDirPerformance,
+  testDirUnit,
 } = values;
 
 const RUN_MUTATION_TESTING = [
@@ -41,6 +44,13 @@ function main(argv) {
   log.print(filters);
 }
 
+function globToRegExp(str) {
+  return str
+    .replace("{", "(")
+    .replace("}", ")")
+    .replace(",", "|");
+}
+
 function getPackageCriteria(arg) {
   switch (arg) {
   case "mutation":
@@ -48,20 +58,24 @@ function getPackageCriteria(arg) {
   case "performance":
     return (packageName) => hasFiles(
       packageName,
-      (filePath) => filePath.includes(`${testsDir}/performance`),
+      (filePath) => filePath.includes(
+        `${testsDir}/${globToRegExp(testDirPerformance)}`,
+      ),
     );
   case "test":
     return (packageName) => hasFiles(
       packageName,
       (filePath) => {
         const testsExpr = new RegExp(`${testsDir}/[^/]+\\.test\\.ts$`);
-        const unitExpr = new RegExp(`${testsDir}/unit`);
-        const integrationExpr = new RegExp(`${testsDir}/integration`);
-        const commonExpr = new RegExp(`${testsDir}/common/[^/]+\\.test\\.ts`);
+        const unitExpr = new RegExp(
+          `${testsDir}/${globToRegExp(testDirUnit)}/[^/]+\\.test\\.ts$`,
+        );
+        const integrationExpr = new RegExp(
+          `${testsDir}/${globToRegExp(testDirIntegration)}/[^/]+\\.test\\.ts$`,
+        );
         return testsExpr.test(filePath)
           || unitExpr.test(filePath)
-          || integrationExpr.test(filePath)
-          || commonExpr.test(filePath);
+          || integrationExpr.test(filePath);
       },
     );
   default:

@@ -7,6 +7,10 @@ const {
   packagesDir,
   packagesExpr,
   packagesList,
+  testDirAll,
+  testDirIntegration,
+  testDirPerformance,
+  testDirUnit,
   testsDir,
   testSuffix,
   testTypePerformance,
@@ -18,17 +22,17 @@ const {
 let testTypeDir;
 switch (process.env.TEST_TYPE) {
 case testTypePerformance:
-  testTypeDir = "performance";
+  testTypeDir = testDirPerformance;
   break;
 case testTypeIntegration:
-  testTypeDir = "integration";
+  testTypeDir = testDirIntegration;
   break;
 case testTypeUnit:
-  testTypeDir = "{common,unit}";
+  testTypeDir = testDirUnit;
   break;
 case testTypeTests:
 default:
-  testTypeDir = "{.,common,integration,unit}";
+  testTypeDir = testDirAll;
 }
 
 module.exports = {

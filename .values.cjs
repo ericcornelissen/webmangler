@@ -18,6 +18,21 @@ const tempDir = ".temp";
 const testDataDir = "testdata";
 const testsDir = "__tests__";
 
+const _testDirUnit = "unit";
+const testDirCommon = "common";
+const testDirIntegration = "integration";
+const testDirPerformance = "performance";
+const testDirAll = `{${[
+  ".",
+  testDirCommon,
+  testDirIntegration,
+  _testDirUnit,
+].join(",")}}`;
+const testDirUnit = `{${[
+  testDirCommon,
+  _testDirUnit,
+].join(",")}}`;
+
 let packagesExpr = "*";
 let packagesList = [packagesExpr];
 if (process.env.TEST_PACKAGES !== undefined) {
@@ -53,6 +68,11 @@ module.exports = {
   srcDir,
   tempDir,
   testDataDir,
+  testDirAll,
+  testDirCommon,
+  testDirIntegration,
+  testDirPerformance,
+  testDirUnit,
   testsDir,
 
   // Computed

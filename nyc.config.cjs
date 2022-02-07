@@ -10,9 +10,9 @@ const {
   packagesExpr,
   reportsDir,
   tempDir,
-  testSuffixPerformance,
-  testSuffixTest,
+  testDirCommon,
   testsDir,
+  testSuffix,
 } = values;
 
 module.exports = {
@@ -47,8 +47,8 @@ module.exports = {
     `${reportsDir}/`,
     `${tempDir}/`,
     `${dependenciesDir}/`,
-    `${packagesDir}/**/*.{${testSuffixPerformance},${testSuffixTest}}.ts`,
-    `${packagesDir}/**/${testsDir}/common/index.ts`,
+    `${packagesDir}/**/*.${testSuffix}.ts`,
+    `${packagesDir}/**/${testsDir}/${testDirCommon}/index.ts`,
     `${packagesDir}/**/${compiledDir}/`,
     ...packagesCoverageExclusions,
   ],
