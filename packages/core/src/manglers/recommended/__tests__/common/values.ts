@@ -1,6 +1,6 @@
 import type { TestValuesSets } from "@webmangler/testing";
 
-import type { BuiltInManglersOptions } from "../types";
+import type { RecommendedManglersOptions } from "../../types";
 
 const booleanOptional = [
   undefined,
@@ -28,7 +28,6 @@ export const optionsValues = {
   disableCssClassMangling: booleanOptional,
   disableCssVarMangling: booleanOptional,
   disableHtmlAttrMangling: booleanOptional,
-  disableHtmlIdMangling: booleanOptional,
 
   classAttributes: stringsOptional,
   classNamePattern: stringOrStringsOptional,
@@ -42,10 +41,4 @@ export const optionsValues = {
   attrNamePattern: stringOrStringsOptional,
   keepAttrPrefix: stringOptional,
   reservedAttrNames: stringsOptional,
-
-  idAttributes: stringsOptional,
-  idNamePattern: stringOrStringsOptional,
-  keepIdPrefix: stringOptional,
-  reservedIds: stringsOptional,
-  urlAttributes: stringsOptional,
-} as TestValuesSets<keyof BuiltInManglersOptions>;
+} as TestValuesSets<keyof RecommendedManglersOptions>;

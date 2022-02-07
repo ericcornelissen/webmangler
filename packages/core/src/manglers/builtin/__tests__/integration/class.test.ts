@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import BuiltInManglers from "../builtin";
+import BuiltInManglers from "../../index";
 
 suite("Built-in Manglers", function() {
   test("no configuration", function() {
