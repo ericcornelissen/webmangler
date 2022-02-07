@@ -13,12 +13,15 @@
 import * as path from "path";
 
 import execSync from "./utilities/exec.js";
+import { checkFlags } from "./utilities/flags.js";
 import log from "./utilities/log.js";
 import vcs from "./utilities/vcs.js";
 import * as paths from "./paths.js";
 
-const ALL_FLAG = "--all";
-const FORMAT_FLAG = "--format";
+const FLAGS = {
+  ALL: "--all",
+  FORMAT: "--format",
+};
 
 const SUPPORTED_LANGUAGES = [
   "js",
@@ -37,10 +40,10 @@ const ymlExts = ["yml"];
 const eslintBin = path.resolve(paths.nodeBin, "eslint");
 const mdlintBin = path.resolve(paths.nodeBin, "markdownlint");
 
-main(process.argv);
+main(process.argv.slice(2));
 
 async function main(argv) {
-  argv = argv.slice(2);
+  checkFlags(Object.values(FLAGS), argv);
 
   log.print("Initializing Linter...");
   const languages = getLanguagesToLint(argv);
@@ -61,7 +64,7 @@ async function runLinter(argv, linter) {
       ...filesToLint,
     ];
 
-    if (argv.includes(FORMAT_FLAG)) {
+    if (argv.includes(FLAGS.FORMAT)) {
       args.push(linter.fixArg);
     }
 
@@ -133,7 +136,7 @@ function newMarkDownLintConfig(exts) {
 }
 
 async function getFilesToLint(argv, exts) {
-  if (argv.includes(ALL_FLAG)) {
+  if (argv.includes(FLAGS.ALL)) {
     return ["."];
   } else {
     const changedFiles = await vcs.getChangedFiles();

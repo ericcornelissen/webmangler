@@ -12,27 +12,30 @@ import fs from "fs";
 import * as path from "path";
 
 import execSync from "./utilities/exec.js";
+import { checkFlags } from "./utilities/flags.js";
 import log from "./utilities/log.js";
 import vcs from "./utilities/vcs.js";
 import * as paths from "./paths.js";
 import values from "../.values.cjs";
 
-const ALL_FLAG = "--all";
-const COVERAGE_FLAG = "--coverage";
-const INTEGRATION_FLAG = "--integration";
-const MUTATION_FLAG = "--mutation";
-const PERFORMANCE_FLAG = "--performance";
-const UNIT_FLAG = "--unit";
-const WATCH_FLAG = "--watch";
+const FLAGS = {
+  ALL: "--all",
+  COVERAGE: "--coverage",
+  INTEGRATION: "--integration",
+  MUTATION: "--mutation",
+  PERFORMANCE: "--performance",
+  UNIT: "--unit",
+  WATCH: "--watch",
+};
 
 const nycBin = path.resolve(paths.nodeBin, "nyc");
 const mochaBin = path.resolve(paths.nodeBin, "mocha");
 const strykerBin = path.resolve(paths.nodeBin, "stryker");
 
-main(process.argv, process.env);
+main(process.argv.slice(2), process.env);
 
 async function main(argv, env) {
-  argv = argv.slice(2);
+  checkFlags(Object.values(FLAGS), argv);
 
   const cmd = getCliCommand(argv);
   const cmdArgs = getCommandArgs(argv);
@@ -44,7 +47,7 @@ async function main(argv, env) {
     return;
   }
 
-  if (argv.includes(MUTATION_FLAG)) {
+  if (argv.includes(FLAGS.MUTATION)) {
     const allPackages = paths.listPackages().join(",");
     compilePackages(allPackages);
   } else {
@@ -81,11 +84,11 @@ function compilePackages(packagesStr) {
 }
 
 function getCliCommand(argv) {
-  if (argv.includes(COVERAGE_FLAG)) {
+  if (argv.includes(FLAGS.COVERAGE)) {
     return nycBin;
   }
 
-  if (argv.includes(MUTATION_FLAG)) {
+  if (argv.includes(FLAGS.MUTATION)) {
     return strykerBin;
   }
 
@@ -94,15 +97,15 @@ function getCliCommand(argv) {
 
 function getCommandArgs(argv) {
   const cliArgs = [];
-  if (argv.includes(COVERAGE_FLAG)) {
+  if (argv.includes(FLAGS.COVERAGE)) {
     cliArgs.push(mochaBin);
   }
 
-  if (argv.includes(MUTATION_FLAG)) {
+  if (argv.includes(FLAGS.MUTATION)) {
     cliArgs.push("run", "stryker.config.cjs");
   }
 
-  if (argv.includes(WATCH_FLAG)) {
+  if (argv.includes(FLAGS.WATCH)) {
     cliArgs.push("--watch", "--reporter", "min");
   }
 
@@ -116,7 +119,7 @@ async function getPackagesToRun(argv, env) {
     packagesArgs.push(...envPackages);
   }
 
-  if (argv.includes(ALL_FLAG)) {
+  if (argv.includes(FLAGS.ALL)) {
     const allPackages = paths.listPackages();
     return allPackages.join(",");
   }
@@ -142,11 +145,11 @@ async function getPackagesToRun(argv, env) {
 function getTestType(argv) {
   for (const arg of argv) {
     switch (arg) {
-    case PERFORMANCE_FLAG:
+    case FLAGS.PERFORMANCE:
       return values.testTypePerformance;
-    case INTEGRATION_FLAG:
+    case FLAGS.INTEGRATION:
       return values.testTypeIntegration;
-    case UNIT_FLAG:
+    case FLAGS.UNIT:
       return values.testTypeUnit;
     }
   }
