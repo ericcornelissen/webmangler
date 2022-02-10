@@ -15,12 +15,12 @@ suite("CSS Class Mangler prefix helpers", function() {
 
     suite("No attributes", function() {
       test("the name", function() {
-        const result = getClassAttributeExpressionOptions();
+        const result = getClassAttributeExpressionOptions({ });
         expect(result.name).to.equal(optionName);
       });
 
       test("the `attributeNames` option", function() {
-        const _result = getClassAttributeExpressionOptions();
+        const _result = getClassAttributeExpressionOptions({ });
         const result = Array.from(_result.options.attributeNames);
 
         expect(result).to.include.members(STANDARD_CLASS_ATTRIBUTES);
@@ -66,12 +66,16 @@ suite("CSS Class Mangler prefix helpers", function() {
       for (const { name, attributes, expected } of testCases) {
         suite(name, function() {
           test("the name", function() {
-            const result = getClassAttributeExpressionOptions(attributes);
+            const result = getClassAttributeExpressionOptions({
+              classAttributes: attributes,
+            });
             expect(result.name).to.equal(optionName);
           });
 
           test("the `attributeNames` option", function() {
-            const _result = getClassAttributeExpressionOptions(attributes);
+            const _result = getClassAttributeExpressionOptions({
+              classAttributes: attributes,
+            });
             const result = Array.from(_result.options.attributeNames);
 
             expect(result).to.include.members(expected);

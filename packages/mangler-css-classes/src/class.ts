@@ -119,10 +119,7 @@ class CssClassMangler extends SimpleManglerPlugin {
       ignorePatterns: helpers.getIgnorePatterns(options.ignoreClassNamePattern),
       reserved: helpers.getReserved(options.reservedClassNames),
       prefix: helpers.getPrefix(options.keepClassNamePrefix),
-      languageOptions: [
-        helpers.getQuerySelectorExpressionOptions(),
-        helpers.getClassAttributeExpressionOptions(options.classAttributes),
-      ],
+      languageOptions: helpers.getLanguageOptions(options),
     });
   }
 }
