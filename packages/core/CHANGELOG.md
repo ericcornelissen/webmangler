@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add missing direct dependencies. ([#264])
 
 ## [0.1.25] - 2022-01-29
 
@@ -178,5 +178,6 @@ Versioning].
 - Initial release with 4 built-in manglers and 3 built-in supported languages.
 
 [#244]: https://github.com/ericcornelissen/webmangler/pull/244
+[#264]: https://github.com/ericcornelissen/webmangler/pull/264
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
