@@ -31,6 +31,8 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
     "plugin:jsdoc/recommended",
     "plugin:markdown/recommended",
     "plugin:security/recommended",
@@ -79,6 +81,51 @@ module.exports = {
     "semi": ["error", "always"],
     "space-before-function-paren": ["error", "never"],
     "space-in-parens": ["error", "never"],
+
+    // See https://github.com/import-js/eslint-plugin-import#rules
+    "import/default": "error",
+    "import/export": "error",
+    "import/exports-last": "error",
+    "import/first": "error",
+    "import/group-exports": "off",
+    "import/max-dependencies": "off",
+    "import/named": "error",
+    "import/namespace": "error",
+    "import/newline-after-import": ["error", {
+      count: 1,
+    }],
+    "import/no-absolute-path": "error",
+    "import/no-amd": "error",
+    "import/no-anonymous-default-export": "error",
+    "import/no-commonjs": "error",
+    "import/no-cycle": "error",
+    "import/no-default-export": "off",
+    "import/no-deprecated": "error",
+    "import/no-duplicates": "error",
+    "import/no-dynamic-require": "error",
+    "import/no-extraneous-dependencies": "error",
+    "import/no-import-module-exports": "error",
+    "import/no-mutable-exports": "error",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "error",
+    "import/no-named-export": "off",
+    "import/no-namespace": "off",
+    "import/no-nodejs-modules": "off",
+    "import/no-relative-packages": "error",
+    "import/no-relative-parent-imports": "off",
+    "import/no-self-import": "error",
+    "import/no-unassigned-import": "error",
+    "import/no-unresolved": ["error", {
+      caseSensitive: true,
+      ignore: [
+        "webmangler/languages",
+        "webmangler/manglers",
+      ],
+    }],
+    "import/no-unused-modules": "error",
+    "import/no-useless-path-segments": "error",
+    "import/no-webpack-loader-syntax": "error",
+    "import/order": "off", // Blocked by https://github.com/import-js/eslint-plugin-import/issues/2347
 
     // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
     "jsdoc/require-param-type": "off", // Redundant in TypeScript
@@ -161,6 +208,9 @@ module.exports = {
         ecmaVersion: 2020,
       },
       rules: {
+        // See https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-anonymous-default-export": "off",
+
         // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
         "jsdoc/require-jsdoc": "off",
 
@@ -187,6 +237,9 @@ module.exports = {
         "plugin:chai-expect/recommended",
       ],
       rules: {
+        // See https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-extraneous-dependencies": "off",
+
         // See: https://github.com/lo1tuma/eslint-plugin-mocha/tree/master/docs/rules#readme
         "mocha/no-exclusive-tests": ["error"],
         "mocha/valid-suite-description": ["error", "^[A-Z:]"],
@@ -213,6 +266,9 @@ module.exports = {
         ecmaVersion: 2015,
       },
       rules: {
+        // See https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-commonjs": "off",
+
         // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
         "jsdoc/require-jsdoc": "off",
 
