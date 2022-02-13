@@ -1,12 +1,6 @@
-import type { CharSet } from "@webmangler/types";
-
 import type { HtmlAttributeManglerOptions } from "./types";
 
-import {
-  ALL_LOWERCASE_CHARS,
-  ALL_NUMBER_CHARS,
-  SimpleManglerPlugin,
-} from "@webmangler/mangler-utils";
+import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
 import * as helpers from "./helpers";
 
@@ -117,16 +111,6 @@ import * as helpers from "./helpers";
  */
 class HtmlAttributeMangler extends SimpleManglerPlugin {
   /**
-   * The character set used by {@link HtmlAttributeMangler}. Note that HTML
-   * attributes are case insensitive, so only lowercase letters are used.
-   */
-  private static readonly CHARACTER_SET: CharSet = [
-    ...ALL_LOWERCASE_CHARS,
-    ...ALL_NUMBER_CHARS,
-    "-", "_",
-  ];
-
-  /**
    * Instantiate a new {@link HtmlAttributeMangler}.
    *
    * @param options The {@link HtmlAttributeManglerOptions}.
@@ -135,16 +119,12 @@ class HtmlAttributeMangler extends SimpleManglerPlugin {
    */
   constructor(options: HtmlAttributeManglerOptions={}) {
     super({
-      charSet: HtmlAttributeMangler.CHARACTER_SET,
+      charSet: helpers.getCharacterSet(),
       patterns: helpers.getPatterns(options.attrNamePattern),
       ignorePatterns: helpers.getIgnorePatterns(options.ignoreAttrNamePattern),
       reserved: helpers.getReserved(options.reservedAttrNames),
       prefix: helpers.getPrefix(options.keepAttrPrefix),
-      languageOptions: [
-        helpers.getAttributeExpressionOptions(),
-        helpers.getAttributeSelectorExpressionOptions(),
-        helpers.getAttributeUsageExpressionFactory(),
-      ],
+      languageOptions: helpers.getLanguageOptions(),
     });
   }
 }
