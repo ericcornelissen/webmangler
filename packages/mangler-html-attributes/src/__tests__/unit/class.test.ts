@@ -172,39 +172,43 @@ suite("HtmlAttributeMangler class", function() {
 
       test("the `getCharacterSet` function is used", function() {
         expect(getCharacterSet).to.have.callCount(1);
-        expect(getLanguageOptions).to.have.been.calledWithExactly();
+        expect(getCharacterSet).to.have.been.calledWithExactly(
+          options || { },
+        );
       });
 
       test("the `getIgnorePatterns` function is used", function() {
         expect(getIgnorePatterns).to.have.callCount(1);
         expect(getIgnorePatterns).to.have.been.calledWithExactly(
-          options?.ignoreAttrNamePattern,
+          options || { },
         );
       });
 
       test("the `getLanguageOptions` function is used", function() {
         expect(getLanguageOptions).to.have.callCount(1);
-        expect(getLanguageOptions).to.have.been.calledWithExactly();
+        expect(getLanguageOptions).to.have.been.calledWithExactly(
+          options || { },
+        );
       });
 
       test("the `getPatterns` function is used", function() {
         expect(getPatterns).to.have.callCount(1);
         expect(getPatterns).to.have.been.calledWithExactly(
-          options?.attrNamePattern,
+          options || { },
         );
       });
 
       test("the `getPrefix` function is used", function() {
         expect(getPrefix).to.have.callCount(1);
         expect(getPrefix).to.have.been.calledWithExactly(
-          options?.keepAttrPrefix,
+          options || { },
         );
       });
 
       test("the `getReserved` function is used", function() {
         expect(getReserved).to.have.callCount(1);
         expect(getReserved).to.have.been.calledWithExactly(
-          options?.reservedAttrNames,
+          options || { },
         );
       });
     });

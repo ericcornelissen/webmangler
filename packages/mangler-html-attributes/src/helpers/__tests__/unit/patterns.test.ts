@@ -10,25 +10,25 @@ suite("HTML Attribute Mangler pattern helpers", function() {
     const DEFAULT_PATTERNS: string[] = [];
 
     test("default patterns", function() {
-      const result = getIgnorePatterns();
+      const result = getIgnorePatterns({ });
       expect(result).to.deep.equal(DEFAULT_PATTERNS);
     });
 
     test("one custom pattern", function() {
-      const ignorePattern = "foo(bar|baz)-[a-z]+";
+      const ignoreAttrNamePattern = "foo(bar|baz)-[a-z]+";
 
-      const result = getIgnorePatterns(ignorePattern);
-      expect(result).to.equal(ignorePattern);
+      const result = getIgnorePatterns({ ignoreAttrNamePattern });
+      expect(result).to.equal(ignoreAttrNamePattern);
     });
 
     test("multiple custom patterns", function() {
-      const ignorePatterns: string[] = [
+      const ignoreAttrNamePattern: string[] = [
         "foobar-[a-z]+",
         "foobar-[0-9]+",
       ];
 
-      const result = getIgnorePatterns(ignorePatterns);
-      expect(result).to.deep.equal(ignorePatterns);
+      const result = getIgnorePatterns({ ignoreAttrNamePattern });
+      expect(result).to.deep.equal(ignoreAttrNamePattern);
     });
   });
 
@@ -36,25 +36,25 @@ suite("HTML Attribute Mangler pattern helpers", function() {
     const DEFAULT_PATTERNS = ["data-[a-z-]+"];
 
     test("default patterns", function() {
-      const result = getPatterns();
+      const result = getPatterns({ });
       expect(result).to.deep.equal(DEFAULT_PATTERNS);
     });
 
     test("one custom pattern", function() {
-      const patterns = "foo(bar|baz)-[a-z]+";
+      const attrNamePattern = "foo(bar|baz)-[a-z]+";
 
-      const result = getPatterns(patterns);
-      expect(result).to.equal(patterns);
+      const result = getPatterns({ attrNamePattern });
+      expect(result).to.equal(attrNamePattern);
     });
 
     test("multiple custom patterns", function() {
-      const ignorePatterns: string[] = [
+      const attrNamePattern: string[] = [
         "foobar-[a-z]+",
         "foobar-[0-9]+",
       ];
 
-      const result = getPatterns(ignorePatterns);
-      expect(result).to.deep.equal(ignorePatterns);
+      const result = getPatterns({ attrNamePattern });
+      expect(result).to.deep.equal(attrNamePattern);
     });
   });
 });

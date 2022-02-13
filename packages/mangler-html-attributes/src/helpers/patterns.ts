@@ -15,14 +15,26 @@ const DEFAULT_PATTERNS: string[] = [
 ];
 
 /**
+ * The options for HTML attribute mangler ignore patterns.
+ */
+interface IgnorePatternOptions {
+  /**
+   * One or more patterns for HTML attributes that should **never** be mangled,
+   * if any.
+   */
+  readonly ignoreAttrNamePattern?: string | Iterable<string>;
+}
+
+/**
  * Get either the configured patterns or the default patterns.
  *
- * @param ignoreAttrNamePattern The configured ignore patterns.
+ * @param options The {@link IgnorePatternOptions}.
+ * @param options.ignoreAttrNamePattern The configured ignore patterns.
  * @returns The ignore patterns to be used.
  */
- function getIgnorePatterns(
-  ignoreAttrNamePattern?: string | Iterable<string>,
-): string | Iterable<string> {
+function getIgnorePatterns({
+  ignoreAttrNamePattern,
+}: IgnorePatternOptions): string | Iterable<string> {
   if (ignoreAttrNamePattern === undefined) {
     return DEFAULT_IGNORE_PATTERNS;
   }
@@ -31,14 +43,25 @@ const DEFAULT_PATTERNS: string[] = [
 }
 
 /**
+ * The options for HTML attribute mangler patterns.
+ */
+interface PatternOptions {
+  /**
+   * One or more patterns for HTML attributes that should be mangled, if any.
+   */
+  readonly attrNamePattern?: string | Iterable<string>;
+}
+
+/**
  * Get either the configured patterns or the default patterns.
  *
- * @param attrNamePattern The configured patterns.
+ * @param options The {@link PatternOptions}.
+ * @param options.attrNamePattern The configured patterns.
  * @returns The patterns to be used.
  */
-function getPatterns(
-  attrNamePattern?: string | Iterable<string>,
-): string | Iterable<string> {
+function getPatterns({
+  attrNamePattern,
+}: PatternOptions): string | Iterable<string> {
   if (attrNamePattern === undefined) {
     return DEFAULT_PATTERNS;
   }

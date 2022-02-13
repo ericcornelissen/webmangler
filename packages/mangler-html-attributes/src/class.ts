@@ -23,56 +23,62 @@ interface HtmlAttributeManglerDependencies {
   /**
    * Get the {@link CharSet} for the {@link HtmlAttributeMangler}.
    *
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
    * @returns The {@link CharSet}.
    */
-  getCharacterSet(): CharSet;
+  getCharacterSet(
+    options: Record<never, never>,
+  ): CharSet;
 
   /**
    * Get the ignore patterns for the {@link HtmlAttributeMangler}.
    *
-   * @param ignoreAttrNamePattern The configured ignore patterns.
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
    * @returns The ignore patterns.
    */
-  getIgnorePatterns(
-    ignoreAttrNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string>;
+  getIgnorePatterns(options: {
+    ignoreAttrNamePattern?: string | Iterable<string>;
+  }): string | Iterable<string>;
 
   /**
    * Get the language options for the {@link HtmlAttributeMangler}.
    *
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
    * @returns The language options.
    */
-  getLanguageOptions(): Iterable<MangleExpressionOptions<unknown>>;
+  getLanguageOptions(
+    options: Record<never, never>,
+  ): Iterable<MangleExpressionOptions<unknown>>;
 
   /**
    * Get the patterns for the {@link HtmlAttributeMangler}.
    *
-   * @param attrNamePattern The configured patterns.
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
    * @returns The patterns.
    */
-  getPatterns(
-    attrNamePattern?: string | Iterable<string>,
-  ): string | Iterable<string>;
+  getPatterns(options: {
+    attrNamePattern?: string | Iterable<string>;
+  }): string | Iterable<string>;
 
   /**
    * Get the mangle prefix for the {@link HtmlAttributeMangler}.
    *
-   * @param keepAttrPrefix The configured prefix.
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
    * @returns The mangle prefix.
    */
-  getPrefix(
-    keepAttrPrefix?: string,
-  ): string;
+  getPrefix(options: {
+    keepAttrPrefix?: string;
+  }): string;
 
   /**
    * Get the reserved names for the {@link HtmlAttributeMangler}.
    *
-   * @param reservedAttrNames The configured reserved names.
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
    * @returns The reserved names.
    */
-  getReserved(
-    reservedAttrNames?: Iterable<string>,
-  ): Iterable<string>;
+  getReserved(options: {
+    reservedAttrNames?: Iterable<string>;
+  }): Iterable<string>;
 }
 
 /**
@@ -94,12 +100,12 @@ function initHtmlAttributeMangler(
      */
     constructor(options: HtmlAttributeManglerOptions={}) {
       super({
-        charSet: helpers.getCharacterSet(),
-        patterns: helpers.getPatterns(options.attrNamePattern),
-        ignorePatterns: helpers.getIgnorePatterns(options.ignoreAttrNamePattern),
-        reserved: helpers.getReserved(options.reservedAttrNames),
-        prefix: helpers.getPrefix(options.keepAttrPrefix),
-        languageOptions: helpers.getLanguageOptions(),
+        charSet: helpers.getCharacterSet(options),
+        patterns: helpers.getPatterns(options),
+        ignorePatterns: helpers.getIgnorePatterns(options),
+        reserved: helpers.getReserved(options),
+        prefix: helpers.getPrefix(options),
+        languageOptions: helpers.getLanguageOptions(options),
       });
     }
   };
