@@ -1,6 +1,6 @@
 import type { TestValuesSets } from "@webmangler/testing";
 
-import type { BuiltInLanguagesOptions } from "../types";
+import type { BuiltInLanguagesOptions } from "../../types";
 
 const stringOrStringsOptional = [
   undefined,

@@ -3,7 +3,7 @@ import type { SinonStub } from "sinon";
 import type {
   WebManglerLanguagePluginClass,
   BuiltInLanguagesOptions,
-} from "../types";
+} from "../../types";
 
 import {
   generateValueObjects,
@@ -14,9 +14,9 @@ import * as _ from "lodash";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import { optionsValues } from "./values";
+import { optionsValues } from "../common";
 
-import BuiltInLanguagesPlugin, { injectDependencies } from "../class";
+import BuiltInLanguagesPlugin, { injectDependencies } from "../../class";
 
 chaiUse(sinonChai);
 
