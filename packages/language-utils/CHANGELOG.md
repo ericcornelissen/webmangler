@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Update `patternTemplate` format for `SingleGroupMangleExpression`. ([#258])
 
 ## [0.1.26] - 2022-01-29
 
@@ -37,5 +37,6 @@ Versioning].
 [#243]: https://github.com/ericcornelissen/webmangler/pull/243
 [#246]: https://github.com/ericcornelissen/webmangler/pull/246
 [#248]: https://github.com/ericcornelissen/webmangler/pull/248
+[#258]: https://github.com/ericcornelissen/webmangler/pull/258
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

@@ -85,7 +85,8 @@ class SingleGroupMangleExpression implements MangleExpression {
   /**
    * The capturing group to be found and replaced.
    */
-  public static readonly CAPTURE_GROUP: string = "";
+  public static readonly CAPTURE_GROUP: string =
+    `(?<${GROUP_FIND_AND_REPLACE}>%s)`;
 
   /**
    * The template string to use as (generic) pattern.
@@ -116,6 +117,13 @@ class SingleGroupMangleExpression implements MangleExpression {
     this.groupName = params.groupName || GROUP_FIND_AND_REPLACE;
     this.caseSensitive = params.caseSensitive === undefined ?
       true : params.caseSensitive;
+
+    if (
+      !params.groupName &&
+      !this.patternTemplate.includes(SingleGroupMangleExpression.CAPTURE_GROUP)
+    ) {
+      throw new Error("Missing CAPTURE_GROUP from patternTemplate");
+    }
   }
 
   /**
