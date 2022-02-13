@@ -126,12 +126,19 @@ class NestedGroupMangleExpression implements MangleExpression {
   public static readonly CAPTURE_GROUP = ({ before, after }: {
     before: string;
     after: string;
-  }) => "";
+  }) => `
+    (?<${GROUP_FIND_AND_REPLACE}>
+      ${before}
+      %s
+      ${after}
+    )
+  `.replace(/\s/g, "");
 
   /**
    * The capturing group for a `subPatternTemplate`.
    */
-  public static readonly SUB_CAPTURE_GROUP: string = "";
+  public static readonly SUB_CAPTURE_GROUP: string =
+    `(?<${GROUP_FIND_AND_REPLACE}>%s)`;
 
   /**
    * The top-level template string to use as (generic) pattern to find
@@ -171,6 +178,24 @@ class NestedGroupMangleExpression implements MangleExpression {
     this.groupName = params.groupName || GROUP_FIND_AND_REPLACE;
     this.caseSensitive = params.caseSensitive === undefined ?
       true : params.caseSensitive;
+
+    if (
+      !params.groupName &&
+      !this.patternTemplate.match(
+        `\\(\\?\\<${GROUP_FIND_AND_REPLACE}\\>(.*?)%s(.*?)\\)`,
+      )
+    ) {
+      throw new Error("Missing CAPTURE_GROUP from patternTemplate");
+    }
+
+    if (
+      !params.groupName &&
+      !this.subPatternTemplate.includes(
+        NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
+      )
+    ) {
+      throw new Error("Missing SUB_CAPTURE_GROUP from subPatternTemplate");
+    }
   }
 
   /**

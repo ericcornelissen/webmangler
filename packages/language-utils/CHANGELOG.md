@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- Update `patternTemplate` format for `SingleGroupMangleExpression`. ([#258])
+- Update `patternTemplate` format for mangle expressions. ([#258])
 
 ## [0.1.26] - 2022-01-29
 
