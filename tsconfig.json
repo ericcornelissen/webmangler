@@ -26,9 +26,9 @@
       "@webmangler/mangler-utils": ["packages/mangler-utils/lib"],
       "@webmangler/testing": ["packages/testing/lib"],
       "@webmangler/types": ["packages/types/lib"],
-      "webmangler": ["packages/core/build"],
-      "webmangler/languages": ["packages/core/build/languages"],
-      "webmangler/manglers": ["packages/core/build/manglers"]
+      "webmangler": ["packages/core/lib"],
+      "webmangler/languages": ["packages/core/lib/languages"],
+      "webmangler/manglers": ["packages/core/lib/manglers"]
     }
   },
   "exclude": [

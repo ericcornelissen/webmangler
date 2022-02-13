@@ -1,14 +1,14 @@
 {
   "name": "webmangler",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "description": "The WebMangler core",
   "license": "MIT",
-  "main": "./build/index.js",
-  "typings": "./build/index.d.ts",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "exports": {
-    ".": "./build/index.js",
-    "./languages": "./build/languages/index.js",
-    "./manglers": "./build/manglers/index.js"
+    ".": "./lib/index.js",
+    "./languages": "./lib/languages/index.js",
+    "./manglers": "./lib/manglers/index.js"
   },
   "repository": {
     "type": "git",
@@ -24,20 +24,20 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "clean": "rm -rf build/ *.tsbuildinfo",
+    "clean": "rm -rf lib/ *.tsbuildinfo",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
   },
   "dependencies": {
-    "@webmangler/language-css": "^0.1.23",
-    "@webmangler/language-html": "^0.1.23",
-    "@webmangler/language-js": "^0.1.23",
+    "@webmangler/language-css": "^0.1.28",
+    "@webmangler/language-html": "^0.1.26",
+    "@webmangler/language-js": "^0.1.27",
     "@webmangler/mangler-css-classes": "^0.1.23",
     "@webmangler/mangler-css-variables": "^0.1.23",
     "@webmangler/mangler-html-attributes": "^0.1.23",
     "@webmangler/mangler-html-ids": "^0.1.23",
-    "@webmangler/types": "^0.1.23"
+    "@webmangler/types": "^0.1.25"
   },
   "engines": {
     "node": ">=12.16.0"

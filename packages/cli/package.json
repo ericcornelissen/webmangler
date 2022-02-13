@@ -1,11 +1,11 @@
 {
   "name": "webmangler-cli",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "The WebMangler Command Line Interface (CLI)",
   "license": "MIT",
-  "main": "./build/index.js",
+  "main": "./lib/index.js",
   "bin": {
-    "webmangler": "./build/index.js"
+    "webmangler": "./lib/index.js"
   },
   "repository": {
     "type": "git",
@@ -21,8 +21,7 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "preinstall": "mkdir -p build && touch build/index.js",
-    "clean": "rm -rf build/ *.tsbuildinfo",
+    "clean": "rm -rf lib/ *.tsbuildinfo",
     "cli": "ts-node -r tsconfig-paths/register src/index.ts",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
@@ -37,7 +36,7 @@
     "@types/yargs": "17.0.8"
   },
   "peerDependencies": {
-    "webmangler": "^0.1.16"
+    "webmangler": "^0.1.25"
   },
   "engines": {
     "node": ">=12.16.0"

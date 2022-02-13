@@ -10,6 +10,10 @@ Versioning].
 
 - _No changes yet_
 
+## [0.1.26] - 2022-01-29
+
+- Bump minimum `@webmangler/language-utils` version to `^0.1.26`. ([#250])
+
 ## [0.1.25] - 2022-01-17
 
 - Fix finding when embeds with non-standard closing tags. ([#241])
@@ -30,5 +34,6 @@ Versioning].
 [#231]: https://github.com/ericcornelissen/webmangler/pull/231
 [#233]: https://github.com/ericcornelissen/webmangler/pull/233
 [#241]: https://github.com/ericcornelissen/webmangler/pull/241
+[#250]: https://github.com/ericcornelissen/webmangler/pull/250
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

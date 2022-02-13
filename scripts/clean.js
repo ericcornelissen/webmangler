@@ -7,6 +7,7 @@
 import * as path from "path";
 
 import execSync from "./utilities/exec.js";
+import { checkFlags } from "./utilities/flags.js";
 import log from "./utilities/log.js";
 import * as paths from "./paths.js";
 import values from "../.values.cjs";
@@ -17,7 +18,9 @@ const {
   testDataDir,
 } = values;
 
-const HARD_FLAG = "--hard";
+const FLAGS = {
+  HARD: "--hard",
+};
 
 const ALWAYS_DELETE = [
   `${tempDir}/`,
@@ -33,6 +36,8 @@ const HARD_DELETE_ONLY = [
 main(process.argv.slice(2));
 
 function main(argv) {
+  checkFlags(Object.values(FLAGS), argv);
+
   log.print("Cleaning repository...");
   removeFilesAndFolders(argv);
   resetTestData();
@@ -44,7 +49,7 @@ function removeFilesAndFolders(argv) {
   log.reprint("Removing generated files & folders...");
 
   const filesAndFoldersToRemove = ALWAYS_DELETE;
-  if (argv.includes(HARD_FLAG)) {
+  if (argv.includes(FLAGS.HARD)) {
     filesAndFoldersToRemove.push(...HARD_DELETE_ONLY);
   }
 
@@ -62,7 +67,7 @@ function resetTestData() {
 }
 
 function cleanPackages(argv) {
-  if (!argv.includes(HARD_FLAG)) {
+  if (!argv.includes(FLAGS.HARD)) {
     return;
   }
 

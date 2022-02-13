@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.25] - 2022-01-29
+
 - Use `ReadonlyMap` type to force immutable `Map`s in implementations. ([#248])
 
 ## [0.1.24] - 2021-10-30

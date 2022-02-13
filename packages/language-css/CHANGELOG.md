@@ -8,7 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.28] - 2022-01-29
+
 - Add support for mangling multi-value attributes. ([#242])
+- Bump minimum `@webmangler/language-utils` version to `^0.1.26`. ([#250])
 
 ## [0.1.27] - 2022-01-08
 
@@ -40,5 +45,6 @@ Versioning].
 [#173]: https://github.com/ericcornelissen/webmangler/pull/173
 [#226]: https://github.com/ericcornelissen/webmangler/pull/226
 [#242]: https://github.com/ericcornelissen/webmangler/pull/242
+[#250]: https://github.com/ericcornelissen/webmangler/pull/250
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

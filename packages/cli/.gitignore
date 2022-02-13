@@ -3,6 +3,6 @@ node_modules/
 package-lock.json
 
 # Generated & temporary
-build/
+lib/
 .webmanglerrc.js
 webmangler.config.js

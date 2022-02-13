@@ -1,9 +1,11 @@
 import type { CharSet, MangleEngineOptions } from "@webmangler/types";
 
-import { ALL_LOWERCASE_CHARS } from "../characters";
 import { toArrayIfNeeded } from "../helpers";
 
-const DEFAULT_CHAR_SET = ALL_LOWERCASE_CHARS;
+const DEFAULT_CHAR_SET: CharSet = [
+  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+  "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+];
 const DEFAULT_IGNORE_PATTERNS: string[] = [];
 const DEFAULT_MANGLE_PREFIX = "";
 const DEFAULT_RESERVED_NAMES: string[] = [];

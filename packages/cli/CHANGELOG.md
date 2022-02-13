@@ -10,6 +10,10 @@ Versioning].
 
 - _No changes yet_
 
+## [0.1.7] - 2022-01-29
+
+- Increase minimum `webmangler` peerDependency to `^0.1.25`. ([#244])
+
 ## [0.1.6] - 2021-04-17
 
 - Add mangling time to the `--stats` output.
@@ -54,5 +58,6 @@ Versioning].
 - Configure the configuration file with the `--config`/`-c` option.
 - Enable writing to files with the `--write`/`-w` option.
 
+[#244]: https://github.com/ericcornelissen/webmangler/pull/244
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
