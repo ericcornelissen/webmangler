@@ -95,6 +95,11 @@ suite("BuiltInManglers class", function() {
         expect(CssClassManglerConstructor).not.to.have.been.called;
       }
     });
+
+    test("no configuration", function() {
+      new BuiltInManglers();
+      expect(CssClassManglerConstructor).to.have.been.calledOnceWith({ });
+    });
   });
 
   suite("CssVariableMangler", function() {
@@ -140,6 +145,11 @@ suite("BuiltInManglers class", function() {
         expect(CssVariableManglerConstructor).not.to.have.been.called;
       }
     });
+
+    test("no configuration", function() {
+      new BuiltInManglers();
+      expect(CssVariableManglerConstructor).to.have.been.calledOnceWith({ });
+    });
   });
 
   suite("HtmlAttributeMangler", function() {
@@ -184,6 +194,11 @@ suite("BuiltInManglers class", function() {
         new BuiltInManglers(options as BuiltInManglersOptions);
         expect(HtmlAttributeManglerConstructor).not.to.have.been.called;
       }
+    });
+
+    test("no configuration", function() {
+      new BuiltInManglers();
+      expect(HtmlAttributeManglerConstructor).to.have.been.calledOnceWith({ });
     });
   });
 
@@ -233,6 +248,11 @@ suite("BuiltInManglers class", function() {
         new BuiltInManglers(options as BuiltInManglersOptions);
         expect(HtmlIdManglerConstructor).not.to.have.been.called;
       }
+    });
+
+    test("no configuration", function() {
+      new BuiltInManglers();
+      expect(HtmlIdManglerConstructor).to.have.been.calledOnceWith({ });
     });
   });
 });

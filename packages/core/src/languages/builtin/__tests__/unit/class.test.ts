@@ -50,6 +50,10 @@ suite("BuiltInLanguages class", function() {
       "cssExtensions",
     ];
 
+    setup(function() {
+      CssLanguagePluginConstructor.resetHistory();
+    });
+
     test("configure the CssLanguagePlugin", function() {
       const optionsValueSource = _.pick(optionsValues, CssLanguagePluginKeys);
 
@@ -64,12 +68,21 @@ suite("BuiltInLanguages class", function() {
         );
       }
     });
+
+    test("no configuration", function() {
+      new BuiltInLanguagesPlugin();
+      expect(CssLanguagePluginConstructor).to.have.been.calledOnceWith({ });
+    });
   });
 
   suite("HtmlLanguagePlugin", function() {
     const HtmlLanguagePluginKeys: string[] = [
       "htmlExtensions",
     ];
+
+    setup(function() {
+      HtmlLanguagePluginConstructor.resetHistory();
+    });
 
     test("configure the HtmlLanguagePlugin", function() {
       const optionsValueSource = _.pick(optionsValues, HtmlLanguagePluginKeys);
@@ -85,12 +98,21 @@ suite("BuiltInLanguages class", function() {
         );
       }
     });
+
+    test("no configuration", function() {
+      new BuiltInLanguagesPlugin();
+      expect(HtmlLanguagePluginConstructor).to.have.been.calledOnceWith({ });
+    });
   });
 
   suite("JsLanguagePlugin", function() {
     const JsLanguagePluginKeys: string[] = [
       "jsExtensions",
     ];
+
+    setup(function() {
+      JsLanguagePluginConstructor.resetHistory();
+    });
 
     test("configure the JavaScriptLanguagePlugin", function() {
       const optionsValueSource = _.pick(optionsValues, JsLanguagePluginKeys);
@@ -105,6 +127,11 @@ suite("BuiltInLanguages class", function() {
           }),
         );
       }
+    });
+
+    test("no configuration", function() {
+      new BuiltInLanguagesPlugin();
+      expect(JsLanguagePluginConstructor).to.have.been.calledOnceWith({ });
     });
   });
 });
