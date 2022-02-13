@@ -13,28 +13,54 @@ type RegExpMatchGroups = {
  * The configuration options of a {@link NestedGroupMangleExpression}.
  *
  * @since v0.1.25
+ * @version v0.1.27
  */
 interface NestedGroupMangleExpressionOptions {
   /**
-   * A generic pattern with a `"%s"` for a specific character pattern.
+   * A string representing a regular expression to find substrings of a string.
    *
-   * NOTE 1: only one `"%s"` is supported.
-   * NOTE 2: whitespace is automatically removed from this template.
+   * It must contain {@link NestedGroupMangleExpression.CAPTURE_GROUP} or an
+   * error will be throw.
    *
+   * _Notes_
+   * 1. The regular expression is not allowed to contain a capturing group with
+   *    the name {@link GROUP_FIND_AND_REPLACE}.
+   * 2. Whitespace is automatically removed from this template.
    *
-   * @example "(?<=--)(?<GROUP_NAME>%s)(?=--)"
+   * @example
+   * `
+   *   (?<=')
+   *   ${NestedGroupMangleExpression.CAPTURE_GROUP({
+   *     before: "\\s",
+   *     after: "\\s",
+   *   })}
+   *   (?=')
+   * `
    * @since v0.1.11
+   * @version v0.1.27
    */
   readonly patternTemplate: string;
 
   /**
-   * A generic pattern with a `"%s"` for a specific character pattern.
+   * A string representing a regular expression to find and replace substrings
+   * of strings found by the `patternTemplate`.
    *
-   * NOTE 1: only one `"%s"` is supported.
-   * NOTE 2: whitespace is automatically removed from this template.
+   * It must contain {@link NestedGroupMangleExpression.CAPTURE_GROUP} or an
+   * error will be throw.
    *
-   * @example "(?<=--)(?<GROUP_NAME>%s)(?=--)"
+   * _Notes_
+   * 1. The regular expression is not allowed to contain a capturing group with
+   *    the name {@link GROUP_FIND_AND_REPLACE}.
+   * 2. Whitespace is automatically removed from this template.
+   *
+   * @example
+   * `
+   *   (?<=\\s)
+   *   ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+   *   (?=\\s)
+   * `
    * @since v0.1.11
+   * @version v0.1.27
    */
   readonly subPatternTemplate: string;
 
@@ -46,8 +72,10 @@ interface NestedGroupMangleExpressionOptions {
    *
    * @example "GROUP_NAME"
    * @since v0.1.11
+   * @deprecated Use `NestedGroupMangleExpression.CAPTURE_GROUP` and
+   * `NestedGroupMangleExpression.SUB_CAPTURE_GROUP` instead.
    */
-  readonly groupName: string;
+  readonly groupName?: string;
 
   /**
    * Should the expression be case sensitive.
@@ -59,22 +87,63 @@ interface NestedGroupMangleExpressionOptions {
 }
 
 /**
+ * The name of the capturing group in a template that will be found and
+ * replaced.
+ */
+const GROUP_FIND_AND_REPLACE = "NestedGroupMangleExpressionCapturingGroup";
+
+/**
  * A {@link NestedGroupMangleExpression} is a {@link MangleExpression}
  * implementation that matches and replaces in one-level nested substrings.
  *
  * @example
- * new NestedGroupMangleExpression(
- *   "(?<=')(?<GROUP_NAME>%s)(?=')",
- *   "(?<=\s)([a-z])(?=\s)"
- *   "GROUP_NAME",
- * );
+ * new NestedGroupMangleExpression({
+ *   patternTemplate: `
+ *     (?<=')
+ *     ${NestedGroupMangleExpression.CAPTURE_GROUP({
+ *       before: "\\s",
+ *       after: "\\s",
+ *     })}
+ *     (?=')
+ *   `,
+ *   subPatternTemplate: `
+ *     (?<=\\s)
+ *     ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+ *     (?=\\s)
+ *   `,
+ * });
  * // matches "horse" & "battery" in "var pw = 'correct horse battery staple';"
  * // and for the replacements "horse->zebra" and "battery->cell" will change it
  * // into "var pw = 'correct zebra cell staple';"
  * @since v0.1.12
- * @version v0.1.26
+ * @version v0.1.27
  */
 class NestedGroupMangleExpression implements MangleExpression {
+  /**
+   * Create a capturing group for a `patternTemplate`.
+   *
+   * @param options The options for the capturing group.
+   * @param options.after The pattern required after the search pattern.
+   * @param options.before The pattern required before the search pattern.
+   * @returns The capturing group.
+   */
+  public static readonly CAPTURE_GROUP = ({ before, after }: {
+    before: string;
+    after: string;
+  }) => `
+    (?<${GROUP_FIND_AND_REPLACE}>
+      ${before}
+      %s
+      ${after}
+    )
+  `.replace(/\s/g, "");
+
+  /**
+   * The capturing group for a `subPatternTemplate`.
+   */
+  public static readonly SUB_CAPTURE_GROUP: string =
+    `(?<${GROUP_FIND_AND_REPLACE}>%s)`;
+
   /**
    * The top-level template string to use as (generic) pattern to find
    * substrings in the target string that can be processed by the
@@ -105,14 +174,32 @@ class NestedGroupMangleExpression implements MangleExpression {
    *
    * @param params The {@link NestedGroupMangleExpressionOptions}.
    * @since v0.1.12
-   * @version v0.1.26
+   * @version v0.1.27
    */
   constructor(params: NestedGroupMangleExpressionOptions) {
     this.patternTemplate = params.patternTemplate.replace(/\s/g, "");
     this.subPatternTemplate = params.subPatternTemplate.replace(/\s/g, "");
-    this.groupName = params.groupName;
+    this.groupName = params.groupName || GROUP_FIND_AND_REPLACE;
     this.caseSensitive = params.caseSensitive === undefined ?
       true : params.caseSensitive;
+
+    if (
+      !params.groupName &&
+      !this.patternTemplate.match(
+        `\\(\\?\\<${GROUP_FIND_AND_REPLACE}\\>(.*?)%s(.*?)\\)`,
+      )
+    ) {
+      throw new Error("Missing CAPTURE_GROUP from patternTemplate");
+    }
+
+    if (
+      !params.groupName &&
+      !this.subPatternTemplate.includes(
+        NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
+      )
+    ) {
+      throw new Error("Missing SUB_CAPTURE_GROUP from subPatternTemplate");
+    }
   }
 
   /**

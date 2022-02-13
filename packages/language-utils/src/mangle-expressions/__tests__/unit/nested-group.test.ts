@@ -5,11 +5,35 @@ import { expect } from "chai";
 import NestedGroupMangleExpression from "../../nested-group.class";
 
 suite("NestedGroupMangleExpression", function() {
+  test("without the capturing group in template", function() {
+    const expectedMessage = "Missing CAPTURE_GROUP from patternTemplate";
+
+    expect(() => {
+      new NestedGroupMangleExpression({
+        patternTemplate: "",
+        subPatternTemplate: NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
+      });
+    }).to.throw(expectedMessage);
+  });
+
+  test("without the capturing group in sub template", function() {
+    const expectedMessage = "Missing SUB_CAPTURE_GROUP from subPatternTemplate";
+
+    expect(() => {
+      new NestedGroupMangleExpression({
+        patternTemplate: NestedGroupMangleExpression.CAPTURE_GROUP({
+          before: "foo",
+          after: "bar",
+        }),
+        subPatternTemplate: "",
+      });
+    }).to.throw(expectedMessage);
+  });
+
   suite("::findAll", function() {
     type TestCase = Iterable<{
       patternTemplate: string;
       subPatternTemplate: string;
-      group: string;
       caseSensitive?: boolean;
       pattern: string;
       s: string;
@@ -21,40 +45,52 @@ suite("NestedGroupMangleExpression", function() {
         testName: "sample",
         getScenario: () => [
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "var pw = 'correct horse battery staple';",
             expected: ["horse", "battery"],
           },
           {
-            patternTemplate: "(?<=class=\")(?<g>[^\"]*%s[^\"]*)(?=\")",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=class=")
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^\"]*", after: "[^\"]*" })}
+              (?=")
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "cls-[a-z]+",
             s: "<img class=\"cls-foo cls-bar\">",
             expected: ["cls-foo", "cls-bar"],
           },
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "data-[a-z]+",
             s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
             expected: ["data-foo", "data-bar"],
-          },
-          {
-            patternTemplate: "(\\/\\*.*?\\*\\/|(?<g>%s))",
-            subPatternTemplate: "(?<g>%s)",
-            group: "g",
-            caseSensitive: true,
-            pattern: "[a-z]+",
-            s: "/*foobaz*/foobar",
-            expected: ["foobar"],
           },
         ],
       },
@@ -62,17 +98,31 @@ suite("NestedGroupMangleExpression", function() {
         testName: "default case sensitivity",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             pattern: "data-[a-z]+",
             s: "<div data-foo=\"bar\" id=\"3\" data-bar></div>",
             expected: ["data-foo", "data-bar"],
           },
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             pattern: "[A-Za-z]+",
             s: "var pw = 'Correct Horse Battery Staple';",
             expected: ["Horse", "Battery"],
@@ -83,18 +133,32 @@ suite("NestedGroupMangleExpression", function() {
         testName: "patterns with newlines",
         getScenario: () => [
           {
-            patternTemplate: "(?<=')\n(?<g>[^']*%s[^']*)\n(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `,
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "var pw = 'correct horse battery staple';",
             expected: ["horse", "battery"],
           },
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)\n(?<g>%s)\n(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `,
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "var pw = 'correct horse battery staple';",
@@ -106,18 +170,32 @@ suite("NestedGroupMangleExpression", function() {
         testName: "case sensitive",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "data-[A-Za-z]+",
             s: "<div data-foo=\"bar\" id=\"3\" data-BAR></div>",
             expected: ["data-foo", "data-BAR"],
           },
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "data-[A-Za-z]+",
             s: "<div data-Foo=\"bar\" id=\"3\" data-Bar></div>",
@@ -129,18 +207,32 @@ suite("NestedGroupMangleExpression", function() {
         testName: "case insensitive",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: false,
             pattern: "data-[a-z]+",
             s: "<div data-foo=\"bar\" id=\"3\" data-BAR></div>",
             expected: ["data-foo", "data-bar"],
           },
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: false,
             pattern: "data-[a-z]+",
             s: "<div data-Foo=\"bar\" id=\"3\" data-Bar></div>",
@@ -149,25 +241,43 @@ suite("NestedGroupMangleExpression", function() {
         ],
       },
       {
-        testName: "missing group",
+        testName: "matching another group",
         getScenario: () => [
           {
-            patternTemplate: "(?<g1>foo%s)",
-            subPatternTemplate: "(?<g2>%s)",
-            group: "g1",
+            patternTemplate: `
+              (
+                \\/\\*.*?\\*\\/
+                |
+                ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "", after: "" })}
+              )
+            `.replace(/\s/g, ""),
+            subPatternTemplate: NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
             caseSensitive: true,
             pattern: "[a-z]+",
-            s: "foobar",
-            expected: [],
+            s: "/*foobaz*/foobar",
+            expected: ["foobar"],
           },
           {
-            patternTemplate: "(?<g1>hello%s)",
-            subPatternTemplate: "(?<g2>%s)",
-            group: "g2",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (
+                horse
+                |
+                (
+                  (?<=\\s)
+                  ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+                  (?=\\s)
+                )
+              )
+            `.replace(/\s/g, ""),
             caseSensitive: true,
-            pattern: "\\s[a-z]+",
-            s: "hello world",
-            expected: [],
+            pattern: "[a-z]+",
+            s: "var pw = 'correct horse battery staple';",
+            expected: ["battery"],
           },
         ],
       },
@@ -175,18 +285,32 @@ suite("NestedGroupMangleExpression", function() {
         testName: "corner cases",
         getScenario: () => [
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "",
             expected: [],
           },
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             pattern: "[a-z]+",
             s: "var m = new Map();",
@@ -202,7 +326,6 @@ suite("NestedGroupMangleExpression", function() {
           const {
             patternTemplate,
             subPatternTemplate,
-            group,
             caseSensitive,
             pattern,
             s,
@@ -212,7 +335,42 @@ suite("NestedGroupMangleExpression", function() {
           const subject = new NestedGroupMangleExpression({
             patternTemplate,
             subPatternTemplate,
-            groupName: group,
+            caseSensitive,
+          });
+
+          let i = 0;
+          for (const str of subject.findAll(s, pattern)) {
+            expect(str).to.equal(expected[i]);
+            i++;
+          }
+
+          expect(i).to.equal(expected.length, `in ${s}`);
+        }
+      });
+
+      test(`${testName}, with groupName`, function() {
+        for (const testCase of getScenario()) {
+          const {
+            patternTemplate,
+            subPatternTemplate,
+            caseSensitive,
+            pattern,
+            s,
+            expected,
+          } = testCase;
+
+          const groupName = "g";
+
+          const subject = new NestedGroupMangleExpression({
+            patternTemplate: patternTemplate.replace(
+              "NestedGroupMangleExpressionCapturingGroup",
+              groupName,
+            ),
+            subPatternTemplate: subPatternTemplate.replace(
+              NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
+              `(?<${groupName}>%s)`,
+            ),
+            groupName,
             caseSensitive,
           });
 
@@ -232,7 +390,6 @@ suite("NestedGroupMangleExpression", function() {
     type TestCase = Iterable<{
       patternTemplate: string;
       subPatternTemplate: string;
-      group: string;
       caseSensitive: boolean;
       replacements: Map<string, string>;
       s: string;
@@ -244,9 +401,16 @@ suite("NestedGroupMangleExpression", function() {
         testName: "sample",
         getScenario: () => [
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["horse", "zebra"],
@@ -256,9 +420,16 @@ suite("NestedGroupMangleExpression", function() {
             expected: "var pw = 'correct zebra cell staple';",
           },
           {
-            patternTemplate: "(?<=class=\")(?<g>[^\"]*%s[^\"]*)(?=\")",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=class=")
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^\"]*", after: "[^\"]*" })}
+              (?=")
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["cls-foo", "a"],
@@ -269,9 +440,16 @@ suite("NestedGroupMangleExpression", function() {
             expected: "<img class=\"a c\">",
           },
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["data-foo", "data-a"],
@@ -282,9 +460,16 @@ suite("NestedGroupMangleExpression", function() {
             expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
           },
           {
-            patternTemplate: "(?<=\\<)[a-z]+\\s(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<)[a-z]+\\s
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["data-foo", "data-a"],
@@ -299,9 +484,16 @@ suite("NestedGroupMangleExpression", function() {
         testName: "case sensitive",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["data-FOO", "data-a"],
@@ -311,9 +503,16 @@ suite("NestedGroupMangleExpression", function() {
             expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
           },
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["data-foo", "data-a"],
@@ -323,9 +522,16 @@ suite("NestedGroupMangleExpression", function() {
             expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
           },
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["data-FOO", "data-a"],
@@ -340,9 +546,16 @@ suite("NestedGroupMangleExpression", function() {
         testName: "case insensitive",
         getScenario: () => [
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: false,
             replacements: new Map([
               ["data-foo", "data-a"],
@@ -352,9 +565,16 @@ suite("NestedGroupMangleExpression", function() {
             expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
           },
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: false,
             replacements: new Map([
               ["data-foo", "data-a"],
@@ -364,9 +584,16 @@ suite("NestedGroupMangleExpression", function() {
             expected: "<div data-a=\"bar\" id=\"3\" data-b></div>",
           },
           {
-            patternTemplate: "(?<=\\<[a-z]+\\s)(?<g>[^>]*%s[^>]*)(?=\\>)",
-            subPatternTemplate: "(?<=^|\\s)(?<g>%s)(?=$|\\s|\\=)",
-            group: "g",
+            patternTemplate: `
+              (?<=\\<[a-z]+\\s)
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^>]*", after: "[^>]*" })}
+              (?=\\>)
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=^|\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=$|\\s|\\=)
+            `.replace(/\s/g, ""),
             caseSensitive: false,
             replacements: new Map([
               ["data-foo", "data-a"],
@@ -378,29 +605,50 @@ suite("NestedGroupMangleExpression", function() {
         ],
       },
       {
-        testName: "missing group",
+        testName: "matching another group",
         getScenario: () => [
           {
-            patternTemplate: "(?<g1>foo%s)",
-            subPatternTemplate: "(?<g2>%s)",
-            group: "g1",
+            patternTemplate: `
+              (
+                \\/\\*.*?\\*\\/
+                |
+                ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "foo", after: "" })}
+              )
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+            `,
             caseSensitive: true,
             replacements: new Map([
               ["bar", "baz"],
             ]),
-            s: "foobar",
-            expected: "foobar",
+            s: "/*foobar*/foobar",
+            expected: "/*foobar*/foobaz",
           },
           {
-            patternTemplate: "(?<g1>hello%s)",
-            subPatternTemplate: "(?<g2>%s)",
-            group: "g2",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (
+                horse
+                |
+                (
+                  (?<=\\s)
+                  ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+                  (?=\\s)
+                )
+              )
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
-              [" world", " planet"],
+              ["horse", "zebra"],
+              ["battery", "cell"],
             ]),
-            s: "hello world",
-            expected: "hello world",
+            s: "var pw = 'correct horse battery staple';",
+            expected: "var pw = 'correct horse cell staple';",
           },
         ],
       },
@@ -408,27 +656,48 @@ suite("NestedGroupMangleExpression", function() {
         testName: "corner cases",
         getScenario: () => [
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map(),
             s: "",
             expected: "",
           },
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)[a-z]+ (?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map(),
             s: "var pw = 'correct horse battery staple';",
             expected: "var pw = 'correct horse battery staple';",
           },
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
@@ -437,9 +706,16 @@ suite("NestedGroupMangleExpression", function() {
             expected: "",
           },
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
@@ -448,9 +724,16 @@ suite("NestedGroupMangleExpression", function() {
             expected: "",
           },
           {
-            patternTemplate: "(?<=')(?<g>[^']*%s[^']*)(?=')",
-            subPatternTemplate: "(?<=\\s)(?<g>%s)(?=\\s)",
-            group: "g",
+            patternTemplate: `
+              (?<=')
+              ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "[^']*", after: "[^']*" })}
+              (?=')
+            `.replace(/\s/g, ""),
+            subPatternTemplate: `
+              (?<=\\s)
+              ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+              (?=\\s)
+            `.replace(/\s/g, ""),
             caseSensitive: true,
             replacements: new Map([
               ["foo", "bar"],
@@ -468,7 +751,6 @@ suite("NestedGroupMangleExpression", function() {
           const {
             patternTemplate,
             subPatternTemplate,
-            group,
             caseSensitive,
             replacements,
             s,
@@ -478,7 +760,36 @@ suite("NestedGroupMangleExpression", function() {
           const subject = new NestedGroupMangleExpression({
             patternTemplate,
             subPatternTemplate,
-            groupName: group,
+            caseSensitive,
+          });
+          const result = subject.replaceAll(s, replacements);
+          expect(result).to.equal(expected);
+        }
+      });
+
+      test(`${testName}, with groupName`, function() {
+        for (const testCase of getScenario()) {
+          const {
+            patternTemplate,
+            subPatternTemplate,
+            caseSensitive,
+            replacements,
+            s,
+            expected,
+          } = testCase;
+
+          const groupName = "g";
+
+          const subject = new NestedGroupMangleExpression({
+            patternTemplate: patternTemplate.replace(
+              "NestedGroupMangleExpressionCapturingGroup",
+              groupName,
+            ),
+            subPatternTemplate: subPatternTemplate.replace(
+              NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
+              `(?<${groupName}>%s)`,
+            ),
+            groupName,
             caseSensitive,
           });
           const result = subject.replaceAll(s, replacements);
