@@ -7,9 +7,12 @@ const {
   packagesDir,
   packagesExpr,
   packagesList,
+  testDirAll,
+  testDirIntegration,
+  testDirPerformance,
+  testDirUnit,
   testsDir,
-  testSuffixPerformance,
-  testSuffixTest,
+  testSuffix,
   testTypePerformance,
   testTypeIntegration,
   testTypeTests,
@@ -17,24 +20,19 @@ const {
 } = values;
 
 let testTypeDir;
-let testTypeSuffix;
 switch (process.env.TEST_TYPE) {
 case testTypePerformance:
-  testTypeDir = "{.,benchmark,performance}";
-  testTypeSuffix = testSuffixPerformance;
+  testTypeDir = testDirPerformance;
   break;
 case testTypeIntegration:
-  testTypeDir = "integration";
-  testTypeSuffix = testSuffixTest;
+  testTypeDir = testDirIntegration;
   break;
 case testTypeUnit:
-  testTypeDir = "{common,unit}";
-  testTypeSuffix = testSuffixTest;
+  testTypeDir = testDirUnit;
   break;
 case testTypeTests:
 default:
-  testTypeDir = "{.,common,integration,unit}";
-  testTypeSuffix = testSuffixTest;
+  testTypeDir = testDirAll;
 }
 
 module.exports = {
@@ -48,7 +46,7 @@ module.exports = {
     "**",
     testsDir,
     testTypeDir,
-    `*.${testTypeSuffix}.ts`,
+    `*.${testSuffix}.ts`,
   ].join("/"),
   require: [
     "ts-node/register",
