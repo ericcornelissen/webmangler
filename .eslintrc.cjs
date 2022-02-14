@@ -16,7 +16,6 @@ const {
 const INDENT_SIZE = 2;
 const JS_GLOBALS = {
   module: "readonly",
-  process: "readonly",
   require: "readonly",
 };
 const MAX_LINE_LENGTH = 80;
