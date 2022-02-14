@@ -12,7 +12,7 @@ suite("HTML Attribute Mangler reserved helpers", function() {
     const DEFAULT_RESERVED: string[] = [];
 
     test("default reserved", function() {
-      const _result = getReserved();
+      const _result = getReserved({ });
       const result = Array.from(_result);
 
       expect(result).to.include.members(ALWAYS_RESERVED);
@@ -23,14 +23,16 @@ suite("HTML Attribute Mangler reserved helpers", function() {
     });
 
     test("custom reserved", function() {
-      const reserved: string[] = ["foo", "bar"];
+      const reservedAttrNames: string[] = ["foo", "bar"];
 
-      const _result = getReserved(reserved);
+      const _result = getReserved({ reservedAttrNames });
       const result = Array.from(_result);
 
       expect(result).to.include.members(ALWAYS_RESERVED);
-      expect(result).to.include.members(reserved);
-      expect(result).to.have.length(ALWAYS_RESERVED.length + reserved.length);
+      expect(result).to.include.members(reservedAttrNames);
+      expect(result).to.have.length(
+        ALWAYS_RESERVED.length + reservedAttrNames.length,
+      );
     });
   });
 });
