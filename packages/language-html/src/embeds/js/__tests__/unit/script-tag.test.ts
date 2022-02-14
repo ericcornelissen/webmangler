@@ -194,7 +194,22 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
         {
           file: {
             type: "html",
-            content: "<script>var foo = \"bar\";</script hello=\"world\">",
+            content: "<script>var foo = \"bar\";</script praise=\"the>sun\">",
+          },
+          expected: [
+            {
+              content: "var foo = \"bar\";",
+              type: EMBED_TYPE_JS,
+              startIndex: 8,
+              endIndex: 24,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<script>var foo = \"bar\";</script praise='the>sun'>",
           },
           expected: [
             {
@@ -244,6 +259,27 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
           file: {
             type: "html",
             content: "<!--<script>var foo = \"bar\";</script>--!>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<script>var foo = \"bar\";</script",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<script>var foo = \"bar\";</script praise=\"the>sun\"",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<script>var foo = \"bar\";</script praise='the>sun'",
           },
           expected: [],
         },
