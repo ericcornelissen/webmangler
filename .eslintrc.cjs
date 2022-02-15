@@ -127,9 +127,22 @@ module.exports = {
     "import/order": "off", // Blocked by https://github.com/import-js/eslint-plugin-import/issues/2347
 
     // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
-    "jsdoc/require-param-type": "off", // Redundant in TypeScript
-    "jsdoc/require-returns-type": "off", // Redundant in TypeScript
-    "jsdoc/newline-after-description": "error",
+    "jsdoc/check-access": "off",
+    "jsdoc/check-alignment": "error",
+    "jsdoc/check-line-alignment": "off",
+    "jsdoc/check-indentation": "error",
+    "jsdoc/check-param-names": "error",
+    "jsdoc/check-property-names": "error",
+    "jsdoc/check-syntax": "off",
+    "jsdoc/check-tag-names": "error",
+    "jsdoc/check-types": "off",
+    "jsdoc/check-values": "error",
+    "jsdoc/empty-tags": ["error", {
+      tags: [
+        "inheritDoc",
+      ],
+    }],
+    "jsdoc/implements-on-classes": "off",
     "jsdoc/match-description": ["error", {
       matchDescription: "^([A-Z]|[`\\d_])[\\s\\S]*\\.$",
       tags: {
@@ -138,6 +151,50 @@ module.exports = {
         since: "^v[0-9]\\.[0-9]\\.[0-9]",
       },
     }],
+    "jsdoc/multiline-blocks": ["error", {
+      noZeroLineText: true,
+      noFinalLineText: true,
+      noSingleLineBlocks: true,
+      singleLineTags: [],
+      noMultilineBlocks: false,
+    }],
+    "jsdoc/newline-after-description": ["error", "always"],
+    "jsdoc/no-bad-blocks": "error",
+    "jsdoc/no-defaults": "error",
+    "jsdoc/no-multi-asterisks": ["error", {
+      allowWhitespace: true,
+      preventAtMiddleLines: true,
+      preventAtEnd: true,
+    }],
+    "jsdoc/no-types": "error",
+    "jsdoc/no-undefined-types": "off",
+    "jsdoc/require-asterisk-prefix": ["error", "always"],
+    "jsdoc/require-description": "error",
+    "jsdoc/require-description-complete-sentence": "off",
+    "jsdoc/require-example": "off",
+    "jsdoc/require-file-overview": "off",
+    "jsdoc/require-hyphen-before-param-description": ["error", "never"],
+    "jsdoc/require-jsdoc": "error",
+    "jsdoc/require-param-description": "error",
+    "jsdoc/require-param-name": "error",
+    "jsdoc/require-param-type": "off",
+    "jsdoc/require-param": "error",
+    "jsdoc/require-property": "off",
+    "jsdoc/require-returns": "error",
+    "jsdoc/require-returns-check": "error",
+    "jsdoc/require-returns-description": "error",
+    "jsdoc/require-returns-type": "off",
+    "jsdoc/require-throws": "error",
+    "jsdoc/require-yields": "error",
+    "jsdoc/require-yields-check": "error",
+    "jsdoc/sort-tags": ["error", {
+      tagSequence: [
+        "inheritDoc", "default", "example", "param", "returns",
+        "yields", "throws", "since", "version",
+      ],
+    }],
+    "jsdoc/tag-lines": ["error", "never"],
+    "jsdoc/valid-types": "off",
 
     // See: https://github.com/nodesecurity/eslint-plugin-security#rules
     "security/detect-object-injection": "off", // Too many false positives
@@ -148,6 +205,7 @@ module.exports = {
     jsdoc: {
       tagNamePreference: {
         "file": "fileoverview",
+        "inheritdoc": false,
       },
     },
   },
@@ -211,6 +269,7 @@ module.exports = {
         "import/no-anonymous-default-export": "off",
 
         // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
+        "jsdoc/require-file-overview": "error",
         "jsdoc/require-jsdoc": "off",
 
         // See: https://github.com/nodesecurity/eslint-plugin-security#rules
