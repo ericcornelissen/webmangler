@@ -1,152 +1,114 @@
-import type { CharSet } from "@webmangler/types";
+import type {
+  CharSet,
+  MangleExpressionOptions,
+  WebManglerPlugin,
+} from "@webmangler/types";
 
 import type { HtmlAttributeManglerOptions } from "./types";
 
-import {
-  ALL_LOWERCASE_CHARS,
-  ALL_NUMBER_CHARS,
-  SimpleManglerPlugin,
-} from "@webmangler/mangler-utils";
-
-import * as helpers from "./helpers";
+import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
 /**
- * The HTML attribute mangler is a built-in plugin of _WebMangler_ that can be
- * used to mangle HTML attributes, e.g. "data-foo" in `<img data-foo="bar"/>`.
- *
- * This mangler can be configured using the {@link HtmlAttributeManglerOptions}.
- *
- * The simplest way to configure this mangler is by specifying a single pattern
- * of HTML attributes to mangle, e.g. all "data-" attributes:
- *
- * ```javascript
- * new HtmlAttributeMangler({ attrNamePattern: "data-[a-zA-Z-]+" });
- * ```
- *
- * For more fine-grained control or easier-to-read patterns, you can specify
- * multiple patterns. For example, to mangle only the "data-" attributes for
- * names and ages (provided you consistently prefix those attributes with
- * "data-name" and "data-age" resp.), you can use:
- *
- * ```javascript
- * new HtmlAttributeMangler({
- *   attrNamePattern: ["data-name[a-z-]+", "data-age[a-z-]+"],
- * });
- *
- * // Which is equivalent to:
- * new HtmlAttributeMangler({ attrNamePattern: "data-(name|font)[a-z-]+" });
- * ```
- *
- * If you don't specify any patterns the {@link HtmlAttributeMangler.
- * DEFAULT_PATTERNS} will be used, which will mangle all "data-" attributes.
- *
- * ## Examples
- *
- * _The following examples assume the usage of the built-in language plugins._
- *
- * ### HTML
- *
- * Using the default configuration (`new HtmlAttributeMangler()`) on the HTML:
- *
- * ```html
- * <div class="container">
- *   <p class="text">Hello <span data-name="John"></span></p>
- *    <a data-link-type="outgoing" href="https://www.example.com">Visit our website</a>
- * </div>
- * ```
- *
- * Will result in:
- *
- * ```html
- * <div class="container">
- *   <p class="text">Hello <span data-a="John"></span></p>
- *    <a data-b="outgoing" href="https://www.example.com">Visit our website</a>
- * </div>
- * ```
- *
- * If a prefix of "attr-" is used and the name "a" is reserved, the resulting
- * HTML will instead be:
- *
- * ```css
- * <div class="container">
- *   <p class="text">Hello <span attr-b="John"></span></p>
- *    <a attr-c="outgoing" href="https://www.example.com">Visit our website</a>
- * </div>
- * ```
- *
- * ### CSS
- *
- * Using the default configuration (`new HtmlAttributeMangler()`) on the CSS:
- *
- * ```css
- * span[data-name] { }
- * a[data-link-type="outgoing"] { }
- *
- * .data-name { }
- * #data-link-type { }
- * ```
- *
- * Will result in:
- *
- * ```css
- * span[data-a] { }
- * a[data-b="outgoing"] { }
- *
- * .data-name { }
- * #data-link-type { }
- * ```
- *
- * ### JavaScript
- *
- * Using the default configuration (`new HtmlIdMangler()`) on the JavaScript:
- *
- * ```javascript
- * document.querySelector("span[data-name]");
- * document.querySelector("a[data-link-type]");
- * ```
- *
- * Will result in:
- *
- * ```javascript
- * document.querySelector("span[data-a]");
- * document.querySelector("a[data-b]");
- * ```
- *
- * @since v0.1.0
- * @version v0.1.23
+ * The type of the {@link HtmlAttributeMangler} constructor.
  */
-class HtmlAttributeMangler extends SimpleManglerPlugin {
+type HtmlAttributeManglerConstructor = new (
+  options?: HtmlAttributeManglerOptions
+) => WebManglerPlugin;
+
+/**
+ * The interface defining the dependencies of the {@link HtmlAttributeMangler}
+ * class.
+ */
+interface HtmlAttributeManglerDependencies {
   /**
-   * The character set used by {@link HtmlAttributeMangler}. Note that HTML
-   * attributes are case insensitive, so only lowercase letters are used.
+   * Get the {@link CharSet} for the {@link HtmlAttributeMangler}.
+   *
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
+   * @returns The {@link CharSet}.
    */
-  private static readonly CHARACTER_SET: CharSet = [
-    ...ALL_LOWERCASE_CHARS,
-    ...ALL_NUMBER_CHARS,
-    "-", "_",
-  ];
+  getCharacterSet(
+    options: Record<never, never>,
+  ): CharSet;
 
   /**
-   * Instantiate a new {@link HtmlAttributeMangler}.
+   * Get the ignore patterns for the {@link HtmlAttributeMangler}.
    *
-   * @param options The {@link HtmlAttributeManglerOptions}.
-   * @since v0.1.0
-   * @version v0.1.23
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
+   * @returns The ignore patterns.
    */
-  constructor(options: HtmlAttributeManglerOptions={}) {
-    super({
-      charSet: HtmlAttributeMangler.CHARACTER_SET,
-      patterns: helpers.getPatterns(options.attrNamePattern),
-      ignorePatterns: helpers.getIgnorePatterns(options.ignoreAttrNamePattern),
-      reserved: helpers.getReserved(options.reservedAttrNames),
-      prefix: helpers.getPrefix(options.keepAttrPrefix),
-      languageOptions: [
-        helpers.getAttributeExpressionOptions(),
-        helpers.getAttributeSelectorExpressionOptions(),
-        helpers.getAttributeUsageExpressionFactory(),
-      ],
-    });
-  }
+  getIgnorePatterns(options: {
+    ignoreAttrNamePattern?: string | Iterable<string>;
+  }): string | Iterable<string>;
+
+  /**
+   * Get the language options for the {@link HtmlAttributeMangler}.
+   *
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
+   * @returns The language options.
+   */
+  getLanguageOptions(
+    options: Record<never, never>,
+  ): Iterable<MangleExpressionOptions<unknown>>;
+
+  /**
+   * Get the patterns for the {@link HtmlAttributeMangler}.
+   *
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
+   * @returns The patterns.
+   */
+  getPatterns(options: {
+    attrNamePattern?: string | Iterable<string>;
+  }): string | Iterable<string>;
+
+  /**
+   * Get the mangle prefix for the {@link HtmlAttributeMangler}.
+   *
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
+   * @returns The mangle prefix.
+   */
+  getPrefix(options: {
+    keepAttrPrefix?: string;
+  }): string;
+
+  /**
+   * Get the reserved names for the {@link HtmlAttributeMangler}.
+   *
+   * @param options The options provided to the {@link HtmlAttributeMangler}.
+   * @returns The reserved names.
+   */
+  getReserved(options: {
+    reservedAttrNames?: Iterable<string>;
+  }): Iterable<string>;
 }
 
-export default HtmlAttributeMangler;
+/**
+ * Initialize the {@link HtmlAttributeMangler} class with explicit dependencies.
+ *
+ * @param helpers The dependencies of the class.
+ * @returns The {@link HtmlAttributeMangler} class.
+ */
+function initHtmlAttributeMangler(
+  helpers: HtmlAttributeManglerDependencies,
+): HtmlAttributeManglerConstructor {
+  return class HtmlAttributeMangler extends SimpleManglerPlugin {
+    /**
+     * Instantiate a new {@link HtmlAttributeMangler}.
+     *
+     * @param options The {@link HtmlAttributeManglerOptions}.
+     * @since v0.1.0
+     * @version v0.1.23
+     */
+    constructor(options: HtmlAttributeManglerOptions={}) {
+      super({
+        charSet: helpers.getCharacterSet(options),
+        patterns: helpers.getPatterns(options),
+        ignorePatterns: helpers.getIgnorePatterns(options),
+        reserved: helpers.getReserved(options),
+        prefix: helpers.getPrefix(options),
+        languageOptions: helpers.getLanguageOptions(options),
+      });
+    }
+  };
+}
+
+export default initHtmlAttributeMangler;

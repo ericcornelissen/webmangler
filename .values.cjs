@@ -1,7 +1,6 @@
 "use strict";
 
-const testSuffixPerformance = "{bench,test}";
-const testSuffixTest = "test";
+const testSuffix = "test";
 
 const testTypeTests = "tests";
 const testTypePerformance = "performance";
@@ -18,6 +17,21 @@ const reportsDir = "_reports";
 const tempDir = ".temp";
 const testDataDir = "testdata";
 const testsDir = "__tests__";
+
+const _testDirUnit = "unit";
+const testDirCommon = "common";
+const testDirIntegration = "integration";
+const testDirPerformance = "performance";
+const testDirAll = `{${[
+  ".",
+  testDirCommon,
+  testDirIntegration,
+  _testDirUnit,
+].join(",")}}`;
+const testDirUnit = `{${[
+  testDirCommon,
+  _testDirUnit,
+].join(",")}}`;
 
 let packagesExpr = "*";
 let packagesList = [packagesExpr];
@@ -54,6 +68,11 @@ module.exports = {
   srcDir,
   tempDir,
   testDataDir,
+  testDirAll,
+  testDirCommon,
+  testDirIntegration,
+  testDirPerformance,
+  testDirUnit,
   testsDir,
 
   // Computed
@@ -63,8 +82,7 @@ module.exports = {
   packagesList,
 
   // Tests
-  testSuffixPerformance,
-  testSuffixTest,
+  testSuffix,
   testTypePerformance,
   testTypeIntegration,
   testTypeTests,

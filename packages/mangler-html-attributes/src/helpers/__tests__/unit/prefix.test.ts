@@ -9,15 +9,15 @@ suite("HTML Attribute Mangler prefix helpers", function() {
     const DEFAULT_PREFIX = "data-";
 
     test("default prefix", function() {
-      const result = getPrefix();
+      const result = getPrefix({ });
       expect(result).to.equal(DEFAULT_PREFIX);
     });
 
     test("custom prefix", function() {
-      const prefix = "foobar";
+      const keepAttrPrefix = "foobar";
 
-      const result = getPrefix(prefix);
-      expect(result).to.equal(prefix);
+      const result = getPrefix({ keepAttrPrefix });
+      expect(result).to.equal(keepAttrPrefix);
     });
   });
 });

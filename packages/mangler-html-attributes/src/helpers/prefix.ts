@@ -1,22 +1,35 @@
 /**
  * The default prefix used by a {@link HtmlAttributeMangler}.
  */
- const DEFAULT_PREFIX = "data-";
+const DEFAULT_PREFIX = "data-";
 
- /**
-  * Get either the configured prefix or the default prefix.
-  *
-  * @param keepAttrPrefix The configured prefix.
-  * @returns The prefix to be used.
-  */
- function getPrefix(keepAttrPrefix?: string): string {
-   if (keepAttrPrefix === undefined) {
-     return DEFAULT_PREFIX;
-   }
+/**
+ * The options for the HTML attribute mangler prefix.
+ */
+interface PrefixOptions {
+  /**
+   * A prefix to use for mangled HTML attributes, if any.
+   */
+  readonly keepAttrPrefix?: string;
+}
 
-   return keepAttrPrefix;
- }
+/**
+ * Get either the configured prefix or the default prefix.
+ *
+ * @param options The {@link PrefixOptions}.
+ * @param options.keepAttrPrefix The configured prefix.
+ * @returns The prefix to be used.
+ */
+function getPrefix({
+  keepAttrPrefix,
+}: PrefixOptions): string {
+  if (keepAttrPrefix === undefined) {
+    return DEFAULT_PREFIX;
+  }
 
- export {
-   getPrefix,
- };
+  return keepAttrPrefix;
+}
+
+export {
+  getPrefix,
+};

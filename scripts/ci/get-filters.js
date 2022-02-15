@@ -16,6 +16,9 @@ import values from "../../.values.cjs";
 
 const {
   testsDir,
+  testDirIntegration,
+  testDirPerformance,
+  testDirUnit,
 } = values;
 
 const RUN_MUTATION_TESTING = [
@@ -24,7 +27,9 @@ const RUN_MUTATION_TESTING = [
   "language-css",
   "language-js",
   "language-utils",
+  "mangler-css-classes",
   "mangler-css-variables",
+  "mangler-html-attributes",
   "mangler-html-ids",
   "mangler-utils",
   "testing",
@@ -41,6 +46,13 @@ function main(argv) {
   log.print(filters);
 }
 
+function globToRegExp(str) {
+  return str
+    .replace("{", "(")
+    .replace("}", ")")
+    .replace(",", "|");
+}
+
 function getPackageCriteria(arg) {
   switch (arg) {
   case "mutation":
@@ -48,27 +60,24 @@ function getPackageCriteria(arg) {
   case "performance":
     return (packageName) => hasFiles(
       packageName,
-      (filePath) => {
-        const benchmarkSuffixExpr = /\.bench\.ts$/;
-        const benchmarkExpr = new RegExp(`${testsDir}/benchmark`);
-        const performanceExpr = new RegExp(`${testsDir}/performance`);
-        return benchmarkSuffixExpr.test(filePath)
-          || benchmarkExpr.test(filePath)
-          || performanceExpr.test(filePath);
-      },
+      (filePath) => filePath.includes(
+        `${testsDir}/${globToRegExp(testDirPerformance)}`,
+      ),
     );
   case "test":
     return (packageName) => hasFiles(
       packageName,
       (filePath) => {
         const testsExpr = new RegExp(`${testsDir}/[^/]+\\.test\\.ts$`);
-        const unitExpr = new RegExp(`${testsDir}/unit`);
-        const integrationExpr = new RegExp(`${testsDir}/integration`);
-        const commonExpr = new RegExp(`${testsDir}/common/[^/]+\\.test\\.ts`);
+        const unitExpr = new RegExp(
+          `${testsDir}/${globToRegExp(testDirUnit)}/[^/]+\\.test\\.ts$`,
+        );
+        const integrationExpr = new RegExp(
+          `${testsDir}/${globToRegExp(testDirIntegration)}/[^/]+\\.test\\.ts$`,
+        );
         return testsExpr.test(filePath)
           || unitExpr.test(filePath)
-          || integrationExpr.test(filePath)
-          || commonExpr.test(filePath);
+          || integrationExpr.test(filePath);
       },
     );
   default:

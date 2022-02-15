@@ -1,12 +1,6 @@
-import type { CharSet } from "@webmangler/types";
-
 import type { CssClassManglerOptions } from "./types";
 
-import {
-  ALL_LETTER_CHARS,
-  ALL_NUMBER_CHARS,
-  SimpleManglerPlugin,
-} from "@webmangler/mangler-utils";
+import { SimpleManglerPlugin } from "@webmangler/mangler-utils";
 
 import * as helpers from "./helpers";
 
@@ -112,15 +106,6 @@ import * as helpers from "./helpers";
  */
 class CssClassMangler extends SimpleManglerPlugin {
   /**
-   * The character set used by {@link CssClassMangler}.
-   */
-  private static readonly CHARACTER_SET: CharSet = [
-    ...ALL_LETTER_CHARS,
-    ...ALL_NUMBER_CHARS,
-    "-", "_",
-  ];
-
-  /**
    * Instantiate a new {@link CssClassMangler}.
    *
    * @param options The {@link CssClassManglerOptions}.
@@ -129,15 +114,12 @@ class CssClassMangler extends SimpleManglerPlugin {
    */
   constructor(options: CssClassManglerOptions={}) {
     super({
-      charSet: CssClassMangler.CHARACTER_SET,
+      charSet: helpers.getCharacterSet(),
       patterns: helpers.getPatterns(options.classNamePattern),
       ignorePatterns: helpers.getIgnorePatterns(options.ignoreClassNamePattern),
       reserved: helpers.getReserved(options.reservedClassNames),
       prefix: helpers.getPrefix(options.keepClassNamePrefix),
-      languageOptions: [
-        helpers.getQuerySelectorExpressionOptions(),
-        helpers.getClassAttributeExpressionOptions(options.classAttributes),
-      ],
+      languageOptions: helpers.getLanguageOptions(options),
     });
   }
 }
