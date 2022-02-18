@@ -1,9 +1,8 @@
-import type { Logger } from "../logger";
-import type { ManglerStats } from "./types";
+import type { Reporter, Stats, Writer } from "./types";
 
 import * as chalk from "chalk";
 
-import { getChangedPercentage } from "./helpers";
+import { getChangedPercentage } from "../stats/helpers";
 
 /**
  * Round a number to at most two decimal places.
@@ -45,18 +44,18 @@ function getDisplayPercentage(percentage: number): string {
 /**
  * Log statistics about a _WebMangler_ run.
  *
- * @param logger A {@link Logger}.
+ * @param writer A {@link Writer}.
  * @param stats The _WebMangler_ run statistics.
  */
 function logStats(
-  logger: Logger,
-  stats: ManglerStats,
+  writer: Writer,
+  stats: Stats,
 ): void {
   const fileCount: number = stats.files.size;
   const duration: number = roundToTwoDecimalPlaces(stats.duration);
 
   if (stats.files.size === 0) {
-    logger.print(`Nothing was mangled (${duration} ms)`);
+    writer.write(`Nothing was mangled (${duration} ms)`);
     return;
   }
 
@@ -68,19 +67,43 @@ function logStats(
     if (fileStats.changed) {
       const percentage = getDisplayPercentage(fileStats.changePercentage);
       const reduction = `${fileStats.sizeBefore} -> ${fileStats.sizeAfter}`;
-      logger.print(`${filePath} ${percentage} (${reduction})`);
+      writer.write(`${filePath} ${percentage} (${reduction})`);
     } else {
-      logger.print(`${filePath} [NOT MANGLED]`);
+      writer.write(`${filePath} [NOT MANGLED]`);
     }
   });
 
   const changedPercentage = getChangedPercentage(overallBefore, overallAfter);
   const overallPercentage = getDisplayPercentage(changedPercentage);
   const overallReduction = `${overallBefore} -> ${overallAfter}`;
-  logger.print(`OVERALL ${overallPercentage} (${overallReduction})`);
-  logger.print(`\nmangled ${fileCount} files in ${duration} ms`);
+  writer.write(`OVERALL ${overallPercentage} (${overallReduction})`);
+  writer.write(`\nmangled ${fileCount} files in ${duration} ms`);
 }
 
-export {
-  logStats,
-};
+/**
+ * The default reporter for the _WebMangler_ CLI.
+ */
+class DefaultReporter implements Reporter {
+  /**
+   * The function used to write the report.
+   */
+  private readonly writer: Writer;
+
+  /**
+   * Create a new {@link DefaultReporter}.
+   *
+   * @param writer The {@link Writer} to be used by this {@link Reporter}.
+   */
+  constructor(writer: Writer) {
+    this.writer = writer;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  async report(stats: Stats): Promise<void> {
+    logStats(this.writer, stats);
+  }
+}
+
+export default DefaultReporter;

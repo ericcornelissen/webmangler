@@ -1,74 +1,76 @@
-import type { FileStats, ManglerStats } from "../../types";
+import type { FileStats } from "../../../stats/types";
+import type { Reporter, Stats } from "../../types";
 
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import FileStatsMock from "../common/file-stats.mock";
-import LoggerMock from "../common/logger.mock";
+import { FileStatsMock, WriterMock } from "../common";
 
-import {
-  logStats,
-} from "../../log";
+import DefaultReporter from "../../default-reporter";
 
 chaiUse(sinonChai);
 
-suite("Log stats", function() {
-  suite("::logStats", function() {
+suite("DefaultReporter", function() {
+  let reporter: Reporter;
+
+  let writer: WriterMock;
+
+  suiteSetup(function() {
+    writer = new WriterMock();
+
+    reporter = new DefaultReporter(writer);
+  });
+
+  setup(function() {
+    writer.write.resetHistory();
+  });
+
+  suite("::report", function() {
     const round = (x: number): number => {
       return Math.round((x + Number.EPSILON) * 100) / 100;
     };
 
-    let logger: LoggerMock;
-
-    suiteSetup(function() {
-      logger = new LoggerMock();
-    });
-
-    setup(function() {
-      logger.resetHistory();
-    });
-
-    test("no files in ManglerStats", function() {
-      const emptyStats: ManglerStats = {
+    test("no files in stats", function() {
+      const emptyStats: Stats = {
         duration: 0,
         files: new Map([]),
       };
 
-      logStats(logger, emptyStats);
-      expect(logger.print).to.have.been.calledWith(
+      reporter.report(emptyStats);
+      expect(writer.write).to.have.been.calledWith(
         sinon.match("Nothing was mangled"),
       );
     });
 
-    test("one file in ManglerStats", function() {
+    test("one file in stats", function() {
       const path = "foo.bar";
       const fileStats = new FileStatsMock(10, 5);
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: 0,
         files: new Map([[path, fileStats]]),
       };
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.callCount(3);
-      expect(logger.print).to.have.been.calledWith(sinon.match(path));
+      reporter.report(stats);
+      expect(writer.write).to.have.callCount(3);
+      expect(writer.write).to.have.been.calledWith(sinon.match(path));
     });
 
-    test("multiple files in ManglerStats", function() {
+    test("multiple files in stats", function() {
       const entries: [string, FileStats][] = [
         ["foo.txt", new FileStatsMock(3, 14)],
         ["bar.md", new FileStatsMock(2, 718)],
         ["hello/world.css", new FileStatsMock(16, 7)],
       ];
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: 0,
         files: new Map(entries),
       };
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.callCount(entries.length + 2);
+      reporter.report(stats);
+      expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [path] of entries) {
-        expect(logger.print).to.have.been.calledWith(sinon.match(path));
+        expect(writer.write).to.have.been.calledWith(sinon.match(path));
       }
     });
 
@@ -76,16 +78,16 @@ suite("Log stats", function() {
       const entries: [string, FileStats][] = [
         ["foo.bar", new FileStatsMock(1, 1)],
       ];
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: 0,
         files: new Map(entries),
       };
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.callCount(entries.length + 2);
+      reporter.report(stats);
+      expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [path] of entries) {
-        expect(logger.print).to.have.been.calledWith(sinon.match(path));
-        expect(logger.print).to.have.been.calledWith(sinon.match("[NOT MANGLED]"));
+        expect(writer.write).to.have.been.calledWith(sinon.match(path));
+        expect(writer.write).to.have.been.calledWith(sinon.match("[NOT MANGLED]"));
       }
     });
 
@@ -102,22 +104,22 @@ suite("Log stats", function() {
         ["rum.txt", new FileStatsMock(0, 1, -1.125)],
         ["gone.txt", new FileStatsMock(0, 1, -10.128)],
       ];
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: 0,
         files: new Map(entries),
       };
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.callCount(entries.length + 2);
+      reporter.report(stats);
+      expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
-        expect(logger.print).to.have.been.calledWith(
+        expect(writer.write).to.have.been.calledWith(
           sinon.match(`${round(fileStats.changePercentage)}%`),
         );
-        expect(logger.print).to.have.been.calledWith(
+        expect(writer.write).to.have.been.calledWith(
           sinon.match(`(${fileStats.sizeBefore} -> ${fileStats.sizeAfter})`),
         );
       }
-      expect(logger.print).not.to.have.been.calledWith(sinon.match("<-0.01%"));
+      expect(writer.write).not.to.have.been.calledWith(sinon.match("<-0.01%"));
     });
 
     test("negative percentage between 0 and -0.01", function() {
@@ -126,16 +128,16 @@ suite("Log stats", function() {
         ["the.txt", new FileStatsMock(0, 1, -0.001)],
         ["sun.txt", new FileStatsMock(0, 1, -0.0001)],
       ];
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: 0,
         files: new Map(entries),
       };
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.callCount(entries.length + 2);
+      reporter.report(stats);
+      expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
-        expect(logger.print).to.have.been.calledWith(sinon.match("<-0.01%"));
-        expect(logger.print).to.have.been.calledWith(
+        expect(writer.write).to.have.been.calledWith(sinon.match("<-0.01%"));
+        expect(writer.write).to.have.been.calledWith(
           sinon.match(`(${fileStats.sizeBefore} -> ${fileStats.sizeAfter})`),
         );
       }
@@ -154,22 +156,22 @@ suite("Log stats", function() {
         ["rum.txt", new FileStatsMock(0, 1, 1.125)],
         ["gone.txt", new FileStatsMock(0, 1, 10.128)],
       ];
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: 0,
         files: new Map(entries),
       };
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.callCount(entries.length + 2);
+      reporter.report(stats);
+      expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
-        expect(logger.print).to.have.been.calledWith(
+        expect(writer.write).to.have.been.calledWith(
           sinon.match(`${round(fileStats.changePercentage)}%`),
         );
-        expect(logger.print).to.have.been.calledWith(
+        expect(writer.write).to.have.been.calledWith(
           sinon.match(`(${fileStats.sizeBefore} -> ${fileStats.sizeAfter})`),
         );
       }
-      expect(logger.print).not.to.have.been.calledWith(sinon.match("<+0.01%"));
+      expect(writer.write).not.to.have.been.calledWith(sinon.match("<+0.01%"));
     });
 
     test("positive percentage between 0 and 0.01", function() {
@@ -178,16 +180,16 @@ suite("Log stats", function() {
         ["the.txt", new FileStatsMock(0, 1, 0.001)],
         ["sun.txt", new FileStatsMock(0, 1, 0.0001)],
       ];
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: 0,
         files: new Map(entries),
       };
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.callCount(entries.length + 2);
+      reporter.report(stats);
+      expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
-        expect(logger.print).to.have.been.calledWith(sinon.match("<+0.01%"));
-        expect(logger.print).to.have.been.calledWith(
+        expect(writer.write).to.have.been.calledWith(sinon.match("<+0.01%"));
+        expect(writer.write).to.have.been.calledWith(
           sinon.match(`(${fileStats.sizeBefore} -> ${fileStats.sizeAfter})`),
         );
       }
@@ -197,15 +199,15 @@ suite("Log stats", function() {
       const entries: [string, FileStats][] = [
         ["foo.bar", new FileStatsMock(0, 1, 0)],
       ];
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: 0,
         files: new Map(entries),
       };
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.callCount(entries.length + 2);
+      reporter.report(stats);
+      expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [,] of entries) {
-        expect(logger.print).to.have.been.calledWith(sinon.match("0%"));
+        expect(writer.write).to.have.been.calledWith(sinon.match("0%"));
       }
     });
 
@@ -215,7 +217,7 @@ suite("Log stats", function() {
         ["bar.md", new FileStatsMock(3, 1)],
         ["hello/world.css", new FileStatsMock(5, 2)],
       ];
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: 0,
         files: new Map(entries),
       };
@@ -226,22 +228,22 @@ suite("Log stats", function() {
       const sizesAfter = entries.map(([, file]) => file.sizeAfter);
       const sizeAfter = sizesAfter.reduce((total, size) => total + size, 0);
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.been.calledWith(sinon.match("-60%"));
-      expect(logger.print).to.have.been.calledWith(
+      reporter.report(stats);
+      expect(writer.write).to.have.been.calledWith(sinon.match("-60%"));
+      expect(writer.write).to.have.been.calledWith(
         sinon.match(`(${sizeBefore} -> ${sizeAfter})`),
       );
     });
 
     test("duration", function() {
       const duration = 42;
-      const stats: ManglerStats = {
+      const stats: Stats = {
         duration: duration,
         files: new Map([["foo.bar", new FileStatsMock(2, 1)]]),
       };
 
-      logStats(logger, stats);
-      expect(logger.print).to.have.been.calledWith(
+      reporter.report(stats);
+      expect(writer.write).to.have.been.calledWith(
         sinon.match(`${duration} ms`),
       );
     });

@@ -1,5 +1,7 @@
 import type { Reporter, Writer } from "./types";
 
+import DefaultReporter from "./default-reporter";
+
 /**
  * Create a new {@link Reporter}.
  *
@@ -7,11 +9,7 @@ import type { Reporter, Writer } from "./types";
  * @returns A new {@link Reporter}.
  */
 function New(writer: Writer): Reporter {
-  const reporter = {
-    async report() {
-      // Nothing to do here...
-    },
-  };
+  const reporter = new DefaultReporter(writer);
   return reporter;
 }
 
