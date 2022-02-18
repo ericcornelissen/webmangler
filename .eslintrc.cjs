@@ -365,11 +365,38 @@ module.exports = {
         "plugin:yml/standard",
       ],
       rules: {
+        "spaced-comment": "off",
+
+        // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/
+        "yml/block-mapping": ["error", "always"],
+        "yml/block-sequence": ["error", "always"],
+        "yml/block-sequence-hyphen-indicator-newline": ["error", "never"],
+        "yml/indent": ["error", INDENT_SIZE],
+        "yml/key-name-casing": "off",
+        "yml/key-spacing": ["error", {
+          afterColon: true,
+          beforeColon: false,
+          mode: "strict",
+        }],
+        "yml/no-empty-document": "error",
+        "yml/no-empty-key": "error",
+        "yml/no-empty-mapping-value": "error",
+        "yml/no-empty-sequence-entry": "error",
+        "yml/no-irregular-whitespace": "error",
         "yml/no-multiple-empty-lines": ["error", {
           max: 1,
           maxEOF: 0,
           maxBOF: 0,
         }],
+        "yml/no-tab-indent": "error",
+        "yml/plain-scalar": ["error", "always"],
+        "yml/quotes": ["error", {
+          avoidEscape: true,
+          prefer: "double",
+        }],
+        "yml/require-string-key": "error",
+        "yml/spaced-comment": ["error", "always"],
+        "yml/vue-custom-block/no-parsing-error": "off",
       },
     },
     { // Documentation Snippets (MarkDown.*)
