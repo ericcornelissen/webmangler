@@ -1,21 +1,21 @@
 import { expect } from "chai";
 
-import * as manglers from "../../index";
+import * as languages from "../../index";
 
 suite("The webmangler/languages exports", function() {
   test("has BuiltInLanguagesSupport", function() {
-    expect(manglers).to.have.property("BuiltInLanguagesSupport");
+    expect(languages).to.have.property("BuiltInLanguagesSupport");
   });
 
   test("has CssLanguageSupport", function() {
-    expect(manglers).to.have.property("CssLanguageSupport");
+    expect(languages).to.have.property("CssLanguageSupport");
   });
 
   test("has HtmlLanguageSupport", function() {
-    expect(manglers).to.have.property("HtmlLanguageSupport");
+    expect(languages).to.have.property("HtmlLanguageSupport");
   });
 
   test("has JavaScriptLanguageSupport", function() {
-    expect(manglers).to.have.property("JavaScriptLanguageSupport");
+    expect(languages).to.have.property("JavaScriptLanguageSupport");
   });
 });

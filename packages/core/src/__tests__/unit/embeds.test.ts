@@ -1,37 +1,37 @@
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 
-import type { IdentifiableWebManglerEmbed } from "../embeds";
+import type { IdentifiableWebManglerEmbed } from "../../embeds";
 import type {
   WebManglerEmbed,
   WebManglerFile,
   WebManglerLanguagePlugin,
-} from "../types";
+} from "../../types";
 
 import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import { getEmbeds, reEmbed } from "../embeds";
+import { getEmbeds, reEmbed } from "../../embeds";
 
 suite("Embeds", function() {
-    const idPrefix = "wm-embed@";
+  const idPrefix = "wm-embed@";
 
   suite("::getEmbeds", function() {
     const idPattern = `${idPrefix}[a-zA-Z0-9]+-[0-9]+`;
 
-    type TestCase = {
+    interface TestCase {
       readonly files: WebManglerFile[];
       readonly plugins: WebManglerLanguagePlugin[];
       readonly expected: {
         readonly embeds: WebManglerEmbed[];
         readonly files: WebManglerFile[];
       };
-    };
+    }
 
-    const scenarios: TestScenario<TestCase>[] = [
+    const scenarios: TestScenarios<Iterable<TestCase>> = [
       {
-        name: "sample",
-        cases: [
+        testName: "sample",
+        getScenario: () => [
           {
             files: [
               {
@@ -165,8 +165,8 @@ suite("Embeds", function() {
         ],
       },
       {
-        name: "edge cases",
-        cases: [
+        testName: "edge cases",
+        getScenario: () => [
           {
             files: [],
             plugins: [
@@ -193,9 +193,9 @@ suite("Embeds", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
+    for (const { getScenario, testName } of scenarios) {
+      test(testName, function() {
+        for (const testCase of getScenario()) {
           const { expected, files, plugins } = testCase;
 
           const embedsMap = getEmbeds(files, plugins);
@@ -236,16 +236,16 @@ suite("Embeds", function() {
   });
 
   suite("::reEmbed", function() {
-    type TestCase = {
+    interface TestCase {
       readonly embeds: IdentifiableWebManglerEmbed[];
       readonly file: WebManglerFile;
       readonly expected: string;
     }
 
-    const scenarios: TestScenario<TestCase>[] = [
+    const scenarios: TestScenarios<Iterable<TestCase>> = [
       {
-        name: "sample",
-        cases: [
+        testName: "sample",
+        getScenario: () => [
           {
             embeds: [
               {
@@ -310,8 +310,8 @@ suite("Embeds", function() {
         ],
       },
       {
-        name: "edge cases",
-        cases: [
+        testName: "edge cases",
+        getScenario: () => [
           {
             embeds: [],
             file: {
@@ -324,9 +324,9 @@ suite("Embeds", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
+    for (const { getScenario, testName } of scenarios) {
+      test(testName, function() {
+        for (const testCase of getScenario()) {
           const { embeds, expected, file } = testCase;
 
           reEmbed(embeds, file);
