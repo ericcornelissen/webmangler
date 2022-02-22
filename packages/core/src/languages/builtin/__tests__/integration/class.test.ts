@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import BuiltInLanguagesPlugin from "../builtin";
+import BuiltInLanguagesPlugin from "../../index";
 
 suite("Built-in Language Supports", function() {
   test("get embeds", function() {

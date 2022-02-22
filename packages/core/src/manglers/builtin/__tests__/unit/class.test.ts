@@ -1,6 +1,9 @@
 import type { SinonStub } from "sinon";
 
-import type { WebManglerPluginClass, RecommendedManglersOptions } from "../types";
+import type {
+  BuiltInManglersOptions,
+  WebManglerPluginClass,
+} from "../../types";
 
 import {
   generateValueObjects,
@@ -11,34 +14,39 @@ import * as _ from "lodash";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
-import { optionsValues } from "./values";
+import { optionsValues } from "../common";
 
-import RecommendedManglers, { injectDependencies } from "../class";
+import BuiltInManglers, { injectDependencies } from "../../class";
 
 chaiUse(sinonChai);
 
-suite("RecommendedManglers class", function() {
+suite("BuiltInManglers class", function() {
   let CssClassManglerConstructor: SinonStub;
   let CssVariableManglerConstructor: SinonStub;
   let HtmlAttributeManglerConstructor: SinonStub;
+  let HtmlIdManglerConstructor: SinonStub;
 
   suiteSetup(function() {
     const CssClassMangler = new WebManglerPluginMock();
     const CssVariableMangler = new WebManglerPluginMock();
     const HtmlAttributeMangler = new WebManglerPluginMock();
+    const HtmlIdMangler = new WebManglerPluginMock();
 
     CssClassManglerConstructor = sinon.stub();
     CssVariableManglerConstructor = sinon.stub();
     HtmlAttributeManglerConstructor = sinon.stub();
+    HtmlIdManglerConstructor = sinon.stub();
 
     CssClassManglerConstructor.returns(CssClassMangler);
     CssVariableManglerConstructor.returns(CssVariableMangler);
     HtmlAttributeManglerConstructor.returns(HtmlAttributeMangler);
+    HtmlIdManglerConstructor.returns(HtmlIdMangler);
 
     injectDependencies(
       CssClassManglerConstructor as unknown as WebManglerPluginClass,
       CssVariableManglerConstructor as unknown as WebManglerPluginClass,
       HtmlAttributeManglerConstructor as unknown as WebManglerPluginClass,
+      HtmlIdManglerConstructor as unknown as WebManglerPluginClass,
     );
   });
 
@@ -62,7 +70,7 @@ suite("RecommendedManglers class", function() {
       );
 
       for (const options of generateValueObjects(optionsValueSource)) {
-        new RecommendedManglers(options as RecommendedManglersOptions);
+        new BuiltInManglers(options as BuiltInManglersOptions);
         expect(CssClassManglerConstructor).to.have.been.calledOnceWith(
           sinon.match({
             classAttributes: options.classAttributes,
@@ -83,9 +91,14 @@ suite("RecommendedManglers class", function() {
       );
 
       for (const options of generateValueObjects(optionsValueSource)) {
-        new RecommendedManglers(options as RecommendedManglersOptions);
+        new BuiltInManglers(options as BuiltInManglersOptions);
         expect(CssClassManglerConstructor).not.to.have.been.called;
       }
+    });
+
+    test("no configuration", function() {
+      new BuiltInManglers();
+      expect(CssClassManglerConstructor).to.have.been.calledOnceWith({ });
     });
   });
 
@@ -108,7 +121,7 @@ suite("RecommendedManglers class", function() {
       );
 
       for (const options of generateValueObjects(optionsValueSource)) {
-        new RecommendedManglers(options as RecommendedManglersOptions);
+        new BuiltInManglers(options as BuiltInManglersOptions);
         expect(CssVariableManglerConstructor).to.have.been.calledOnceWith(
           sinon.match({
             cssVarNamePattern: options.cssVarNamePattern,
@@ -128,9 +141,14 @@ suite("RecommendedManglers class", function() {
       );
 
       for (const options of generateValueObjects(optionsValueSource)) {
-        new RecommendedManglers(options as RecommendedManglersOptions);
+        new BuiltInManglers(options as BuiltInManglersOptions);
         expect(CssVariableManglerConstructor).not.to.have.been.called;
       }
+    });
+
+    test("no configuration", function() {
+      new BuiltInManglers();
+      expect(CssVariableManglerConstructor).to.have.been.calledOnceWith({ });
     });
   });
 
@@ -153,7 +171,7 @@ suite("RecommendedManglers class", function() {
       );
 
       for (const options of generateValueObjects(optionsValueSource)) {
-        new RecommendedManglers(options as RecommendedManglersOptions);
+        new BuiltInManglers(options as BuiltInManglersOptions);
         expect(HtmlAttributeManglerConstructor).to.have.been.calledOnceWith(
           sinon.match({
             attrNamePattern: options.attrNamePattern,
@@ -173,9 +191,68 @@ suite("RecommendedManglers class", function() {
       );
 
       for (const options of generateValueObjects(optionsValueSource)) {
-        new RecommendedManglers(options as RecommendedManglersOptions);
+        new BuiltInManglers(options as BuiltInManglersOptions);
         expect(HtmlAttributeManglerConstructor).not.to.have.been.called;
       }
+    });
+
+    test("no configuration", function() {
+      new BuiltInManglers();
+      expect(HtmlAttributeManglerConstructor).to.have.been.calledOnceWith({ });
+    });
+  });
+
+  suite("HtmlIdMangler", function() {
+    const HtmlIdManglerKeys: string[] = [
+      "idAttributes",
+      "idNamePattern",
+      "disableHtmlIdMangling",
+      "keepIdPrefix",
+      "reservedIds",
+      "urlAttributes",
+    ];
+
+    setup(function() {
+      HtmlIdManglerConstructor.resetHistory();
+    });
+
+    test("enable & configure the HtmlIdMangler", function() {
+      const optionsValueSource = Object.assign(
+        _.pick(optionsValues, HtmlIdManglerKeys),
+        { disableHtmlIdMangling: [undefined, false] },
+      );
+
+      for (const options of generateValueObjects(optionsValueSource)) {
+        new BuiltInManglers(options as BuiltInManglersOptions);
+        expect(HtmlIdManglerConstructor).to.have.been.calledOnceWith(
+          sinon.match({
+            idAttributes: options.idAttributes,
+            idNamePattern: options.idNamePattern,
+            keepIdPrefix: options.keepIdPrefix,
+            reservedIds: options.reservedIds,
+            urlAttributes: options.urlAttributes,
+          }),
+        );
+
+        HtmlIdManglerConstructor.resetHistory();
+      }
+    });
+
+    test("disable the HtmlIdMangler", function() {
+      const optionsValueSource = Object.assign(
+        _.pick(optionsValues, HtmlIdManglerKeys),
+        { disableHtmlIdMangling: [true] },
+      );
+
+      for (const options of generateValueObjects(optionsValueSource)) {
+        new BuiltInManglers(options as BuiltInManglersOptions);
+        expect(HtmlIdManglerConstructor).not.to.have.been.called;
+      }
+    });
+
+    test("no configuration", function() {
+      new BuiltInManglers();
+      expect(HtmlIdManglerConstructor).to.have.been.calledOnceWith({ });
     });
   });
 });

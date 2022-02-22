@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import RecommendedManglers from "../recommended";
+import RecommendedManglers from "../../index";
 
 suite("Recommended Manglers", function() {
   test("no configuration", function() {

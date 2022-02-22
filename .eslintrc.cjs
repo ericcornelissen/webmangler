@@ -119,6 +119,7 @@ module.exports = {
       ignore: [
         "webmangler/languages",
         "webmangler/manglers",
+        "webmangler/testing",
       ],
     }],
     "import/no-unused-modules": "error",
