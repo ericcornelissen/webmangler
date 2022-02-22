@@ -395,6 +395,14 @@ module.exports = {
           prefer: "double",
         }],
         "yml/require-string-key": "error",
+        "yml/sort-sequence-values": ["error",
+          {
+            pathPattern: ".*",
+            order: {
+              type: "asc",
+            },
+          },
+        ],
         "yml/spaced-comment": ["error", "always"],
         "yml/vue-custom-block/no-parsing-error": "off",
       },
