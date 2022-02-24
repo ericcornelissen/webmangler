@@ -3,23 +3,13 @@ import type { CharSet, MangleEngineOptions } from "@webmangler/types";
 import { expect } from "chai";
 
 import {
+  ALL_LOWERCASE_CHARS,
+  ALL_UPPERCASE_CHARS,
+} from "../common";
+
+import {
   parseOptions,
 } from "../../options";
-
-const ALL_LOWERCASE_CHARS: CharSet = [
-  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-  "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-];
-
-const ALL_UPPERCASE_CHARS: CharSet = [
-  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-  "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-];
-
-const ALL_CHARS: CharSet = [
-  ...ALL_LOWERCASE_CHARS,
-  ...ALL_UPPERCASE_CHARS,
-];
 
 suite("ManglerEngine options", function() {
   suite("::parseOptions", function() {
@@ -44,6 +34,7 @@ suite("ManglerEngine options", function() {
           {
             options: {
               patterns: ["foo*", "ba+r"],
+              charSet: ALL_LOWERCASE_CHARS,
             },
             expected: {
               patterns: ["foo*", "ba+r"],
@@ -61,12 +52,12 @@ suite("ManglerEngine options", function() {
           {
             options: {
               patterns: ["foo*", "ba+r"],
-              charSet: ALL_CHARS,
+              charSet: ALL_UPPERCASE_CHARS,
             },
             expected: {
               patterns: ["foo*", "ba+r"],
               ignorePatterns: [],
-              charSet: ALL_CHARS,
+              charSet: ALL_UPPERCASE_CHARS,
               manglePrefix: "",
               reservedNames: [],
             },
@@ -80,6 +71,7 @@ suite("ManglerEngine options", function() {
             options: {
               patterns: ["foo*", "ba+r"],
               ignorePatterns: ["hello", "world"],
+              charSet: ALL_LOWERCASE_CHARS,
             },
             expected: {
               patterns: ["foo*", "ba+r"],
@@ -97,6 +89,7 @@ suite("ManglerEngine options", function() {
           {
             options: {
               patterns: ["foo*", "ba+r"],
+              charSet: ALL_LOWERCASE_CHARS,
               reservedNames: ["hello", "world"],
             },
             expected: {
@@ -115,6 +108,7 @@ suite("ManglerEngine options", function() {
           {
             options: {
               patterns: ["foo*", "ba+r"],
+              charSet: ALL_LOWERCASE_CHARS,
               manglePrefix: "data-",
             },
             expected: {
