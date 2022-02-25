@@ -9,6 +9,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import process from "process";
 
 import log from "../utilities/log.js";
 import * as paths from "../paths.js";
@@ -25,6 +26,7 @@ const RUN_MUTATION_TESTING = [
   "cli",
   "benchmarking",
   "language-css",
+  "language-html",
   "language-js",
   "language-utils",
   "mangler-css-classes",
