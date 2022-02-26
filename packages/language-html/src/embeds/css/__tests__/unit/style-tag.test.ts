@@ -194,7 +194,22 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<style>.foobar { color: red; }</style hello=\"world\">",
+            content: "<style>.foobar { color: red; }</style praise=\"the>sun\">",
+          },
+          expected: [
+            {
+              content: ".foobar { color: red; }",
+              type: EMBED_TYPE_CSS,
+              startIndex: 7,
+              endIndex: 30,
+              getRaw(): string { return this.content; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<style>.foobar { color: red; }</style praise='the>sun'>",
           },
           expected: [
             {
@@ -244,6 +259,27 @@ suite("HTML CSS Embeds - <style> tag", function() {
           file: {
             type: "html",
             content: "<!--<style>.foobar { color: red; }</style>--!>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<style>.foobar { color: red; }</style",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<style>.foobar { color: red; }</style praise=\"the>sun\"",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<style>.foobar { color: red; }</style praise='the>sun'",
           },
           expected: [],
         },
