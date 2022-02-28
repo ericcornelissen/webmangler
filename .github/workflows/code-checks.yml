@@ -1,7 +1,7 @@
 name: Validate Source Code
 on:
-  - push
   - pull_request
+  - push
 
 permissions: read-all
 
@@ -86,7 +86,10 @@ jobs:
   test-performance:
     name: Performance
     runs-on: ubuntu-latest
-    needs: [changes, compile, test]
+    needs: 
+      - changes
+      - compile
+      - test
     if: ${{ needs.changes.outputs.performance-packages != '[]' }}
     strategy:
       matrix:
@@ -119,7 +122,8 @@ jobs:
   compile:
     name: Compile
     runs-on: ubuntu-latest
-    needs: [changes]
+    needs: 
+      - changes
     if: ${{ needs.changes.outputs.all-packages != '[]' }}
     strategy:
       matrix:
@@ -152,7 +156,9 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    needs: [changes, compile]
+    needs: 
+      - changes
+      - compile
     if: ${{ needs.changes.outputs.tested-packages != '[]' }}
     strategy:
       matrix:
@@ -190,7 +196,10 @@ jobs:
   test-mutation:
     name: Mutation
     runs-on: ubuntu-latest
-    needs: [changes, compile, test]
+    needs: 
+      - changes
+      - compile
+      - test
     if: ${{ needs.changes.outputs.mutation-packages != '[]' }}
     strategy:
       matrix:
