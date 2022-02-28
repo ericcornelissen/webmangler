@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- BREAKING: Require plugins to specify a character set. ([#274])
 - Add missing direct dependencies. ([#264])
 
 ## [0.1.25] - 2022-01-29
@@ -179,5 +180,6 @@ Versioning].
 
 [#244]: https://github.com/ericcornelissen/webmangler/pull/244
 [#264]: https://github.com/ericcornelissen/webmangler/pull/264
+[#274]: https://github.com/ericcornelissen/webmangler/pull/274
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

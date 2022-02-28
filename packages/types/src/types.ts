@@ -4,7 +4,7 @@ import type { CharSet } from "./characters";
  * A set of generic options used by the {@link MangleEngine} for mangling.
  *
  * @since v0.1.0
- * @version v0.1.23
+ * @version v0.1.26
  */
 interface MangleEngineOptions {
   /**
@@ -26,10 +26,10 @@ interface MangleEngineOptions {
   /**
    * The character set for mangled strings.
    *
-   * @default {@link ALL_LOWERCASE_CHARS}
    * @since v0.1.7
+   * @version v0.1.26
    */
-  readonly charSet?: CharSet;
+  readonly charSet: CharSet;
 
   /**
    * The prefix to use for mangled strings.
@@ -120,7 +120,7 @@ interface MangleExpressionOptions<T> {
  * configure the _WebMangler_ core.
  *
  * @since v0.1.14
- * @version v0.1.23
+ * @version v0.1.26
  */
 interface MangleOptions extends MangleEngineOptions {
   /**
