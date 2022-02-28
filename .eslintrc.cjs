@@ -230,6 +230,8 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
       ],
       rules: {
+        "space-before-blocks": "off",
+
         // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
         "@typescript-eslint/consistent-type-imports": ["error", {
           prefer: "type-imports",
@@ -247,6 +249,9 @@ module.exports = {
           },
           multilineDetection: "brackets",
         }],
+        "@typescript-eslint/no-redundant-type-constituents": "error",
+        "@typescript-eslint/no-useless-empty-export": "error",
+        "@typescript-eslint/space-before-blocks": "error",
       },
     },
     { // packages/cli
