@@ -26,7 +26,12 @@ type FileStats = {
 /**
  * Statistics about a _WebMangler_ run.
  */
-type ManglerStats = {
+interface ManglerStats {
+  /**
+   * The aggregate {@link FileStats} over all files.
+   */
+  readonly aggregate: FileStats;
+
   /**
    * The time it took to mangle.
    */
@@ -36,7 +41,7 @@ type ManglerStats = {
    * The {@link FileStats} for every mangled file.
    */
   readonly files: Map<string, FileStats>;
-};
+}
 
 export type {
   FileStats,

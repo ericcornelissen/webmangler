@@ -26,6 +26,12 @@ suite("Reporters", function() {
 
     test("reporter can write a report", function() {
       const stats = {
+        aggregate: {
+          changed: false,
+          changePercentage: 0,
+          sizeBefore: 10,
+          sizeAfter: 10,
+        },
         duration: 0,
         files: new Map(),
       };

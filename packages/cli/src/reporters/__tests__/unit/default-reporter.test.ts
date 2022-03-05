@@ -12,6 +12,15 @@ import DefaultReporter from "../../default-reporter";
 chaiUse(sinonChai);
 
 suite("DefaultReporter", function() {
+  // TODO: provide per-test aggregates when the implementation uses the provided
+  // aggregate.
+  const sampleAggregate = {
+    changed: false,
+    changePercentage: 0,
+    sizeBefore: 10,
+    sizeAfter: 10,
+  };
+
   let reporter: Reporter;
 
   let writer: WriterMock;
@@ -33,6 +42,7 @@ suite("DefaultReporter", function() {
 
     test("no files in stats", function() {
       const emptyStats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map([]),
       };
@@ -47,6 +57,7 @@ suite("DefaultReporter", function() {
       const path = "foo.bar";
       const fileStats = new FileStatsMock(10, 5);
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map([[path, fileStats]]),
       };
@@ -63,6 +74,7 @@ suite("DefaultReporter", function() {
         ["hello/world.css", new FileStatsMock(16, 7)],
       ];
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map(entries),
       };
@@ -79,6 +91,7 @@ suite("DefaultReporter", function() {
         ["foo.bar", new FileStatsMock(1, 1)],
       ];
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map(entries),
       };
@@ -105,6 +118,7 @@ suite("DefaultReporter", function() {
         ["gone.txt", new FileStatsMock(0, 1, -10.128)],
       ];
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map(entries),
       };
@@ -129,6 +143,7 @@ suite("DefaultReporter", function() {
         ["sun.txt", new FileStatsMock(0, 1, -0.0001)],
       ];
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map(entries),
       };
@@ -157,6 +172,7 @@ suite("DefaultReporter", function() {
         ["gone.txt", new FileStatsMock(0, 1, 10.128)],
       ];
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map(entries),
       };
@@ -181,6 +197,7 @@ suite("DefaultReporter", function() {
         ["sun.txt", new FileStatsMock(0, 1, 0.0001)],
       ];
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map(entries),
       };
@@ -200,6 +217,7 @@ suite("DefaultReporter", function() {
         ["foo.bar", new FileStatsMock(0, 1, 0)],
       ];
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map(entries),
       };
@@ -218,6 +236,7 @@ suite("DefaultReporter", function() {
         ["hello/world.css", new FileStatsMock(5, 2)],
       ];
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: 0,
         files: new Map(entries),
       };
@@ -238,6 +257,7 @@ suite("DefaultReporter", function() {
     test("duration", function() {
       const duration = 42;
       const stats: Stats = {
+        aggregate: sampleAggregate,
         duration: duration,
         files: new Map([["foo.bar", new FileStatsMock(2, 1)]]),
       };

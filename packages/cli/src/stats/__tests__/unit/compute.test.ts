@@ -24,6 +24,11 @@ suite("Compute stats", function() {
         readonly sizeBefore?: number;
         readonly sizeAfter?: number;
       }[];
+      readonly expectedAggregate: {
+        readonly changed: boolean;
+        readonly sizeBefore?: number;
+        readonly sizeAfter?: number;
+      };
     }
 
     const scenarios: TestScenarios<Iterable<TestCase>> = [
@@ -36,13 +41,13 @@ suite("Compute stats", function() {
               inFiles: [
                 new WebManglerCliFileMock({
                   path: "foo.bar",
-                  originalSize: 3.14,
+                  originalSize: 3,
                 }),
               ],
               outFiles: [
                 new WebManglerCliFileMock({
                   path: "foo.bar",
-                  size: 2.718,
+                  size: 2,
                 }),
               ],
             },
@@ -50,10 +55,15 @@ suite("Compute stats", function() {
               {
                 filePath: "foo.bar",
                 changed: true,
-                sizeBefore: 3.14,
-                sizeAfter: 2.718,
+                sizeBefore: 3,
+                sizeAfter: 2,
               },
             ],
+            expectedAggregate: {
+              changed: true,
+              sizeBefore: 3,
+              sizeAfter: 2,
+            },
           },
           {
             input: {
@@ -61,7 +71,7 @@ suite("Compute stats", function() {
               inFiles: [
                 new WebManglerCliFileMock({
                   path: "foo.bar",
-                  originalSize: 3.14,
+                  originalSize: 3,
                 }),
               ],
               outFiles: [],
@@ -72,6 +82,9 @@ suite("Compute stats", function() {
                 changed: false,
               },
             ],
+            expectedAggregate: {
+              changed: false,
+            },
           },
           {
             input: {
@@ -79,17 +92,17 @@ suite("Compute stats", function() {
               inFiles: [
                 new WebManglerCliFileMock({
                   path: "foo.bar",
-                  originalSize: 3.14,
+                  originalSize: 3,
                 }),
                 new WebManglerCliFileMock({
                   path: "foo.baz",
-                  originalSize: 3.14,
+                  originalSize: 3,
                 }),
               ],
               outFiles: [
                 new WebManglerCliFileMock({
                   path: "foo.bar",
-                  size: 2.718,
+                  size: 2,
                 }),
               ],
             },
@@ -97,14 +110,19 @@ suite("Compute stats", function() {
               {
                 filePath: "foo.bar",
                 changed: true,
-                sizeBefore: 3.14,
-                sizeAfter: 2.718,
+                sizeBefore: 3,
+                sizeAfter: 2,
               },
               {
                 filePath: "foo.baz",
                 changed: false,
               },
             ],
+            expectedAggregate: {
+              changed: true,
+              sizeBefore: 6,
+              sizeAfter: 5,
+            },
           },
         ],
       },
@@ -118,6 +136,9 @@ suite("Compute stats", function() {
               outFiles: [],
             },
             expected: [],
+            expectedAggregate: {
+              changed: false,
+            },
           },
         ],
       },
@@ -126,7 +147,7 @@ suite("Compute stats", function() {
     for (const { getScenario, testName } of scenarios) {
       test(testName, function() {
         for (const testCase of getScenario()) {
-          const { input, expected } = testCase;
+          const { input, expected, expectedAggregate } = testCase;
           const { duration, inFiles, outFiles } = input;
 
           const stats = computeStats({
@@ -155,6 +176,14 @@ suite("Compute stats", function() {
               expect(fileStats.sizeBefore).to.equal(sizeBefore);
               expect(fileStats.sizeAfter).to.equal(sizeAfter);
             }
+          }
+
+          const aggregate = stats.aggregate;
+          expect(aggregate.changed).to.equal(expectedAggregate.changed);
+          if (aggregate.changed) {
+            expect(aggregate.changePercentage).not.to.equal(0);
+            expect(aggregate.sizeBefore).to.equal(expectedAggregate.sizeBefore);
+            expect(aggregate.sizeAfter).to.equal(expectedAggregate.sizeAfter);
           }
         }
       });
