@@ -27,7 +27,7 @@ const charSet: CharSet = [
 function getSafeTwoStepMangleMapping(
   mangleMap: Map<string, string>,
 ): [Map<string, string>, Map<string, string>] {
-  const reservedNames = Array.from(mangleMap.values());
+  const reservedNames = mangleMap.values();
   const uniqueNameGenerator = new NameGenerator({ charSet, reservedNames });
 
   const map1 = new Map();
