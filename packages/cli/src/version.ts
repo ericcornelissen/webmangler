@@ -18,12 +18,21 @@ interface FileSystem {
   existsSync(filepath: string): boolean;
 
   /**
+   * Check if a file exists at a given path or not.
+   *
+   * @param filepath The path of the file to open.
+   * @param flags The file system flags (e.g. `"r"`).
+   * @returns A file handle.
+   */
+  openSync(filepath: string, flags: number | string): number;
+
+  /**
    * Read a file at a given path.
    *
-   * @param filePath The file to read.
+   * @param file The file to read.
    * @returns The file content as a {@link Buffer}.
    */
-  readFileSync(filePath: string): Buffer;
+  readFileSync(file: number | string): Buffer;
 }
 
 /**

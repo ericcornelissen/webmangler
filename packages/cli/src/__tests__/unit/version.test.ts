@@ -15,6 +15,7 @@ suite("Version data", function() {
 
   let fs: {
     readonly existsSync: SinonStub;
+    readonly openSync: SinonStub;
     readonly readFileSync: SinonStub;
   };
   let path: {
@@ -30,6 +31,7 @@ suite("Version data", function() {
 
     fs = {
       existsSync: sinon.stub(),
+      openSync: sinon.stub(),
       readFileSync: sinon.stub(),
     };
     path = {
@@ -43,6 +45,7 @@ suite("Version data", function() {
 
   setup(function() {
     fs.existsSync.reset();
+    fs.openSync.reset();
     fs.readFileSync.reset();
     path.resolve.reset();
     run.reset();
