@@ -2,8 +2,6 @@ import type { Reporter, Stats, Writer } from "./types";
 
 import * as chalk from "chalk";
 
-import { getChangedPercentage } from "../stats/helpers";
-
 /**
  * Round a number to at most two decimal places.
  *
@@ -59,11 +57,7 @@ function logStats(
     return;
   }
 
-  let overallBefore = 0;
-  let overallAfter = 0;
   stats.files.forEach((fileStats, filePath) => {
-    overallBefore += fileStats.sizeBefore;
-    overallAfter += fileStats.sizeAfter;
     if (fileStats.changed) {
       const percentage = getDisplayPercentage(fileStats.changePercentage);
       const reduction = `${fileStats.sizeBefore} -> ${fileStats.sizeAfter}`;
@@ -73,9 +67,9 @@ function logStats(
     }
   });
 
-  const changedPercentage = getChangedPercentage(overallBefore, overallAfter);
-  const overallPercentage = getDisplayPercentage(changedPercentage);
-  const overallReduction = `${overallBefore} -> ${overallAfter}`;
+  const aggregate = stats.aggregate;
+  const overallPercentage = getDisplayPercentage(aggregate.changePercentage);
+  const overallReduction = `${aggregate.sizeBefore} -> ${aggregate.sizeAfter}`;
   writer.write(`OVERALL ${overallPercentage} (${overallReduction})`);
   writer.write(`\nmangled ${fileCount} files in ${duration} ms`);
 }

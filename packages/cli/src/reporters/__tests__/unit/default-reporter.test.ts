@@ -12,15 +12,6 @@ import DefaultReporter from "../../default-reporter";
 chaiUse(sinonChai);
 
 suite("DefaultReporter", function() {
-  // TODO: provide per-test aggregates when the implementation uses the provided
-  // aggregate.
-  const sampleAggregate = {
-    changed: false,
-    changePercentage: 0,
-    sizeBefore: 10,
-    sizeAfter: 10,
-  };
-
   let reporter: Reporter;
 
   let writer: WriterMock;
@@ -42,7 +33,12 @@ suite("DefaultReporter", function() {
 
     test("no files in stats", function() {
       const emptyStats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: false,
+          changePercentage: 0,
+          sizeBefore: 0,
+          sizeAfter: 0,
+        },
         duration: 0,
         files: new Map([]),
       };
@@ -57,7 +53,12 @@ suite("DefaultReporter", function() {
       const path = "foo.bar";
       const fileStats = new FileStatsMock(10, 5);
       const stats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: true,
+          changePercentage: -50,
+          sizeBefore: 10,
+          sizeAfter: 5,
+        },
         duration: 0,
         files: new Map([[path, fileStats]]),
       };
@@ -74,7 +75,12 @@ suite("DefaultReporter", function() {
         ["hello/world.css", new FileStatsMock(16, 7)],
       ];
       const stats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: true,
+          changePercentage: 3419.05,
+          sizeBefore: 21,
+          sizeAfter: 739,
+        },
         duration: 0,
         files: new Map(entries),
       };
@@ -91,7 +97,12 @@ suite("DefaultReporter", function() {
         ["foo.bar", new FileStatsMock(1, 1)],
       ];
       const stats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: false,
+          changePercentage: 0,
+          sizeBefore: 1,
+          sizeAfter: 1,
+        },
         duration: 0,
         files: new Map(entries),
       };
@@ -118,7 +129,12 @@ suite("DefaultReporter", function() {
         ["gone.txt", new FileStatsMock(0, 1, -10.128)],
       ];
       const stats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: false,
+          changePercentage: 0,
+          sizeBefore: 0,
+          sizeAfter: 0,
+        },
         duration: 0,
         files: new Map(entries),
       };
@@ -143,7 +159,12 @@ suite("DefaultReporter", function() {
         ["sun.txt", new FileStatsMock(0, 1, -0.0001)],
       ];
       const stats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: false,
+          changePercentage: 0,
+          sizeBefore: 0,
+          sizeAfter: 0,
+        },
         duration: 0,
         files: new Map(entries),
       };
@@ -172,7 +193,12 @@ suite("DefaultReporter", function() {
         ["gone.txt", new FileStatsMock(0, 1, 10.128)],
       ];
       const stats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: false,
+          changePercentage: 0,
+          sizeBefore: 0,
+          sizeAfter: 0,
+        },
         duration: 0,
         files: new Map(entries),
       };
@@ -197,7 +223,12 @@ suite("DefaultReporter", function() {
         ["sun.txt", new FileStatsMock(0, 1, 0.0001)],
       ];
       const stats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: false,
+          changePercentage: 0,
+          sizeBefore: 0,
+          sizeAfter: 0,
+        },
         duration: 0,
         files: new Map(entries),
       };
@@ -217,7 +248,12 @@ suite("DefaultReporter", function() {
         ["foo.bar", new FileStatsMock(0, 1, 0)],
       ];
       const stats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: false,
+          changePercentage: 0,
+          sizeBefore: 0,
+          sizeAfter: 0,
+        },
         duration: 0,
         files: new Map(entries),
       };
@@ -230,34 +266,40 @@ suite("DefaultReporter", function() {
     });
 
     test("overall percentage", function() {
-      const entries: [string, FileStats][] = [
-        ["foo.txt", new FileStatsMock(2, 1)],
-        ["bar.md", new FileStatsMock(3, 1)],
-        ["hello/world.css", new FileStatsMock(5, 2)],
-      ];
-      const stats: Stats = {
-        aggregate: sampleAggregate,
-        duration: 0,
-        files: new Map(entries),
+      const aggregate = {
+        changed: false,
+        changePercentage: -60,
+        sizeBefore: 10,
+        sizeAfter: 4,
       };
 
-      const sizesBefore = entries.map(([, file]) => file.sizeBefore);
-      const sizeBefore = sizesBefore.reduce((total, size) => total + size, 0);
-
-      const sizesAfter = entries.map(([, file]) => file.sizeAfter);
-      const sizeAfter = sizesAfter.reduce((total, size) => total + size, 0);
+      const stats: Stats = {
+        aggregate,
+        duration: 0,
+        files: new Map([
+          ["foo.bar", new FileStatsMock(5, 3)],
+          ["foo.bar", new FileStatsMock(5, 1)],
+        ]),
+      };
 
       reporter.report(stats);
-      expect(writer.write).to.have.been.calledWith(sinon.match("-60%"));
       expect(writer.write).to.have.been.calledWith(
-        sinon.match(`(${sizeBefore} -> ${sizeAfter})`),
+        sinon.match(`${aggregate.changePercentage}%`),
+      );
+      expect(writer.write).to.have.been.calledWith(
+        sinon.match(`(${aggregate.sizeBefore} -> ${aggregate.sizeAfter})`),
       );
     });
 
     test("duration", function() {
       const duration = 42;
       const stats: Stats = {
-        aggregate: sampleAggregate,
+        aggregate: {
+          changed: false,
+          changePercentage: 50,
+          sizeBefore: 2,
+          sizeAfter: 1,
+        },
         duration: duration,
         files: new Map([["foo.bar", new FileStatsMock(2, 1)]]),
       };
