@@ -1,33 +1,19 @@
 import type { TestValuesSets } from "@webmangler/testing";
 
-import type { RecommendedManglersOptions } from "../types";
+import type { BuiltInManglersOptions } from "../../types";
 
-const booleanOptional = [
-  undefined,
-  true,
-  false,
-];
+import {
+  booleanOptional,
+  stringOptional,
+  stringOrStringsOptional,
+  stringsOptional,
+} from "../../../../__tests__/common";
 
-const stringOrStringsOptional = [
-  undefined,
-  "foobar",
-  ["foo", "bar"],
-];
-
-const stringOptional = [
-  undefined,
-  "foobar",
-];
-
-const stringsOptional = [
-  undefined,
-  ["foo", "bar"],
-];
-
-export const optionsValues = {
+const optionsValues = {
   disableCssClassMangling: booleanOptional,
   disableCssVarMangling: booleanOptional,
   disableHtmlAttrMangling: booleanOptional,
+  disableHtmlIdMangling: booleanOptional,
 
   classAttributes: stringsOptional,
   classNamePattern: stringOrStringsOptional,
@@ -41,4 +27,14 @@ export const optionsValues = {
   attrNamePattern: stringOrStringsOptional,
   keepAttrPrefix: stringOptional,
   reservedAttrNames: stringsOptional,
-} as TestValuesSets<keyof RecommendedManglersOptions>;
+
+  idAttributes: stringsOptional,
+  idNamePattern: stringOrStringsOptional,
+  keepIdPrefix: stringOptional,
+  reservedIds: stringsOptional,
+  urlAttributes: stringsOptional,
+} as TestValuesSets<keyof BuiltInManglersOptions>;
+
+export {
+  optionsValues,
+};

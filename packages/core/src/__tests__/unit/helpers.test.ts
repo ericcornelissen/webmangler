@@ -3,12 +3,17 @@ import { expect } from "chai";
 import {
   getTypeFromFilePath,
   toArrayIfNeeded,
-} from "../helpers";
+} from "../../helpers";
 
 suite("Helpers (core/src)", function() {
   suite("::getTypeFromFilePath", function() {
     test("file path with extension", function() {
-      const testCases: { input: string; expected: string }[] = [
+      interface TestCase {
+        readonly input: string;
+        readonly expected: string;
+      }
+
+      const testCases: TestCase[] = [
         { input: "/foo/bar.js", expected: "js" },
         { input: "/hello/world.html", expected: "html" },
         { input: "/praise/the/sun.css", expected: "css" },

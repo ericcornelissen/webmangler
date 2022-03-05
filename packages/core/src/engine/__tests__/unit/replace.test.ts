@@ -143,6 +143,66 @@ suite("ManglerEngine replace", function() {
           ];
         },
       },
+      {
+        testName: "mangle 'x' |-> 'x'",
+        getTestCases: () => {
+          const cssExpression = new MangleExpressionMock({
+            replaceAll: sinon.stub().returns(".a { color: red; }"),
+          });
+
+          const cssFile = {
+            type: "css",
+            content: ".a { color: red; }",
+          };
+
+          return [
+            {
+              files: [cssFile],
+              expressions: new Map([
+                ["css", [cssExpression]],
+              ]),
+              mangleMap: new Map([
+                ["a", "a"],
+              ]),
+              expected: [
+                cssFile,
+              ],
+            },
+          ];
+        },
+      },
+      {
+        testName: "mangle 'a' |-> 'b' and 'b' |-> 'c'",
+        getTestCases: () => {
+          const cssFile = {
+            type: "css",
+            content: ".foo { } .bar { }",
+          };
+
+          const cssExpression = new MangleExpressionMock({
+            replaceAll: sinon.stub().returns(".bar { } .baz { }"),
+          });
+
+          return [
+            {
+              files: [cssFile],
+              expressions: new Map([
+                ["css", [cssExpression]],
+              ]),
+              mangleMap: new Map([
+                ["foo", "bar"],
+                ["bar", "baz"],
+              ]),
+              expected: [
+                {
+                  type: "css",
+                  content: ".bar { } .baz { }",
+                },
+              ],
+            },
+          ];
+        },
+      },
     ];
 
     for (const { testName, getTestCases } of scenarios) {

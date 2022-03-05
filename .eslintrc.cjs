@@ -16,7 +16,6 @@ const {
 const INDENT_SIZE = 2;
 const JS_GLOBALS = {
   module: "readonly",
-  process: "readonly",
   require: "readonly",
 };
 const MAX_LINE_LENGTH = 80;
@@ -31,6 +30,8 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
     "plugin:jsdoc/recommended",
     "plugin:markdown/recommended",
     "plugin:security/recommended",
@@ -80,10 +81,70 @@ module.exports = {
     "space-before-function-paren": ["error", "never"],
     "space-in-parens": ["error", "never"],
 
+    // See https://github.com/import-js/eslint-plugin-import#rules
+    "import/default": "error",
+    "import/export": "error",
+    "import/exports-last": "error",
+    "import/first": "error",
+    "import/group-exports": "off",
+    "import/max-dependencies": "off",
+    "import/named": "error",
+    "import/namespace": "error",
+    "import/newline-after-import": ["error", {
+      count: 1,
+    }],
+    "import/no-absolute-path": "error",
+    "import/no-amd": "error",
+    "import/no-anonymous-default-export": "error",
+    "import/no-commonjs": "error",
+    "import/no-cycle": "error",
+    "import/no-default-export": "off",
+    "import/no-deprecated": "error",
+    "import/no-duplicates": "error",
+    "import/no-dynamic-require": "error",
+    "import/no-extraneous-dependencies": "error",
+    "import/no-import-module-exports": "error",
+    "import/no-mutable-exports": "error",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "error",
+    "import/no-named-export": "off",
+    "import/no-namespace": "off",
+    "import/no-nodejs-modules": "off",
+    "import/no-relative-packages": "error",
+    "import/no-relative-parent-imports": "off",
+    "import/no-self-import": "error",
+    "import/no-unassigned-import": "error",
+    "import/no-unresolved": ["error", {
+      caseSensitive: true,
+      ignore: [
+        "webmangler",
+        "webmangler/languages",
+        "webmangler/manglers",
+        "webmangler/testing",
+      ],
+    }],
+    "import/no-unused-modules": "error",
+    "import/no-useless-path-segments": "error",
+    "import/no-webpack-loader-syntax": "error",
+    "import/order": "off", // Blocked by https://github.com/import-js/eslint-plugin-import/issues/2347
+
     // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
-    "jsdoc/require-param-type": "off", // Redundant in TypeScript
-    "jsdoc/require-returns-type": "off", // Redundant in TypeScript
-    "jsdoc/newline-after-description": "error",
+    "jsdoc/check-access": "off",
+    "jsdoc/check-alignment": "error",
+    "jsdoc/check-line-alignment": "off",
+    "jsdoc/check-indentation": "error",
+    "jsdoc/check-param-names": "error",
+    "jsdoc/check-property-names": "error",
+    "jsdoc/check-syntax": "off",
+    "jsdoc/check-tag-names": "error",
+    "jsdoc/check-types": "off",
+    "jsdoc/check-values": "error",
+    "jsdoc/empty-tags": ["error", {
+      tags: [
+        "inheritDoc",
+      ],
+    }],
+    "jsdoc/implements-on-classes": "off",
     "jsdoc/match-description": ["error", {
       matchDescription: "^([A-Z]|[`\\d_])[\\s\\S]*\\.$",
       tags: {
@@ -92,6 +153,50 @@ module.exports = {
         since: "^v[0-9]\\.[0-9]\\.[0-9]",
       },
     }],
+    "jsdoc/multiline-blocks": ["error", {
+      noZeroLineText: true,
+      noFinalLineText: true,
+      noSingleLineBlocks: true,
+      singleLineTags: [],
+      noMultilineBlocks: false,
+    }],
+    "jsdoc/newline-after-description": ["error", "always"],
+    "jsdoc/no-bad-blocks": "error",
+    "jsdoc/no-defaults": "error",
+    "jsdoc/no-multi-asterisks": ["error", {
+      allowWhitespace: true,
+      preventAtMiddleLines: true,
+      preventAtEnd: true,
+    }],
+    "jsdoc/no-types": "error",
+    "jsdoc/no-undefined-types": "off",
+    "jsdoc/require-asterisk-prefix": ["error", "always"],
+    "jsdoc/require-description": "error",
+    "jsdoc/require-description-complete-sentence": "off",
+    "jsdoc/require-example": "off",
+    "jsdoc/require-file-overview": "off",
+    "jsdoc/require-hyphen-before-param-description": ["error", "never"],
+    "jsdoc/require-jsdoc": "error",
+    "jsdoc/require-param-description": "error",
+    "jsdoc/require-param-name": "error",
+    "jsdoc/require-param-type": "off",
+    "jsdoc/require-param": "error",
+    "jsdoc/require-property": "off",
+    "jsdoc/require-returns": "error",
+    "jsdoc/require-returns-check": "error",
+    "jsdoc/require-returns-description": "error",
+    "jsdoc/require-returns-type": "off",
+    "jsdoc/require-throws": "error",
+    "jsdoc/require-yields": "error",
+    "jsdoc/require-yields-check": "error",
+    "jsdoc/sort-tags": ["error", {
+      tagSequence: [
+        "inheritDoc", "default", "example", "param", "returns",
+        "yields", "throws", "since", "version",
+      ],
+    }],
+    "jsdoc/tag-lines": ["error", "never"],
+    "jsdoc/valid-types": "off",
 
     // See: https://github.com/nodesecurity/eslint-plugin-security#rules
     "security/detect-object-injection": "off", // Too many false positives
@@ -102,6 +207,7 @@ module.exports = {
     jsdoc: {
       tagNamePreference: {
         "file": "fileoverview",
+        "inheritdoc": false,
       },
     },
   },
@@ -125,6 +231,8 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
       ],
       rules: {
+        "space-before-blocks": "off",
+
         // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
         "@typescript-eslint/consistent-type-imports": ["error", {
           prefer: "type-imports",
@@ -142,6 +250,9 @@ module.exports = {
           },
           multilineDetection: "brackets",
         }],
+        "@typescript-eslint/no-redundant-type-constituents": "error",
+        "@typescript-eslint/no-useless-empty-export": "error",
+        "@typescript-eslint/space-before-blocks": "error",
       },
     },
     { // packages/cli
@@ -161,7 +272,11 @@ module.exports = {
         ecmaVersion: 2020,
       },
       rules: {
+        // See https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-anonymous-default-export": "off",
+
         // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
+        "jsdoc/require-file-overview": "error",
         "jsdoc/require-jsdoc": "off",
 
         // See: https://github.com/nodesecurity/eslint-plugin-security#rules
@@ -187,6 +302,9 @@ module.exports = {
         "plugin:chai-expect/recommended",
       ],
       rules: {
+        // See https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-extraneous-dependencies": "off",
+
         // See: https://github.com/lo1tuma/eslint-plugin-mocha/tree/master/docs/rules#readme
         "mocha/no-exclusive-tests": ["error"],
         "mocha/valid-suite-description": ["error", "^[A-Z:]"],
@@ -213,6 +331,9 @@ module.exports = {
         ecmaVersion: 2015,
       },
       rules: {
+        // See https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-commonjs": "off",
+
         // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
         "jsdoc/require-jsdoc": "off",
 
@@ -251,11 +372,46 @@ module.exports = {
         "plugin:yml/standard",
       ],
       rules: {
+        "spaced-comment": "off",
+
+        // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/
+        "yml/block-mapping": ["error", "always"],
+        "yml/block-sequence": ["error", "always"],
+        "yml/block-sequence-hyphen-indicator-newline": ["error", "never"],
+        "yml/indent": ["error", INDENT_SIZE],
+        "yml/key-name-casing": "off",
+        "yml/key-spacing": ["error", {
+          afterColon: true,
+          beforeColon: false,
+          mode: "strict",
+        }],
+        "yml/no-empty-document": "error",
+        "yml/no-empty-key": "error",
+        "yml/no-empty-mapping-value": "error",
+        "yml/no-empty-sequence-entry": "error",
+        "yml/no-irregular-whitespace": "error",
         "yml/no-multiple-empty-lines": ["error", {
           max: 1,
           maxEOF: 0,
           maxBOF: 0,
         }],
+        "yml/no-tab-indent": "error",
+        "yml/plain-scalar": ["error", "always"],
+        "yml/quotes": ["error", {
+          avoidEscape: true,
+          prefer: "double",
+        }],
+        "yml/require-string-key": "error",
+        "yml/sort-sequence-values": ["error",
+          {
+            pathPattern: ".*",
+            order: {
+              type: "asc",
+            },
+          },
+        ],
+        "yml/spaced-comment": ["error", "always"],
+        "yml/vue-custom-block/no-parsing-error": "off",
       },
     },
     { // Documentation Snippets (MarkDown.*)

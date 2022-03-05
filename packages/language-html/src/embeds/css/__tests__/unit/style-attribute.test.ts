@@ -177,6 +177,21 @@ suite("HTML CSS Embeds - Style attribute", function() {
             },
           ],
         },
+        {
+          file: {
+            type: "html",
+            content: "<div  style=\"color: blue;\"><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color: blue;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 13,
+              endIndex: 25,
+              getRaw(): string { return "color: blue;"; },
+            },
+          ],
+        },
       ],
     },
     {
@@ -299,6 +314,21 @@ suite("HTML CSS Embeds - Style attribute", function() {
               startIndex: 24,
               endIndex: 34,
               getRaw(): string { return "color:red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div data-foo style=color:blue;><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:blue;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 20,
+              endIndex: 31,
+              getRaw(): string { return "color:blue;"; },
             },
           ],
         },
@@ -431,6 +461,21 @@ suite("HTML CSS Embeds - Style attribute", function() {
               startIndex: 13,
               endIndex: 24,
               getRaw(): string { return "color: red;"; },
+            },
+          ],
+        },
+        {
+          file: {
+            type: "html",
+            content: "< div style=color:blue;><div>",
+          },
+          expected: [
+            {
+              content: prepareContent("color:blue;"),
+              type: EMBED_TYPE_CSS,
+              startIndex: 12,
+              endIndex: 23,
+              getRaw(): string { return "color:blue;"; },
             },
           ],
         },

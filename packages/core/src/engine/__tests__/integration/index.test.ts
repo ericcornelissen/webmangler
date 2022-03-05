@@ -9,6 +9,10 @@ import { MangleExpressionMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
+import {
+  ALL_LOWERCASE_CHARS,
+} from "../common";
+
 import engine from "../../index";
 
 interface TestCase {
@@ -17,7 +21,7 @@ interface TestCase {
   expressions: Map<string, MangleExpression[]>;
   files: WebManglerFile[];
   patterns: string | string[];
-  charSet?: CharSet;
+  charSet: CharSet;
   ignorePatterns?: string | string[];
   reservedNames?: string[];
   manglePrefix?: string;
@@ -49,6 +53,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [{
@@ -70,6 +75,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "cls-[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
       ],
     },
@@ -120,6 +126,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -165,6 +172,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -210,6 +218,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -251,6 +260,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
       ],
     },
@@ -379,6 +389,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
           ignorePatterns: "f[a-z]+",
         },
         {
@@ -407,6 +418,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
           ignorePatterns: ["b[a-z]+"],
         },
       ],
@@ -441,6 +453,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
           reservedNames: ["b"],
         },
         {
@@ -467,6 +480,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
           reservedNames: ["a", "b"],
         },
       ],
@@ -501,6 +515,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
           manglePrefix: "cls-",
         },
       ],
@@ -535,6 +550,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
           reservedNames: ["a"],
           manglePrefix: "cls-",
         },
@@ -558,6 +574,7 @@ suite("ManglerEngine", function() {
           ],
           expressions: new Map(),
           patterns: "",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -593,6 +610,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -619,6 +637,7 @@ suite("ManglerEngine", function() {
             ["html", []],
           ]),
           patterns: "",
+          charSet: ALL_LOWERCASE_CHARS,
         },
       ],
     },
@@ -652,6 +671,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
       ],
     },
@@ -688,6 +708,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -719,6 +740,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
           description: "mangled source may be re-mangled",
         },
         {
@@ -751,6 +773,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -782,6 +805,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -813,6 +837,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -844,6 +869,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -875,6 +901,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -906,6 +933,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -937,6 +965,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
         {
           files: [
@@ -968,6 +997,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
       ],
     },
@@ -1001,6 +1031,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
           description: "no changes expected if source is already mangled",
         },
         {
@@ -1030,6 +1061,7 @@ suite("ManglerEngine", function() {
             })]],
           ]),
           patterns: "[a-z]+",
+          charSet: ALL_LOWERCASE_CHARS,
         },
       ],
     },

@@ -3,7 +3,7 @@ import type { CharSet } from "@webmangler/types";
 
 import { expect } from "chai";
 
-import NameGenerator from "../name-generator.class";
+import NameGenerator from "../../name-generator.class";
 
 interface TestCase {
   charSet: CharSet;
