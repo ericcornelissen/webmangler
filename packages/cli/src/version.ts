@@ -98,20 +98,21 @@ function getWebManglerCliVersion(
   path: Path,
   projectRoot: string,
 ): string {
-  const manifestFilePath = path.resolve(
-    projectRoot,
-    NODE_MODULES_DIR,
-    CLI_DIR,
-    MANIFEST_FILE,
-  );
+  try {
+    const manifestFilePath = path.resolve(
+      projectRoot,
+      NODE_MODULES_DIR,
+      CLI_DIR,
+      MANIFEST_FILE,
+    );
 
-  if (!fs.existsSync(manifestFilePath)) {
+    const manifestFileHandle = fs.openSync(manifestFilePath, "r");
+    const manifestRaw = fs.readFileSync(manifestFileHandle).toString();
+    const manifest = JSON.parse(manifestRaw);
+    return `v${manifest.version}`;
+  } catch (_) {
     return VERSION_MISSING;
   }
-
-  const manifestRaw = fs.readFileSync(manifestFilePath).toString();
-  const manifest = JSON.parse(manifestRaw);
-  return `v${manifest.version}`;
 }
 
 /**
@@ -127,20 +128,21 @@ function getWebManglerVersion(
   path: Path,
   projectRoot: string,
 ): string {
-  const manifestFilePath = path.resolve(
-    projectRoot,
-    NODE_MODULES_DIR,
-    WEBMANGLER_DIR,
-    MANIFEST_FILE,
-  );
+  try {
+    const manifestFilePath = path.resolve(
+      projectRoot,
+      NODE_MODULES_DIR,
+      WEBMANGLER_DIR,
+      MANIFEST_FILE,
+    );
 
-  if (!fs.existsSync(manifestFilePath)) {
+    const manifestFileHandle = fs.openSync(manifestFilePath, "r");
+    const manifestRaw = fs.readFileSync(manifestFileHandle).toString();
+    const manifest = JSON.parse(manifestRaw);
+    return `v${manifest.version}`;
+  } catch (_) {
     return VERSION_MISSING;
   }
-
-  const manifestRaw = fs.readFileSync(manifestFilePath).toString();
-  const manifest = JSON.parse(manifestRaw);
-  return `v${manifest.version}`;
 }
 
 /**
