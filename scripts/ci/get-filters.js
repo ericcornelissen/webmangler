@@ -12,7 +12,7 @@ import * as path from "path";
 import process from "process";
 
 import log from "../utilities/log.js";
-import * as paths from "../paths.js";
+import * as paths from "../utilities/paths.js";
 import values from "../../.values.cjs";
 
 const {
