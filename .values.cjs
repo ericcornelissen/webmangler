@@ -1,5 +1,7 @@
 "use strict";
 
+const process = require("process");
+
 const testSuffix = "test";
 
 const testTypeTests = "tests";
@@ -23,7 +25,6 @@ const testDirCommon = "common";
 const testDirIntegration = "integration";
 const testDirPerformance = "performance";
 const testDirAll = `{${[
-  ".",
   testDirCommon,
   testDirIntegration,
   _testDirUnit,
