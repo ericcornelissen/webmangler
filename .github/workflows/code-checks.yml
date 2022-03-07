@@ -16,7 +16,7 @@ jobs:
       tested-packages: ${{ steps.tested-filter.outputs.changes }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.0
       - name: Install Node.js
         uses: actions/setup-node@v3.0.0
         with:
@@ -96,7 +96,7 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.performance-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.0
       - name: Cache compiled package
         uses: actions/cache@v2
         with:
@@ -130,7 +130,7 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.all-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.0
       - name: Cache compiled package
         uses: actions/cache@v2
         with:
@@ -165,7 +165,7 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.tested-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.0
       - name: Cache compiled package
         uses: actions/cache@v2
         with:
@@ -206,7 +206,7 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.mutation-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.0
       - name: Cache compiled package
         uses: actions/cache@v2
         with:
@@ -229,7 +229,7 @@ jobs:
       - name: Run mutation tests for packages/${{ matrix.package }}
         run: npm run test:mutation -- ${{ matrix.package }}
       - name: Upload mutation report as artifact
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v3.0.0
         with:
           name: mutation-report-${{ matrix.package }}-${{ github.sha }}
           path: |
