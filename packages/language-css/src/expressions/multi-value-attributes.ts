@@ -6,8 +6,6 @@ import type {
 import { NestedGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns, QUOTES_ARRAY } from "./common";
 
-const GROUP_MAIN = "main";
-
 /**
  * Get {@link MangleExpression}s to match multi-value attribute selector values
  * in CSS, e.g. 'foo' and `bar` in `[class="foo bar"] { }`.
@@ -19,35 +17,37 @@ function newAttributeSelectorMultiValueExpression(
   attributesPattern: string,
 ): Iterable<MangleExpression> {
   return [
-    ...QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression({
-      patternTemplate: `
-        (?:
-          (?:${patterns.anyString}|${patterns.comment})
-          |
+    ...QUOTES_ARRAY.map((quote) => {
+      const captureGroup = NestedGroupMangleExpression.CAPTURE_GROUP({
+        before: `(?:[^${quote}]+\\s)?`,
+        after: `(?:\\s[^${quote}]+)?`,
+      });
+
+      return new NestedGroupMangleExpression({
+        patternTemplate: `
           (?:
-            \\[\\s*
-            (?:${attributesPattern})\\s*
-            (?:${patterns.attributeOperators})\\s*
-            ${quote}\\s*
+            (?:${patterns.anyString}|${patterns.comment})
+            |
+            (?:
+              \\[\\s*
+              (?:${attributesPattern})\\s*
+              (?:${patterns.attributeOperators})\\s*
+              ${quote}\\s*
+            )
+            ${captureGroup}
+            (?:
+              \\s*${quote}
+              \\s*\\]
+            )
           )
-          (?<${GROUP_MAIN}>
-            (?:[^${quote}]+\\s)?
-            %s
-            (?:\\s[^${quote}]+)?
-          )
-          (?:
-            \\s*${quote}
-            \\s*\\]
-          )
-        )
-      `,
-      subPatternTemplate: `
-        (?<=^|\\s)
-        (?<${GROUP_MAIN}>%s)
-        (?=$|\\s)
-      `,
-      groupName: GROUP_MAIN,
-    })),
+        `,
+        subPatternTemplate: `
+          (?<=^|\\s)
+          ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+          (?=$|\\s)
+        `,
+      });
+    }),
   ];
 }
 
@@ -58,7 +58,7 @@ function newAttributeSelectorMultiValueExpression(
  *
  * @param options The {@link MultiValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @since v0.1.28
+ * @version v0.1.29
  */
 function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,
