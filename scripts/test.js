@@ -10,12 +10,13 @@
 
 import fs from "fs";
 import * as path from "path";
+import process from "process";
 
 import execSync from "./utilities/exec.js";
 import { checkFlags } from "./utilities/flags.js";
 import log from "./utilities/log.js";
+import * as paths from "./utilities/paths.js";
 import vcs from "./utilities/vcs.js";
-import * as paths from "./paths.js";
 import values from "../.values.cjs";
 
 const FLAGS = {
