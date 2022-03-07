@@ -14,7 +14,6 @@ suite("Version data", function() {
   const missingString = "[missing]";
 
   let fs: {
-    readonly existsSync: SinonStub;
     readonly openSync: SinonStub;
     readonly readFileSync: SinonStub;
   };
@@ -30,7 +29,6 @@ suite("Version data", function() {
     const cwd = processBackup.cwd();
 
     fs = {
-      existsSync: sinon.stub(),
       openSync: sinon.stub(),
       readFileSync: sinon.stub(),
     };
@@ -44,13 +42,11 @@ suite("Version data", function() {
   });
 
   setup(function() {
-    fs.existsSync.reset();
     fs.openSync.reset();
     fs.readFileSync.reset();
     path.resolve.reset();
     run.reset();
 
-    fs.existsSync.returns(false);
     run.returns("");
   });
 

@@ -12,14 +12,6 @@ interface FileSystem {
   /**
    * Check if a file exists at a given path or not.
    *
-   * @param filepath The file path to check.
-   * @returns `true` if the file exists, `false` otherwise.
-   */
-  existsSync(filepath: string): boolean;
-
-  /**
-   * Check if a file exists at a given path or not.
-   *
    * @param filepath The path of the file to open.
    * @param flags The file system flags (e.g. `"r"`).
    * @returns A file handle.
