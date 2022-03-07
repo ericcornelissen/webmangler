@@ -8,6 +8,7 @@
  */
 
 import * as fs from "fs";
+import micromatch from "micromatch";
 import * as path from "path";
 import process from "process";
 
@@ -47,13 +48,6 @@ function main(argv) {
   log.print(filters);
 }
 
-function globToRegExp(str) {
-  return str
-    .replace(/\{/g, "(")
-    .replace(/\}/g, ")")
-    .replace(/,/g, "|");
-}
-
 function getPackageCriteria(arg) {
   switch (arg) {
   case "mutation":
@@ -61,17 +55,18 @@ function getPackageCriteria(arg) {
   case "performance":
     return (packageName) => hasFiles(
       packageName,
-      (filePath) => filePath.includes(
-        `${testsDir}/${globToRegExp(testDirPerformance)}`,
+      (filePath) => micromatch.isMatch(
+        filePath,
+        `**/${testsDir}/${testDirPerformance}/**`,
       ),
     );
   case "test":
     return (packageName) => hasFiles(
       packageName,
-      (filePath) => {
-        const testsExpr = new RegExp(`${testsDir}/${globToRegExp(testDirAll)}`);
-        return testsExpr.test(filePath);
-      },
+      (filePath) => micromatch.isMatch(
+        filePath,
+        `**/${testsDir}/${testDirAll}/**`,
+      ),
     );
   default:
     return () => true;
