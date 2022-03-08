@@ -12,18 +12,19 @@ interface FileSystem {
   /**
    * Check if a file exists at a given path or not.
    *
-   * @param filepath The file path to check.
-   * @returns `true` if the file exists, `false` otherwise.
+   * @param filepath The path of the file to open.
+   * @param flags The file system flags (e.g. `"r"`).
+   * @returns A file handle.
    */
-  existsSync(filepath: string): boolean;
+  openSync(filepath: string, flags: number | string): number;
 
   /**
    * Read a file at a given path.
    *
-   * @param filePath The file to read.
+   * @param file The file to read.
    * @returns The file content as a {@link Buffer}.
    */
-  readFileSync(filePath: string): Buffer;
+  readFileSync(file: number | string): Buffer;
 }
 
 /**
@@ -89,20 +90,21 @@ function getWebManglerCliVersion(
   path: Path,
   projectRoot: string,
 ): string {
-  const manifestFilePath = path.resolve(
-    projectRoot,
-    NODE_MODULES_DIR,
-    CLI_DIR,
-    MANIFEST_FILE,
-  );
+  try {
+    const manifestFilePath = path.resolve(
+      projectRoot,
+      NODE_MODULES_DIR,
+      CLI_DIR,
+      MANIFEST_FILE,
+    );
 
-  if (!fs.existsSync(manifestFilePath)) {
+    const manifestFileHandle = fs.openSync(manifestFilePath, "r");
+    const manifestRaw = fs.readFileSync(manifestFileHandle).toString();
+    const manifest = JSON.parse(manifestRaw);
+    return `v${manifest.version}`;
+  } catch (_) {
     return VERSION_MISSING;
   }
-
-  const manifestRaw = fs.readFileSync(manifestFilePath).toString();
-  const manifest = JSON.parse(manifestRaw);
-  return `v${manifest.version}`;
 }
 
 /**
@@ -118,20 +120,21 @@ function getWebManglerVersion(
   path: Path,
   projectRoot: string,
 ): string {
-  const manifestFilePath = path.resolve(
-    projectRoot,
-    NODE_MODULES_DIR,
-    WEBMANGLER_DIR,
-    MANIFEST_FILE,
-  );
+  try {
+    const manifestFilePath = path.resolve(
+      projectRoot,
+      NODE_MODULES_DIR,
+      WEBMANGLER_DIR,
+      MANIFEST_FILE,
+    );
 
-  if (!fs.existsSync(manifestFilePath)) {
+    const manifestFileHandle = fs.openSync(manifestFilePath, "r");
+    const manifestRaw = fs.readFileSync(manifestFileHandle).toString();
+    const manifest = JSON.parse(manifestRaw);
+    return `v${manifest.version}`;
+  } catch (_) {
     return VERSION_MISSING;
   }
-
-  const manifestRaw = fs.readFileSync(manifestFilePath).toString();
-  const manifest = JSON.parse(manifestRaw);
-  return `v${manifest.version}`;
 }
 
 /**

@@ -14,7 +14,7 @@ suite("Version data", function() {
   const missingString = "[missing]";
 
   let fs: {
-    readonly existsSync: SinonStub;
+    readonly openSync: SinonStub;
     readonly readFileSync: SinonStub;
   };
   let path: {
@@ -29,7 +29,7 @@ suite("Version data", function() {
     const cwd = processBackup.cwd();
 
     fs = {
-      existsSync: sinon.stub(),
+      openSync: sinon.stub(),
       readFileSync: sinon.stub(),
     };
     path = {
@@ -42,12 +42,11 @@ suite("Version data", function() {
   });
 
   setup(function() {
-    fs.existsSync.reset();
+    fs.openSync.reset();
     fs.readFileSync.reset();
     path.resolve.reset();
     run.reset();
 
-    fs.existsSync.returns(false);
     run.returns("");
   });
 
@@ -55,12 +54,20 @@ suite("Version data", function() {
     const pathToCliManifest = "/path/to/cli/manifest/package.json";
     const cliVersion = "3.1.4";
 
+    const fileHandleToPath = new Map();
+    const filePathToHandle = new Map();
+    let handlesCounter = 0;
+
     path.resolve.onFirstCall().returns(pathToCliManifest);
-    fs.existsSync.callsFake((arg) => {
-      return arg === pathToCliManifest;
+    fs.openSync.callsFake((filePath) => {
+      const fileHandle = handlesCounter++;
+      fileHandleToPath.set(fileHandle, filePath);
+      filePathToHandle.set(filePath, fileHandle);
+      return fileHandle;
     });
-    fs.readFileSync.callsFake((arg) => {
-      if (arg === pathToCliManifest) {
+    fs.readFileSync.callsFake((fileHandle) => {
+      const filePath = fileHandleToPath.get(fileHandle);
+      if (filePath === pathToCliManifest) {
         return `{"version":"${cliVersion}"}`;
       }
     });
@@ -72,13 +79,14 @@ suite("Version data", function() {
       "webmangler-cli",
       "package.json",
     );
-    expect(fs.existsSync).to.have.been.calledWithExactly(pathToCliManifest);
-    expect(fs.readFileSync).to.have.been.calledWithExactly(pathToCliManifest);
+    expect(fs.openSync).to.have.been.calledWithExactly(pathToCliManifest, "r");
+    const cliManifestHandle = filePathToHandle.get(pathToCliManifest);
+    expect(fs.readFileSync).to.have.been.calledWithExactly(cliManifestHandle);
     expect(result.cli).to.equal(`v${cliVersion}`);
   });
 
   test("cli manifest missing", function() {
-    fs.existsSync.onFirstCall().returns(false);
+    fs.openSync.onFirstCall().throws();
 
     const result = getVersionsData(fs, path, process, run);
     expect(result.cli).to.equal(missingString);
@@ -88,12 +96,20 @@ suite("Version data", function() {
     const pathToCoreManifest = "/path/to/core/manifest/package.json";
     const coreVersion = "1.6.7";
 
+    const fileHandleToPath = new Map();
+    const filePathToHandle = new Map();
+    let handlesCounter = 0;
+
     path.resolve.onSecondCall().returns(pathToCoreManifest);
-    fs.existsSync.callsFake((arg) => {
-      return arg === pathToCoreManifest;
+    fs.openSync.callsFake((filePath) => {
+      const fileHandle = handlesCounter++;
+      fileHandleToPath.set(fileHandle, filePath);
+      filePathToHandle.set(filePath, fileHandle);
+      return fileHandle;
     });
-    fs.readFileSync.callsFake((arg) => {
-      if (arg === pathToCoreManifest) {
+    fs.readFileSync.callsFake((fileHandle) => {
+      const filePath = fileHandleToPath.get(fileHandle);
+      if (filePath === pathToCoreManifest) {
         return `{"version":"${coreVersion}"}`;
       }
     });
@@ -105,13 +121,14 @@ suite("Version data", function() {
       "webmangler",
       "package.json",
     );
-    expect(fs.existsSync).to.have.been.calledWithExactly(pathToCoreManifest);
-    expect(fs.readFileSync).to.have.been.calledWithExactly(pathToCoreManifest);
+    expect(fs.openSync).to.have.been.calledWithExactly(pathToCoreManifest, "r");
+    const coreManifestHandle = filePathToHandle.get(pathToCoreManifest);
+    expect(fs.readFileSync).to.have.been.calledWithExactly(coreManifestHandle);
     expect(result.core).to.equal(`v${coreVersion}`);
   });
 
   test("core manifest missing", function() {
-    fs.existsSync.onSecondCall().returns(false);
+    fs.openSync.onSecondCall().throws();
 
     const result = getVersionsData(fs, path, process, run);
     expect(result.core).to.equal(missingString);
