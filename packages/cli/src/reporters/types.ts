@@ -1,4 +1,4 @@
-import type { ManglerStats } from "../stats/types";
+import type { AggregateStats, FileStats, ManglerStats } from "../stats/types";
 
 /**
  * A reporter is an object that can report {@link Stats}.
@@ -9,13 +9,8 @@ interface Reporter {
    *
    * @param stats The {@link Stats} to report.
    */
-  report(stats: Stats): Promise<void>;
+  report(stats: ManglerStats): Promise<void>;
 }
-
-/**
- * The statistics that {@link Reporter}s write.
- */
-type Stats = ManglerStats;
 
 /**
  * A writer is an object that can be used to write messages.
@@ -30,7 +25,9 @@ interface Writer {
 }
 
 export type {
+  AggregateStats,
+  FileStats,
+  ManglerStats,
   Reporter,
-  Stats,
   Writer,
 };

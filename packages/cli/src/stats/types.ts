@@ -1,7 +1,12 @@
 /**
+ * Aggregated statistics over all files.
+ */
+type AggregateStats = FileStats;
+
+/**
  * Statistics about an individually mangled file.
  */
-type FileStats = {
+interface FileStats {
   /**
    * Did the file size change.
    */
@@ -30,7 +35,7 @@ interface ManglerStats {
   /**
    * The aggregate {@link FileStats} over all files.
    */
-  readonly aggregate: FileStats;
+  readonly aggregate: AggregateStats;
 
   /**
    * The time it took to mangle.
@@ -40,10 +45,11 @@ interface ManglerStats {
   /**
    * The {@link FileStats} for every mangled file.
    */
-  readonly files: Map<string, FileStats>;
+  readonly files: ReadonlyMap<string, FileStats>;
 }
 
 export type {
+  AggregateStats,
   FileStats,
   ManglerStats,
 };

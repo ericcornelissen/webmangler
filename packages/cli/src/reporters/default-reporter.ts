@@ -1,9 +1,12 @@
-import type { Reporter, Stats, Writer } from "./types";
+import type {
+  AggregateStats,
+  FileStats,
+  ManglerStats,
+  Reporter,
+  Writer,
+} from "./types";
 
 import * as chalk from "chalk";
-
-type AggregateStats = Stats["aggregate"];
-type FileStats = Stats["aggregate"];
 
 /**
  * The default reporter for the _WebMangler_ CLI.
@@ -26,7 +29,7 @@ class DefaultReporter implements Reporter {
   /**
    * @inheritDoc
    */
-  async report(stats: Stats): Promise<void> {
+  async report(stats: ManglerStats): Promise<void> {
     const fileCount: number = stats.files.size;
     const duration: number = this.roundToTwoDecimalPlaces(stats.duration);
 

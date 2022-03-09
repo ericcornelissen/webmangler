@@ -1,5 +1,5 @@
 import type { FileStats } from "../../../stats/types";
-import type { Reporter, Stats } from "../../types";
+import type { ManglerStats, Reporter } from "../../types";
 
 import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
@@ -32,7 +32,7 @@ suite("DefaultReporter", function() {
     };
 
     test("no files in stats", function() {
-      const emptyStats: Stats = {
+      const emptyStats: ManglerStats = {
         aggregate: {
           changed: false,
           changePercentage: 0,
@@ -52,7 +52,7 @@ suite("DefaultReporter", function() {
     test("one file in stats", function() {
       const path = "foo.bar";
       const fileStats = new FileStatsMock(10, 5);
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate: {
           changed: true,
           changePercentage: -50,
@@ -74,7 +74,7 @@ suite("DefaultReporter", function() {
         ["bar.md", new FileStatsMock(2, 718)],
         ["hello/world.css", new FileStatsMock(16, 7)],
       ];
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate: {
           changed: true,
           changePercentage: 3419.05,
@@ -96,7 +96,7 @@ suite("DefaultReporter", function() {
       const entries: [string, FileStats][] = [
         ["foo.bar", new FileStatsMock(1, 1)],
       ];
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate: {
           changed: false,
           changePercentage: 0,
@@ -128,7 +128,7 @@ suite("DefaultReporter", function() {
         ["rum.txt", new FileStatsMock(0, 1, -1.125)],
         ["gone.txt", new FileStatsMock(0, 1, -10.128)],
       ];
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate: {
           changed: false,
           changePercentage: 0,
@@ -158,7 +158,7 @@ suite("DefaultReporter", function() {
         ["the.txt", new FileStatsMock(0, 1, -0.001)],
         ["sun.txt", new FileStatsMock(0, 1, -0.0001)],
       ];
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate: {
           changed: false,
           changePercentage: 0,
@@ -192,7 +192,7 @@ suite("DefaultReporter", function() {
         ["rum.txt", new FileStatsMock(0, 1, 1.125)],
         ["gone.txt", new FileStatsMock(0, 1, 10.128)],
       ];
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate: {
           changed: false,
           changePercentage: 0,
@@ -222,7 +222,7 @@ suite("DefaultReporter", function() {
         ["the.txt", new FileStatsMock(0, 1, 0.001)],
         ["sun.txt", new FileStatsMock(0, 1, 0.0001)],
       ];
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate: {
           changed: false,
           changePercentage: 0,
@@ -247,7 +247,7 @@ suite("DefaultReporter", function() {
       const entries: [string, FileStats][] = [
         ["foo.bar", new FileStatsMock(0, 1, 0)],
       ];
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate: {
           changed: false,
           changePercentage: 0,
@@ -273,7 +273,7 @@ suite("DefaultReporter", function() {
         sizeAfter: 4,
       };
 
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate,
         duration: 0,
         files: new Map([
@@ -293,7 +293,7 @@ suite("DefaultReporter", function() {
 
     test("duration", function() {
       const duration = 42;
-      const stats: Stats = {
+      const stats: ManglerStats = {
         aggregate: {
           changed: false,
           changePercentage: 50,
