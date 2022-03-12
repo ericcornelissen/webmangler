@@ -1,0 +1,61 @@
+name: Bug Report
+description: Report a problem with WebMangler
+labels:
+  - bug
+
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Note: Please search to see if an issue already exists for the bug you
+        encountered.
+  - type: input
+    attributes:
+      label: Package(s)
+      description: >-
+        Provide the package(s) in which the bug occurs and include the version
+        of the package(s).
+      placeholder: >-
+        Example: webmangler (v2.7.1), webmangler-cli (v3.1.4)
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Description
+      description: >-
+        Describe the bug at a high level.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual Behaviour
+      description: >-
+        Describe the actual behaviour.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected Behaviour
+      description: >-
+        Describe the expected behaviour.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Working Example
+      description: >-
+        Provide a small working example that reproduces the bug, e.g. a gist or
+        a git repository. Include an explanation of how to use the example to
+        reproduce the bug.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Workaround
+      description: >-
+        Provide a workaround for the bug if you found one.
+  - type: textarea
+    attributes:
+      label: Notes
+      description: >-
+        Provide any additional context that might be useful.
