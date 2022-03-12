@@ -9,8 +9,6 @@ import {
 } from "@webmangler/language-utils";
 import { patterns, QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
 
-const GROUP_MAIN = "main";
-
 /**
  * Get {@link MangleExpression}s to match element attribute values in HTML, e.g.
  * `the` and `sun` in `<img data-praise="the sun">`.
@@ -21,35 +19,37 @@ const GROUP_MAIN = "main";
 function newElementAttributeMultiValueExpressions(
   attributesPattern: string,
 ): Iterable<MangleExpression> {
-  return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression({
-    patternTemplate: `
-      (?:
-        (?:${patterns.comment})
-        |
-        (?<=
-          ${patterns.tagOpen}
-          (?:${patterns.attributes})?
-          ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)}
+  return QUOTES_ARRAY.map((quote) => {
+    const captureGroup = NestedGroupMangleExpression.CAPTURE_GROUP({
+      before: `(?:[^${quote}]+\\s)?`,
+      after: `(?:\\s[^${quote}]+)?`,
+    });
+
+    return new NestedGroupMangleExpression({
+      patternTemplate: `
+        (?:
+          (?:${patterns.comment})
+          |
+          (?<=
+            ${patterns.tagOpen}
+            (?:${patterns.attributes})?
+            ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quote)}
+          )
+          ${captureGroup}
+          (?=
+            \\s*${quote}
+            [^>]*
+            >
+          )
         )
-        (?<${GROUP_MAIN}>
-          (?:[^${quote}]+\\s)?
-          %s
-          (?:\\s[^${quote}]+)?
-        )
-        (?=
-          \\s*${quote}
-          [^>]*
-          >
-        )
-      )
-    `,
-    subPatternTemplate: `
-      (?<=^|\\s)
-      (?<${GROUP_MAIN}>%s)
-      (?=$|\\s)
-    `,
-    groupName: GROUP_MAIN,
-  }));
+      `,
+      subPatternTemplate: `
+        (?<=^|\\s)
+        ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+        (?=$|\\s)
+      `,
+    });
+  });
 }
 
 /**
@@ -74,13 +74,12 @@ function newUnquotedAttributeValueExpressions(
             (?:${attributesPattern})
             \\s*=\\s*
           )
-          (?<${GROUP_MAIN}>%s)
+          ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
             (?:${patterns.afterAttribute})
           )
         )
       `,
-      groupName: GROUP_MAIN,
     }),
   ];
 }
@@ -93,7 +92,7 @@ function newUnquotedAttributeValueExpressions(
  * @param options The {@link MultiValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.22
+ * @version v0.1.27
  */
 function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,
