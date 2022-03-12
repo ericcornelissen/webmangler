@@ -24,8 +24,8 @@ DID_STASH () {
 
 IS_MERGING () {
   if [ -f "$(git rev-parse --git-dir)/MERGE_HEAD" ]; then
-    echo $_TRUE
+    echo $__TRUE
   else
-    echo $_FALSE
+    echo $__FALSE
   fi
 }

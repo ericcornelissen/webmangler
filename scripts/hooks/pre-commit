@@ -3,12 +3,12 @@
 . "$(dirname $0)/common.sh"
 
 if [ ! $(IS_MERGING) ]; then
-  git stash -q -u --keep-index
+  git stash push --quiet --include-untracked --keep-index
 fi
 
 npm run format
 git update-index --again
 
 if [ $(DID_STASH) ]; then
-  git stash pop -q
+  git stash pop --quiet
 fi
