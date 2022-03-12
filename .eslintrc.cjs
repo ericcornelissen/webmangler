@@ -120,7 +120,6 @@ module.exports = {
         "webmangler",
         "webmangler/languages",
         "webmangler/manglers",
-        "webmangler/testing",
       ],
     }],
     "import/no-unused-modules": "error",
