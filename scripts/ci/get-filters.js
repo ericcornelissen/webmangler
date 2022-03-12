@@ -12,14 +12,13 @@ import * as path from "path";
 import process from "process";
 
 import log from "../utilities/log.js";
-import * as paths from "../paths.js";
+import * as paths from "../utilities/paths.js";
 import values from "../../.values.cjs";
 
 const {
   testsDir,
-  testDirIntegration,
+  testDirAll,
   testDirPerformance,
-  testDirUnit,
 } = values;
 
 const RUN_MUTATION_TESTING = [
@@ -50,9 +49,9 @@ function main(argv) {
 
 function globToRegExp(str) {
   return str
-    .replace("{", "(")
-    .replace("}", ")")
-    .replace(",", "|");
+    .replace(/\{/g, "(")
+    .replace(/\}/g, ")")
+    .replace(/,/g, "|");
 }
 
 function getPackageCriteria(arg) {
@@ -70,16 +69,8 @@ function getPackageCriteria(arg) {
     return (packageName) => hasFiles(
       packageName,
       (filePath) => {
-        const testsExpr = new RegExp(`${testsDir}/[^/]+\\.test\\.ts$`);
-        const unitExpr = new RegExp(
-          `${testsDir}/${globToRegExp(testDirUnit)}/[^/]+\\.test\\.ts$`,
-        );
-        const integrationExpr = new RegExp(
-          `${testsDir}/${globToRegExp(testDirIntegration)}/[^/]+\\.test\\.ts$`,
-        );
-        return testsExpr.test(filePath)
-          || unitExpr.test(filePath)
-          || integrationExpr.test(filePath);
+        const testsExpr = new RegExp(`${testsDir}/${globToRegExp(testDirAll)}`);
+        return testsExpr.test(filePath);
       },
     );
   default:

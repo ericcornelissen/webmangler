@@ -11,9 +11,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.0
         with:
           fetch-depth: 0
+      - name: Cache compiled package
+        uses: actions/cache@v2.1.7
+        with:
+          path: |
+            packages/*/build
+            packages/*/lib
+            packages/*/tsconfig.tsbuildinfo
+          key: >-
+            compiled
+            all
+            ${{ hashFiles('packages/**/src/**') }}
+          restore-keys: |
+            compiled all
       - name: Fetch main branch
         if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main
@@ -24,5 +37,7 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Compile all packages
+        run: npm run compile --workspaces
       - name: Run linters
         run: npm run lint

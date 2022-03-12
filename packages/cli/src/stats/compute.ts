@@ -55,7 +55,20 @@ function computeStats(data: RawStatsData): ManglerStats {
     }
   });
 
+  let overallBefore = 0;
+  let overallAfter = 0;
+  fileStats.forEach(({ sizeAfter, sizeBefore }) => {
+    overallBefore += sizeBefore;
+    overallAfter += sizeAfter;
+  });
+
   return {
+    aggregate: {
+      changed: overallBefore !== overallAfter,
+      changePercentage: getChangedPercentage(overallBefore, overallAfter),
+      sizeBefore: overallBefore,
+      sizeAfter: overallAfter,
+    },
     files: fileStats,
     duration: duration,
   };
