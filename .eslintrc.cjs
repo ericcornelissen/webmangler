@@ -145,9 +145,9 @@ module.exports = {
     }],
     "jsdoc/implements-on-classes": "off",
     "jsdoc/match-description": ["error", {
-      matchDescription: "^([A-Z]|[`\\d_])[\\s\\S]*\\.$",
+      matchDescription: "^([A-Z]|[`\\d_])[\\s\\S]*\\.\\n{0,1}$",
       tags: {
-        param: true,
+        param: "^[A-Z].*\\.$",
         returns: "^[A-Z`].*\\.$",
         since: "^v[0-9]\\.[0-9]\\.[0-9]",
       },
