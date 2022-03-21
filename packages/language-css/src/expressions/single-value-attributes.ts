@@ -6,7 +6,6 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
-const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
 
 /**
@@ -37,7 +36,7 @@ function newAttributeSelectorSingleValueExpression(
             (?<${GROUP_QUOTE}>${patterns.quotes})\\s*
             ${valuePrefix}
           )
-          (?<${GROUP_MAIN}>%s)
+          ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?:
             ${valueSuffix}
             \\s*\\k<${GROUP_QUOTE}>
@@ -45,7 +44,6 @@ function newAttributeSelectorSingleValueExpression(
           )
         )
       `,
-      groupName: GROUP_MAIN,
     }),
   ];
 }
@@ -58,7 +56,7 @@ function newAttributeSelectorSingleValueExpression(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.26
+ * @version v0.1.29
  */
 function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,

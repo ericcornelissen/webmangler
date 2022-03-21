@@ -6,8 +6,6 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
-const GROUP_MAIN = "main";
-
 /**
  * Get a {@link MangleExpression} to match the value of CSS declarations in CSS,
  * e.g. `serif` in `div { font: serif; }`.
@@ -38,7 +36,7 @@ function newCssDeclarationValueExpression(
             )
             ${valuePrefix}
           )
-          (?<${GROUP_MAIN}>%s)
+          ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
             ${valueSuffix}
             (?:
@@ -49,7 +47,6 @@ function newCssDeclarationValueExpression(
           )
         )
       `,
-      groupName: GROUP_MAIN,
     }),
   ];
 }
@@ -62,7 +59,7 @@ function newCssDeclarationValueExpression(
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.24
+ * @version v0.1.29
  */
 function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,

@@ -6,8 +6,6 @@ import type {
 import { NestedGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
-const GROUP_MAIN = "main";
-
 /**
  * Get {@link MangleExpression}s to match attributes in HTML, e.g. `data-foo` in
  * `<div data-foo="bar"></div>`.
@@ -15,6 +13,11 @@ const GROUP_MAIN = "main";
  * @returns The {@link MangleExpression}s to match element attributes in HTML.
  */
 function newElementAttributeExpressions(): Iterable<MangleExpression> {
+  const captureGroup = NestedGroupMangleExpression.CAPTURE_GROUP({
+    before: `(?:${patterns.attributes})?`,
+    after: "",
+  });
+
   return [
     new NestedGroupMangleExpression({
       patternTemplate: `
@@ -22,10 +25,7 @@ function newElementAttributeExpressions(): Iterable<MangleExpression> {
           (?:${patterns.comment}|${patterns.anyString})
           |
           (?<=${patterns.tagOpen})
-          (?<${GROUP_MAIN}>
-            (?:${patterns.attributes})?
-            %s
-          )
+          ${captureGroup}
           (?=${patterns.afterAttributeName})
         )
       `,
@@ -34,11 +34,10 @@ function newElementAttributeExpressions(): Iterable<MangleExpression> {
           (?:${patterns.anyString})
           |
           (?<=\\s|^)
-          (?<${GROUP_MAIN}>%s)
+          ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
           (?=${patterns.afterAttributeName}|$)
         )
       `,
-      groupName: GROUP_MAIN,
       caseSensitive: false,
     }),
   ];
@@ -52,7 +51,7 @@ function newElementAttributeExpressions(): Iterable<MangleExpression> {
  * @param options The {@link AttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.23
+ * @version v0.1.27
  */
 function attributeExpressionFactory(
   options: AttributeOptions, // eslint-disable-line @typescript-eslint/no-unused-vars

@@ -9,7 +9,6 @@ import {
 } from "@webmangler/language-utils";
 import { patterns, QUOTES_ARRAY } from "./common";
 
-const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
 
 /**
@@ -24,37 +23,37 @@ function newQuerySelectorExpressions(
   selectorPrefix?: string,
   selectorSuffix?: string,
 ): Iterable<MangleExpression> {
-  return QUOTES_ARRAY.map((quote) => new NestedGroupMangleExpression({
-    patternTemplate: `
-      (?:
-        (?:${patterns.comment})
-        |
-        (?<${GROUP_MAIN}>
-          ${quote}
-          (?:\\\\${quote}|[^${quote}])*
-          %s
-          (?:\\\\${quote}|[^${quote}])*
-          ${quote}
-        )
-        |
+  return QUOTES_ARRAY.map((quote) => {
+    const captureGroup = NestedGroupMangleExpression.CAPTURE_GROUP({
+      before: `${quote}(?:\\\\${quote}|[^${quote}])*`,
+      after: `(?:\\\\${quote}|[^${quote}])*${quote}`,
+    });
+
+    return new NestedGroupMangleExpression({
+      patternTemplate: `
         (?:
-          ${quote}
-          (?:\\\\${quote}|[^${quote}])*
-          ${quote}
+          (?:${patterns.comment})
+          |
+          ${captureGroup}
+          |
+          (?:
+            ${quote}
+            (?:\\\\${quote}|[^${quote}])*
+            ${quote}
+          )
         )
-      )
-    `,
-    subPatternTemplate: `
-      (?<=
-        ${selectorPrefix || `(?:${quote}|${patterns.allowedBeforeSelector})`}
-      )
-      (?<${GROUP_MAIN}>%s)
-      (?=
-        ${selectorSuffix || `(?:${quote}|${patterns.allowedAfterSelector})`}
-      )
-    `,
-    groupName: GROUP_MAIN,
-  }));
+      `,
+      subPatternTemplate: `
+        (?<=
+          ${selectorPrefix || `(?:${quote}|${patterns.allowedBeforeSelector})`}
+        )
+        ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+        (?=
+          ${selectorSuffix || `(?:${quote}|${patterns.allowedAfterSelector})`}
+        )
+      `,
+    });
+  });
 }
 
 /**
@@ -75,14 +74,13 @@ function newSelectorAsStandaloneStringExpressions():
             (?<${GROUP_QUOTE}>${patterns.quotes})
             \\s*
           )
-          (?<${GROUP_MAIN}>%s)
+          ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
             \\s*
             \\k<${GROUP_QUOTE}>
           )
         )
       `,
-      groupName: GROUP_MAIN,
     }),
   ];
 }
@@ -96,7 +94,7 @@ function newSelectorAsStandaloneStringExpressions():
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.26
+ * @version v0.1.28
  */
 function querySelectorExpressionFactory(
   options: QuerySelectorOptions,

@@ -6,7 +6,6 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns, QUOTED_ATTRIBUTE_PATTERN } from "./common";
 
-const GROUP_MAIN = "main";
 const GROUP_QUOTE = "quote";
 
 /**
@@ -37,7 +36,7 @@ function newQuotedValueExpressions(
             ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quoteExpr)}
             ${valuePrefix}
           )
-          (?<${GROUP_MAIN}>%s)
+          ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
             ${valueSuffix}
             \\s*\\k<${GROUP_QUOTE}>
@@ -46,7 +45,6 @@ function newQuotedValueExpressions(
           )
         )
       `,
-      groupName: GROUP_MAIN,
     }),
   ];
 }
@@ -79,14 +77,13 @@ function newUnquotedValueExpressions(
             \\s*=\\s*
             ${valuePrefix}
           )
-          (?<${GROUP_MAIN}>%s)
+          ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
             ${valueSuffix}
             ${patterns.afterAttribute}
           )
         )
       `,
-      groupName: GROUP_MAIN,
     }),
   ];
 }
@@ -100,7 +97,7 @@ function newUnquotedValueExpressions(
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.22
+ * @version v0.1.27
  */
 function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,

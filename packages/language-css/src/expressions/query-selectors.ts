@@ -6,8 +6,6 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
-const GROUP_MAIN = "main";
-
 /**
  * Get a {@link MangleExpression} to match query selectors in CSS, e.g. `foobar`
  * in `.foobar { }`.
@@ -35,7 +33,7 @@ function newCssSelectorExpression(
               )
             `}
           )
-          (?<${GROUP_MAIN}>%s)
+          ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
             ${selectorSuffix ? selectorSuffix : `
               (?:
@@ -47,7 +45,6 @@ function newCssSelectorExpression(
           )
         )
       `,
-      groupName: GROUP_MAIN,
     }),
   ];
 }
@@ -60,7 +57,7 @@ function newCssSelectorExpression(
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  * @since v0.1.14
- * @version v0.1.24
+ * @version v0.1.29
  */
 function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
