@@ -14,6 +14,7 @@ function New(writer: Writer): Reporter { // eslint-disable-line @typescript-esli
 }
 
 export {
+  DefaultReporter,
   New,
 };
 

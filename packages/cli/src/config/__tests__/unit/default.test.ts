@@ -19,7 +19,7 @@ suite("Configuration defaults", function() {
     expect(defaultConfig.languages).to.have.length.above(0);
   });
 
-  test.skip("reporters", function() {
+  test("reporters", function() {
     expect(defaultConfig.reporters).to.have.length.above(0);
   });
 });

@@ -3,6 +3,8 @@ import type { WebManglerCliConfig } from "./types";
 import { BuiltInLanguagesSupport } from "webmangler/languages";
 import { RecommendedManglers } from "webmangler/manglers";
 
+import { DefaultReporter } from "../reporters";
+
 /**
  * The default configuration for _WebMangler_ used by the _WebMangler_ CLI.
  *
@@ -19,7 +21,7 @@ function newDefaultConfig(): WebManglerCliConfig {
       new BuiltInLanguagesSupport(),
     ],
     reporters: [
-      // TODO: Add at least one default reporter
+      new DefaultReporter(),
     ],
   };
 }
