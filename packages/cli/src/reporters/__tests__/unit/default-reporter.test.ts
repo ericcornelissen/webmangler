@@ -19,7 +19,7 @@ suite("DefaultReporter", function() {
   suiteSetup(function() {
     writer = new WriterMock();
 
-    reporter = new DefaultReporter(writer);
+    reporter = new DefaultReporter();
   });
 
   setup(function() {
@@ -43,7 +43,7 @@ suite("DefaultReporter", function() {
         files: new Map([]),
       };
 
-      reporter.report(emptyStats);
+      reporter.report(writer, emptyStats);
       expect(writer.write).to.have.been.calledWith(
         sinon.match("Nothing was mangled"),
       );
@@ -63,7 +63,7 @@ suite("DefaultReporter", function() {
         files: new Map([[path, fileStats]]),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.callCount(3);
       expect(writer.write).to.have.been.calledWith(sinon.match(path));
     });
@@ -85,7 +85,7 @@ suite("DefaultReporter", function() {
         files: new Map(entries),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [path] of entries) {
         expect(writer.write).to.have.been.calledWith(sinon.match(path));
@@ -107,7 +107,7 @@ suite("DefaultReporter", function() {
         files: new Map(entries),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [path] of entries) {
         expect(writer.write).to.have.been.calledWith(sinon.match(path));
@@ -139,7 +139,7 @@ suite("DefaultReporter", function() {
         files: new Map(entries),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
         expect(writer.write).to.have.been.calledWith(
@@ -169,7 +169,7 @@ suite("DefaultReporter", function() {
         files: new Map(entries),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
         expect(writer.write).to.have.been.calledWith(sinon.match("<-0.01%"));
@@ -203,7 +203,7 @@ suite("DefaultReporter", function() {
         files: new Map(entries),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
         expect(writer.write).to.have.been.calledWith(
@@ -233,7 +233,7 @@ suite("DefaultReporter", function() {
         files: new Map(entries),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [, fileStats] of entries) {
         expect(writer.write).to.have.been.calledWith(sinon.match("<+0.01%"));
@@ -258,7 +258,7 @@ suite("DefaultReporter", function() {
         files: new Map(entries),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.callCount(entries.length + 2);
       for (const [,] of entries) {
         expect(writer.write).to.have.been.calledWith(sinon.match("0%"));
@@ -282,7 +282,7 @@ suite("DefaultReporter", function() {
         ]),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.been.calledWith(
         sinon.match(`${aggregate.changePercentage}%`),
       );
@@ -304,7 +304,7 @@ suite("DefaultReporter", function() {
         files: new Map([["foo.bar", new FileStatsMock(2, 1)]]),
       };
 
-      reporter.report(stats);
+      reporter.report(writer, stats);
       expect(writer.write).to.have.been.calledWith(
         sinon.match(`${duration} ms`),
       );

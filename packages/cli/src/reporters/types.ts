@@ -7,9 +7,10 @@ interface Reporter {
   /**
    * Report {@link Stats}.
    *
+   * @param writer A {@link Writer}.
    * @param stats The {@link Stats} to report.
    */
-  report(stats: ManglerStats): Promise<void>;
+  report(writer: Writer, stats: ManglerStats): Promise<void>;
 }
 
 /**

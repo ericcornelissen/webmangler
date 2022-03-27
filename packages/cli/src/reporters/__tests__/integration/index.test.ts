@@ -37,7 +37,7 @@ suite("Reporters", function() {
       };
 
       const reporter = reporters.New(writer);
-      expect(() => reporter.report(stats)).not.to.throw();
+      expect(() => reporter.report(writer, stats)).not.to.throw();
     });
   });
 });

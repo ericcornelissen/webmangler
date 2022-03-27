@@ -8,8 +8,8 @@ import DefaultReporter from "./default-reporter";
  * @param writer A {@link Writer} to use when writing reports.
  * @returns A new {@link Reporter}.
  */
-function New(writer: Writer): Reporter {
-  const reporter = new DefaultReporter(writer);
+function New(writer: Writer): Reporter { // eslint-disable-line @typescript-eslint/no-unused-vars
+  const reporter = new DefaultReporter();
   return reporter;
 }
 

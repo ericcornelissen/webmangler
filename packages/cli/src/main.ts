@@ -64,7 +64,7 @@ export default async function run(
     const reporter = reporters.New({ write: writer });
     logger.debug("reporter created");
     logger.debug("reporting stats...");
-    reporter.report(stats);
+    reporter.report({ write: writer }, stats);
     logger.debug("stats reported");
   }
 
