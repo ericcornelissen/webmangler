@@ -231,9 +231,5 @@ jobs:
         run: npm ci
       - name: Run mutation tests for packages/${{ matrix.package }}
         run: npm run test:mutation -- ${{ matrix.package }}
-      - name: Upload mutation report as artifact
-        uses: actions/upload-artifact@v3.0.0
-        with:
-          name: mutation-report-${{ matrix.package }}-${{ github.sha }}
-          path: |
-            _reports/mutation
+        env:
+          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}

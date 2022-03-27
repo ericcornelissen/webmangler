@@ -34,9 +34,13 @@ module.exports = {
 
   reporters: [
     "clear-text",
+    "dashboard",
     "html",
     "progress",
   ],
+  dashboard: {
+    module: packagesList[0],
+  },
   htmlReporter: {
     baseDir: `${reportsDir}/mutation`,
   },
