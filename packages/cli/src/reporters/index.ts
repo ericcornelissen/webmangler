@@ -16,3 +16,7 @@ function New(writer: Writer): Reporter {
 export {
   New,
 };
+
+export type {
+  Reporter,
+};
