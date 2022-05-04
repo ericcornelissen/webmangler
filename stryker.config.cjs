@@ -42,7 +42,7 @@ module.exports = {
     module: packagesList[0],
   },
   htmlReporter: {
-    baseDir: `${reportsDir}/mutation`,
+    fileName: `${reportsDir}/mutation/index.html`,
   },
   thresholds: {
     high: 80,
