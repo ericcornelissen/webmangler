@@ -8,7 +8,6 @@ import webmangler from "webmangler";
 import getConfiguration from "./config";
 import * as fs from "./fs";
 import Logger from "./logger";
-import * as reporters from "./reporters";
 import { computeStats } from "./stats";
 import { timeCall } from "./timing";
 
@@ -60,11 +59,10 @@ export default async function run(
     logger.debug("computing stats...");
     const stats = computeStats({ inFiles, outFiles, duration });
     logger.debug("stats computed");
-    logger.debug("creating reporter...");
-    const reporter = reporters.New({ write: writer });
-    logger.debug("reporter created");
     logger.debug("reporting stats...");
-    reporter.report({ write: writer }, stats);
+    for (const reporter of config.reporters) {
+      reporter.report({ write: writer }, stats);
+    }
     logger.debug("stats reported");
   }
 
