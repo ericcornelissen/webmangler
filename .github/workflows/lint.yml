@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
       - name: Cache compiled package
-        uses: actions/cache@v3.0.0
+        uses: actions/cache@v3.0.3
         with:
           path: |
             packages/*/build
@@ -31,7 +31,7 @@ jobs:
         if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main
       - name: Install Node.js
-        uses: actions/setup-node@v3.0.0
+        uses: actions/setup-node@v3.2.0
         with:
           node-version-file: .nvmrc
           cache: npm

@@ -16,9 +16,9 @@ jobs:
       tested-packages: ${{ steps.tested-filter.outputs.changes }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.0.0
+        uses: actions/setup-node@v3.2.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -99,9 +99,9 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.performance-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.2
       - name: Cache compiled package
-        uses: actions/cache@v3.0.0
+        uses: actions/cache@v3.0.3
         with:
           path: |
             packages/*/build
@@ -114,7 +114,7 @@ jobs:
           restore-keys: |
             compiled ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.0.0
+        uses: actions/setup-node@v3.2.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -133,9 +133,9 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.all-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.2
       - name: Cache compiled package
-        uses: actions/cache@v3.0.0
+        uses: actions/cache@v3.0.3
         with:
           path: |
             packages/*/build
@@ -148,7 +148,7 @@ jobs:
           restore-keys: |
             compiled ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.0.0
+        uses: actions/setup-node@v3.2.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -168,9 +168,9 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.tested-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.2
       - name: Cache compiled package
-        uses: actions/cache@v3.0.0
+        uses: actions/cache@v3.0.3
         with:
           path: |
             packages/*/build
@@ -183,7 +183,7 @@ jobs:
           restore-keys: |
             compiled ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.0.0
+        uses: actions/setup-node@v3.2.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -192,7 +192,7 @@ jobs:
       - name: Run test suite for packages/${{ matrix.package }}
         run: npm run coverage -- ${{ matrix.package }}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v3.1.0
         with:
           file: ./_reports/coverage/lcov.info
           flags: package-${{ matrix.package }}
@@ -209,9 +209,9 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.mutation-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.2
       - name: Cache compiled package
-        uses: actions/cache@v3.0.0
+        uses: actions/cache@v3.0.3
         with:
           path: |
             packages/*/build
@@ -223,7 +223,7 @@ jobs:
           restore-keys: |
             mutation
       - name: Install Node.js
-        uses: actions/setup-node@v3.0.0
+        uses: actions/setup-node@v3.2.0
         with:
           node-version-file: .nvmrc
           cache: npm

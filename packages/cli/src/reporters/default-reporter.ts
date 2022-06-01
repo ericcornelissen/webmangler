@@ -13,63 +13,51 @@ import * as chalk from "chalk";
  */
 class DefaultReporter implements Reporter {
   /**
-   * The function used to write the report.
-   */
-  private readonly writer: Writer;
-
-  /**
-   * Create a new {@link DefaultReporter}.
-   *
-   * @param writer The {@link Writer} to be used by this {@link Reporter}.
-   */
-  constructor(writer: Writer) {
-    this.writer = writer;
-  }
-
-  /**
    * @inheritDoc
    */
-  async report(stats: ManglerStats): Promise<void> {
+  async report(writer: Writer, stats: ManglerStats): Promise<void> {
     const fileCount: number = stats.files.size;
     const duration: number = this.roundToTwoDecimalPlaces(stats.duration);
 
     if (stats.files.size === 0) {
-      this.writer.write(`Nothing was mangled (${duration} ms)`);
+      writer.write(`Nothing was mangled (${duration} ms)`);
       return;
     }
 
     stats.files.forEach((fileStats: FileStats, filePath: string) => {
-      this.reportFile(fileStats, filePath);
+      this.reportFile(writer, fileStats, filePath);
     });
 
-    this.reportAggregated(stats.aggregate);
-    this.writer.write(`\nmangled ${fileCount} files in ${duration} ms`);
+    this.reportAggregated(writer, stats.aggregate);
+    writer.write(`\nmangled ${fileCount} files in ${duration} ms`);
   }
 
   /**
    * Report the aggregated mangle stats.
    *
+   * @param writer A {@link Writer}.
    * @param stats The aggregated stats.
    */
-  private reportAggregated(stats: AggregateStats): void {
+  private reportAggregated(writer: Writer, stats: AggregateStats): void {
     const overallPercentage = this.getDisplayPercentage(stats);
     const overallReduction = this.getNumericChangeString(stats);
-    this.writer.write(`OVERALL ${overallPercentage} (${overallReduction})`);
+    writer.write(`OVERALL ${overallPercentage} (${overallReduction})`);
   }
 
   /**
    * Report the mangle stats for one file.
    *
+   * @param writer A {@link Writer}.
    * @param stats The {@link FileStats}.
    * @param filepath The path to the file of which the `stats` are.
    */
-  private reportFile(stats: FileStats, filepath: string): void {
+  private reportFile(writer: Writer, stats: FileStats, filepath: string): void {
     if (stats.changed) {
       const percentage = this.getDisplayPercentage(stats);
       const reduction = this.getNumericChangeString(stats);
-      this.writer.write(`${filepath} ${percentage} (${reduction})`);
+      writer.write(`${filepath} ${percentage} (${reduction})`);
     } else {
-      this.writer.write(`${filepath} [NOT MANGLED]`);
+      writer.write(`${filepath} [NOT MANGLED]`);
     }
   }
 
