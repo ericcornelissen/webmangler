@@ -233,6 +233,9 @@ module.exports = {
         "space-before-blocks": "off",
 
         // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+        "@typescript-eslint/consistent-type-exports": ["error", {
+          fixMixedExportsWithInlineTypeSpecifier: false,
+        }],
         "@typescript-eslint/consistent-type-imports": ["error", {
           prefer: "type-imports",
           disallowTypeAnnotations: false,

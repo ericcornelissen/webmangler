@@ -16,10 +16,11 @@ interface BuiltInLanguagesOptions extends
 /**
  * Type of the constructor of a {@link WebManglerLanguagePlugin}.
  */
-export type WebManglerLanguagePluginClass = {
+type WebManglerLanguagePluginClass = {
   new(options?: unknown): WebManglerLanguagePlugin;
 };
 
-export type {
+export {
   BuiltInLanguagesOptions,
+  WebManglerLanguagePluginClass,
 };
