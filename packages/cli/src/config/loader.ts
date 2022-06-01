@@ -1,4 +1,4 @@
-import type { WebManglerOptions } from "@webmangler/types";
+import type { WebManglerCliConfig, WebManglerCliOptions } from "./types";
 
 import { DEFAULT_CONFIG_PATHS, MODULE_NAME } from "./constants";
 import { newDefaultConfig } from "./default";
@@ -46,7 +46,7 @@ type NewLoader = (
 function loadSpecificConfiguration(
   loader: NewLoader,
   configPath: string,
-): WebManglerOptions {
+): WebManglerCliOptions {
   const explorer = loader(MODULE_NAME);
 
   const result = explorer.load(configPath);
@@ -54,7 +54,7 @@ function loadSpecificConfiguration(
     throw new Error(`No configuration file found at ${configPath}`);
   }
 
-  return result.config as WebManglerOptions;
+  return result.config as WebManglerCliOptions;
 }
 
 /**
@@ -64,7 +64,7 @@ function loadSpecificConfiguration(
  * @param loader A {@link Loader}.
  * @returns The {@link WebManglerOptions}.
  */
-function searchDefaultPaths(loader: NewLoader): WebManglerOptions {
+function searchDefaultPaths(loader: NewLoader): WebManglerCliOptions {
   const explorer = loader(MODULE_NAME, {
     searchPlaces: DEFAULT_CONFIG_PATHS,
   });
@@ -74,7 +74,25 @@ function searchDefaultPaths(loader: NewLoader): WebManglerOptions {
     return newDefaultConfig();
   }
 
-  return result.config as WebManglerOptions;
+  return result.config as WebManglerCliOptions;
+}
+
+/**
+ * Convert {@link WebManglerCliOptions} into {@link WebManglerCliConfig} by
+ * filling in optional options with their defaults (if not present).
+ *
+ * @param options The {@link WebManglerCliOptions}.
+ * @returns The {@link WebManglerCliConfig}.
+ */
+function convertCliOptionsToConfig(
+  options: WebManglerCliOptions,
+): WebManglerCliConfig {
+  const defaultConfiguration = newDefaultConfig();
+  return {
+    plugins: options.plugins,
+    languages: options.languages,
+    reporters: options.reporters || defaultConfiguration.reporters,
+  };
 }
 
 /**
@@ -84,12 +102,12 @@ function searchDefaultPaths(loader: NewLoader): WebManglerOptions {
  * @returns A function to get the _WebMangler_ CLI configuration.
  */
 function newGetConfiguration(newLoader: NewLoader) {
-  return (configPath?: string): WebManglerOptions => {
-    if (configPath !== undefined) {
-      return loadSpecificConfiguration(newLoader, configPath);
-    } else {
-      return searchDefaultPaths(newLoader);
-    }
+  return (configPath?: string): WebManglerCliConfig => {
+    const options = (configPath === undefined) ?
+      searchDefaultPaths(newLoader) :
+      loadSpecificConfiguration(newLoader, configPath);
+
+    return convertCliOptionsToConfig(options);
   };
 }
 

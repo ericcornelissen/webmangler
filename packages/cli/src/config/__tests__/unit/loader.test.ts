@@ -4,6 +4,7 @@ import { expect, use as chaiUse } from "chai";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
+import { newDefaultConfig } from "../../default";
 import { newGetConfiguration } from "../../loader";
 
 chaiUse(sinonChai);
@@ -17,6 +18,8 @@ suite("Configuration loader", function() {
     readonly search: SinonStub;
   };
 
+  let defaultConfig: ReturnType<typeof newDefaultConfig>;
+
   suiteSetup(function() {
     newLoader = sinon.stub();
     loader = {
@@ -27,6 +30,8 @@ suite("Configuration loader", function() {
     newLoader.returns(loader);
 
     getConfiguration = newGetConfiguration(newLoader);
+
+    defaultConfig = newDefaultConfig();
   });
 
   suite("With a configuration path", function() {
@@ -37,8 +42,11 @@ suite("Configuration loader", function() {
       loader.load.reset();
     });
 
-    test("configuration file exists and is not empty", function() {
-      const config = { foo: "bar" };
+    test("configuration file exists, is not empty, no reporters", function() {
+      const config = {
+        languages: ["foo"],
+        plugins: ["bar"],
+      };
 
       loader.load.returns({
         isEmpty: false,
@@ -46,7 +54,26 @@ suite("Configuration loader", function() {
       });
 
       const result = getConfiguration(configPath);
-      expect(result).to.equal(config);
+      expect(result).to.deep.equal({
+        ...config,
+        reporters: defaultConfig.reporters,
+      });
+    });
+
+    test("configuration file exists, is not empty, with reporters", function() {
+      const config = {
+        languages: ["praise"],
+        plugins: ["the"],
+        reporters: ["sun"],
+      };
+
+      loader.load.returns({
+        isEmpty: false,
+        config: config,
+      });
+
+      const result = getConfiguration(configPath);
+      expect(result).to.deep.equal(config);
     });
 
     test("configuration file exist but is empty", function() {
@@ -65,7 +92,11 @@ suite("Configuration loader", function() {
   });
 
   suite("Without a configuration path", function() {
-    const config = { foo: "bar" };
+    const config = {
+      languages: ["praise"],
+      plugins: ["the"],
+      reporters: ["sun"],
+    };
 
     setup(function() {
       loader.search.reset();
@@ -78,7 +109,7 @@ suite("Configuration loader", function() {
       });
 
       const result = getConfiguration(undefined);
-      expect(result).to.equal(config);
+      expect(result).to.deep.equal(config);
     });
 
     test("a default config exists but is empty", function() {
@@ -88,7 +119,7 @@ suite("Configuration loader", function() {
       });
 
       const result = getConfiguration(undefined);
-      expect(result).not.to.equal(config);
+      expect(result).not.to.deep.equal(config);
     });
 
     test("no default config exists", function() {
