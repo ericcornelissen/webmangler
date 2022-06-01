@@ -86,7 +86,7 @@ module.exports = {
     "import/export": "error",
     "import/exports-last": "error",
     "import/first": "error",
-    "import/group-exports": "off",
+    "import/group-exports": "error",
     "import/max-dependencies": "off",
     "import/named": "error",
     "import/namespace": "error",
