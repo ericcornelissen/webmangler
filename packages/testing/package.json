@@ -19,7 +19,7 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "clean": "rm -rf lib/ *.tsbuildinfo",
+    "clean": "del-cli lib/ *.tsbuildinfo",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
