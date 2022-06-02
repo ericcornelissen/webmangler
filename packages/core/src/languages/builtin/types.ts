@@ -20,7 +20,7 @@ type WebManglerLanguagePluginClass = {
   new(options?: unknown): WebManglerLanguagePlugin;
 };
 
-export {
+export type {
   BuiltInLanguagesOptions,
   WebManglerLanguagePluginClass,
 };
