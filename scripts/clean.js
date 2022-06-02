@@ -4,6 +4,7 @@
  * Restore the repository to a clean state, removing all generated files.
  */
 
+import * as fs from "fs";
 import * as path from "path";
 import process from "process";
 
@@ -54,12 +55,10 @@ function removeFilesAndFolders(argv) {
     filesAndFoldersToRemove.push(...HARD_DELETE_ONLY);
   }
 
-  execSync("rm", [
-    "-rf",
-    ...filesAndFoldersToRemove.map(
-      (fileOrFolder) => path.resolve(paths.projectRoot, fileOrFolder),
-    ),
-  ]);
+  for (const fileOrFolder of filesAndFoldersToRemove) {
+    const fullPath = path.resolve(paths.projectRoot, fileOrFolder);
+    fs.rmSync(fullPath, { force: true, recursive: true });
+  }
 }
 
 function resetTestData() {
