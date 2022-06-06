@@ -8,7 +8,7 @@ import type { JavaScriptLanguagePluginOptions } from "@webmangler/language-js";
  *
  * @since v0.1.21
  */
-export interface BuiltInLanguagesOptions extends
+interface BuiltInLanguagesOptions extends
   CssLanguagePluginOptions,
   HtmlLanguagePluginOptions,
   JavaScriptLanguagePluginOptions { }
@@ -16,6 +16,11 @@ export interface BuiltInLanguagesOptions extends
 /**
  * Type of the constructor of a {@link WebManglerLanguagePlugin}.
  */
-export type WebManglerLanguagePluginClass = {
+type WebManglerLanguagePluginClass = {
   new(options?: unknown): WebManglerLanguagePlugin;
+};
+
+export type {
+  BuiltInLanguagesOptions,
+  WebManglerLanguagePluginClass,
 };

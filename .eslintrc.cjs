@@ -86,7 +86,7 @@ module.exports = {
     "import/export": "error",
     "import/exports-last": "error",
     "import/first": "error",
-    "import/group-exports": "off",
+    "import/group-exports": "error",
     "import/max-dependencies": "off",
     "import/named": "error",
     "import/namespace": "error",
@@ -233,6 +233,9 @@ module.exports = {
         "space-before-blocks": "off",
 
         // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+        "@typescript-eslint/consistent-type-exports": ["error", {
+          fixMixedExportsWithInlineTypeSpecifier: false,
+        }],
         "@typescript-eslint/consistent-type-imports": ["error", {
           prefer: "type-imports",
           disallowTypeAnnotations: false,
