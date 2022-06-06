@@ -7,10 +7,11 @@
  * included in the output for "performance".
  */
 
-import * as fs from "fs";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import process from "node:process";
+
 import micromatch from "micromatch";
-import * as path from "path";
-import process from "process";
 
 import log from "../utilities/log.js";
 import * as paths from "../utilities/paths.js";

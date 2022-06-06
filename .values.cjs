@@ -1,6 +1,6 @@
 "use strict";
 
-const process = require("process");
+const process = require("node:process");
 
 const testSuffix = "test";
 
@@ -51,8 +51,8 @@ if (packagesList.includes("cli")) {
 }
 
 function getAllPackagesAsArray() {
-  const fs = require("fs");
-  const path = require("path");
+  const fs = require("node:fs");
+  const path = require("node:path");
   const absPackagesDir = path.resolve(__dirname, "packages");
   const packagesArray = fs.readdirSync(absPackagesDir);
   return packagesArray;
