@@ -36,6 +36,7 @@ import * as helpers from "./helpers";
  * @version v0.1.26
  */
 const CssLanguagePlugin = initCssLanguagePlugin({
+  getEmbedFinders: helpers.getEmbedFinders,
   getExpressionFactories: helpers.getExpressionFactories,
   getLanguages: helpers.getLanguages,
 });

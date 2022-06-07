@@ -1,4 +1,7 @@
-import type { ExpressionFactory } from "@webmangler/language-utils";
+import type {
+  EmbedsGetter,
+  ExpressionFactory,
+} from "@webmangler/language-utils";
 
 import * as factories from "./expressions";
 
@@ -8,6 +11,16 @@ import * as factories from "./expressions";
 const DEFAULT_LANGUAGES: Iterable<string> = [
   "css",
 ];
+
+/**
+ * Get the embed finders for a new {@link HtmlLanguagePlugin} instance.
+ *
+ * @returns The embed finders.
+ */
+function getEmbedFinders(): Iterable<EmbedsGetter> {
+  // TODO: Add implementation
+  return [];
+}
 
 /**
  * Get all the expression factories for a new {@link CssLanguagePlugin}
@@ -57,6 +70,7 @@ function getLanguages(
 }
 
 export {
+  getEmbedFinders,
   getExpressionFactories,
   getLanguages,
 };

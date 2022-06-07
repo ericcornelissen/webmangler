@@ -1,11 +1,26 @@
 import { expect } from "chai";
 
 import {
+  getEmbedFinders,
   getExpressionFactories,
   getLanguages,
 } from "../../helpers";
 
 suite("CSS language plugin helpers", function() {
+  suite("::getEmbedFinders", function() {
+    let subject: ReturnType<typeof getEmbedFinders>;
+
+    suiteSetup(function() {
+      subject = getEmbedFinders();
+    });
+
+    // TODO: Enable test when `getEmbedFinders` is implemented
+    test.skip("at least one (CSS)", function() {
+      const length = Array.from(subject).length;
+      expect(length).to.be.at.least(1);
+    });
+  });
+
   suite("::getExpressionFactories", function() {
     let subject: ReturnType<typeof getExpressionFactories>;
 
