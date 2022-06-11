@@ -1,0 +1,29 @@
+name: Question
+description: Ask a question about WebMangler
+labels:
+  - question
+
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Note: Please search to see if an issue already exists for the question.
+  - type: input
+    attributes:
+      label: Package(s)
+      description: >-
+        Specify the package(s) you're asking a question about and include the
+        version of the package(s) you're currently using.
+
+
+        Leave blank if you're unsure what package the question is about.
+      placeholder: >-
+        Example: webmangler (v2.7.1), webmangler-cli (v3.1.4)
+  - type: textarea
+    attributes:
+      label: Question
+      description: >-
+        Describe what your question is and, if possible, why you have this
+        question.
+    validations:
+      required: true
