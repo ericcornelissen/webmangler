@@ -1,11 +1,11 @@
 import type { TestScenarios } from "@webmangler/testing";
-
-import type { IdentifiableWebManglerEmbed } from "../../embeds";
 import type {
   WebManglerEmbed,
   WebManglerFile,
   WebManglerLanguagePlugin,
-} from "../../types";
+} from "@webmangler/types";
+
+import type { IdentifiableWebManglerEmbed } from "../../embeds";
 
 import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
