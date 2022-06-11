@@ -15,7 +15,10 @@ function tryLogError(error) {
 
 export default function execSync(command, args, options) {
   try {
-    cp.execFileSync(command, args, options);
+    cp.execFileSync(command, args, {
+      ...options,
+      shell: true,
+    });
   } catch (error) {
     tryLogError(error);
     process.exit(1);
