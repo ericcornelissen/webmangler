@@ -9,6 +9,8 @@ Versioning].
 ## [Unreleased]
 
 - BREAKING: Require plugins to specify a character set. ([#274])
+- BREAKING: Use `Collection` type in `WebManglerOptions`. ([#306])
+- Export `Collection` type definition. ([#306])
 
 ## [0.1.25] - 2022-01-29
 
@@ -26,5 +28,6 @@ Versioning].
 [#185]: https://github.com/ericcornelissen/webmangler/pull/185
 [#248]: https://github.com/ericcornelissen/webmangler/pull/248
 [#274]: https://github.com/ericcornelissen/webmangler/pull/274
+[#306]: https://github.com/ericcornelissen/webmangler/pull/306
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
