@@ -1,0 +1,59 @@
+name: Feature Request
+description: Request a feature for WebMangler
+labels:
+  - enhancement
+
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Note: Please search to see if an issue already exists for the feature
+        you're request.
+  - type: input
+    attributes:
+      label: Package(s)
+      description: >-
+        Specify the package(s) for which you're requesting a feature and include
+        the version of the package(s) you're currently using.
+
+
+        Leave blank if you're unsure to what package the feature belongs.
+      placeholder: >-
+        Example: webmangler (v2.7.1), webmangler-cli (v3.1.4)
+  - type: textarea
+    attributes:
+      label: Description
+      description: >-
+        Describe the feature at a high level.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Motivation
+      description: >-
+        Explain _why_ the requested feature should be considered. For example,
+        provide an example use case.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposal
+      description: >-
+        Provide a detailed description of how the feature should work. This may
+        include things like requirements, diagrams, etc.
+
+
+        Leave blank if you're unsure.
+  - type: textarea
+    attributes:
+      label: Alternatives
+      description: >-
+        Describe alternative technical solutions for the requested feature.
+
+
+        Only necessary when also providing a Proposal.
+  - type: textarea
+    attributes:
+      label: Notes
+      description: >-
+        Provide any additional context that might be useful.
