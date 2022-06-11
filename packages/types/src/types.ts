@@ -1,4 +1,5 @@
 import type { CharSet } from "./characters";
+import type { Collection } from "./utils";
 
 /**
  * A set of generic options used by the {@link MangleEngine} for mangling.
@@ -240,24 +241,24 @@ interface WebManglerLanguagePlugin {
  * Type defining the available options for _WebMangler_.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.26
  */
 interface WebManglerOptions {
   /**
    * The plugins to be used by the _WebMangler_.
    *
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.26
    */
-  plugins: Iterable<WebManglerPlugin>;
+  plugins: Collection<WebManglerPlugin>;
 
   /**
    * The plugins of language to support.
    *
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.26
    */
-  languages: Iterable<WebManglerLanguagePlugin>;
+  languages: Collection<WebManglerLanguagePlugin>;
 }
 
 /**
