@@ -15,6 +15,7 @@ const {
 
 const INDENT_SIZE = 2;
 const JS_GLOBALS = {
+  console: "readonly",
   module: "readonly",
   require: "readonly",
 };

@@ -3,7 +3,7 @@
  * Provides a collection of functions to work with CLI flags.
  */
 
-import process from "process";
+import process from "node:process";
 
 import log from "./log.js";
 

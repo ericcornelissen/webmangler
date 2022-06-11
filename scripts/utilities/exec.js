@@ -3,7 +3,8 @@
  * Provides a way to execute other programs.
  */
 
-import * as cp from "child_process";
+import * as cp from "node:child_process";
+import process from "node:process";
 
 function tryLogError(error) {
   if (error.stdout) {
