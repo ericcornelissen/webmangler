@@ -14,8 +14,7 @@ suite("CSS language plugin helpers", function() {
       subject = getEmbedFinders();
     });
 
-    // TODO: Enable test when `getEmbedFinders` is implemented
-    test.skip("at least one (CSS)", function() {
+    test("at least one (CSS)", function() {
       const length = Array.from(subject).length;
       expect(length).to.be.at.least(1);
     });

@@ -3,6 +3,7 @@ import type {
   ExpressionFactory,
 } from "@webmangler/language-utils";
 
+import * as embeds from "./embeds";
 import * as factories from "./expressions";
 
 /**
@@ -18,8 +19,9 @@ const DEFAULT_LANGUAGES: Iterable<string> = [
  * @returns The embed finders.
  */
 function getEmbedFinders(): Iterable<EmbedsGetter> {
-  // TODO: Add implementation
-  return [];
+  return [
+    ...embeds.embeddedCssFinders,
+  ];
 }
 
 /**
