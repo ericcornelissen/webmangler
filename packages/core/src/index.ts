@@ -1,4 +1,5 @@
 import type {
+  Collection,
   MangleExpression,
   MangleExpressionOptions,
   MangleOptions,
@@ -64,9 +65,9 @@ function getExpressions(
  * @param options The options for the mangler.
  * @returns The mangled files.
  * @since v0.1.0
- * @version v0.1.21
+ * @version v0.1.26
  */
-function webmangler<Files extends Iterable<WebManglerFile>>(
+function webmangler<Files extends Collection<WebManglerFile>>(
   files: Files,
   options: WebManglerOptions,
 ): { files: Files; } {

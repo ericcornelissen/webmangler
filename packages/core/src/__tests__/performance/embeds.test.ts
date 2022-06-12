@@ -1,4 +1,5 @@
 import type {
+  Collection,
   WebManglerFile,
   WebManglerLanguagePlugin,
 } from "@webmangler/types";
@@ -40,8 +41,8 @@ suite("Core embeds", function() {
   test("getEmbeds", function() {
     const budget = getRuntimeBudget(3);
 
-    const files: Iterable<WebManglerFile> = [file];
-    const plugins: Iterable<WebManglerLanguagePlugin> = [
+    const files: Collection<WebManglerFile> = [file];
+    const plugins: Collection<WebManglerLanguagePlugin> = [
       new WebManglerLanguagePluginMock({
         getEmbeds: sinon.stub().returns(embeds),
       }),

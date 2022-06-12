@@ -21,11 +21,15 @@ import type {
   WebManglerOptions,
   WebManglerPlugin,
 } from "./types";
+import type {
+  Collection,
+} from "./utils";
 
 export type {
   AttributeOptions,
   Char,
   CharSet,
+  Collection,
   CssDeclarationPropertyOptions,
   CssDeclarationValueOptions,
   MangleEngineOptions,
