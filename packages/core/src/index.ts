@@ -6,7 +6,7 @@ import type {
   WebManglerOptions,
   WebManglerPlugin,
   WebManglerLanguagePlugin,
-} from "./types";
+} from "@webmangler/types";
 
 import { getEmbeds, reEmbed } from "./embeds";
 import manglerEngine from "./engine";
