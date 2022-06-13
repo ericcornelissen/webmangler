@@ -101,7 +101,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.0.2
       - name: Cache compiled package
-        uses: actions/cache@v3.0.3
+        uses: actions/cache@v3.0.4
         with:
           path: |
             packages/*/build
@@ -135,7 +135,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.0.2
       - name: Cache compiled package
-        uses: actions/cache@v3.0.3
+        uses: actions/cache@v3.0.4
         with:
           path: |
             packages/*/build
@@ -170,7 +170,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.0.2
       - name: Cache compiled package
-        uses: actions/cache@v3.0.3
+        uses: actions/cache@v3.0.4
         with:
           path: |
             packages/*/build
@@ -211,7 +211,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.0.2
       - name: Cache compiled package
-        uses: actions/cache@v3.0.3
+        uses: actions/cache@v3.0.4
         with:
           path: |
             packages/*/build
