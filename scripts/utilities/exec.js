@@ -15,7 +15,7 @@ function tryLogError(error) {
 
 export default function execSync(command, args, options) {
   try {
-    cp.execFileSync(command, args, {
+    cp.spawnSync(command, args, {
       ...options,
       shell: true,
     });
