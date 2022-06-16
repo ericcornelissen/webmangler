@@ -23,6 +23,7 @@ import type {
 } from "./types";
 import type {
   Collection,
+  ReadonlyCollection,
 } from "./utils";
 
 export type {
@@ -38,6 +39,7 @@ export type {
   MangleOptions,
   MultiValueAttributeOptions,
   QuerySelectorOptions,
+  ReadonlyCollection,
   SingleValueAttributeOptions,
   WebManglerEmbed,
   WebManglerFile,
