@@ -15,10 +15,14 @@ function tryLogError(error) {
 
 export default function execSync(command, args, options) {
   try {
-    cp.spawnSync(command, args, {
+    const child = cp.spawnSync(command, args, {
       ...options,
       shell: true,
     });
+
+    if (child.status !== 0) {
+      process.exit(child.status);
+    }
   } catch (error) {
     tryLogError(error);
     process.exit(1);
