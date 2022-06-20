@@ -1,4 +1,6 @@
 # WebMangler
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fwebmangler.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fwebmangler?ref=badge_shield)
+
 
 > :warning: WebMangler is currently in alpha development. There are still bugs
 > and APIs are still being changed. Use it at your own risk.
@@ -111,3 +113,7 @@ version.
 
 [cssnano]: https://cssnano.co/
 [terser]: https://terser.org/
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fwebmangler.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fwebmangler?ref=badge_large)
