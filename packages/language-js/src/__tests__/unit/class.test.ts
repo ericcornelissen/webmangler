@@ -21,6 +21,9 @@ suite("JavaScriptLanguagePlugin class", function() {
     getExpressionFactories = sinon.stub();
     getLanguages = sinon.stub();
 
+    getExpressionFactories.returns(new Map());
+    getLanguages.returns([]);
+
     JavaScriptLanguagePlugin = initJavaScriptLanguagePlugin({
       getExpressionFactories,
       getLanguages,
