@@ -12,6 +12,7 @@ Versioning].
 - BREAKING: Use `Collection` type in `WebManglerOptions`. ([#306])
 - Export `Collection` type definition. ([#306])
 - Export `ReadonlyCollection` type definition. ([#311])
+- Make fields of mangler expression option types `readonly`. ([#314])
 
 ## [0.1.25] - 2022-01-29
 
@@ -31,5 +32,6 @@ Versioning].
 [#274]: https://github.com/ericcornelissen/webmangler/pull/274
 [#306]: https://github.com/ericcornelissen/webmangler/pull/306
 [#311]: https://github.com/ericcornelissen/webmangler/pull/311
+[#314]: https://github.com/ericcornelissen/webmangler/pull/314
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
