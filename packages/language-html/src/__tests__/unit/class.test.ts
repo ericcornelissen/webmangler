@@ -23,6 +23,10 @@ suite("HtmlLanguagePlugin class", function() {
     getExpressionFactories = sinon.stub();
     getLanguages = sinon.stub();
 
+    getEmbedFinders.returns([]);
+    getExpressionFactories.returns(new Map());
+    getLanguages.returns([]);
+
     HtmlLanguagePlugin = initHtmlLanguagePlugin({
       getEmbedFinders,
       getExpressionFactories,
