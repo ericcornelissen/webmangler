@@ -2,7 +2,7 @@ import type { TestCase } from "./types";
 
 import {
   embedContentInContext,
-} from "../../../../expressions/__tests__/common/benchmark-helpers";
+} from "../../../../__tests__/common";
 
 export {
   embedContentInContext,
