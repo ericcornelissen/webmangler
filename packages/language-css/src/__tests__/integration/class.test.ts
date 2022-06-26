@@ -20,14 +20,30 @@ suite("The @webmangler/language-css plugin", function() {
   });
 
   suite("::getEmbeds", function() {
-    test("does not throw", function() {
+    let plugin: WebManglerLanguagePlugin;
+
+    setup(function() {
+      plugin = new CssLanguagePlugin();
+    });
+
+    test("no embeds", function() {
       const file = {
         type: "css",
         content: ".foo { color: red; }",
       };
 
-      const plugin = new CssLanguagePlugin();
-      expect(() => plugin.getEmbeds(file)).not.to.throw();
+      const result = plugin.getEmbeds(file);
+      expect(result).to.have.length(0);
+    });
+
+    test("media query", function() {
+      const file = {
+        type: "css",
+        content: "@media screen { .foo { color: red; } }",
+      };
+
+      const result = plugin.getEmbeds(file);
+      expect(result).to.have.length(1);
     });
   });
 
