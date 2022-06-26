@@ -26,6 +26,7 @@ const {
 const RUN_MUTATION_TESTING = [
   "cli",
   "benchmarking",
+  "core",
   "language-css",
   "language-html",
   "language-js",
