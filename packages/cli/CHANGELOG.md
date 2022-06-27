@@ -8,7 +8,9 @@ Versioning].
 
 ## [Unreleased]
 
-- Add a JSON reporter. ([#315])
+- Add support for configuring the reporter of mangling results. ([#291])
+- Export a JSON reporter. ([#315])
+- Export the (pre-existing) default reporter. ([#318])
 - Use file handles when obtaining `--version` information. ([#280])
 
 ## [0.1.7] - 2022-01-29
@@ -61,6 +63,8 @@ Versioning].
 
 [#244]: https://github.com/ericcornelissen/webmangler/pull/244
 [#280]: https://github.com/ericcornelissen/webmangler/pull/280
+[#291]: https://github.com/ericcornelissen/webmangler/pull/291
 [#315]: https://github.com/ericcornelissen/webmangler/pull/315
+[#318]: https://github.com/ericcornelissen/webmangler/pull/318
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
