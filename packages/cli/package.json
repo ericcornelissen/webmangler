@@ -25,6 +25,7 @@
   },
   "scripts": {
     "clean": "del-cli lib/ *.tsbuildinfo",
+    "precli": "npm run compile",
     "cli": "ts-node -r tsconfig-paths/register src/index.ts",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
