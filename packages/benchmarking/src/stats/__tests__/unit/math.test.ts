@@ -9,7 +9,7 @@ import {
 suite("Benchmarking stats maths", function() {
   suite("::medianOf", function() {
     interface TestCase {
-      readonly values: number[];
+      readonly values: ReadonlyArray<number>;
       readonly expected: number;
     }
 
