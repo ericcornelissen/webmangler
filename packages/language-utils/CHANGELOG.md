@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.27] - 2022-06-29
+
 - Update `patternTemplate` format for mangle expressions. ([#258])
 - Update interface of `SimpleLanguagePlugin`. ([#310])
 

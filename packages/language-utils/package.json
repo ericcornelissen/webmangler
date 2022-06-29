@@ -1,6 +1,6 @@
 {
   "name": "@webmangler/language-utils",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "Utilities for building WebMangler language plugins",
   "license": "MIT",
   "main": "./lib/index.js",
