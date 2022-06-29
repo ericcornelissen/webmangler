@@ -95,11 +95,11 @@ function initHtmlLanguagePlugin({
      * @version v0.1.17
      */
     constructor(options: HtmlLanguagePluginOptions={}) {
-      super(
-        getLanguages(options),
-        getExpressionFactories(options),
-        getEmbedFinders(options),
-      );
+      super({
+        embedsGetters: getEmbedFinders(options),
+        expressionFactories: getExpressionFactories(options),
+        languages: getLanguages(options),
+      });
     }
   };
 }
