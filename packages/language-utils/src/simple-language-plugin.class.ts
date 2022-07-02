@@ -63,7 +63,7 @@ interface SimpleLanguagePluginOptions {
  * {@link WebManglerLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.26
+ * @version v0.1.28
  */
 abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
   /**
@@ -97,28 +97,15 @@ abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
    *   }
    * }
    * @param params The {@link SimpleLanguagePluginOptions}.
-   * @param [expressionFactories] The {@link ExpressionFactory}s to use.
-   * @param [embedsGetters] The {@link EmbedsGetter} to use.
    * @since v0.1.15
-   * @version v0.1.27
-   * @deprecated Update to use the `params` parameter.
+   * @version v0.1.28
    */
   constructor(
-    params: Iterable<string> | SimpleLanguagePluginOptions,
-    expressionFactories?: Map<string, ExpressionFactory>,
-    embedsGetters?: Iterable<EmbedsGetter>,
+    params: SimpleLanguagePluginOptions,
   ) {
-    const paramsAsIterable = params as unknown as Iterable<string>;
-    if (typeof paramsAsIterable[Symbol.iterator] === "function") {
-      this.embedsGetters = embedsGetters || [];
-      this.expressionFactories = expressionFactories as Map<string, ExpressionFactory>; // eslint-disable-line max-len
-      this.languages =paramsAsIterable;
-    } else {
-      const _params = params as unknown as SimpleLanguagePluginOptions;
-      this.embedsGetters = _params.embedsGetters || [];
-      this.expressionFactories = _params.expressionFactories;
-      this.languages = _params.languages;
-    }
+    this.embedsGetters = params.embedsGetters || [];
+    this.expressionFactories = params.expressionFactories;
+    this.languages = params.languages;
   }
 
   /**

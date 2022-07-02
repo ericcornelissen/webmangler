@@ -17,12 +17,8 @@ import SimpleLanguagePlugin from "../../simple-language-plugin.class";
 chaiUse(sinonChai);
 
 class ConcreteSimpleLanguagePlugin extends SimpleLanguagePlugin {
-  constructor(
-    languages: string[] | SimpleLanguagePluginOptions,
-    expressionFactories?: Map<string, ExpressionFactory>,
-    embedsGetters?: Iterable<EmbedsGetter>,
-  ) {
-    super(languages, expressionFactories, embedsGetters);
+  constructor(params: SimpleLanguagePluginOptions) {
+    super(params);
   }
 }
 
@@ -110,31 +106,6 @@ suite("SimpleLanguagePlugin", function() {
     ];
 
     for (const { name, cases } of scenarios) {
-      test(`${name}, deprecated constructor`, function() {
-        for (const testCase of cases) {
-          const { embedsGetters, expectedEmbeds, languages } = testCase;
-          const plugin = new ConcreteSimpleLanguagePlugin(
-            languages,
-            new Map(),
-            embedsGetters,
-          );
-
-          const unsupportedFile = { content: "", type: "not a language" };
-          const noEmbeds = plugin.getEmbeds(unsupportedFile);
-          expect(noEmbeds).to.have.length(0);
-
-          for (const [i, language] of languages.entries()) {
-            const file = { content: "", type: language };
-            const embeds = plugin.getEmbeds(file);
-            expect(embeds).to.deep.equal(expectedEmbeds);
-
-            for (const embedsGetter of embedsGetters) {
-              expect(embedsGetter).to.have.callCount(i + 1);
-            }
-          }
-        }
-      });
-
       test(name, function() {
         for (const testCase of cases) {
           const { embedsGetters, expectedEmbeds, languages } = testCase;
@@ -218,29 +189,6 @@ suite("SimpleLanguagePlugin", function() {
     ];
 
     for (const { name, cases } of scenarios) {
-      test(`${name}, deprecated constructor`, function() {
-        for (const testCase of cases) {
-          const { testGets, languages, factories } = testCase;
-          expect(testGets).to.have.length.above(0);
-
-          const plugin = new ConcreteSimpleLanguagePlugin(languages, factories);
-          for (const { expressionSetName, options } of testGets) {
-            const result = plugin.getExpressions(expressionSetName, options);
-            if (factories.has(expressionSetName)) {
-              expect(result).to.have.lengthOf(languages.length);
-              result.forEach((_, language) => {
-                expect(languages).to.include(language);
-              });
-
-              const factory = factories.get(expressionSetName);
-              expect(factory).to.have.been.calledWith(options);
-            } else {
-              expect(result).to.be.empty;
-            }
-          }
-        }
-      });
-
       test(name, function() {
         for (const testCase of cases) {
           const { testGets, languages, factories } = testCase;
@@ -290,17 +238,6 @@ suite("SimpleLanguagePlugin", function() {
     ];
 
     for (const { name, cases } of scenarios) {
-      test(`${name}, deprecated constructor`, function() {
-        for (const languages of cases) {
-          const plugin = new ConcreteSimpleLanguagePlugin(languages, factories);
-          const result = plugin.getLanguages();
-          expect(result).to.have.lengthOf(languages.length);
-          for (const language of languages) {
-            expect(result).to.include(language);
-          }
-        }
-      });
-
       test(name, function() {
         for (const languages of cases) {
           const plugin = new ConcreteSimpleLanguagePlugin({
