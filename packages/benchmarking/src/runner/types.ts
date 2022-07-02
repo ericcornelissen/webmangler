@@ -12,7 +12,7 @@ type BenchmarkCallback = () => void;
  *
  * @since v0.1.1
  */
-type BenchmarkParameters = {
+interface BenchmarkParameters {
   /**
    * To function to benchmark.
    *
@@ -25,8 +25,8 @@ type BenchmarkParameters = {
    * benchmark repetition and its resources ARE NOT included in the benchmarking
    * results.
    *
-   * @since v0.1.1
    * @default `() => { }`
+   * @since v0.1.1
    */
   readonly setup?: BenchmarkSetup;
 
@@ -37,8 +37,8 @@ type BenchmarkParameters = {
    * NOTE: This number is assumed to be greater than 0. If it is less than or
    * equal to 0, the package behaviour is not defined.
    *
-   * @since v0.1.1
    * @default {@link DEFAULT_REPETITIONS}.
+   * @since v0.1.1
    */
   readonly repetitions?: number;
 }

@@ -27,7 +27,7 @@ suite("Benchmarking runner", function() {
     });
 
     test("custom iterations", function() {
-      const testCases: number[] = [1, 25, 50, 75];
+      const testCases: ReadonlyArray<number> = [1, 25, 50, 75];
       for (const repetitions of testCases) {
         const spy = sinon.spy();
 
@@ -49,7 +49,7 @@ suite("Benchmarking runner", function() {
     });
 
     test("setup with custom iterations", function() {
-      const testCases: number[] = [1, 25, 50, 75];
+      const testCases: ReadonlyArray<number> = [1, 25, 50, 75];
       for (const repetitions of testCases) {
         const setupSpy = sinon.spy();
 

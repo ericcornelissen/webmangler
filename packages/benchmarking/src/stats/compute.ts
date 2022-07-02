@@ -10,7 +10,7 @@ interface Math {
    * @param numbers A collection of numbers.
    * @returns The median number.
    */
-  medianOf(numbers: number[]): number;
+  medianOf(numbers: ReadonlyArray<number>): number;
 }
 
 /**
@@ -21,7 +21,7 @@ interface Math {
  * @returns A function to compute stats from {@link BenchmarkRunStats}.
  */
 function newComputeStats(math: Math) {
-  return (results: BenchmarkRunStats[]): BenchmarkStats => {
+  return (results: ReadonlyArray<BenchmarkRunStats>): BenchmarkStats => {
     const durations = results.map((result) => result.duration);
 
     return {
