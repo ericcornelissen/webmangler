@@ -28,7 +28,7 @@
     "postpublish": "npm run clean"
   },
   "dependencies": {
-    "@webmangler/language-utils": "^0.1.26",
+    "@webmangler/language-utils": "^0.1.27",
     "@webmangler/types": "^0.1.25"
   },
   "engines": {
