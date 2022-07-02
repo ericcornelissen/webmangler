@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.26] - 2022-07-02
+
 - BREAKING: Change `Iterable` on API to `Collection`. ([#306])
 - BREAKING: Require plugins to specify a character set. ([#274])
 - Add missing direct dependencies. ([#264])

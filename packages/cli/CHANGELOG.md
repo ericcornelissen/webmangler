@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.8] - 2022-07-02
+
 - Add support for configuring the reporter of mangling results. ([#291])
 - Export a JSON reporter. ([#315])
 - Export the (pre-existing) default reporter. ([#318])
