@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.26] - 2022-07-02
+
 - BREAKING: Require plugins to specify a character set. ([#274])
 - BREAKING: Use `Collection` type in `WebManglerOptions`. ([#306])
 - Export `Collection` type definition. ([#306])
