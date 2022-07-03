@@ -10,7 +10,6 @@ import {
   WebManglerLanguagePluginMock,
 } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
-import * as _ from "lodash";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
@@ -46,16 +45,14 @@ suite("BuiltInLanguages class", function() {
   });
 
   suite("CssLanguagePlugin", function() {
-    const CssLanguagePluginKeys: string[] = [
-      "cssExtensions",
-    ];
-
     setup(function() {
       CssLanguagePluginConstructor.resetHistory();
     });
 
     test("configure the CssLanguagePlugin", function() {
-      const optionsValueSource = _.pick(optionsValues, CssLanguagePluginKeys);
+      const optionsValueSource = {
+        cssExtensions: optionsValues.cssExtensions,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         CssLanguagePluginConstructor.resetHistory();
@@ -76,16 +73,14 @@ suite("BuiltInLanguages class", function() {
   });
 
   suite("HtmlLanguagePlugin", function() {
-    const HtmlLanguagePluginKeys: string[] = [
-      "htmlExtensions",
-    ];
-
     setup(function() {
       HtmlLanguagePluginConstructor.resetHistory();
     });
 
     test("configure the HtmlLanguagePlugin", function() {
-      const optionsValueSource = _.pick(optionsValues, HtmlLanguagePluginKeys);
+      const optionsValueSource = {
+        htmlExtensions: optionsValues.htmlExtensions,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         HtmlLanguagePluginConstructor.resetHistory();
@@ -106,16 +101,14 @@ suite("BuiltInLanguages class", function() {
   });
 
   suite("JsLanguagePlugin", function() {
-    const JsLanguagePluginKeys: string[] = [
-      "jsExtensions",
-    ];
-
     setup(function() {
       JsLanguagePluginConstructor.resetHistory();
     });
 
     test("configure the JavaScriptLanguagePlugin", function() {
-      const optionsValueSource = _.pick(optionsValues, JsLanguagePluginKeys);
+      const optionsValueSource = {
+        jsExtensions: optionsValues.jsExtensions,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         JsLanguagePluginConstructor.resetHistory();
