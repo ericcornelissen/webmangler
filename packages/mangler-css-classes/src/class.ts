@@ -22,58 +22,61 @@ interface CssClassManglerDependencies {
   /**
    * Get the {@link CharSet} for the {@link CssClassMangler}.
    *
+   * @param options The {@link CssClassManglerOptions}.
    * @returns The {@link CharSet}.
    */
-  getCharacterSet(): CharSet;
+  getCharacterSet(
+    options: CssClassManglerOptions,
+  ): CharSet;
 
   /**
    * Get the ignore patterns for the {@link CssClassMangler}.
    *
-   * @param ignoreClassNamePattern The configured ignore patterns.
+   * @param options The {@link CssClassManglerOptions}.
    * @returns The ignore patterns.
    */
   getIgnorePatterns(
-    ignoreClassNamePattern?: string | Iterable<string>,
+    options: CssClassManglerOptions,
   ): string | Iterable<string>;
 
   /**
    * Get the language options for the {@link CssClassMangler}.
    *
-   * @param options The options provided to the {@link CssClassMangler}.
+   * @param options The {@link CssClassManglerOptions}.
    * @returns The language options.
    */
   getLanguageOptions(
-    options: Record<never, never>,
+    options: CssClassManglerOptions,
   ): Iterable<MangleExpressionOptions<unknown>>;
 
   /**
    * Get the patterns for the {@link CssClassMangler}.
    *
-   * @param classNamePattern The configured patterns.
+   * @param options The {@link CssClassManglerOptions}.
    * @returns The patterns.
    */
   getPatterns(
-    classNamePattern?: string | Iterable<string>,
+    options: CssClassManglerOptions,
   ): string | Iterable<string>;
 
   /**
    * Get the mangle prefix for the {@link CssClassMangler}.
    *
-   * @param keepClassNamePrefix The configured prefix.
+   * @param options The {@link CssClassManglerOptions}.
    * @returns The mangle prefix.
    */
   getPrefix(
-    keepClassNamePrefix?: string,
+    options: CssClassManglerOptions,
   ): string;
 
   /**
    * Get the reserved names for the {@link CssClassMangler}.
    *
-   * @param reservedClassNames The configured reserved names.
+   * @param options The {@link CssClassManglerOptions}.
    * @returns The reserved names.
    */
   getReserved(
-    reservedClassNames?: Iterable<string>,
+    options: CssClassManglerOptions,
   ): Iterable<string>;
 }
 
@@ -96,13 +99,11 @@ function initCssClassMangler(
      */
     constructor(options: CssClassManglerOptions={}) {
       super({
-        charSet: helpers.getCharacterSet(),
-        patterns: helpers.getPatterns(options.classNamePattern),
-        ignorePatterns: helpers.getIgnorePatterns(
-          options.ignoreClassNamePattern,
-        ),
-        reserved: helpers.getReserved(options.reservedClassNames),
-        prefix: helpers.getPrefix(options.keepClassNamePrefix),
+        charSet: helpers.getCharacterSet(options),
+        patterns: helpers.getPatterns(options),
+        ignorePatterns: helpers.getIgnorePatterns(options),
+        reserved: helpers.getReserved(options),
+        prefix: helpers.getPrefix(options),
         languageOptions: helpers.getLanguageOptions(options),
       });
     }

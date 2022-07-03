@@ -1,3 +1,5 @@
+import type { CssClassManglerOptions } from "../types";
+
 /**
  * The ignore patterns used by default if none are provided to a
  * {@link CssClassMangler}.
@@ -15,14 +17,23 @@ const DEFAULT_PATTERNS: string[] = [
 ];
 
 /**
+ * The options for getting the {@link CssClassMangler} ignore pattern(s).
+ */
+type IgnorePatternOptions = Pick<
+  CssClassManglerOptions,
+  "ignoreClassNamePattern"
+>;
+
+/**
  * Get either the configured patterns or the default patterns.
  *
- * @param ignoreClassNamePattern The configured ignore patterns.
+ * @param options The {@link IgnorePatternOptions}.
+ * @param options.ignoreClassNamePattern The configured ignore patterns.
  * @returns The ignore patterns to be used.
  */
- function getIgnorePatterns(
-  ignoreClassNamePattern?: string | Iterable<string>,
-): string | Iterable<string> {
+function getIgnorePatterns({
+  ignoreClassNamePattern,
+}: IgnorePatternOptions): string | Iterable<string> {
   if (ignoreClassNamePattern === undefined) {
     return DEFAULT_IGNORE_PATTERNS;
   }
@@ -31,14 +42,23 @@ const DEFAULT_PATTERNS: string[] = [
 }
 
 /**
+ * The options for getting the {@link CssClassMangler} pattern(s).
+ */
+type PatternOptions = Pick<
+  CssClassManglerOptions,
+  "classNamePattern"
+>;
+
+/**
  * Get either the configured patterns or the default patterns.
  *
- * @param classNamePattern The configured patterns.
+ * @param options The {@link PatternOptions}.
+ * @param options.classNamePattern The configured patterns.
  * @returns The patterns to be used.
  */
-function getPatterns(
-  classNamePattern?: string | Iterable<string>,
-): string | Iterable<string> {
+function getPatterns({
+  classNamePattern,
+}: PatternOptions): string | Iterable<string> {
   if (classNamePattern === undefined) {
     return DEFAULT_PATTERNS;
   }
