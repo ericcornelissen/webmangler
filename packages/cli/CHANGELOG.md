@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add "pretty-print" option to the `JsonReporter`. ([#325])
 
 ## [0.1.8] - 2022-07-02
 
@@ -70,5 +70,6 @@ Versioning].
 [#291]: https://github.com/ericcornelissen/webmangler/pull/291
 [#315]: https://github.com/ericcornelissen/webmangler/pull/315
 [#318]: https://github.com/ericcornelissen/webmangler/pull/318
+[#325]: https://github.com/ericcornelissen/webmangler/pull/325
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

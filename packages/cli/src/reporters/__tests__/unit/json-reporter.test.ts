@@ -274,5 +274,51 @@ suite("JsonReporter", function() {
         }
       });
     });
+
+    suite("Pretty print", function() {
+      const stats: ManglerStats = {
+        aggregate: {
+          changed: false,
+          changePercentage: 0,
+          sizeBefore: 0,
+          sizeAfter: 0,
+        },
+        duration: 3.14,
+        files: new Map([]),
+      };
+
+      const statsToJson = (space?: string | number) => JSON.stringify({
+        aggregate: stats.aggregate,
+        duration: stats.duration,
+        perFile: Object.fromEntries(stats.files),
+      }, null, space);
+
+      test("default", function() {
+        const expectedJson = statsToJson(undefined);
+
+        reporter = new JsonReporter({ });
+        reporter.report(writer, stats);
+
+        expect(writer.write).to.have.been.calledWith(expectedJson);
+      });
+
+      test("disabled", function() {
+        const expectedJson = statsToJson(undefined);
+
+        reporter = new JsonReporter({ prettyPrint: false });
+        reporter.report(writer, stats);
+
+        expect(writer.write).to.have.been.calledWith(expectedJson);
+      });
+
+      test("enabled", function() {
+        const expectedJson = statsToJson("\t");
+
+        reporter = new JsonReporter({ prettyPrint: true });
+        reporter.report(writer, stats);
+
+        expect(writer.write).to.have.been.calledWith(expectedJson);
+      });
+    });
   });
 });
