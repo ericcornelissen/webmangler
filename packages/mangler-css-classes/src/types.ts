@@ -8,7 +8,7 @@ interface CssClassManglerOptions {
   /**
    * One or more patterns for CSS classes that should be mangled.
    *
-   * @default `"cls-[a-zA-Z-_]+"`
+   * @default "cls-[a-zA-Z-_]+"
    * @since v0.1.0
    * @version v0.1.17
    */
@@ -17,7 +17,7 @@ interface CssClassManglerOptions {
   /**
    * One or more patterns for CSS classes that should **never** be mangled.
    *
-   * @default `[]`
+   * @default []
    * @version v0.1.23
    */
   ignoreClassNamePattern?: string | Iterable<string>;
@@ -27,7 +27,7 @@ interface CssClassManglerOptions {
    *
    * Patterns are supported since v0.1.7.
    *
-   * @default `[]`
+   * @default []
    * @since v0.1.0
    * @version v0.1.17
    */
@@ -36,7 +36,7 @@ interface CssClassManglerOptions {
   /**
    * A prefix to use for mangled CSS classes.
    *
-   * @default `""`
+   * @default ""
    * @since v0.1.0
    */
   keepClassNamePrefix?: string;
@@ -47,7 +47,7 @@ interface CssClassManglerOptions {
    * NOTE: the `class` attribute is always included and does not need to be
    * specified when using this option.
    *
-   * @default `[]`
+   * @default ["class"]
    * @since v0.1.16
    * @version v0.1.17
    */

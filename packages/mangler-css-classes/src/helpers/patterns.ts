@@ -1,14 +1,14 @@
 /**
- * The ignore patterns used by default if none are provided to a {@link
- * CssClassMangler}.
+ * The ignore patterns used by default if none are provided to a
+ * {@link CssClassMangler}.
  */
 const DEFAULT_IGNORE_PATTERNS: string[] = [
   // No class patterns are ignored by default.
 ];
 
 /**
- * The patterns used by default if none are provided to a {@link
- * CssClassMangler}.
+ * The patterns used by default if none are provided to a
+ * {@link CssClassMangler}.
  */
 const DEFAULT_PATTERNS: string[] = [
   "cls-[a-zA-Z-_]+",

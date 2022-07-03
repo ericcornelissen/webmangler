@@ -16,8 +16,8 @@ interface ClassAttributeExpressionOptions {
 }
 
 /**
- * A list of the attributes always consider as `class`-like by a {@link
- * CssClassMangler}.
+ * A list of the attributes always consider as `class`-like by a
+ * {@link CssClassMangler}.
  */
 const STANDARD_CLASS_ATTRIBUTES: string[] = [
   "class",
@@ -27,7 +27,7 @@ const STANDARD_CLASS_ATTRIBUTES: string[] = [
  * Get the {@link MangleExpressionOptions} for mangling class-like attributes.
  * The attribute `class` is always included.
  *
- * @param options The {@link IdAttributeExpressionOptions}.
+ * @param options The {@link ClassAttributeExpressionOptions}.
  * @param options.classAttributes The attributes to treat as `class`-like.
  * @returns The {@link MangleExpressionOptions}.
  */
