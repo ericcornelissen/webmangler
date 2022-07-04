@@ -26,7 +26,7 @@ function styleAttributeMatchToEmbed(
 
   const groups = match.groups as { [key: string]: string; };
   const declarations = groups.v;
-  if (declarations === undefined) {
+  if (declarations === undefined || /^\s*$/.test(declarations)) {
     return null;
   }
 

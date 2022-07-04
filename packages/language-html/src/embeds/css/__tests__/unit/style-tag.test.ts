@@ -164,21 +164,6 @@ suite("HTML CSS Embeds - <style> tag", function() {
         {
           file: {
             type: "html",
-            content: "<style> </style>",
-          },
-          expected: [
-            {
-              content: " ",
-              type: EMBED_TYPE_CSS,
-              startIndex: 7,
-              endIndex: 8,
-              getRaw(): string { return this.content; },
-            },
-          ],
-        },
-        {
-          file: {
-            type: "html",
             content: "< style>.foobar { color: red; }</style>",
           },
           expected: [
@@ -252,6 +237,20 @@ suite("HTML CSS Embeds - <style> tag", function() {
           file: {
             type: "html",
             content: "<style></style>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<style> </style>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<style>\n</style>",
           },
           expected: [],
         },
