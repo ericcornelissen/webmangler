@@ -137,26 +137,6 @@ suite("CSS CSS Embeds - Media queries", function() {
       ],
     },
     {
-      testName: "edge cases, with matches",
-      getScenario: () => [
-        {
-          file: {
-            type: "css",
-            content: "@media screen { }",
-          },
-          expected: [
-            {
-              content: " ",
-              type: EMBED_TYPE_CSS,
-              startIndex: 15,
-              endIndex: 16,
-              getRaw(): string { return " "; },
-            },
-          ],
-        },
-      ],
-    },
-    {
       testName: "edge cases, without matches",
       getScenario: () => [
         {
@@ -170,6 +150,20 @@ suite("CSS CSS Embeds - Media queries", function() {
           file: {
             type: "css",
             content: "@media screen {}",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "css",
+            content: "@media screen { }",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "css",
+            content: "@media screen {\n}",
           },
           expected: [],
         },

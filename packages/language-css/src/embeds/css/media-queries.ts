@@ -17,7 +17,7 @@ function matchToEmbed(
   const groups = match.groups as { [key: string]: string; };
   const query = groups.q;
   const stylesheet = groups.v;
-  if (stylesheet === undefined) {
+  if (stylesheet === undefined || /^\s*$/.test(stylesheet)) {
     return null;
   }
 
