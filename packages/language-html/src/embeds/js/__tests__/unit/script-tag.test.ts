@@ -164,21 +164,6 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
         {
           file: {
             type: "html",
-            content: "<script> </script>",
-          },
-          expected: [
-            {
-              content: " ",
-              type: EMBED_TYPE_JS,
-              startIndex: 8,
-              endIndex: 9,
-              getRaw(): string { return this.content; },
-            },
-          ],
-        },
-        {
-          file: {
-            type: "html",
             content: "< script>var foo = \"bar\";</script>",
           },
           expected: [
@@ -252,6 +237,20 @@ suite("HTML JavaScript Embeds - <script> tag", function() {
           file: {
             type: "html",
             content: "<script></script>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<script> </script>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<script>\n</script>",
           },
           expected: [],
         },

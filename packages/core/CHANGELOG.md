@@ -8,6 +8,11 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.26] - 2022-07-02
+
+- BREAKING: Change `Iterable` on API to `Collection`. ([#306])
 - BREAKING: Require plugins to specify a character set. ([#274])
 - Add missing direct dependencies. ([#264])
 - Improve performance by removing useless conversions. ([#275])
@@ -183,5 +188,6 @@ Versioning].
 [#264]: https://github.com/ericcornelissen/webmangler/pull/264
 [#274]: https://github.com/ericcornelissen/webmangler/pull/274
 [#275]: https://github.com/ericcornelissen/webmangler/pull/275
+[#306]: https://github.com/ericcornelissen/webmangler/pull/306
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

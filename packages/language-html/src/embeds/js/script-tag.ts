@@ -17,7 +17,7 @@ function scriptTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed | null {
   const groups = match.groups as { [key: string]: string; };
   const tag = groups.t;
   const script = groups.v;
-  if (script === undefined) {
+  if (script === undefined || /^\s*$/.test(script)) {
     return null;
   }
 

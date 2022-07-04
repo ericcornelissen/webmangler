@@ -125,10 +125,6 @@ class NameGenerator {
    * @returns The next string.
    */
   private tick(s: string): string {
-    if (s === "") {
-      return this.charList[0];
-    }
-
     let nextChar = this.charList[0];
     let tailStr = s.substring(0, s.length - 1);
 

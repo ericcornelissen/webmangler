@@ -22,6 +22,9 @@ suite("CssLanguagePlugin class", function() {
     getExpressionFactories = sinon.stub();
     getLanguages = sinon.stub();
 
+    getExpressionFactories.returns(new Map());
+    getLanguages.returns([]);
+
     CssLanguagePlugin = initCssLanguagePlugin({
       getEmbedFinders,
       getExpressionFactories,

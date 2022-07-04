@@ -71,11 +71,45 @@ suite("ManglerEngine replace", function() {
       {
         testName: "mangle things",
         getTestCases: () => {
+          const replaceAllCss = sinon.stub();
+          const replaceAllJs = sinon.stub();
+
+          const expectedMap = new Map([
+            ["foobar", "a"],
+          ]);
+
+          replaceAllCss.withArgs(
+            ".foobar { color: red; }",
+            sinon.match.map.contains(expectedMap),
+          ).returns(".a { color: red; }");
+          replaceAllCss.withArgs(
+            ".a { color: red; }",
+            sinon.match.map.contains(expectedMap),
+          ).returns(".a { color: red; }");
+          replaceAllCss.withArgs(
+            sinon.match.string,
+            sinon.match.map.deepEquals(new Map()),
+          ).returnsArg(0);
+
           const cssExpression = new MangleExpressionMock({
-            replaceAll: sinon.stub().returns(".a { color: red; }"),
+            replaceAll: replaceAllCss,
           });
+
+          replaceAllJs.withArgs(
+            "var x = 'foobar';",
+            sinon.match.map.contains(expectedMap),
+          ).returns("var x = 'a';");
+          replaceAllJs.withArgs(
+            "var x = 'a';",
+            sinon.match.map.contains(expectedMap),
+          ).returns("var x = 'a';");
+          replaceAllJs.withArgs(
+            sinon.match.string,
+            sinon.match.map.deepEquals(new Map()),
+          ).returnsArg(0);
+
           const jsExpression = new MangleExpressionMock({
-            replaceAll: sinon.stub().returns("var x = 'a';"),
+            replaceAll: replaceAllJs,
           });
 
           const cssFile = {
@@ -146,8 +180,14 @@ suite("ManglerEngine replace", function() {
       {
         testName: "mangle 'x' |-> 'x'",
         getTestCases: () => {
+          const replaceAll = sinon.stub();
+          replaceAll.withArgs(
+            ".a { color: red; }",
+            sinon.match.map.deepEquals(new Map()),
+          ).returns(".a { color: red; }");
+
           const cssExpression = new MangleExpressionMock({
-            replaceAll: sinon.stub().returns(".a { color: red; }"),
+            replaceAll,
           });
 
           const cssFile = {
@@ -179,8 +219,23 @@ suite("ManglerEngine replace", function() {
             content: ".foo { } .bar { }",
           };
 
+          const replaceAll = sinon.stub();
+          replaceAll.withArgs(
+            ".foo { } .bar { }",
+            sinon.match.map.contains(new Map([
+              ["foo", "a"],
+              ["bar", "baz"],
+            ])),
+          ).returns(".a { } .baz { }");
+          replaceAll.withArgs(
+            ".a { } .baz { }",
+            sinon.match.map.contains(new Map([
+              ["a", "bar"],
+            ])),
+          ).returns(".bar { } .baz { }");
+
           const cssExpression = new MangleExpressionMock({
-            replaceAll: sinon.stub().returns(".bar { } .baz { }"),
+            replaceAll,
           });
 
           return [
@@ -208,7 +263,11 @@ suite("ManglerEngine replace", function() {
     for (const { testName, getTestCases } of scenarios) {
       test(testName, function() {
         for (const testCase of getTestCases()) {
-          const { files, expressions, mangleMap, expected } = testCase;
+          const { files, expressions, mangleMap } = testCase;
+          const expected = testCase.expected.map(
+            (file) => Object.assign({ }, file),
+          );
+
           const result = doMangle(files, expressions, mangleMap);
           expect(result).to.deep.equal(expected);
         }

@@ -134,7 +134,7 @@ suite("Benchmarking runner runners", function() {
       readonly startTime: number;
       readonly endTime: number;
       readonly expected: {
-        duration: number;
+        readonly duration: number;
       };
     }
 

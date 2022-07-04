@@ -17,7 +17,7 @@ function styleTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed | null {
   const groups = match.groups as { [key: string]: string; };
   const tag = groups.t;
   const stylesheet = groups.v;
-  if (stylesheet === undefined) {
+  if (stylesheet === undefined || /^\s*$/.test(stylesheet)) {
     return null;
   }
 

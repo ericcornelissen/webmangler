@@ -12,6 +12,7 @@ type AttributeOptions = Record<string, never>;
  * The {@link MangleExpression} options for CSS properties.
  *
  * @since v0.1.14
+ * @version v0.1.26
  */
 interface CssDeclarationPropertyOptions {
   /**
@@ -20,8 +21,9 @@ interface CssDeclarationPropertyOptions {
    *
    * @default `""`
    * @since v0.1.14
+   * @version v0.1.26
    */
-  prefix?: string;
+  readonly prefix?: string;
 
   /**
    * A regular expression as a string defining the suffix that properties must
@@ -29,14 +31,16 @@ interface CssDeclarationPropertyOptions {
    *
    * @default `""`
    * @since v0.1.14
+   * @version v0.1.26
    */
-  suffix?: string;
+  readonly suffix?: string;
 }
 
 /**
  * The {@link MangleExpression} options for CSS property values.
  *
  * @since v0.1.14
+ * @version v0.1.26
  */
 interface CssDeclarationValueOptions {
   /**
@@ -45,8 +49,9 @@ interface CssDeclarationValueOptions {
    *
    * @default `""`
    * @since v0.1.14
+   * @version v0.1.26
    */
-  prefix?: string;
+  readonly prefix?: string;
 
   /**
    * A regular expression as a string defining the suffix that property values
@@ -54,8 +59,9 @@ interface CssDeclarationValueOptions {
    *
    * @default `""`
    * @since v0.1.14
+   * @version v0.1.26
    */
-  suffix?: string;
+  readonly suffix?: string;
 }
 
 /**
@@ -63,22 +69,23 @@ interface CssDeclarationValueOptions {
  * multiple values.
  *
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.26
  */
 interface MultiValueAttributeOptions {
   /**
    * The names of the attributes to match values of.
    *
    * @since v0.1.14
-   * @version v0.1.17
+   * @version v0.1.26
    */
-  attributeNames: Iterable<string>;
+  readonly attributeNames: Iterable<string>;
 }
 
 /**
  * The {@link MangleExpression} options for CSS query selectors.
  *
  * @since v0.1.14
+ * @version v0.1.26
  */
 interface QuerySelectorOptions {
   /**
@@ -90,8 +97,9 @@ interface QuerySelectorOptions {
    *
    * @default `""`
    * @since v0.1.14
+   * @version v0.1.26
    */
-  prefix?: string;
+  readonly prefix?: string;
 
   /**
    * A regular expression as a string defining the suffix that query selectors
@@ -101,8 +109,9 @@ interface QuerySelectorOptions {
    *
    * @default `""`
    * @since v0.1.14
+   * @version v0.1.26
    */
-  suffix?: string;
+  readonly suffix?: string;
 }
 
 /**
@@ -110,16 +119,16 @@ interface QuerySelectorOptions {
  * single value.
  *
  * @since v0.1.14
- * @version v0.1.17
+ * @version v0.1.26
  */
 interface SingleValueAttributeOptions {
   /**
    * The names of the attributes to match values of.
    *
    * @since v0.1.14
-   * @version v0.1.17
+   * @version v0.1.26
    */
-  attributeNames: Iterable<string>;
+  readonly attributeNames: Iterable<string>;
 
   /**
    * A regular expression as a string defining the prefix that values must have
@@ -127,8 +136,9 @@ interface SingleValueAttributeOptions {
    *
    * @default `""`
    * @since v0.1.14
+   * @version v0.1.26
    */
-  valuePrefix?: string;
+  readonly valuePrefix?: string;
 
   /**
    * A regular expression as a string defining the suffix that values must have
@@ -136,8 +146,9 @@ interface SingleValueAttributeOptions {
    *
    * @default `""`
    * @since v0.1.14
+   * @version v0.1.26
    */
-  valueSuffix?: string;
+  readonly valueSuffix?: string;
 }
 
 export type {

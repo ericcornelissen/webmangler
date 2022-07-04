@@ -8,7 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.27] - 2022-06-29
+
 - Update `patternTemplate` format for mangle expressions. ([#258])
+- Update interface of `SimpleLanguagePlugin`. ([#310])
 
 ## [0.1.26] - 2022-01-29
 
@@ -38,5 +43,6 @@ Versioning].
 [#246]: https://github.com/ericcornelissen/webmangler/pull/246
 [#248]: https://github.com/ericcornelissen/webmangler/pull/248
 [#258]: https://github.com/ericcornelissen/webmangler/pull/258
+[#310]: https://github.com/ericcornelissen/webmangler/pull/310
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

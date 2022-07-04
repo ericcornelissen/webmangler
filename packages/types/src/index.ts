@@ -21,11 +21,16 @@ import type {
   WebManglerOptions,
   WebManglerPlugin,
 } from "./types";
+import type {
+  Collection,
+  ReadonlyCollection,
+} from "./utils";
 
 export type {
   AttributeOptions,
   Char,
   CharSet,
+  Collection,
   CssDeclarationPropertyOptions,
   CssDeclarationValueOptions,
   MangleEngineOptions,
@@ -34,6 +39,7 @@ export type {
   MangleOptions,
   MultiValueAttributeOptions,
   QuerySelectorOptions,
+  ReadonlyCollection,
   SingleValueAttributeOptions,
   WebManglerEmbed,
   WebManglerFile,

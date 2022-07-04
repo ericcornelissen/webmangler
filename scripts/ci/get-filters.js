@@ -7,10 +7,11 @@
  * included in the output for "performance".
  */
 
-import * as fs from "fs";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import process from "node:process";
+
 import micromatch from "micromatch";
-import * as path from "path";
-import process from "process";
 
 import log from "../utilities/log.js";
 import * as paths from "../utilities/paths.js";
@@ -20,22 +21,8 @@ const {
   testsDir,
   testDirAll,
   testDirPerformance,
+  testDirUnit,
 } = values;
-
-const RUN_MUTATION_TESTING = [
-  "cli",
-  "benchmarking",
-  "language-css",
-  "language-html",
-  "language-js",
-  "language-utils",
-  "mangler-css-classes",
-  "mangler-css-variables",
-  "mangler-html-attributes",
-  "mangler-html-ids",
-  "mangler-utils",
-  "testing",
-];
 
 main(process.argv);
 
@@ -51,7 +38,13 @@ function main(argv) {
 function getPackageCriteria(arg) {
   switch (arg) {
   case "mutation":
-    return (pkg) => RUN_MUTATION_TESTING.includes(pkg);
+    return (packageName) => hasFiles(
+      packageName,
+      (filePath) => micromatch.isMatch(
+        filePath,
+        `**/${testsDir}/${testDirUnit}/**`,
+      ),
+    );
   case "performance":
     return (packageName) => hasFiles(
       packageName,

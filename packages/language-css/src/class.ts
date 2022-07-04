@@ -86,11 +86,11 @@ function initCssLanguagePlugin({
      * @version v0.1.17
      */
     constructor(options: CssLanguagePluginOptions={}) {
-      super(
-        getLanguages(options.cssExtensions),
-        getExpressionFactories(),
-        getEmbedFinders(),
-      );
+      super({
+        embedsGetters: getEmbedFinders(),
+        expressionFactories: getExpressionFactories(),
+        languages: getLanguages(options.cssExtensions),
+      });
     }
   };
 }

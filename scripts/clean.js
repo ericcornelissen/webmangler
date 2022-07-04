@@ -4,9 +4,9 @@
  * Restore the repository to a clean state, removing all generated files.
  */
 
-import * as fs from "fs";
-import * as path from "path";
-import process from "process";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import process from "node:process";
 
 import execSync from "./utilities/exec.js";
 import { checkFlags } from "./utilities/flags.js";

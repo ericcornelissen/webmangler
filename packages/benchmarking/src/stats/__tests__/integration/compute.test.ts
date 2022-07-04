@@ -9,7 +9,7 @@ import { computeStats } from "../../index";
 suite("Benchmarking stats", function() {
   suite("::computeStats", function() {
     interface TestCase {
-      readonly runs: BenchmarkRunStats[];
+      readonly runs: ReadonlyArray<BenchmarkRunStats>;
       readonly expected: number;
     }
 

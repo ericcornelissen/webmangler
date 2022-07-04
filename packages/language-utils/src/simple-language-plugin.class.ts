@@ -23,6 +23,37 @@ type EmbedsGetter = (file: WebManglerFile) => Iterable<WebManglerEmbed>;
 type ExpressionFactory = (options: any) => Iterable<MangleExpression>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
+ * The configuration options of a {@link SimpleLanguagePlugin}.
+ *
+ * @since v0.1.27
+ */
+interface SimpleLanguagePluginOptions {
+  /**
+   * The {@link EmbedsGetter}s to use.
+   *
+   * @since v0.1.21
+   * @version v0.1.27
+   */
+  readonly embedsGetters?: Iterable<EmbedsGetter>;
+
+  /**
+   * The {@link ExpressionFactory}s to use.
+   *
+   * @since v0.1.14
+   * @version v0.1.27
+   */
+  readonly expressionFactories: Map<string, ExpressionFactory>;
+
+  /**
+   * Supported languages, including aliases.
+   *
+   * @since v0.1.10
+   * @version v0.1.27
+   */
+  readonly languages: Iterable<string>;
+}
+
+/**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of
  * a {@link WebManglerLanguagePlugin} that works given a set of languages and a
  * map of manglers to {@link MangleExpression}.
@@ -32,7 +63,7 @@ type ExpressionFactory = (options: any) => Iterable<MangleExpression>; // eslint
  * {@link WebManglerLanguagePlugin}.
  *
  * @since v0.1.0
- * @version v0.1.26
+ * @version v0.1.28
  */
 abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
   /**
@@ -59,23 +90,22 @@ abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
    * @example
    * class LanguagePlugin extends SimpleLanguagePlugin {
    *   constructor() {
-   *     super(["js", "cjs", "mjs"], expressions);
+   *     super({
+   *       expressionFactories,
+   *       languages,
+   *     });
    *   }
    * }
-   * @param languages Supported language, including aliases.
-   * @param expressionFactories The {@link ExpressionFactory}s to use.
-   * @param [embedsGetters] The {@link EmbedsGetter} to use.
+   * @param params The {@link SimpleLanguagePluginOptions}.
    * @since v0.1.15
-   * @version v0.1.21
+   * @version v0.1.28
    */
   constructor(
-    languages: Iterable<string>,
-    expressionFactories: Map<string, ExpressionFactory>,
-    embedsGetters?: Iterable<EmbedsGetter>,
+    params: SimpleLanguagePluginOptions,
   ) {
-    this.embedsGetters = embedsGetters || [];
-    this.expressionFactories = expressionFactories;
-    this.languages = languages;
+    this.embedsGetters = params.embedsGetters || [];
+    this.expressionFactories = params.expressionFactories;
+    this.languages = params.languages;
   }
 
   /**
@@ -152,4 +182,5 @@ export default SimpleLanguagePlugin;
 export type {
   EmbedsGetter,
   ExpressionFactory,
+  SimpleLanguagePluginOptions,
 };

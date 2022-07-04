@@ -1,11 +1,14 @@
 {
   "name": "webmangler-cli",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "The WebMangler Command Line Interface (CLI)",
   "license": "MIT",
   "main": "./lib/index.js",
   "bin": {
     "webmangler": "./lib/index.js"
+  },
+  "exports": {
+    "./reporters": "./lib/reporters/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,7 @@
   },
   "scripts": {
     "clean": "del-cli lib/ *.tsbuildinfo",
+    "precli": "npm run compile",
     "cli": "ts-node -r tsconfig-paths/register src/index.ts",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",

@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Bump minimum `@webmangler/language-utils` version to `^0.1.27`. ([#322])
 
 ## [0.1.28] - 2022-01-29
 
@@ -46,5 +46,6 @@ Versioning].
 [#226]: https://github.com/ericcornelissen/webmangler/pull/226
 [#242]: https://github.com/ericcornelissen/webmangler/pull/242
 [#250]: https://github.com/ericcornelissen/webmangler/pull/250
+[#322]: https://github.com/ericcornelissen/webmangler/pull/322
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

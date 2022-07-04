@@ -8,7 +8,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Bump minimum `@webmangler/language-utils` version to `^0.1.27`. ([#322])
+- Improve detection of CSS embedding. ([#326])
 
 ## [0.1.26] - 2022-01-29
 
@@ -35,5 +36,7 @@ Versioning].
 [#233]: https://github.com/ericcornelissen/webmangler/pull/233
 [#241]: https://github.com/ericcornelissen/webmangler/pull/241
 [#250]: https://github.com/ericcornelissen/webmangler/pull/250
+[#322]: https://github.com/ericcornelissen/webmangler/pull/322
+[#326]: https://github.com/ericcornelissen/webmangler/pull/326
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

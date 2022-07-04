@@ -5,7 +5,7 @@ interface BenchmarkRunStats {
   /**
    * The duration in milliseconds of a run.
    */
-  duration: number;
+  readonly duration: number;
 }
 
 /**

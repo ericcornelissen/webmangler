@@ -31,7 +31,7 @@ suite("Benchmarking budget system", function() {
     });
 
     interface TestCase {
-      readonly cpus: CPU[];
+      readonly cpus: ReadonlyArray<CPU>;
       readonly expected: number;
     }
 

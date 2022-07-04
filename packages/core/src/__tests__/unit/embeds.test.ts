@@ -1,11 +1,11 @@
 import type { TestScenarios } from "@webmangler/testing";
-
-import type { IdentifiableWebManglerEmbed } from "../../embeds";
 import type {
   WebManglerEmbed,
   WebManglerFile,
   WebManglerLanguagePlugin,
-} from "../../types";
+} from "@webmangler/types";
+
+import type { IdentifiableWebManglerEmbed } from "../../embeds";
 
 import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
@@ -227,7 +227,8 @@ suite("Embeds", function() {
           for (const i in files) {
             const file = files[i];
             const expectedFile = expected.files[i];
-            expect(file.content).to.match(new RegExp(expectedFile.content));
+            const expectedContent = new RegExp(`^${expectedFile.content}$`);
+            expect(file.content).to.match(expectedContent);
             expect(file.type).to.equal(expectedFile.type);
           }
         }
@@ -334,5 +335,16 @@ suite("Embeds", function() {
         }
       });
     }
+
+    test("id prefix appears in the file content", function() {
+      const file = {
+        type: "html",
+        content: `<div>${idPrefix}</div>`,
+      };
+
+      expect(() => {
+        reEmbed([], file);
+      }).not.to.throw();
+    });
   });
 });

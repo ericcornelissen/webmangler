@@ -1,5 +1,6 @@
 import type {
   CharSet,
+  Collection,
   WebManglerEmbed,
   WebManglerFile,
   WebManglerLanguagePlugin,
@@ -14,7 +15,7 @@ type EmbedsMap = Map<WebManglerFile, Iterable<IdentifiableWebManglerEmbed>>;
  *
  * @since v0.1.21
  */
-export interface IdentifiableWebManglerEmbed extends WebManglerEmbed {
+interface IdentifiableWebManglerEmbed extends WebManglerEmbed {
   /**
    * The identifier of the {@link WebManglerEmbed}.
    *
@@ -115,8 +116,8 @@ function getEmbedsInFile(
  * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
  * @returns All {@link WebManglerEmbed}s in `files`.
  */
-export function getEmbeds(
-  files: Iterable<WebManglerFile>,
+function getEmbeds(
+  files: Collection<WebManglerFile>,
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
 ): EmbedsMap {
   const embeds: EmbedsMap = new Map();
@@ -137,7 +138,7 @@ export function getEmbeds(
  * @param embeds The {@link WebManglerEmbed}s to re-embed.
  * @param file The {@link WebManglerFile} to embed into.
  */
-export function reEmbed(
+function reEmbed(
   embeds: Iterable<IdentifiableWebManglerEmbed>,
   file: WebManglerFile,
 ): void {
@@ -154,3 +155,12 @@ export function reEmbed(
     return embed.getRaw();
   });
 }
+
+export {
+  getEmbeds,
+  reEmbed,
+};
+
+export type {
+  IdentifiableWebManglerEmbed,
+};

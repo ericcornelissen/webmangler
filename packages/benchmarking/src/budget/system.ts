@@ -15,7 +15,7 @@ interface System {
   /**
    * Get information about the {@link CPU}s on the current system.
    */
-  cpus(): CPU[];
+  cpus(): ReadonlyArray<CPU>;
 }
 
 /**

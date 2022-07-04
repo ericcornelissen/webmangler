@@ -79,10 +79,10 @@ function initJavaScriptLanguagePlugin({
      * @version v0.1.17
      */
     constructor(options: JavaScriptLanguagePluginOptions={}) {
-      super(
-        getLanguages(options),
-        getExpressionFactories(options),
-      );
+      super({
+        expressionFactories: getExpressionFactories(options),
+        languages: getLanguages(options),
+      });
     }
   };
 }

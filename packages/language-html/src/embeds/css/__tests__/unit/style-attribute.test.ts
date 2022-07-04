@@ -437,21 +437,6 @@ suite("HTML CSS Embeds - Style attribute", function() {
         {
           file: {
             type: "html",
-            content: "<div style=\" \">foobar</div>",
-          },
-          expected: [
-            {
-              content: prepareContent(" "),
-              type: EMBED_TYPE_CSS,
-              startIndex: 12,
-              endIndex: 13,
-              getRaw(): string { return " "; },
-            },
-          ],
-        },
-        {
-          file: {
-            type: "html",
             content: "< div style=\"color: red;\"><div>",
           },
           expected: [
@@ -547,6 +532,20 @@ suite("HTML CSS Embeds - Style attribute", function() {
           file: {
             type: "html",
             content: "<div style=\"\">foobar</div>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div style=\" \">foobar</div>",
+          },
+          expected: [],
+        },
+        {
+          file: {
+            type: "html",
+            content: "<div style=\"\n\">foobar</div>",
           },
           expected: [],
         },

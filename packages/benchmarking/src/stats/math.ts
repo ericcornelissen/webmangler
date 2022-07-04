@@ -4,8 +4,8 @@
  * @param numbers A collection of numbers.
  * @returns The median number.
  */
-function medianOf(numbers: number[]): number {
-  const sortedNumbers = numbers.sort((a, b) => a - b);
+function medianOf(numbers: ReadonlyArray<number>): number {
+  const sortedNumbers = Array.prototype.sort.apply(numbers, [(a, b) => a - b]);
 
   const n = numbers.length;
   const middle = Math.floor(n / 2);
