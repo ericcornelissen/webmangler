@@ -10,7 +10,7 @@ suite("CSS Class Mangler reserved helpers", function() {
     const DEFAULT_RESERVED: string[] = [];
 
     test("default reserved", function() {
-      const _result = getReserved();
+      const _result = getReserved({ });
       const result = Array.from(_result);
 
       expect(result).to.include.members(ALWAYS_RESERVED);
@@ -23,7 +23,9 @@ suite("CSS Class Mangler reserved helpers", function() {
     test("custom reserved", function() {
       const reserved: string[] = ["foo", "bar"];
 
-      const _result = getReserved(reserved);
+      const _result = getReserved({
+        reservedClassNames: reserved,
+      });
       const result = Array.from(_result);
 
       expect(result).to.include.members(ALWAYS_RESERVED);
