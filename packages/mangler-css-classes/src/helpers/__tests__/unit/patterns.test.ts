@@ -10,14 +10,16 @@ suite("CSS Class Mangler pattern helpers", function() {
     const DEFAULT_PATTERNS: string[] = [];
 
     test("default patterns", function() {
-      const result = getIgnorePatterns();
+      const result = getIgnorePatterns({ });
       expect(result).to.deep.equal(DEFAULT_PATTERNS);
     });
 
     test("one custom pattern", function() {
       const ignorePattern = "foo(bar|baz)-[a-z]+";
 
-      const result = getIgnorePatterns(ignorePattern);
+      const result = getIgnorePatterns({
+        ignoreClassNamePattern: ignorePattern,
+      });
       expect(result).to.equal(ignorePattern);
     });
 
@@ -27,7 +29,9 @@ suite("CSS Class Mangler pattern helpers", function() {
         "foobar-[0-9]+",
       ];
 
-      const result = getIgnorePatterns(ignorePatterns);
+      const result = getIgnorePatterns({
+        ignoreClassNamePattern: ignorePatterns,
+      });
       expect(result).to.deep.equal(ignorePatterns);
     });
   });
@@ -36,25 +40,29 @@ suite("CSS Class Mangler pattern helpers", function() {
     const DEFAULT_PATTERNS = ["cls-[a-zA-Z-_]+"];
 
     test("default patterns", function() {
-      const result = getPatterns();
+      const result = getPatterns({ });
       expect(result).to.deep.equal(DEFAULT_PATTERNS);
     });
 
     test("one custom pattern", function() {
       const patterns = "foo(bar|baz)-[a-z]+";
 
-      const result = getPatterns(patterns);
+      const result = getPatterns({
+        classNamePattern: patterns,
+      });
       expect(result).to.equal(patterns);
     });
 
     test("multiple custom patterns", function() {
-      const ignorePatterns: string[] = [
+      const patterns: string[] = [
         "foobar-[a-z]+",
         "foobar-[0-9]+",
       ];
 
-      const result = getPatterns(ignorePatterns);
-      expect(result).to.deep.equal(ignorePatterns);
+      const result = getPatterns({
+        classNamePattern: patterns,
+      });
+      expect(result).to.deep.equal(patterns);
     });
   });
 });
