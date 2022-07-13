@@ -362,9 +362,9 @@ module.exports = {
       parserOptions: {
         ecmaVersion: 2015,
       },
-      extends: [
-        "plugin:json/recommended",
-      ],
+      rules: {
+        "json/*": ["error"],
+      },
     },
     { // Configuration files (YAML)
       files: [
