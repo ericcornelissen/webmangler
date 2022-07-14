@@ -10,7 +10,6 @@ import {
   WebManglerPluginMock,
 } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
-import * as _ from "lodash";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
@@ -51,23 +50,18 @@ suite("BuiltInManglers class", function() {
   });
 
   suite("CssClassMangler", function() {
-    const CssClassManglerKeys: string[] = [
-      "classAttributes",
-      "classNamePattern",
-      "disableCssClassMangling",
-      "keepClassNamePrefix",
-      "reservedClassNames",
-    ];
-
     setup(function() {
       CssClassManglerConstructor.resetHistory();
     });
 
     test("enable & configure the CssClassMangler", function() {
-      const optionsValueSource = Object.assign(
-        _.pick(optionsValues, CssClassManglerKeys),
-        { disableCssClassMangling: [undefined, false] },
-      );
+      const optionsValueSource = {
+        classAttributes: optionsValues.classAttributes,
+        classNamePattern: optionsValues.classNamePattern,
+        disableCssClassMangling: [undefined, false] as unknown as string[],
+        keepClassNamePrefix: optionsValues.keepClassNamePrefix,
+        reservedClassNames: optionsValues.reservedClassNames,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
@@ -85,10 +79,13 @@ suite("BuiltInManglers class", function() {
     });
 
     test("disable the CssClassMangler", function() {
-      const optionsValueSource = Object.assign(
-        _.pick(optionsValues, CssClassManglerKeys),
-        { disableCssClassMangling: [true] },
-      );
+      const optionsValueSource = {
+        classAttributes: optionsValues.classAttributes,
+        classNamePattern: optionsValues.classNamePattern,
+        disableCssClassMangling: [true] as unknown as string[],
+        keepClassNamePrefix: optionsValues.keepClassNamePrefix,
+        reservedClassNames: optionsValues.reservedClassNames,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
@@ -103,22 +100,17 @@ suite("BuiltInManglers class", function() {
   });
 
   suite("CssVariableMangler", function() {
-    const CssVariableManglerKeys: string[] = [
-      "cssVarNamePattern",
-      "disableCssVarMangling",
-      "keepCssVarPrefix",
-      "reservedCssVarNames",
-    ];
-
     setup(function() {
       CssVariableManglerConstructor.resetHistory();
     });
 
     test("enable & configure the CssVariableMangler", function() {
-      const optionsValueSource = Object.assign(
-        _.pick(optionsValues, CssVariableManglerKeys),
-        { disableCssVarMangling: [undefined, false] },
-      );
+      const optionsValueSource = {
+        cssVarNamePattern: optionsValues.cssVarNamePattern,
+        disableCssVarMangling: [undefined, false] as unknown as string[],
+        keepCssVarPrefix: optionsValues.keepCssVarPrefix,
+        reservedCssVarNames: optionsValues.reservedCssVarNames,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
@@ -135,10 +127,12 @@ suite("BuiltInManglers class", function() {
     });
 
     test("disable the CssVariableMangler", function() {
-      const optionsValueSource = Object.assign(
-        _.pick(optionsValues, CssVariableManglerKeys),
-        { disableCssVarMangling: [true] },
-      );
+      const optionsValueSource = {
+        cssVarNamePattern: optionsValues.cssVarNamePattern,
+        disableCssVarMangling: [true] as unknown as string[],
+        keepCssVarPrefix: optionsValues.keepCssVarPrefix,
+        reservedCssVarNames: optionsValues.reservedCssVarNames,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
@@ -153,22 +147,17 @@ suite("BuiltInManglers class", function() {
   });
 
   suite("HtmlAttributeMangler", function() {
-    const HtmlAttributeManglerKeys: string[] = [
-      "attrNamePattern",
-      "disableHtmlAttrMangling",
-      "keepAttrPrefix",
-      "reservedAttrNames",
-    ];
-
     setup(function() {
       HtmlAttributeManglerConstructor.resetHistory();
     });
 
     test("enable & configure the HtmlAttributeMangler", function() {
-      const optionsValueSource = Object.assign(
-        _.pick(optionsValues, HtmlAttributeManglerKeys),
-        { disableHtmlAttrMangling: [undefined, false] },
-      );
+      const optionsValueSource = {
+        attrNamePattern: optionsValues.attrNamePattern,
+        disableHtmlAttrMangling: [undefined, false] as unknown as string[],
+        keepAttrPrefix: optionsValues.keepAttrPrefix,
+        reservedAttrNames: optionsValues.reservedAttrNames,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
@@ -185,10 +174,12 @@ suite("BuiltInManglers class", function() {
     });
 
     test("disable the HtmlAttributeMangler", function() {
-      const optionsValueSource = Object.assign(
-        _.pick(optionsValues, HtmlAttributeManglerKeys),
-        { disableHtmlAttrMangling: [true] },
-      );
+      const optionsValueSource = {
+        attrNamePattern: optionsValues.attrNamePattern,
+        disableHtmlAttrMangling: [true] as unknown as string[],
+        keepAttrPrefix: optionsValues.keepAttrPrefix,
+        reservedAttrNames: optionsValues.reservedAttrNames,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
@@ -203,24 +194,19 @@ suite("BuiltInManglers class", function() {
   });
 
   suite("HtmlIdMangler", function() {
-    const HtmlIdManglerKeys: string[] = [
-      "idAttributes",
-      "idNamePattern",
-      "disableHtmlIdMangling",
-      "keepIdPrefix",
-      "reservedIds",
-      "urlAttributes",
-    ];
-
     setup(function() {
       HtmlIdManglerConstructor.resetHistory();
     });
 
     test("enable & configure the HtmlIdMangler", function() {
-      const optionsValueSource = Object.assign(
-        _.pick(optionsValues, HtmlIdManglerKeys),
-        { disableHtmlIdMangling: [undefined, false] },
-      );
+      const optionsValueSource = {
+        idAttributes: optionsValues.idAttributes,
+        idNamePattern: optionsValues.idNamePattern,
+        disableHtmlIdMangling: [undefined, false] as unknown as string[],
+        keepIdPrefix: optionsValues.keepIdPrefix,
+        reservedIds: optionsValues.reservedIds,
+        urlAttributes: optionsValues.urlAttributes,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
@@ -239,10 +225,14 @@ suite("BuiltInManglers class", function() {
     });
 
     test("disable the HtmlIdMangler", function() {
-      const optionsValueSource = Object.assign(
-        _.pick(optionsValues, HtmlIdManglerKeys),
-        { disableHtmlIdMangling: [true] },
-      );
+      const optionsValueSource = {
+        idAttributes: optionsValues.idAttributes,
+        idNamePattern: optionsValues.idNamePattern,
+        disableHtmlIdMangling: [true] as unknown as string[],
+        keepIdPrefix: optionsValues.keepIdPrefix,
+        reservedIds: optionsValues.reservedIds,
+        urlAttributes: optionsValues.urlAttributes,
+      };
 
       for (const options of generateValueObjects(optionsValueSource)) {
         new BuiltInManglers(options as BuiltInManglersOptions);
