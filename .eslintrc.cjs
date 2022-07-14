@@ -375,10 +375,12 @@ module.exports = {
         "plugin:yml/standard",
       ],
       rules: {
+        // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
         "spaced-comment": "off",
 
         // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/
         "yml/block-mapping": ["error", "always"],
+        "yml/block-mapping-question-indicator-newline": ["error", "never"],
         "yml/block-sequence": ["error", "always"],
         "yml/block-sequence-hyphen-indicator-newline": ["error", "never"],
         "yml/indent": ["error", INDENT_SIZE],
@@ -405,6 +407,7 @@ module.exports = {
           prefer: "double",
         }],
         "yml/require-string-key": "error",
+        "yml/sort-keys": "off",
         "yml/sort-sequence-values": ["error",
           {
             pathPattern: ".*",
