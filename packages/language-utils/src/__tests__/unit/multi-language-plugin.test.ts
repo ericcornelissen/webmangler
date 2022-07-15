@@ -14,7 +14,7 @@ import * as sinon from "sinon";
 import MultiLanguagePlugin from "../../multi-language-plugin.class";
 
 class ConcreteMultiLanguagePlugin extends MultiLanguagePlugin {
-  constructor(plugins: Iterable<WebManglerLanguagePlugin>) {
+  constructor(plugins: WebManglerLanguagePlugin[]) {
     super(plugins);
   }
 }

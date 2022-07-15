@@ -1,5 +1,6 @@
 import type {
   MangleExpression,
+  ReadonlyCollection,
   WebManglerEmbed,
   WebManglerFile,
   WebManglerLanguagePlugin,
@@ -14,18 +15,18 @@ import type {
  * {@link BuiltInLanguagesPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.26
+ * @version v0.1.28
  */
 abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
   /**
    * the languages supported by the {@link MultiLanguagePlugin}.
    */
-  private readonly languages: Set<string>;
+  private readonly languages: ReadonlyCollection<string>;
 
   /**
    * The {@link WebManglerLanguagePlugin}s in the {@link MultiLanguagePlugin}.
    */
-  private readonly plugins: Iterable<WebManglerLanguagePlugin>;
+  private readonly plugins: ReadonlyCollection<WebManglerLanguagePlugin>;
 
   /**
    * Initialize a {@link WebManglerLanguagePlugin} with a fixed set of language
@@ -33,24 +34,30 @@ abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
    *
    * @param plugins The plugins to include in the {@link MultiLanguagePlugin}.
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.28
    */
-  constructor(plugins: Iterable<WebManglerLanguagePlugin>) {
-    this.languages = new Set();
+  constructor(
+    plugins: ReadonlyCollection<WebManglerLanguagePlugin>,
+  ) {
     this.plugins = plugins;
 
+    const languages: Set<string> = new Set();
     for (const plugin of plugins) {
       for (const language of plugin.getLanguages()) {
-        this.languages.add(language);
+        languages.add(language);
       }
     }
+
+    this.languages = languages;
   }
 
   /**
    * @inheritDoc
-   * @version v0.1.21
+   * @version v0.1.28
    */
-  getEmbeds(file: WebManglerFile): Iterable<WebManglerEmbed> {
+  getEmbeds(
+    file: Readonly<WebManglerFile>,
+  ): Iterable<WebManglerEmbed> {
     const result: WebManglerEmbed[] = [];
     for (const plugin of this.plugins) {
       const pluginEmbeds = plugin.getEmbeds(file);
