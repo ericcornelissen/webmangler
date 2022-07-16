@@ -10,8 +10,11 @@ import type {
  * WebManglerFile}.
  *
  * @since v0.1.21
+ * @version v0.1.28
  */
-type EmbedsGetter = (file: WebManglerFile) => Iterable<WebManglerEmbed>;
+type EmbedsGetter = (
+  file: Readonly<WebManglerFile>,
+) => Iterable<WebManglerEmbed>;
 
 /**
  * A function that produces a set of {@link MangleExpression}s given the set's
@@ -26,6 +29,7 @@ type ExpressionFactory = (options: any) => Iterable<MangleExpression>; // eslint
  * The configuration options of a {@link SimpleLanguagePlugin}.
  *
  * @since v0.1.27
+ * @version v0.1.28
  */
 interface SimpleLanguagePluginOptions {
   /**
@@ -40,9 +44,9 @@ interface SimpleLanguagePluginOptions {
    * The {@link ExpressionFactory}s to use.
    *
    * @since v0.1.14
-   * @version v0.1.27
+   * @version v0.1.28
    */
-  readonly expressionFactories: Map<string, ExpressionFactory>;
+  readonly expressionFactories: ReadonlyMap<string, ExpressionFactory>;
 
   /**
    * Supported languages, including aliases.
@@ -76,7 +80,7 @@ abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
    * A map from {@link MangleExpression}-set names to a functions that produce
    * the respective set of {@link MangleExpression}s given the set's options.
    */
-  private readonly expressionFactories: Map<string, ExpressionFactory>;
+  private readonly expressionFactories: ReadonlyMap<string, ExpressionFactory>;
 
   /**
    * A collection of functions that can get {@link WebManglerEmbed}s from a
@@ -111,8 +115,11 @@ abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
   /**
    * @inheritDoc
    * @version v0.1.21
+   * @version v0.1.28
    */
-  getEmbeds(file: WebManglerFile): Iterable<WebManglerEmbed> {
+  getEmbeds(
+    file: Readonly<WebManglerFile>,
+  ): Iterable<WebManglerEmbed> {
     const result: WebManglerEmbed[] = [];
     if (!this.supportsLanguage(file.type)) {
       return result;
