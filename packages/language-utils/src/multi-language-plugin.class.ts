@@ -11,15 +11,22 @@ import type {
  * {@link WebManglerLanguagePlugin} that provides multiple language plugins in
  * one.
  *
- * {@link MultiLanguagePlugin} is used to implement the
- * {@link BuiltInLanguagesPlugin}.
- *
+ * @example
+ * class MyMultiLanguagePlugin extends MultiLanguagePlugin {
+ *   constructor() {
+ *     super([
+ *       new MyLanguagePluginA(),
+ *       new MyLanguagePluginB(),
+ *       // ...
+ *     ]);
+ *   }
+ * }
  * @since v0.1.0
  * @version v0.1.28
  */
 abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
   /**
-   * the languages supported by the {@link MultiLanguagePlugin}.
+   * The languages supported by the {@link MultiLanguagePlugin}.
    */
   private readonly languages: ReadonlyCollection<string>;
 
@@ -85,8 +92,8 @@ abstract class MultiLanguagePlugin implements WebManglerLanguagePlugin {
   }
 
   /**
-   * Will return all the languages supported by every plugin in the {@link
-   * MultiLanguagePlugin}.
+   * Will return all the languages supported by every plugin in the
+   * {@link MultiLanguagePlugin}.
    *
    * @inheritDoc
    * @version v0.1.25
