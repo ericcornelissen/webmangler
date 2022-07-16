@@ -61,7 +61,12 @@ function buildDir({
   lstat: LstatSync;
 }): Dir {
   return (path: string): string => {
-    return "";
+    const stats = lstat(path);
+    if (stats.isFile()) {
+      return dirname(path);
+    } else {
+      return path;
+    }
   };
 }
 
@@ -83,8 +88,29 @@ function buildCommonDir({
   lstat: LstatSync;
   pathSeparator: string;
 }): CommonDir {
+  const dir = buildDir({ dirname, lstat });
   return (pathA: string, pathB: string): string => {
-    return "";
+    const dirA = dir(pathA);
+    const dirB = dir(pathB);
+
+    const pathToA = dirA.split(pathSeparator);
+    const pathToB = dirB.split(pathSeparator);
+    const min = Math.min(pathToA.length, pathToB.length);
+
+    const result = [];
+    for (let i = 0; i < min; i++) {
+      if (pathToA[i] === pathToB[i]) {
+        result.push(pathToA[i]);
+      } else {
+        break;
+      }
+    }
+
+    if (result.length === 0) {
+      throw new Error("no common parent");
+    }
+
+    return result.join(pathSeparator) || pathSeparator;
   };
 }
 
