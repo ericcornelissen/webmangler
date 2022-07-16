@@ -14,8 +14,7 @@ const {
 } = values;
 
 const INDENT_SIZE = 2;
-const JS_GLOBALS = {
-  console: "readonly",
+const COMMON_JS_GLOBALS = {
   module: "readonly",
   require: "readonly",
 };
@@ -290,7 +289,10 @@ module.exports = {
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-var-requires": "off",
       },
-      globals: JS_GLOBALS,
+      globals: {
+        ...COMMON_JS_GLOBALS,
+        console: "readonly",
+      },
     },
     { // Test files
       files: [
@@ -331,7 +333,7 @@ module.exports = {
       ],
       parser: "espree",
       parserOptions: {
-        ecmaVersion: 2015,
+        ecmaVersion: 2020,
       },
       rules: {
         // See https://github.com/import-js/eslint-plugin-import#rules
@@ -346,9 +348,10 @@ module.exports = {
         // Disable any lingering TypeScript issues
         "@typescript-eslint/no-var-requires": "off",
       },
-      globals: Object.assign({}, JS_GLOBALS, {
+      globals: {
+        ...COMMON_JS_GLOBALS,
         __dirname: "readonly",
-      }),
+      },
     },
     { // Configuration files (JSON)
       files: [
@@ -430,7 +433,10 @@ module.exports = {
         // Remove the project as snippets are not part of any project
         project: null,
       },
-      globals: JS_GLOBALS,
+      globals: {
+        ...COMMON_JS_GLOBALS,
+        console: "readonly",
+      },
       rules: {
         // See: https://eslint.org/docs/rules/
         "no-console": "off",
