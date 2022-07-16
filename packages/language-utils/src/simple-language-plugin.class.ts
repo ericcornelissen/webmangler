@@ -6,8 +6,8 @@ import type {
 } from "@webmangler/types";
 
 /**
- * A function that extracts {@link WebManglerEmbed}s from a {@link
- * WebManglerFile}.
+ * A function that extracts {@link WebManglerEmbed}s from a
+ * {@link WebManglerFile}.
  *
  * @since v0.1.21
  * @version v0.1.28
@@ -59,13 +59,20 @@ interface SimpleLanguagePluginOptions {
 
 /**
  * The {@link SimpleLanguagePlugin} abstract class provides an implementation of
- * a {@link WebManglerLanguagePlugin} that works given a set of languages and a
- * map of manglers to {@link MangleExpression}.
+ * a {@link WebManglerLanguagePlugin} that works given a collection of
+ * languages, a map of {@link ExpressionFactory}, and (optionally) a collection
+ * of {@link EmbedsGetter}s.
  *
- * It is recommended to extend this class - or {@link MultiLanguagePlugin},
- * depending on your needs - if you're implementing a
- * {@link WebManglerLanguagePlugin}.
- *
+ * @example
+ * class MyLanguagePlugin extends SimpleLanguagePlugin {
+ *   constructor() {
+ *     super({
+ *       expressionFactories,
+ *       languages,
+ *       embedsGetters, // optional
+ *     });
+ *   }
+ * }
  * @since v0.1.0
  * @version v0.1.28
  */
@@ -91,15 +98,6 @@ abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
   /**
    * Initialize a new {@link SimpleLanguagePlugin}.
    *
-   * @example
-   * class LanguagePlugin extends SimpleLanguagePlugin {
-   *   constructor() {
-   *     super({
-   *       expressionFactories,
-   *       languages,
-   *     });
-   *   }
-   * }
    * @param params The {@link SimpleLanguagePluginOptions}.
    * @since v0.1.15
    * @version v0.1.28
@@ -157,8 +155,8 @@ abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
   }
 
   /**
-   * Will return all the languages configured when the {@link
-   * SimpleLanguagePlugin} was initialized.
+   * Will return all the languages configured when the
+   * {@link SimpleLanguagePlugin} was initialized.
    *
    * @inheritDoc
    * @version v0.1.17
@@ -170,7 +168,7 @@ abstract class SimpleLanguagePlugin implements WebManglerLanguagePlugin {
   /**
    * Check if a language is supported by this {@link SimpleLanguagePlugin}.
    *
-   * @param query THe language of interest.
+   * @param query The language of interest.
    * @returns `true` if the language is supported, `false` otherwise.
    */
   private supportsLanguage(query: string): boolean {
