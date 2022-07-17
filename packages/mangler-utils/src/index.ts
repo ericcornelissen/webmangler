@@ -20,7 +20,7 @@ import initSimpleManglerPlugin from "./simple-mangler.class";
  * and {@link BuiltInManglers}.
  *
  * @since v0.1.0
- * @version v0.1.17
+ * @version v0.1.28
  */
 const MultiManglerPlugin = initMultiManglerPlugin({
   toArrayIfNeeded,

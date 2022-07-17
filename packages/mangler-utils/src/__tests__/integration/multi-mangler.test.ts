@@ -10,7 +10,7 @@ chaiUse(sinonChai);
 
 suite("MultiManglerPlugin", function() {
   class ConcreteMultiManglerPlugin extends MultiManglerPlugin {
-    constructor(plugins: Iterable<WebManglerPlugin>) {
+    constructor(plugins: ReadonlyArray<WebManglerPlugin>) {
       super(plugins);
     }
   }
