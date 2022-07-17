@@ -1,27 +1,6 @@
-import type { WebManglerCliFile } from "../fs";
-import type { ManglerStats } from "./types";
+import type { ManglerStats, RawStatsData } from "./types";
 
 import { getChangedPercentage } from "./helpers";
-
-/**
- * The raw data needed to compute stats about a _WebMangler_ run.
- */
-interface RawStatsData {
-  /**
-   * The time it took to mangle.
-   */
-  readonly duration: number;
-
-  /**
-   * The files that were inputted to _WebMangler_.
-   */
-  readonly inFiles: WebManglerCliFile[];
-
-  /**
-   * The files that were outputted by _WebMangler_.
-   */
-  readonly outFiles: WebManglerCliFile[];
-}
 
 /**
  * Compute the statistics about one _WebMangler_ run.
