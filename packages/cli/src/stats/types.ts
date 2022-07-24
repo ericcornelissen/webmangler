@@ -1,3 +1,5 @@
+import type { WebManglerCliFile } from "../fs";
+
 /**
  * Aggregated statistics over all files.
  */
@@ -48,8 +50,29 @@ interface ManglerStats {
   readonly files: ReadonlyMap<string, FileStats>;
 }
 
+/**
+ * The raw data needed to compute stats about a _WebMangler_ run.
+ */
+interface RawStatsData {
+  /**
+   * The time it took to mangle.
+   */
+  readonly duration: number;
+
+  /**
+   * The files that were inputted to _WebMangler_.
+   */
+  readonly inFiles: ReadonlyArray<WebManglerCliFile>;
+
+  /**
+   * The files that were outputted by _WebMangler_.
+   */
+  readonly outFiles: ReadonlyArray<WebManglerCliFile>;
+}
+
 export type {
   AggregateStats,
   FileStats,
   ManglerStats,
+  RawStatsData,
 };
