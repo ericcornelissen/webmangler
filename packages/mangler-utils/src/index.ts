@@ -16,9 +16,6 @@ import initSimpleManglerPlugin from "./simple-mangler.class";
  * The {@link MultiManglerPlugin} abstract class is a utility to create a
  * {@link WebManglerPlugin} that provides multiple manglers in one plugin.
  *
- * {@link MultiManglerPlugin} is used to implement {@link RecommendedManglers}
- * and {@link BuiltInManglers}.
- *
  * @since v0.1.0
  * @version v0.1.28
  */
@@ -35,7 +32,7 @@ const MultiManglerPlugin = initMultiManglerPlugin({
  * depending on your needs - if you're implementing a {@link WebManglerPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.23
+ * @version v0.1.28
  */
 const SimpleManglerPlugin = initSimpleManglerPlugin({
   // SimpleManglerPlugin has no dependencies
