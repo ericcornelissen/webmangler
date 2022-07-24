@@ -365,6 +365,9 @@ module.exports = {
       parserOptions: {
         ecmaVersion: 2015,
       },
+      plugins: [
+        "json",
+      ],
       rules: {
         "json/*": ["error"],
       },
