@@ -8,7 +8,7 @@ import { format as printf } from "util";
  * The configuration options of a {@link NestedGroupMangleExpression}.
  *
  * @since v0.1.25
- * @version v0.1.27
+ * @version v0.1.28
  */
 interface NestedGroupMangleExpressionOptions {
   /**
@@ -60,19 +60,6 @@ interface NestedGroupMangleExpressionOptions {
   readonly subPatternTemplate: string;
 
   /**
-   * The name of a group in `patternTemplate`.
-   *
-   * NOTE 1: it is assumed the provided group is present in the both templates.
-   * If this is not true the failure will be silent.
-   *
-   * @example "GROUP_NAME"
-   * @since v0.1.11
-   * @deprecated Use `NestedGroupMangleExpression.CAPTURE_GROUP` and
-   * `NestedGroupMangleExpression.SUB_CAPTURE_GROUP` instead.
-   */
-  readonly groupName?: string;
-
-  /**
    * Should the expression be case sensitive.
    *
    * @default true
@@ -111,7 +98,7 @@ const GROUP_FIND_AND_REPLACE = "NestedGroupMangleExpressionCapturingGroup";
  * // and for the replacements "horse->zebra" and "battery->cell" will change it
  * // into "var pw = 'correct zebra cell staple';"
  * @since v0.1.12
- * @version v0.1.27
+ * @version v0.1.28
  */
 class NestedGroupMangleExpression implements MangleExpression {
   /**
@@ -169,17 +156,16 @@ class NestedGroupMangleExpression implements MangleExpression {
    *
    * @param params The {@link NestedGroupMangleExpressionOptions}.
    * @since v0.1.12
-   * @version v0.1.27
+   * @version v0.1.28
    */
   constructor(params: NestedGroupMangleExpressionOptions) {
     this.patternTemplate = params.patternTemplate.replace(/\s/g, "");
     this.subPatternTemplate = params.subPatternTemplate.replace(/\s/g, "");
-    this.groupName = params.groupName || GROUP_FIND_AND_REPLACE;
+    this.groupName = GROUP_FIND_AND_REPLACE;
     this.caseSensitive = params.caseSensitive === undefined ?
       true : params.caseSensitive;
 
     if (
-      !params.groupName &&
       !this.patternTemplate.match(
         `\\(\\?\\<${GROUP_FIND_AND_REPLACE}\\>(.*?)%s(.*?)\\)`,
       )
@@ -188,7 +174,6 @@ class NestedGroupMangleExpression implements MangleExpression {
     }
 
     if (
-      !params.groupName &&
       !this.subPatternTemplate.includes(
         NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
       )
