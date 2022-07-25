@@ -380,7 +380,7 @@ suite("Embeds", function() {
 
           for (const file of files) {
             for (const plugin of plugins) {
-              expect(plugin.getEmbeds).to.have.been.calledOnceWith(file);
+              expect(plugin.getEmbeds).to.have.been.calledWith(file);
             }
           }
 
