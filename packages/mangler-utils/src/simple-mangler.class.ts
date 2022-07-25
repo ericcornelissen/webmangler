@@ -22,52 +22,56 @@ type SimpleManglerPluginDependencies = Record<never, never>;
  * Interface defining the configuration of a {@link SimpleManglerPlugin}.
  *
  * @since v0.1.0
- * @version v0.1.23
+ * @version v0.1.28
  */
 interface SimpleManglerOptions {
   /**
    * The character set to use when mangling.
    *
    * @since v0.1.7
+   * @version v0.1.28
    */
-  charSet: CharSet;
+  readonly charSet: CharSet;
 
   /**
    * One or more patterns that should **never** be mangled.
    *
    * @since v0.1.23
+   * @version v0.1.28
    */
-  ignorePatterns: string | Iterable<string>;
+  readonly ignorePatterns: string | Iterable<string>;
 
   /**
    * The configuration for the {@link WebManglerLanguagePlugin}s.
    *
    * @since v0.1.17
+   * @version v0.1.28
    */
-  languageOptions: Iterable<MangleExpressionOptions<unknown>>;
+  readonly languageOptions: Iterable<MangleExpressionOptions<unknown>>;
 
   /**
    * One or more patterns that should be mangled.
    *
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.28
    */
-  patterns: string | Iterable<string>;
+  readonly patterns: string | Iterable<string>;
 
   /**
    * A list of names that should not be outputted by the mangler.
    *
    * @since v0.1.0
-   * @version v0.1.17
+   * @version v0.1.28
    */
-  reserved: Iterable<string>;
+  readonly reserved: Iterable<string>;
 
   /**
    * The prefix to use whe mangling.
    *
    * @since v0.1.0
+   * @version v0.1.28
    */
-  prefix: string;
+  readonly prefix: string;
 }
 
 /**
@@ -117,7 +121,7 @@ function initSimpleManglerPlugin(
      *
      * @param options The {@link SimpleManglerOptions}.
      * @since v0.1.0
-     * @version v0.1.23
+     * @version v0.1.28
      */
     constructor(options: SimpleManglerOptions) {
       this.charSet = options.charSet;

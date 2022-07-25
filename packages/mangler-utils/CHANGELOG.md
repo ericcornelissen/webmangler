@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- BREAKING: Drop support for generators from `MultiManglerPlugin`. (#334)
 
 ## [0.1.27] - 2022-01-29
 
@@ -35,5 +35,6 @@ Versioning].
 [#182]: https://github.com/ericcornelissen/webmangler/pull/182
 [#210]: https://github.com/ericcornelissen/webmangler/pull/210
 [#247]: https://github.com/ericcornelissen/webmangler/pull/247
+[#334]: https://github.com/ericcornelissen/webmangler/pull/334
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

@@ -1,10 +1,14 @@
-import type { MangleOptions, WebManglerPlugin } from "@webmangler/types";
+import type {
+  MangleOptions,
+  ReadonlyCollection,
+  WebManglerPlugin,
+} from "@webmangler/types";
 
 /**
  * The type of the {@link MultiManglerPlugin} abstract constructor.
  */
 type MultiManglerPluginConstructor = abstract new (
-  plugins: Iterable<WebManglerPlugin>,
+  plugins: ReadonlyCollection<WebManglerPlugin>,
 ) => WebManglerPlugin;
 
 /**
@@ -39,20 +43,25 @@ function initMultiManglerPlugin({
     /**
      * The {@link MangleOptions} of every {@link WebManglerPlugin} included.
      */
-    private readonly _options: MangleOptions[] = [];
+    private readonly _options: ReadonlyCollection<MangleOptions>;
 
     /**
      * Initialize a {@link MultiManglerPlugin} with a fixed set of manglers.
      *
      * @param plugins The manglers to include in the {@link MultiManglerPlugin}.
      * @since v0.1.0
-     * @version v0.1.17
+     * @version v0.1.28
      */
-    constructor(plugins: Iterable<WebManglerPlugin>) {
+    constructor(
+      plugins: ReadonlyCollection<WebManglerPlugin>,
+    ) {
+      const options: MangleOptions[] = [];
       for (const plugin of plugins) {
         const pluginOptions = plugin.options();
-        this._options.push(...toArrayIfNeeded(pluginOptions));
+        options.push(...toArrayIfNeeded(pluginOptions));
       }
+
+      this._options = options;
     }
 
     /**
