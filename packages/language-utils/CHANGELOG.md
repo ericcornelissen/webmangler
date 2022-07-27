@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- BREAKING: Drop `groupName` parameter for `MangleExpression`s. ([#337])
 - BREAKING: Drop support for generators from `MultiLanguagePlugin`. ([#332])
 - BREAKING: Force readonly file contents in `EmbedsGetter` type. ([#332])
 
@@ -46,5 +47,6 @@ Versioning].
 [#258]: https://github.com/ericcornelissen/webmangler/pull/258
 [#310]: https://github.com/ericcornelissen/webmangler/pull/310
 [#332]: https://github.com/ericcornelissen/webmangler/pull/332
+[#337]: https://github.com/ericcornelissen/webmangler/pull/337
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
