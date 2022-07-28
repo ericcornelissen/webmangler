@@ -39,16 +39,23 @@ suite("Core embeds", function() {
   });
 
   test("getEmbeds", function() {
-    const budget = getRuntimeBudget(3);
+    const budget = getRuntimeBudget(6);
+
+    const getEmbedsStub = sinon.stub();
 
     const files: Collection<WebManglerFile> = [file];
     const plugins: Collection<WebManglerLanguagePlugin> = [
       new WebManglerLanguagePluginMock({
-        getEmbeds: sinon.stub().returns(embeds),
+        getEmbeds: getEmbedsStub,
       }),
     ];
 
     const result = benchmarkFn({
+      setup: () => {
+        getEmbedsStub.reset();
+        getEmbedsStub.onFirstCall().returns(embeds);
+        getEmbedsStub.returns([]);
+      },
       fn: () => getEmbeds(files, plugins),
     });
 
