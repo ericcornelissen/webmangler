@@ -31,138 +31,311 @@ suite("Embeds", function() {
     const scenarios: TestScenarios<Iterable<TestCase>> = [
       {
         testName: "sample",
-        getScenario: () => [
-          {
-            files: [
-              {
-                type: "html",
-                content: "<style>.foobar { color: red; }</style>",
-              },
-            ],
-            plugins: [
-              new WebManglerLanguagePluginMock({
-                getEmbeds: sinon.stub().returns([
-                  {
-                    content: ".foobar { color: red; }",
-                    type: "css",
-                    startIndex: 7,
-                    endIndex: 30,
-                    getRaw(): string { return this.content; },
-                  },
-                ]),
-              }),
-            ],
-            expected: {
-              embeds: [
-                {
-                  content: ".foobar { color: red; }",
-                  type: "css",
-                  startIndex: 7,
-                  endIndex: 30,
-                  getRaw(): string { return this.content; },
-                },
-              ],
+        getScenario: () => {
+          const cssEmbed = ".foo { color: red; }";
+          const jsEmbed = "var x = document.getElementById(\"bar\");";
+
+          const stylesheet = `<style>${cssEmbed}</style>`;
+          const script = `<script>${jsEmbed}</script>`;
+
+          return [
+            {
               files: [
                 {
                   type: "html",
-                  content: `<style>${idPattern}</style>`,
+                  content: stylesheet,
                 },
               ],
-            },
-          },
-          {
-            files: [
-              {
-                type: "html",
-                content: "<script>var x = document.getElementById(\"foobar\");</script>",
-              },
-            ],
-            plugins: [
-              new WebManglerLanguagePluginMock({
-                getEmbeds: sinon.stub().returns([
+              plugins: [
+                new WebManglerLanguagePluginMock({
+                  getEmbeds: sinon.stub().callsFake(({ content }) => {
+                    if (content === stylesheet) {
+                      return [
+                        {
+                          content: cssEmbed,
+                          type: "css",
+                          startIndex: 7,
+                          endIndex: 27,
+                          getRaw(): string { return this.content; },
+                        },
+                      ];
+                    }
+
+                    return [];
+                  }),
+                }),
+              ],
+              expected: {
+                embeds: [
                   {
-                    content: "var x = document.getElementById(\"foobar\");",
+                    content: ".foo { color: red; }",
+                    type: "css",
+                    startIndex: 7,
+                    endIndex: 27,
+                    getRaw(): string { return this.content; },
+                  },
+                ],
+                files: [
+                  {
+                    type: "html",
+                    content: `<style>${idPattern}</style>`,
+                  },
+                ],
+              },
+            },
+            {
+              files: [
+                {
+                  type: "html",
+                  content: script,
+                },
+              ],
+              plugins: [
+                new WebManglerLanguagePluginMock({
+                  getEmbeds: sinon.stub().callsFake(({ content }) => {
+                    if (content === script) {
+                      return [
+                        {
+                          content: jsEmbed,
+                          type: "js",
+                          startIndex: 8,
+                          endIndex: 47,
+                          getRaw(): string { return this.content; },
+                        },
+                      ];
+                    }
+
+                    return [];
+                  }),
+                }),
+              ],
+              expected: {
+                embeds: [
+                  {
+                    content: "var x = document.getElementById\\(\"bar\"\\);",
                     type: "js",
                     startIndex: 8,
-                    endIndex: 50,
+                    endIndex: 47,
                     getRaw(): string { return this.content; },
                   },
-                ]),
-              }),
-            ],
-            expected: {
-              embeds: [
-                {
-                  content: "var x = document.getElementById(\"foobar\");",
-                  type: "js",
-                  startIndex: 8,
-                  endIndex: 50,
-                  getRaw(): string { return this.content; },
-                },
-              ],
+                ],
+                files: [
+                  {
+                    type: "html",
+                    content: `<script>${idPattern}</script>`,
+                  },
+                ],
+              },
+            },
+            {
               files: [
                 {
                   type: "html",
-                  content: `<script>${idPattern}</script>`,
+                  content: `${stylesheet}${script}`,
                 },
               ],
-            },
-          },
-          {
-            files: [
-              {
-                type: "html",
-                content: "<style>.foo { color: blue; }</style>" +
-                  "<script>var x = document.getElementById(\"bar\");</script>",
-              },
-            ],
-            plugins: [
-              new WebManglerLanguagePluginMock({
-                getEmbeds: sinon.stub().returns([
+              plugins: [
+                new WebManglerLanguagePluginMock({
+                  getEmbeds: sinon.stub().callsFake(({ content }) => {
+                    if (content === `${stylesheet}${script}`) {
+                      return [
+                        {
+                          content: jsEmbed,
+                          type: "js",
+                          startIndex: 43,
+                          endIndex: 82,
+                          getRaw(): string { return this.content; },
+                        },
+                        {
+                          content: cssEmbed,
+                          type: "css",
+                          startIndex: 7,
+                          endIndex: 27,
+                          getRaw(): string { return this.content; },
+                        },
+                      ];
+                    }
+
+                    return [];
+                  }),
+                }),
+              ],
+              expected: {
+                embeds: [
                   {
-                    content: "var x = document.getElementById(\"bar\");",
-                    type: "js",
-                    startIndex: 44,
-                    endIndex: 83,
-                    getRaw(): string { return this.content; },
-                  },
-                  {
-                    content: ".foo { color: blue; }",
+                    content: ".foo { color: red; }",
                     type: "css",
                     startIndex: 7,
-                    endIndex: 28,
+                    endIndex: 27,
                     getRaw(): string { return this.content; },
                   },
-                ]),
-              }),
-            ],
-            expected: {
-              embeds: [
-                {
-                  content: ".foo { color: blue; }",
-                  type: "css",
-                  startIndex: 7,
-                  endIndex: 28,
-                  getRaw(): string { return this.content; },
-                },
-                {
-                  content: "var x = document.getElementById(\"bar\");",
-                  type: "js",
-                  startIndex: 44,
-                  endIndex: 83,
-                  getRaw(): string { return this.content; },
-                },
-              ],
+                  {
+                    content: "var x = document.getElementById\\(\"bar\"\\);",
+                    type: "js",
+                    startIndex: 43,
+                    endIndex: 82,
+                    getRaw(): string { return this.content; },
+                  },
+                ],
+                files: [
+                  {
+                    type: "html",
+                    content: `<style>${idPattern}</style>` +
+                      `<script>${idPattern}</script>`,
+                  },
+                ],
+              },
+            },
+            {
               files: [
                 {
                   type: "html",
-                  content: `<style>${idPattern}</style>` +
-                    `<script>${idPattern}</script>`,
+                  content: `${stylesheet}${script}`,
                 },
               ],
+              plugins: [
+                new WebManglerLanguagePluginMock({
+                  getEmbeds: sinon.stub().callsFake(({ content }) => {
+                    if (content.includes(stylesheet)) {
+                      return [
+                        {
+                          content: ".foo { color: red; }",
+                          type: "css",
+                          startIndex: 7,
+                          endIndex: 27,
+                          getRaw(): string { return this.content; },
+                        },
+                      ];
+                    }
+
+                    return [];
+                  }),
+                }),
+                new WebManglerLanguagePluginMock({
+                  getEmbeds: sinon.stub().callsFake(({ content }) => {
+                    if (content.includes(script)) {
+                      return [
+                        {
+                          content: "var x = document.getElementById(\"bar\");",
+                          type: "js",
+                          startIndex: 35,
+                          endIndex: 74,
+                          getRaw(): string { return this.content; },
+                        },
+                      ];
+                    }
+
+                    return [];
+                  }),
+                }),
+              ],
+              expected: {
+                embeds: [
+                  {
+                    content: ".foo { color: red; }",
+                    type: "css",
+                    startIndex: 7,
+                    endIndex: 27,
+                    getRaw(): string { return this.content; },
+                  },
+                  {
+                    content: "var x = document.getElementById\\(\"bar\"\\);",
+                    type: "js",
+                    startIndex: 35,
+                    endIndex: 74,
+                    getRaw(): string { return this.content; },
+                  },
+                ],
+                files: [
+                  {
+                    type: "html",
+                    content: `<style>${idPattern}</style>` +
+                      `<script>${idPattern}</script>`,
+                  },
+                ],
+              },
             },
-          },
-        ],
+          ];
+        },
+      },
+      {
+        testName: "nested embeds",
+        getScenario: () => {
+          const cssEmbed = ".foo { color: blue; }";
+          const mediaEmbed = `@media screen {${cssEmbed}}`;
+          const fileContent = `<style>${mediaEmbed}</style>`;
+
+          return [
+            {
+              files: [
+                {
+                  type: "html",
+                  content: fileContent,
+                },
+              ],
+              plugins: [
+                new WebManglerLanguagePluginMock({
+                  getEmbeds: sinon.stub().callsFake(({ content }) => {
+                    if (content === fileContent) {
+                      return [
+                        {
+                          content: mediaEmbed,
+                          type: "css",
+                          startIndex: 7,
+                          endIndex: 44,
+                          getRaw(): string { return this.content; },
+                        },
+                      ];
+                    }
+
+                    return [];
+                  }),
+                }),
+                new WebManglerLanguagePluginMock({
+                  getEmbeds: sinon.stub().callsFake(({ content }) => {
+                    if (content === mediaEmbed) {
+                      return [
+                        {
+                          content: cssEmbed,
+                          type: "js",
+                          startIndex: 15,
+                          endIndex: 36,
+                          getRaw(): string { return this.content; },
+                        },
+                      ];
+                    }
+
+                    return [];
+                  }),
+                }),
+              ],
+              expected: {
+                embeds: [
+                  {
+                    content: `@media screen {${idPattern}}`,
+                    type: "css",
+                    startIndex: 7,
+                    endIndex: 44,
+                    getRaw(): string { return this.content; },
+                  },
+                  {
+                    content: cssEmbed,
+                    type: "js",
+                    startIndex: 15,
+                    endIndex: 36,
+                    getRaw(): string { return this.content; },
+                  },
+                ],
+                files: [
+                  {
+                    type: "html",
+                    content: `<style>${idPattern}</style>`,
+                  },
+                ],
+              },
+            },
+          ];
+        },
       },
       {
         testName: "edge cases",
@@ -207,7 +380,7 @@ suite("Embeds", function() {
 
           for (const file of files) {
             for (const plugin of plugins) {
-              expect(plugin.getEmbeds).to.have.been.calledOnceWith(file);
+              expect(plugin.getEmbeds).to.have.been.calledWith(file);
             }
           }
 
@@ -215,11 +388,12 @@ suite("Embeds", function() {
           for (const i in embeds) {
             const embed = embeds[i];
             const expectedEmbed = expected.embeds[i];
-            expect(embed.content).to.equal(expectedEmbed.content);
+            const expectedContent = new RegExp(`^${expectedEmbed.content}$`);
+            expect(embed.content).to.match(expectedContent);
             expect(embed.type).to.equal(expectedEmbed.type);
             expect(embed.startIndex).to.equal(expectedEmbed.startIndex);
             expect(embed.endIndex).to.equal(expectedEmbed.endIndex);
-            expect(embed.getRaw()).to.equal(expectedEmbed.getRaw());
+            expect(embed.getRaw()).to.match(expectedContent);
             expect(embed.id).to.be.a.string;
           }
 

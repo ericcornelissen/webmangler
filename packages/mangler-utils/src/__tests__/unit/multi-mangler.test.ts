@@ -12,7 +12,7 @@ chaiUse(sinonChai);
 
 suite("MultiManglerPlugin", function() {
   let createMultiManglerPlugin: (
-    options: Iterable<WebManglerPlugin>,
+    options: ReadonlyArray<WebManglerPlugin>,
   ) => WebManglerPlugin;
 
   let toArrayIfNeeded: SinonStub;
@@ -25,12 +25,12 @@ suite("MultiManglerPlugin", function() {
     });
 
     class ConcreteMultiManglerPlugin extends MultiManglerPlugin {
-      constructor(options: Iterable<WebManglerPlugin>) {
+      constructor(options: ReadonlyArray<WebManglerPlugin>) {
         super(options);
       }
     }
 
-    createMultiManglerPlugin = (options: Iterable<WebManglerPlugin>) => {
+    createMultiManglerPlugin = (options: ReadonlyArray<WebManglerPlugin>) => {
       return new ConcreteMultiManglerPlugin(options);
     };
   });

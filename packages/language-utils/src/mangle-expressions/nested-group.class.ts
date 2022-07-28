@@ -1,19 +1,14 @@
 import type { MangleExpression } from "@webmangler/types";
 
-import { format as printf } from "util";
+import type { RegExpMatchGroups } from "./types";
 
-/**
- * Type of a the groups object of a Regular Expression match.
- */
-type RegExpMatchGroups = {
-  [key: string]: string;
-};
+import { format as printf } from "util";
 
 /**
  * The configuration options of a {@link NestedGroupMangleExpression}.
  *
  * @since v0.1.25
- * @version v0.1.27
+ * @version v0.1.28
  */
 interface NestedGroupMangleExpressionOptions {
   /**
@@ -24,7 +19,7 @@ interface NestedGroupMangleExpressionOptions {
    *
    * _Notes_
    * 1. The regular expression is not allowed to contain a capturing group with
-   *    the name {@link GROUP_FIND_AND_REPLACE}.
+   * the name {@link GROUP_FIND_AND_REPLACE}.
    * 2. Whitespace is automatically removed from this template.
    *
    * @example
@@ -50,7 +45,7 @@ interface NestedGroupMangleExpressionOptions {
    *
    * _Notes_
    * 1. The regular expression is not allowed to contain a capturing group with
-   *    the name {@link GROUP_FIND_AND_REPLACE}.
+   * the name {@link GROUP_FIND_AND_REPLACE}.
    * 2. Whitespace is automatically removed from this template.
    *
    * @example
@@ -63,19 +58,6 @@ interface NestedGroupMangleExpressionOptions {
    * @version v0.1.27
    */
   readonly subPatternTemplate: string;
-
-  /**
-   * The name of a group in `patternTemplate`.
-   *
-   * NOTE 1: it is assumed the provided group is present in the both templates.
-   * If this is not true the failure will be silent.
-   *
-   * @example "GROUP_NAME"
-   * @since v0.1.11
-   * @deprecated Use `NestedGroupMangleExpression.CAPTURE_GROUP` and
-   * `NestedGroupMangleExpression.SUB_CAPTURE_GROUP` instead.
-   */
-  readonly groupName?: string;
 
   /**
    * Should the expression be case sensitive.
@@ -116,7 +98,7 @@ const GROUP_FIND_AND_REPLACE = "NestedGroupMangleExpressionCapturingGroup";
  * // and for the replacements "horse->zebra" and "battery->cell" will change it
  * // into "var pw = 'correct zebra cell staple';"
  * @since v0.1.12
- * @version v0.1.27
+ * @version v0.1.28
  */
 class NestedGroupMangleExpression implements MangleExpression {
   /**
@@ -174,17 +156,16 @@ class NestedGroupMangleExpression implements MangleExpression {
    *
    * @param params The {@link NestedGroupMangleExpressionOptions}.
    * @since v0.1.12
-   * @version v0.1.27
+   * @version v0.1.28
    */
   constructor(params: NestedGroupMangleExpressionOptions) {
     this.patternTemplate = params.patternTemplate.replace(/\s/g, "");
     this.subPatternTemplate = params.subPatternTemplate.replace(/\s/g, "");
-    this.groupName = params.groupName || GROUP_FIND_AND_REPLACE;
+    this.groupName = GROUP_FIND_AND_REPLACE;
     this.caseSensitive = params.caseSensitive === undefined ?
       true : params.caseSensitive;
 
     if (
-      !params.groupName &&
       !this.patternTemplate.match(
         `\\(\\?\\<${GROUP_FIND_AND_REPLACE}\\>(.*?)%s(.*?)\\)`,
       )
@@ -193,7 +174,6 @@ class NestedGroupMangleExpression implements MangleExpression {
     }
 
     if (
-      !params.groupName &&
       !this.subPatternTemplate.includes(
         NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
       )
@@ -203,8 +183,7 @@ class NestedGroupMangleExpression implements MangleExpression {
   }
 
   /**
-   * @inheritdoc
-   * @since v0.1.20
+   * @inheritDoc
    * @version v0.1.24
    */
   public * findAll(s: string, pattern: string): IterableIterator<string> {
@@ -232,8 +211,7 @@ class NestedGroupMangleExpression implements MangleExpression {
   }
 
   /**
-   * @inheritdoc
-   * @since v0.1.12
+   * @inheritDoc
    * @version v0.1.26
    */
   public replaceAll(
@@ -247,13 +225,16 @@ class NestedGroupMangleExpression implements MangleExpression {
     const pattern = Array.from(replacements.keys()).join("|");
     const regExp = this.newRegExp(this.patternTemplate, pattern);
     const regExpSub = this.newRegExp(this.subPatternTemplate, pattern);
-    return str.replace(regExp, (match: string, ...args: unknown[]): string => {
+    return str.replace(regExp, (
+      match: string,
+      ...args: ReadonlyArray<unknown>
+    ): string => {
       const groups = args[args.length - 1] as RegExpMatchGroups;
       if (this.didMatch(groups)) {
         const subStr = groups[this.groupName];
         const newSubStr = subStr.replace(regExpSub, (
           subMatch: string,
-          ...subArgs: unknown[]
+          ...subArgs: ReadonlyArray<unknown>
         ): string => {
           const subGroups = subArgs[subArgs.length - 1] as RegExpMatchGroups;
           if (this.didMatch(subGroups)) {
@@ -295,7 +276,7 @@ class NestedGroupMangleExpression implements MangleExpression {
    * @param args The `String.prototype.replace` callback arguments.
    * @returns The value of the configured named group.
    */
-  private extractGroup(args: unknown[]): string {
+  private extractGroup(args: ReadonlyArray<unknown>): string {
     const groups = args[args.length - 1] as RegExpMatchGroups;
     const groupValue = groups[this.groupName];
     return groupValue;

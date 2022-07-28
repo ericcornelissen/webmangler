@@ -8,7 +8,7 @@ import type {
 
 import NameGenerator from "./name-generator.class";
 
-type EmbedsMap = Map<WebManglerFile, Iterable<IdentifiableWebManglerEmbed>>;
+type EmbedsMap = Map<WebManglerFile, Collection<IdentifiableWebManglerEmbed>>;
 
 /**
  * Extension of {@link WebManglerEmbed} with an identifier.
@@ -80,7 +80,7 @@ function generateUniqueString(s: string): string {
 function getEmbedsInFile(
   file: WebManglerFile,
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
-): Iterable<IdentifiableWebManglerEmbed> {
+): Collection<IdentifiableWebManglerEmbed> {
   const fileUniqueString: string = generateUniqueString(file.content);
   const fileEmbeds: IdentifiableWebManglerEmbed[] = [];
   for (const languagePlugin of languagePlugins) {
@@ -124,6 +124,11 @@ function getEmbeds(
   for (const file of files) {
     const fileEmbeds = getEmbedsInFile(file, languagePlugins);
     embeds.set(file, fileEmbeds);
+
+    if (Array.from(fileEmbeds).length !== 0) {
+      const embedEmbeds = getEmbeds(fileEmbeds, languagePlugins);
+      embedEmbeds.forEach((value, key) => embeds.set(key, value));
+    }
   }
 
   return embeds;

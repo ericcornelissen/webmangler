@@ -347,42 +347,6 @@ suite("NestedGroupMangleExpression", function() {
           expect(i).to.equal(expected.length, `in ${s}`);
         }
       });
-
-      test(`${testName}, with groupName`, function() {
-        for (const testCase of getScenario()) {
-          const {
-            patternTemplate,
-            subPatternTemplate,
-            caseSensitive,
-            pattern,
-            s,
-            expected,
-          } = testCase;
-
-          const groupName = "g";
-
-          const subject = new NestedGroupMangleExpression({
-            patternTemplate: patternTemplate.replace(
-              "NestedGroupMangleExpressionCapturingGroup",
-              groupName,
-            ),
-            subPatternTemplate: subPatternTemplate.replace(
-              NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
-              `(?<${groupName}>%s)`,
-            ),
-            groupName,
-            caseSensitive,
-          });
-
-          let i = 0;
-          for (const str of subject.findAll(s, pattern)) {
-            expect(str).to.equal(expected[i]);
-            i++;
-          }
-
-          expect(i).to.equal(expected.length, `in ${s}`);
-        }
-      });
     }
   });
 
@@ -760,36 +724,6 @@ suite("NestedGroupMangleExpression", function() {
           const subject = new NestedGroupMangleExpression({
             patternTemplate,
             subPatternTemplate,
-            caseSensitive,
-          });
-          const result = subject.replaceAll(s, replacements);
-          expect(result).to.equal(expected);
-        }
-      });
-
-      test(`${testName}, with groupName`, function() {
-        for (const testCase of getScenario()) {
-          const {
-            patternTemplate,
-            subPatternTemplate,
-            caseSensitive,
-            replacements,
-            s,
-            expected,
-          } = testCase;
-
-          const groupName = "g";
-
-          const subject = new NestedGroupMangleExpression({
-            patternTemplate: patternTemplate.replace(
-              "NestedGroupMangleExpressionCapturingGroup",
-              groupName,
-            ),
-            subPatternTemplate: subPatternTemplate.replace(
-              NestedGroupMangleExpression.SUB_CAPTURE_GROUP,
-              `(?<${groupName}>%s)`,
-            ),
-            groupName,
             caseSensitive,
           });
           const result = subject.replaceAll(s, replacements);

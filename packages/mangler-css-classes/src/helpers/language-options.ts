@@ -4,30 +4,29 @@ import type {
   QuerySelectorOptions,
 } from "@webmangler/types";
 
-/**
- * The options for CSS class mangler class attribute expression options.
- */
-interface ClassAttributeExpressionOptions {
-  /**
-   * One or more HTML attributes whose values should be treated as classes, if
-   * any.
-   */
-  readonly classAttributes?: Iterable<string>;
-}
+import type { CssClassManglerOptions } from "../types";
 
 /**
- * A list of the attributes always consider as `class`-like by a {@link
- * CssClassMangler}.
+ * A list of the attributes always consider as `class`-like by a
+ * {@link CssClassMangler}.
  */
 const STANDARD_CLASS_ATTRIBUTES: string[] = [
   "class",
 ];
 
 /**
+ * The options for {@link CssClassMangler} class attribute expression options.
+ */
+type ClassAttributeExpressionOptions = Pick<
+  CssClassManglerOptions,
+  "classAttributes"
+>;
+
+/**
  * Get the {@link MangleExpressionOptions} for mangling class-like attributes.
  * The attribute `class` is always included.
  *
- * @param options The {@link IdAttributeExpressionOptions}.
+ * @param options The {@link ClassAttributeExpressionOptions}.
  * @param options.classAttributes The attributes to treat as `class`-like.
  * @returns The {@link MangleExpressionOptions}.
  */
