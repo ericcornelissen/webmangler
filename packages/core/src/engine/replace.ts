@@ -25,7 +25,7 @@ const charSet: CharSet = [
  * @returns A two-step mapping defining the mangling from input to output.
  */
 function getSafeTwoStepMangleMapping(
-  mangleMap: Map<string, string>,
+  mangleMap: ReadonlyMap<string, string>,
 ): [Map<string, string>, Map<string, string>] {
   const reservedNames = mangleMap.values();
   const uniqueNameGenerator = new NameGenerator({ charSet, reservedNames });
@@ -70,8 +70,8 @@ function getSafeTwoStepMangleMapping(
  */
 function doMangle<Files extends Iterable<WebManglerFile>>(
   files: Files,
-  expressions: Map<string, Iterable<MangleExpression>>,
-  mangleMap: Map<string, string>,
+  expressions: ReadonlyMap<string, Iterable<MangleExpression>>,
+  mangleMap: ReadonlyMap<string, string>,
 ): Files {
   const [map1, map2] = getSafeTwoStepMangleMapping(mangleMap);
   for (const file of files) {

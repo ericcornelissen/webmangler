@@ -6,7 +6,7 @@
  * @returns The ordered list of the `map`.
  * @since v0.1.25
  */
-function mapToOrderedList(map: Map<string, number>): string[] {
+function mapToOrderedList(map: ReadonlyMap<string, number>): string[] {
   const entries = Array.from(map.entries());
   const orderedEntries = entries.sort((a, b) => b[1] - a[1]);
   const orderedInstances = orderedEntries.map((entry) => entry[0]);
@@ -22,9 +22,9 @@ function mapToOrderedList(map: Map<string, number>): string[] {
  * @since v0.1.25
  */
 function removeIgnoredKeys(
-  originalMap: Map<string, number>,
+  originalMap: ReadonlyMap<string, number>,
   removePatterns: Iterable<string>,
-): Map<string, number> {
+): ReadonlyMap<string, number> {
   const prunedMap: Map<string, number> = new Map();
   originalMap.forEach((value, key) => {
     for (const removePattern of removePatterns) {

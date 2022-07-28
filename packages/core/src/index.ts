@@ -42,7 +42,7 @@ function extractOptions(
 function getExpressions(
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
   languageOptions: Iterable<MangleExpressionOptions<unknown>>,
-): Map<string, Iterable<MangleExpression>> {
+): ReadonlyMap<string, Iterable<MangleExpression>> {
   const pluginExpressions: Map<string, Iterable<MangleExpression>> = new Map();
   for (const languagePlugin of languagePlugins) {
     for (const { name, options } of languageOptions) {
