@@ -12,9 +12,9 @@ import type { MangleExpression, WebManglerFile } from "@webmangler/types";
  */
 function countInstances(
   files: Iterable<WebManglerFile>,
-  expressions: Map<string, Iterable<MangleExpression>>,
+  expressions: ReadonlyMap<string, Iterable<MangleExpression>>,
   patterns: Iterable<string>,
-): Map<string, number> {
+): ReadonlyMap<string, number> {
   const countMap: Map<string, number> = new Map();
   for (const file of files) {
     const fileExpressions = expressions.get(file.type) || [];

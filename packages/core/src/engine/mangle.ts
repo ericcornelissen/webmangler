@@ -19,11 +19,11 @@ import { mapToOrderedList } from "./helpers";
  * @since v0.1.25
  */
 function getMangleMap(
-  instances: Map<string, number>,
+  instances: ReadonlyMap<string, number>,
   manglePrefix: string,
   reservedNames: Iterable<string>,
   charSet: CharSet,
-): Map<string, string> {
+): ReadonlyMap<string, string> {
   const orderedInstances = mapToOrderedList(instances);
   const mangleMap: Map<string, string> = new Map();
 
