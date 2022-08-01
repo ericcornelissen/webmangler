@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- Add support for detecting embeds inside of embeds. ([#341])
+- Add support for detecting embeds inside of embeds. ([#341], [#344])
 
 ## [0.1.26] - 2022-07-02
 
@@ -190,5 +190,6 @@ Versioning].
 [#275]: https://github.com/ericcornelissen/webmangler/pull/275
 [#306]: https://github.com/ericcornelissen/webmangler/pull/306
 [#341]: https://github.com/ericcornelissen/webmangler/pull/341
+[#344]: https://github.com/ericcornelissen/webmangler/pull/344
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
