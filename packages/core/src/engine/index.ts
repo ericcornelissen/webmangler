@@ -29,7 +29,7 @@ import { doMangle } from "./replace";
  */
 function mangle<Files extends Iterable<WebManglerFile>>(
   files: Files,
-  expressions: Map<string, Iterable<MangleExpression>>,
+  expressions: ReadonlyMap<string, Iterable<MangleExpression>>,
   options: MangleEngineOptions,
 ): Files {
   const {

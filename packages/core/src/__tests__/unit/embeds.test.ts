@@ -312,17 +312,17 @@ suite("Embeds", function() {
               expected: {
                 embeds: [
                   {
-                    content: `@media screen {${idPattern}}`,
-                    type: "css",
-                    startIndex: 7,
-                    endIndex: 44,
-                    getRaw(): string { return this.content; },
-                  },
-                  {
                     content: cssEmbed,
                     type: "js",
                     startIndex: 15,
                     endIndex: 36,
+                    getRaw(): string { return this.content; },
+                  },
+                  {
+                    content: `@media screen {${idPattern}}`,
+                    type: "css",
+                    startIndex: 7,
+                    endIndex: 44,
                     getRaw(): string { return this.content; },
                   },
                 ],
