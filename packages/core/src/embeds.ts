@@ -123,12 +123,12 @@ function getEmbeds(
   const embeds: EmbedsMap = new Map();
   for (const file of files) {
     const fileEmbeds = getEmbedsInFile(file, languagePlugins);
-    embeds.set(file, fileEmbeds);
-
     if (Array.from(fileEmbeds).length !== 0) {
       const embedEmbeds = getEmbeds(fileEmbeds, languagePlugins);
       embedEmbeds.forEach((value, key) => embeds.set(key, value));
     }
+
+    embeds.set(file, fileEmbeds);
   }
 
   return embeds;
