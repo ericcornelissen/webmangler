@@ -193,6 +193,7 @@ jobs:
         run: npm run coverage -- ${{ matrix.package }}
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3.1.0
+        if: ${{ always() }}
         with:
           file: ./_reports/coverage/lcov.info
           flags: package-${{ matrix.package }}
