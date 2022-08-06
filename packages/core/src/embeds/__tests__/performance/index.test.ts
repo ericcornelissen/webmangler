@@ -4,14 +4,14 @@ import type {
   WebManglerLanguagePlugin,
 } from "@webmangler/types";
 
-import type { IdentifiableWebManglerEmbed } from "../../embeds";
+import type { IdentifiableWebManglerEmbed } from "../../index";
 
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import { getEmbeds, reEmbed } from "../../embeds";
+import { getEmbeds, reEmbed } from "../../index";
 
 suite("Core embeds", function() {
   const embedCount = 100;

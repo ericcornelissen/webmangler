@@ -8,7 +8,7 @@ import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import { getEmbeds, reEmbed } from "../../embeds";
+import { getEmbeds, reEmbed } from "../../index";
 
 suite("Embeds", function() {
   interface TestCase {

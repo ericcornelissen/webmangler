@@ -6,7 +6,7 @@ import type {
   WebManglerLanguagePlugin,
 } from "@webmangler/types";
 
-import NameGenerator from "./name-generator.class";
+import NameGenerator from "../name-generator.class";
 
 type EmbedsMap = Map<WebManglerFile, Collection<IdentifiableWebManglerEmbed>>;
 
@@ -70,8 +70,8 @@ function generateUniqueString(s: string): string {
 }
 
 /**
- * Get all {@link WebManglerEmbed}s in a {@link WebManglerFile} found by {@link
- * WebManglerLanguagePlugin}s.
+ * Get all {@link WebManglerEmbed}s in a {@link WebManglerFile} found by
+ * {@link WebManglerLanguagePlugin}s.
  *
  * @param file The {@link WebManglerFile} to get embeds from.
  * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
