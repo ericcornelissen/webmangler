@@ -4,14 +4,14 @@ import type {
   WebManglerLanguagePlugin,
 } from "@webmangler/types";
 
-import type { IdentifiableWebManglerEmbed } from "../../index";
+import type { IdentifiableWebManglerEmbed } from "../../types";
 
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import { getEmbeds, reEmbed } from "../../index";
+import { getEmbeds } from "../../extract";
 
 suite("Core embeds", function() {
   const embedCount = 100;
@@ -57,16 +57,6 @@ suite("Core embeds", function() {
         getEmbedsStub.returns([]);
       },
       fn: () => getEmbeds(files, plugins),
-    });
-
-    expect(result.medianDuration).to.be.below(budget);
-  });
-
-  test("reEmbed", function() {
-    const budget = getRuntimeBudget(1);
-
-    const result = benchmarkFn({
-      fn: () => reEmbed(embeds, file),
     });
 
     expect(result.medianDuration).to.be.below(budget);
