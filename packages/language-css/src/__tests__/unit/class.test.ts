@@ -13,10 +13,12 @@ chaiUse(sinonChai);
 suite("CssLanguagePlugin class", function() {
   let CssLanguagePlugin: ReturnType<typeof initCssLanguagePlugin>;
 
+  let getEmbedFinders: SinonStub;
   let getExpressionFactories: SinonStub;
   let getLanguages: SinonStub;
 
   suiteSetup(function() {
+    getEmbedFinders = sinon.stub();
     getExpressionFactories = sinon.stub();
     getLanguages = sinon.stub();
 
@@ -24,12 +26,14 @@ suite("CssLanguagePlugin class", function() {
     getLanguages.returns([]);
 
     CssLanguagePlugin = initCssLanguagePlugin({
+      getEmbedFinders,
       getExpressionFactories,
       getLanguages,
     });
   });
 
   setup(function() {
+    getEmbedFinders.resetHistory();
     getExpressionFactories.resetHistory();
     getLanguages.resetHistory();
   });
@@ -63,6 +67,11 @@ suite("CssLanguagePlugin class", function() {
       setup(function() {
         options = getScenario();
         new CssLanguagePlugin(options);
+      });
+
+      test("the `getEmbedFinders` function is used", function() {
+        expect(getEmbedFinders).to.have.callCount(1);
+        expect(getEmbedFinders).to.have.been.calledWithExactly();
       });
 
       test("the `getExpressionFactories` function is used", function() {

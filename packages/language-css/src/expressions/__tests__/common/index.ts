@@ -8,7 +8,7 @@ import type {
 
 import {
   embedContentInContext,
-} from "./benchmark-helpers";
+} from "../../../__tests__/common";
 import {
   buildCssAttributeSelectors,
   buildCssComments,

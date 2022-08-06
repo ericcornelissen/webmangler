@@ -1,5 +1,8 @@
+import type {
+  EmbedsGetter,
+  ExpressionFactory,
+} from "@webmangler/language-utils";
 import type { WebManglerLanguagePlugin } from "@webmangler/types";
-import type { ExpressionFactory } from "@webmangler/language-utils";
 
 import { SimpleLanguagePlugin } from "@webmangler/language-utils";
 
@@ -15,6 +18,13 @@ type CssLanguagePluginConstructor = new (
  * class.
  */
 interface CssLanguagePluginDependencies {
+  /**
+   * Get all the embed finders for a new {@link CssLanguagePlugin} instance.
+   *
+   * @returns The embed finders.
+   */
+  getEmbedFinders(): Iterable<EmbedsGetter>;
+
   /**
    * Get all the expression factories for a new {@link CssLanguagePlugin}
    * instance.
@@ -57,11 +67,13 @@ interface CssLanguagePluginOptions {
  * Initialize the {@link CssLanguagePlugin} class with explicit dependencies.
  *
  * @param helpers The dependencies of the class.
+ * @param helpers.getEmbedFinders A function to get embed finders.
  * @param helpers.getExpressionFactories A function to get expression factories.
  * @param helpers.getLanguages A function to get supported language extensions.
  * @returns The {@link CssLanguagePlugin} class.
  */
 function initCssLanguagePlugin({
+  getEmbedFinders,
   getExpressionFactories,
   getLanguages,
 }: CssLanguagePluginDependencies): CssLanguagePluginConstructor {
@@ -75,6 +87,7 @@ function initCssLanguagePlugin({
      */
     constructor(options: CssLanguagePluginOptions={}) {
       super({
+        embedsGetters: getEmbedFinders(),
         expressionFactories: getExpressionFactories(),
         languages: getLanguages(options.cssExtensions),
       });
