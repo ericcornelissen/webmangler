@@ -40,9 +40,17 @@ interface CssDeclarationPropertyOptions {
  * The {@link MangleExpression} options for CSS property values.
  *
  * @since v0.1.14
- * @version v0.1.26
+ * @version v0.1.27
  */
 interface CssDeclarationValueOptions {
+  /**
+   * Is the value case sensitive.
+   *
+   * @default `true`
+   * @since v0.1.27
+   */
+  readonly caseSensitive?: boolean;
+
   /**
    * A regular expression as a string defining the prefix that property values
    * must have to be considered a match.
@@ -85,9 +93,17 @@ interface MultiValueAttributeOptions {
  * The {@link MangleExpression} options for CSS query selectors.
  *
  * @since v0.1.14
- * @version v0.1.26
+ * @version v0.1.27
  */
 interface QuerySelectorOptions {
+  /**
+   * Is the query selector case sensitive.
+   *
+   * @default `true`
+   * @since v0.1.27
+   */
+  readonly caseSensitive?: boolean;
+
   /**
    * A regular expression as a string defining the prefix that query selectors
    * must have to be considered a match.
