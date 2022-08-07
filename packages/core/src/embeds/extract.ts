@@ -59,33 +59,32 @@ function generateUniqueString(s: string): string {
  * {@link WebManglerLanguagePlugin}s.
  *
  * @param file The {@link WebManglerFile} to get embeds from.
- * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
+ * @param languagePlugin The {@link WebManglerLanguagePlugin} to extract embeds.
  * @returns All {@link WebManglerEmbed}s in `file`.
  */
-function getEmbedsInFile(
+function extractEmbedsFromContent(
   file: WebManglerFile,
-  languagePlugins: Iterable<WebManglerLanguagePlugin>,
+  languagePlugin: WebManglerLanguagePlugin,
 ): Collection<IdentifiableWebManglerEmbed> {
   const fileUniqueString: string = generateUniqueString(file.content);
   const fileEmbeds: IdentifiableWebManglerEmbed[] = [];
-  for (const languagePlugin of languagePlugins) {
-    const rawEmbeds = Array.from(languagePlugin.getEmbeds(file));
-    const sortedEmbeds = rawEmbeds.sort(compareStartIndex);
 
-    let prevEmbedEndIndex = 0;
-    const builder: string[] = [];
-    for (const embed of sortedEmbeds) {
-      const embedId = `${fileUniqueString}-${embed.startIndex}`;
-      fileEmbeds.push({ ...embed, id: embedId });
+  const rawEmbeds = Array.from(languagePlugin.getEmbeds(file));
+  const sortedEmbeds = rawEmbeds.sort(compareStartIndex);
 
-      const preEmbed = file.content.slice(prevEmbedEndIndex, embed.startIndex);
-      builder.push(preEmbed, idPrefix, embedId);
+  let prevEmbedEndIndex = 0;
+  const builder: string[] = [];
+  for (const embed of sortedEmbeds) {
+    const embedId = `${fileUniqueString}-${embed.startIndex}`;
+    fileEmbeds.push({ ...embed, id: embedId });
 
-      prevEmbedEndIndex = embed.endIndex;
-    }
-    builder.push(file.content.slice(prevEmbedEndIndex));
-    file.content = builder.join("");
+    const preEmbed = file.content.slice(prevEmbedEndIndex, embed.startIndex);
+    builder.push(preEmbed, idPrefix, embedId);
+
+    prevEmbedEndIndex = embed.endIndex;
   }
+  builder.push(file.content.slice(prevEmbedEndIndex));
+  file.content = builder.join("");
 
   return fileEmbeds;
 }
@@ -107,7 +106,12 @@ function getEmbeds(
 ): EmbedsMap {
   const embeds: EmbedsMap = new Map();
   for (const file of files) {
-    const fileEmbeds = getEmbedsInFile(file, languagePlugins);
+    const fileEmbeds = [];
+    for (const languagePlugin of languagePlugins) {
+      const _fileEmbeds = extractEmbedsFromContent(file, languagePlugin);
+      fileEmbeds.push(..._fileEmbeds);
+    }
+
     if (Array.from(fileEmbeds).length !== 0) {
       const embedEmbeds = getEmbeds(fileEmbeds, languagePlugins);
       embedEmbeds.forEach((value, key) => embeds.set(key, value));
@@ -120,6 +124,7 @@ function getEmbeds(
 }
 
 export {
+  extractEmbedsFromContent,
   getEmbeds,
 };
 
