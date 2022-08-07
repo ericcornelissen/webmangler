@@ -20,6 +20,7 @@ import values from "../../.values.cjs";
 const {
   testsDir,
   testDirAll,
+  testDirEndToEnd,
   testDirPerformance,
   testDirUnit,
 } = values;
@@ -37,6 +38,14 @@ function main(argv) {
 
 function getPackageCriteria(arg) {
   switch (arg) {
+  case "e2e":
+    return (packageName) => hasFiles(
+      packageName,
+      (filePath) => micromatch.isMatch(
+        filePath,
+        `**/${testsDir}/${testDirEndToEnd}/**`,
+      ),
+    );
   case "mutation":
     return (packageName) => hasFiles(
       packageName,
