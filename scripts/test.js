@@ -22,6 +22,7 @@ import values from "../.values.cjs";
 const FLAGS = {
   ALL: "--all",
   COVERAGE: "--coverage",
+  END_TO_END: "--e2e",
   INTEGRATION: "--integration",
   MUTATION: "--mutation",
   PERFORMANCE: "--performance",
@@ -48,7 +49,7 @@ async function main(argv, env) {
     return;
   }
 
-  if (argv.includes(FLAGS.MUTATION)) {
+  if (argv.includes(FLAGS.END_TO_END) || argv.includes(FLAGS.MUTATION)) {
     const allPackages = paths.listPackages().join(",");
     compilePackages(allPackages);
   } else {
@@ -146,6 +147,8 @@ async function getPackagesToRun(argv, env) {
 function getTestType(argv) {
   for (const arg of argv) {
     switch (arg) {
+    case FLAGS.END_TO_END:
+      return values.testTypeEndToEnd;
     case FLAGS.PERFORMANCE:
       return values.testTypePerformance;
     case FLAGS.INTEGRATION:

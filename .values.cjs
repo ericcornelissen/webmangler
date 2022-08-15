@@ -5,6 +5,7 @@ const process = require("node:process");
 const testSuffix = "test";
 
 const testTypeTests = "tests";
+const testTypeEndToEnd = "end-to-end";
 const testTypePerformance = "performance";
 const testTypeIntegration = "integration";
 const testTypeUnit = "unit";
@@ -22,6 +23,7 @@ const testsDir = "__tests__";
 
 const _testDirUnit = "unit";
 const testDirCommon = "common";
+const testDirEndToEnd = "e2e";
 const testDirIntegration = "integration";
 const testDirPerformance = "performance";
 const testDirAll = `{${[
@@ -71,6 +73,7 @@ module.exports = {
   testDataDir,
   testDirAll,
   testDirCommon,
+  testDirEndToEnd,
   testDirIntegration,
   testDirPerformance,
   testDirUnit,
@@ -84,6 +87,7 @@ module.exports = {
 
   // Tests
   testSuffix,
+  testTypeEndToEnd,
   testTypePerformance,
   testTypeIntegration,
   testTypeTests,

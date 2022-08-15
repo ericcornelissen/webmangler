@@ -1,5 +1,7 @@
 "use strict";
 
+const process = require("node:process");
+
 const values = require("./.values.cjs");
 
 const {
@@ -8,11 +10,13 @@ const {
   packagesExpr,
   packagesList,
   testDirAll,
+  testDirEndToEnd,
   testDirIntegration,
   testDirPerformance,
   testDirUnit,
   testsDir,
   testSuffix,
+  testTypeEndToEnd,
   testTypePerformance,
   testTypeIntegration,
   testTypeTests,
@@ -21,6 +25,9 @@ const {
 
 let testTypeDir;
 switch (process.env.TEST_TYPE) {
+case testTypeEndToEnd:
+  testTypeDir = testDirEndToEnd;
+  break;
 case testTypePerformance:
   testTypeDir = testDirPerformance;
   break;
