@@ -74,26 +74,6 @@ suite("CSS - Query Selector Expression Factory", function() {
       ],
     },
     {
-      // TODO: find better approach for testing nested selectors
-      name: "nested selectors",
-      pattern: "[a-z]+",
-      factoryOptions: {
-        prefix: "\\.",
-      },
-      expected: ["foo"],
-      getValuesSets: () => [
-        {
-          beforeSelector: valuePresets.beforeSelector,
-          selector: [
-            "@media only screen",
-            "@media (max-width: 420px)",
-          ],
-          afterSelector: valuePresets.afterSelector,
-          declarations: [".foo { }"],
-        },
-      ],
-    },
-    {
       name: "multiple selectors in one block",
       pattern: "[a-z]+",
       factoryOptions: {
@@ -134,7 +114,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       factoryOptions: {
         prefix: "\\.",
       },
-      expected: ["foobar"],
+      expected: [],
       getValuesSets: () => [
         {
           beforeRuleset: [
