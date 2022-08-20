@@ -5,7 +5,7 @@ import type { IdentifiableWebManglerEmbed } from "../../types";
 import { benchmarkFn, getRuntimeBudget } from "@webmangler/benchmarking";
 import { expect } from "chai";
 
-import { reEmbed } from "../../insert";
+import { reEmbed } from "../../index";
 
 suite("Core embeds", function() {
   const embedCount = 100;

@@ -7,7 +7,6 @@ import type {
 } from "@webmangler/types";
 
 import type {
-  EmbedsMap,
   IdentifiableWebManglerEmbed,
 } from "./types";
 
@@ -89,43 +88,8 @@ function extractEmbedsFromContent(
   return fileEmbeds;
 }
 
-/**
- * Get all {@link WebManglerEmbed}s in a collection of {@link WebManglerFile}s
- * found by {@link WebManglerLanguagePlugin}s.
- *
- * NOTE: This function changes the `content` of every file that has at least one
- * embed.
- *
- * @param files The {@link WebManglerFile}s to get embeds from.
- * @param languagePlugins The {@link WebManglerLanguagePlugin}s.
- * @returns All {@link WebManglerEmbed}s in `files`.
- */
-function getEmbeds(
-  files: Collection<WebManglerFile>,
-  languagePlugins: Iterable<WebManglerLanguagePlugin>,
-): EmbedsMap {
-  const embeds: EmbedsMap = new Map();
-  for (const file of files) {
-    const fileEmbeds = [];
-    for (const languagePlugin of languagePlugins) {
-      const _fileEmbeds = extractEmbedsFromContent(file, languagePlugin);
-      fileEmbeds.push(..._fileEmbeds);
-    }
-
-    if (Array.from(fileEmbeds).length !== 0) {
-      const embedEmbeds = getEmbeds(fileEmbeds, languagePlugins);
-      embedEmbeds.forEach((value, key) => embeds.set(key, value));
-    }
-
-    embeds.set(file, fileEmbeds);
-  }
-
-  return embeds;
-}
-
 export {
   extractEmbedsFromContent,
-  getEmbeds,
 };
 
 export type {

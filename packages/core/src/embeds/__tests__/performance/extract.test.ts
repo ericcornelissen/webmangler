@@ -11,7 +11,7 @@ import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import { getEmbeds } from "../../extract";
+import { getEmbeds } from "../../index";
 
 suite("Core embeds", function() {
   const embedCount = 100;
