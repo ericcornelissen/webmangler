@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Bump minimum `@webmangler/language-utils` version to `^0.1.27`. ([#322])
+- Improve preciseness of matching query selectors. ([#351])
 - Treat media queries as embeds. ([#304])
 
 ## [0.1.28] - 2022-01-29
@@ -49,5 +50,6 @@ Versioning].
 [#250]: https://github.com/ericcornelissen/webmangler/pull/250
 [#304]: https://github.com/ericcornelissen/webmangler/pull/304
 [#322]: https://github.com/ericcornelissen/webmangler/pull/322
+[#351]: https://github.com/ericcornelissen/webmangler/pull/351
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
