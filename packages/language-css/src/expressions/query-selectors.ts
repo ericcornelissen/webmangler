@@ -22,7 +22,7 @@ function newCssSelectorExpression(
     new SingleGroupMangleExpression({
       patternTemplate: `
         (?:
-          (?:${patterns.anyString}|${patterns.comment})
+          (?:${patterns.anyString}|${patterns.comment}|${patterns.ruleset})
           |
           (?<=
             ${selectorPrefix ? selectorPrefix : `

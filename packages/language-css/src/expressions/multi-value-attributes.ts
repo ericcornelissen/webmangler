@@ -26,7 +26,7 @@ function newAttributeSelectorMultiValueExpression(
       return new NestedGroupMangleExpression({
         patternTemplate: `
           (?:
-            (?:${patterns.anyString}|${patterns.comment})
+            (?:${patterns.anyString}|${patterns.comment}|${patterns.ruleset})
             |
             (?:
               \\[\\s*
