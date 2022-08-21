@@ -1,7 +1,7 @@
 /**
  * Array of characters that are quotes in CSS.
  */
-export const QUOTES_ARRAY = ["\"", "'"];
+const QUOTES_ARRAY = ["\"", "'"];
 
 /**
  * Regular Expression pattern as a string of ways to combine query selectors in
@@ -68,9 +68,14 @@ const anyString = `(?:${doubleQuotedString}|${singleQuotedString})`;
 const quotes = "(?:\"|')";
 
 /**
+ * Regular Expression pattern as a string for a CSS ruleset.
+ */
+const ruleset = `(?:\\{(?:${anyString}|[^}'"])*?\\})`;
+
+/**
  * An object of common Regular Expression patterns in CSS.
  */
-export const patterns = {
+const patterns = {
   allowedAfterSelector,
   allowedBeforeSelector,
   arithmeticOperators,
@@ -81,5 +86,11 @@ export const patterns = {
   commentOpen,
   doubleQuotedString,
   quotes,
+  ruleset,
   singleQuotedString,
+};
+
+export {
+  patterns,
+  QUOTES_ARRAY,
 };

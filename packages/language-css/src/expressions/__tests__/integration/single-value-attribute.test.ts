@@ -135,7 +135,7 @@ suite("CSS - Single Value Attribute Expression Factory", function() {
       factoryOptions: {
         attributeNames: ["data-foo"],
       },
-      expected: ["bar"],
+      expected: [],
       getValuesSets: () => [
         {
           beforeRuleset: [

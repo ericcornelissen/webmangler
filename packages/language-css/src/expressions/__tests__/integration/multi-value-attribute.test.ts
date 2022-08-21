@@ -148,10 +148,7 @@ suite("CSS - Multi Value Attribute Expression Factory", function() {
         options: {
           attributeNames: ["data-foo"],
         },
-        expected: [
-          "bar",
-          "baz",
-        ],
+        expected: [],
         getValuesSets: () => [
           {
             beforeRuleset: [
