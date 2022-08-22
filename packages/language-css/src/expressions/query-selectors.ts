@@ -6,17 +6,19 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
+type QuerySelectorConfig
+  = Required<Pick<QuerySelectorOptions, "caseSensitive">>
+  & Omit<QuerySelectorOptions, "caseSensitive">;
+
 /**
  * Get a {@link MangleExpression} to match query selectors in CSS, e.g. `foobar`
  * in `.foobar { }`.
  *
- * @param [selectorPrefix] The query selector prefix.
- * @param [selectorSuffix] The query selector suffix.
+ * @param config The {@link QuerySelectorConfig}.
  * @returns The {@link MangleExpression}s to match query selectors in CSS.
  */
 function newCssSelectorExpression(
-  selectorPrefix?: string,
-  selectorSuffix?: string,
+  config: QuerySelectorConfig,
 ): Iterable<MangleExpression> {
   return [
     new SingleGroupMangleExpression({
@@ -25,7 +27,7 @@ function newCssSelectorExpression(
           (?:${patterns.anyString}|${patterns.comment}|${patterns.ruleset})
           |
           (?<=
-            ${selectorPrefix ? selectorPrefix : `
+            ${config.prefix ? config.prefix : `
               (?:
                 ^|\\}|
                 ${patterns.allowedBeforeSelector}|
@@ -35,7 +37,7 @@ function newCssSelectorExpression(
           )
           ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
-            ${selectorSuffix ? selectorSuffix : `
+            ${config.suffix ? config.suffix : `
               (?:
                 $|\\{|
                 ${patterns.allowedAfterSelector}|
@@ -56,14 +58,19 @@ function newCssSelectorExpression(
  *
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @since v0.1.14
- * @version v0.1.29
  */
 function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): Iterable<MangleExpression> {
+  const config: QuerySelectorConfig = {
+    ...options,
+    caseSensitive: options.caseSensitive === undefined
+      ? true
+      : options.caseSensitive,
+  };
+
   return [
-    ...newCssSelectorExpression(options.prefix, options.suffix),
+    ...newCssSelectorExpression(config),
   ];
 }
 
