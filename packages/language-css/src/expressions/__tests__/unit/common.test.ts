@@ -374,6 +374,44 @@ suite("CSS - common expressions", function() {
         }
       });
     });
+
+    suite("::ruleset", function() {
+      const getRegExp = () => {
+        return new RegExp(patterns.ruleset, "gm");
+      };
+
+      test("rulesets", function() {
+        const testCases = [
+          ".example { color: red; }",
+          ".example { content: '}'; }",
+          ".example { content: \"}\"; }",
+          ".example {}",
+        ];
+
+        for (const testCase of testCases) {
+          const regExp = getRegExp();
+          const result = regExp.test(testCase);
+          expect(result).to.equal(true, `in "${testCase}"`);
+        }
+      });
+
+      test("not rulesets", function() {
+        const testCases = [
+          "",
+          "foobar",
+          ".incomplete{color: red;",
+          "#incomplete color: red;}",
+          ".trick { content: '}';",
+          "#trick { content: \"}\";",
+        ];
+
+        for (const testCase of testCases) {
+          const regExp = getRegExp();
+          const result = regExp.test(testCase);
+          expect(result).to.equal(false, `in "${testCase}"`);
+        }
+      });
+    });
   });
 
   suite("Values", function() {
