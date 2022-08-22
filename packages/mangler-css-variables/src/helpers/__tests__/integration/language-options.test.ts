@@ -58,7 +58,7 @@ suite("CSS Variable Mangler language-options helpers", function() {
 
     test("the `prefix` option", function() {
       const prefix = subject.options.prefix;
-      expect(prefix).to.equal("var\\s*\\(\\s*--");
+      expect(prefix).to.equal("(VAR|VAr|VaR|Var|vAR|vAr|vaR|var)\\s*\\(\\s*--");
     });
 
     test("the `suffix` option", function() {
