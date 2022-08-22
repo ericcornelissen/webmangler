@@ -62,12 +62,10 @@ async function runLinter(argv, linter) {
   if (filesToLint.length > 0) {
     const args = [
       ...linter.args,
+      argv.includes(FLAGS.FORMAT) ? linter.fixArg : "",
+      "--",
       ...filesToLint,
     ];
-
-    if (argv.includes(FLAGS.FORMAT)) {
-      args.push(linter.fixArg);
-    }
 
     execSync(linter.bin, args, {
       stdio: ["inherit", "inherit", "inherit"],
