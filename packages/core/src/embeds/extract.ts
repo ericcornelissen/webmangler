@@ -32,7 +32,10 @@ const idCharSet: CharSet = [
  * @param b A {@link WebManglerEmbed}.
  * @returns A integer representing which embed has the lowest `startIndex`.
  */
-function compareStartIndex(a: WebManglerEmbed, b: WebManglerEmbed): number {
+function compareStartIndex(
+  a: Pick<WebManglerEmbed, "startIndex">,
+  b: Pick<WebManglerEmbed, "startIndex">,
+): number {
   return a.startIndex - b.startIndex;
 }
 
@@ -89,7 +92,9 @@ function extractEmbedsFromContent(
 }
 
 export {
+  compareStartIndex,
   extractEmbedsFromContent,
+  generateUniqueString,
 };
 
 export type {

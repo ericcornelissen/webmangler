@@ -10,12 +10,85 @@ import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import { extractEmbedsFromContent } from "../../extract";
+import {
+  compareStartIndex,
+  extractEmbedsFromContent,
+  generateUniqueString,
+} from "../../extract";
 
 suite("Embeds", function() {
-  const idPrefix = "wm-embed@";
+  suite("::compareStartIndex", function() {
+    interface TestCase {
+      readonly a: number;
+      readonly b: number;
+    }
+
+    test("a before b", function() {
+      const testCases: ReadonlyArray<TestCase> = [
+        { a: 1, b: 2 },
+        { a: 1, b: 3 },
+        { a: 2, b: 3 },
+        { a: -1, b: 42 },
+        { a: -2, b: -1 },
+      ];
+
+      for (const testCase of testCases) {
+        const a = {
+          startIndex: testCase.a,
+        };
+        const b = {
+          startIndex: testCase.b,
+        };
+
+        const result = compareStartIndex(a, b);
+        expect(result).to.be.below(0);
+      }
+    });
+
+    test("b before a", function() {
+      const testCases: ReadonlyArray<TestCase> = [
+        { a: 2, b: 1 },
+        { a: 3, b: 1 },
+        { a: 3, b: 2 },
+        { a: 42, b: -1 },
+        { a: -1, b: -2 },
+      ];
+
+      for (const testCase of testCases) {
+        const a = {
+          startIndex: testCase.a,
+        };
+        const b = {
+          startIndex: testCase.b,
+        };
+
+        const result = compareStartIndex(a, b);
+        expect(result).to.be.above(0);
+      }
+    });
+
+    test("a equal to b", function() {
+      const testCases: ReadonlyArray<number> = [
+        0,
+        1,
+        -1,
+        42,
+      ];
+
+      for (const testCase of testCases) {
+        const a = {
+          startIndex: testCase,
+        };
+        const b = a;
+
+        const result = compareStartIndex(a, b);
+        expect(result).to.equal(0);
+      }
+    });
+  });
 
   suite("::extractEmbedsFromContent", function() {
+    const idPrefix = "wm-embed@";
     const idPattern = `${idPrefix}[a-zA-Z0-9]+-[0-9]+`;
 
     interface TestCase {
@@ -272,5 +345,49 @@ suite("Embeds", function() {
         }
       });
     }
+  });
+
+  suite("::generateUniqueString", function() {
+    interface TestCase {
+      readonly testString: string;
+      readonly expected: string;
+    }
+
+    test("generate strings", function() {
+      const testCases: ReadonlyArray<TestCase> = [
+        {
+          testString: "foobar",
+          expected: "c",
+        },
+        {
+          testString: "Hello world!",
+          expected: "a",
+        },
+        {
+          testString: "Lorem ipsum dolor",
+          expected: "a",
+        },
+        {
+          testString: ".cls { color: orange; }",
+          expected: "b",
+        },
+        {
+          testString: "<p id='foo' class='bar'>Hello world!</p>",
+          expected: "g",
+        },
+        {
+          testString: "var foo = document.getElementById('.bar');",
+          expected: "h",
+        },
+      ];
+
+      for (const { expected, testString } of testCases) {
+        const result = generateUniqueString(testString);
+        expect(result).to.equal(
+          expected,
+          `incorrect result for \`${testString}\``,
+        );
+      }
+    });
   });
 });
