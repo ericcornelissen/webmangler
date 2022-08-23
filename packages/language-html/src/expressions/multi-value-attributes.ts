@@ -9,16 +9,20 @@ import {
 } from "@webmangler/language-utils";
 import { patterns, QUOTED_ATTRIBUTE_PATTERN, QUOTES_ARRAY } from "./common";
 
+type MultiValueAttributeConfig = Required<MultiValueAttributeOptions>;
+
 /**
  * Get {@link MangleExpression}s to match element attribute values in HTML, e.g.
  * `the` and `sun` in `<img data-praise="the sun">`.
  *
- * @param attributesPattern The pattern of attribute names.
+ * @param config The {@link MultiValueAttributeConfig}.
  * @returns The {@link MangleExpression}s to match attribute values in HTML.
  */
 function newElementAttributeMultiValueExpressions(
-  attributesPattern: string,
+  config: MultiValueAttributeConfig,
 ): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(config.attributeNames).join("|");
+
   return QUOTES_ARRAY.map((quote) => {
     const captureGroup = NestedGroupMangleExpression.CAPTURE_GROUP({
       before: `(?:[^${quote}]+\\s)?`,
@@ -56,12 +60,14 @@ function newElementAttributeMultiValueExpressions(
  * Get {@link MangleExpression}s to match unquoted element attribute values in
  * HTML, e.g. `bar` in `<div data-foo=bar></div>`.
  *
- * @param attributesPattern The pattern of attribute names.
+ * @param config The {@link MultiValueAttributeConfig}.
  * @returns The {@link MangleExpression}s to match unquoted attribute values.
  */
 function newUnquotedAttributeValueExpressions(
-  attributesPattern: string,
+  config: MultiValueAttributeConfig,
 ): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(config.attributeNames).join("|");
+
   return [
     new SingleGroupMangleExpression({
       patternTemplate: `
@@ -91,17 +97,17 @@ function newUnquotedAttributeValueExpressions(
  *
  * @param options The {@link MultiValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @since v0.1.14
- * @version v0.1.27
  */
 function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,
 ): Iterable<MangleExpression> {
-  const attributesPattern = Array.from(options.attributeNames).join("|");
+  const config: MultiValueAttributeConfig = {
+    attributeNames: options.attributeNames,
+  };
 
   return [
-    ...newElementAttributeMultiValueExpressions(attributesPattern),
-    ...newUnquotedAttributeValueExpressions(attributesPattern),
+    ...newElementAttributeMultiValueExpressions(config),
+    ...newUnquotedAttributeValueExpressions(config),
   ];
 }
 
