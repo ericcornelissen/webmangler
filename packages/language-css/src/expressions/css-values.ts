@@ -6,17 +6,17 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
+type CssDeclarationValueConfig = Required<CssDeclarationValueOptions>;
+
 /**
  * Get a {@link MangleExpression} to match the value of CSS declarations in CSS,
  * e.g. `serif` in `div { font: serif; }`.
  *
- * @param valuePrefix The prefix required on values.
- * @param valueSuffix The suffix required on values.
+ * @param config The {@link CssDeclarationValueConfig}.
  * @returns The {@link MangleExpression}s to match declaration values in CSS.
  */
 function newCssDeclarationValueExpression(
-  valuePrefix: string,
-  valueSuffix: string,
+  config: CssDeclarationValueConfig,
 ): Iterable<MangleExpression> {
   return [
     new SingleGroupMangleExpression({
@@ -34,11 +34,11 @@ function newCssDeclarationValueExpression(
               ${patterns.commentClose}|
               ${patterns.arithmeticOperators}
             )
-            ${valuePrefix}
+            ${config.prefix}
           )
           ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
-            ${valueSuffix}
+            ${config.suffix}
             (?:
               \\s|,|\\)|\\!|\\;|\\}|
               ${patterns.commentClose}|
@@ -58,17 +58,20 @@ function newCssDeclarationValueExpression(
  *
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @since v0.1.14
- * @version v0.1.29
  */
 function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,
 ): Iterable<MangleExpression> {
-  const valuePrefix = options.prefix ? options.prefix : "";
-  const valueSuffix = options.suffix ? options.suffix : "";
+  const config: CssDeclarationValueConfig = {
+    caseSensitive: options.caseSensitive === undefined
+      ? true
+      : options.caseSensitive,
+    prefix: options.prefix ? options.prefix : "",
+    suffix: options.suffix ? options.suffix : "",
+  };
 
   return [
-    ...newCssDeclarationValueExpression(valuePrefix, valueSuffix),
+    ...newCssDeclarationValueExpression(config),
   ];
 }
 

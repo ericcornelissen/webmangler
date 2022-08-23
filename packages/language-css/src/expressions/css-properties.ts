@@ -6,17 +6,17 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
+type CssDeclarationPropertyConfig = Required<CssDeclarationPropertyOptions>;
+
 /**
  * Get a {@link MangleExpression} to match the property of CSS declarations in
  * CSS, e.g. `font` in `div { font: serif; }`.
  *
- * @param propertyPrefix The prefix required on properties.
- * @param propertySuffix The suffix required on properties.
+ * @param config The {@link CssDeclarationPropertyConfig}.
  * @returns The {@link MangleExpression}s to match properties in CSS.
  */
 function newCssDeclarationPropertyExpression(
-  propertyPrefix: string,
-  propertySuffix: string,
+  config: CssDeclarationPropertyConfig,
 ): Iterable<MangleExpression> {
   return [
     new SingleGroupMangleExpression({
@@ -29,11 +29,11 @@ function newCssDeclarationPropertyExpression(
               \\;|\\{|
               ${patterns.commentClose}
             )\\s*
-            ${propertyPrefix}
+            ${config.prefix}
           )
           ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
-            ${propertySuffix}
+            ${config.suffix}
             \\s*
             (?:${patterns.comment})?
             \\s*:
@@ -51,17 +51,17 @@ function newCssDeclarationPropertyExpression(
  *
  * @param options The {@link CssDeclarationPropertyOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @since v0.1.14
- * @version v0.1.29
  */
 function cssDeclarationPropertyExpressionFactory(
   options: CssDeclarationPropertyOptions,
 ): Iterable<MangleExpression> {
-  const propertyPrefix = options.prefix ? options.prefix : "";
-  const propertySuffix = options.suffix ? options.suffix : "";
+  const config: CssDeclarationPropertyConfig = {
+    prefix: options.prefix ? options.prefix : "",
+    suffix: options.suffix ? options.suffix : "",
+  };
 
   return [
-    ...newCssDeclarationPropertyExpression(propertyPrefix, propertySuffix),
+    ...newCssDeclarationPropertyExpression(config),
   ];
 }
 
