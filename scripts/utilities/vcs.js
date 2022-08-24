@@ -3,14 +3,27 @@
  * Provides an interface to get Version Control System (VCS) data.
  */
 
+import { execFileSync } from "node:child_process";
+
 import gitChangedFiles from "git-changed-files";
 
 let __changedFiles = null; // Cache for git-changed-files result
 
+function dirty() {
+  const stdout = execFileSync(
+    "git",
+    ["status", "--porcelain"],
+    { encoding: "utf-8" },
+  );
+
+  return stdout.trim() !== "";
+}
+
 async function getChangedFiles() {
   if (__changedFiles === null) {
+    const base = dirty() ? "HEAD~1" : "main";
     const { committedFiles, unCommittedFiles } = await gitChangedFiles({
-      baseBranch: "main",
+      baseBranch: base,
       formats: ["*"],
       diffFilter: "ACDMTX",
       showStatus: true,
