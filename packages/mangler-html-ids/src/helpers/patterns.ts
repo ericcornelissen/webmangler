@@ -11,7 +11,7 @@ const DEFAULT_IGNORE_PATTERNS: Iterable<string> = [
  * {@link HtmlIdMangler}.
  */
 const DEFAULT_PATTERNS: Iterable<string> = [
-  "id-[a-zA-Z-_]+",
+  /id-[a-zA-Z-_]+/.source,
 ];
 
 /**
