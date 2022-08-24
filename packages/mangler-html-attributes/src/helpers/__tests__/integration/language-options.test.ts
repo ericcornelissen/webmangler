@@ -79,7 +79,7 @@ suite("HTML Attribute Mangler language-options helpers", function() {
 
     test("the `prefix` option", function() {
       const prefix = subject.options.prefix;
-      expect(prefix).to.equal("attr\\s*\\(\\s*");
+      expect(prefix).to.equal("(?:ATTR|ATTr|ATtR|AtTR|ATtr|AtTr|AttR|Attr|aTTR|aTTr|aTtR|atTR|aTtr|atTr|attR|attr)\\s*\\(\\s*");
     });
 
     test("the `suffix` option", function() {
