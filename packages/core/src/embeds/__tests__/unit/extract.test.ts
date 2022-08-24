@@ -11,8 +11,8 @@ import { expect } from "chai";
 import * as sinon from "sinon";
 
 import {
+  buildExtractEmbedsFromContent,
   compareStartIndex,
-  extractEmbedsFromContent,
   generateUniqueString,
 } from "../../extract";
 
@@ -88,8 +88,17 @@ suite("Embeds", function() {
   });
 
   suite("::extractEmbedsFromContent", function() {
+    // TODO: This is currently an integration test suite because it integrates
+    // compareStartIndex and generateUniqueString into extractEmbedsFromContent.
+
     const idPrefix = "wm-embed@";
     const idPattern = `${idPrefix}[a-zA-Z0-9]+-[0-9]+`;
+
+    const extractEmbedsFromContent = buildExtractEmbedsFromContent({
+      compareStartIndex,
+      generateUniqueString,
+      idPrefix,
+    });
 
     interface TestCase {
       readonly input: {

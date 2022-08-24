@@ -9,9 +9,28 @@ import type {
   IdentifiableWebManglerEmbed,
 } from "./types";
 
-import { extractEmbedsFromContent } from "./extract";
+import { idPrefix } from "./constants";
+import {
+  buildExtractEmbedsFromContent,
+  compareStartIndex,
+  generateUniqueString,
+} from "./extract";
 import * as F from "./functional";
 import { reEmbed } from "./insert";
+
+/**
+ * Get all {@link WebManglerEmbed}s in a {@link WebManglerFile} found by
+ * {@link WebManglerLanguagePlugin}s.
+ *
+ * @param file The {@link WebManglerFile} to get embeds from.
+ * @param languagePlugin The {@link WebManglerLanguagePlugin} to extract embeds.
+ * @returns All {@link WebManglerEmbed}s in `file`.
+ */
+const extractEmbedsFromContent = buildExtractEmbedsFromContent({
+  compareStartIndex,
+  generateUniqueString,
+  idPrefix,
+});
 
 /**
  * Get all {@link WebManglerEmbed}s in a collection of {@link WebManglerFile}s
