@@ -59,7 +59,7 @@ suite("HTML Attribute Mangler language-options helpers", function() {
 
     test("the `suffix` option", function() {
       const suffix = subject.options.suffix;
-      expect(suffix).to.equal("\\s*(?:\\]|(?:=|~=|\\|=|\\^=|\\$=|\\*=))");
+      expect(suffix).to.equal("\\s*(?:]|(?:=|~=|\\|=|\\^=|\\$=|\\*=))");
     });
   });
 

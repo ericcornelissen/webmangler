@@ -1,17 +1,17 @@
 /**
- * The ignore patterns used by default if none are provided to a {@link
- * HtmlAttributeMangler}.
+ * The ignore patterns used by default if none are provided to a
+ * {@link HtmlAttributeMangler}.
  */
 const DEFAULT_IGNORE_PATTERNS: string[] = [
   // No attribute patterns are ignored by default.
 ];
 
 /**
- * The patterns used by default if none are provided to a {@link
- * HtmlAttributeMangler}.
+ * The patterns used by default if none are provided to a
+ * {@link HtmlAttributeMangler}.
  */
 const DEFAULT_PATTERNS: string[] = [
-  "data-[a-z-]+",
+  /data-[a-z-]+/.source,
 ];
 
 /**

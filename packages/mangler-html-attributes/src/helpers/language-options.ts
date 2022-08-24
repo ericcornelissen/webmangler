@@ -29,8 +29,8 @@ function getAttributeSelectorExpressionOptions():
   return {
     name: "query-selectors",
     options: {
-      prefix: "\\[\\s*",
-      suffix: "\\s*(?:\\]|(?:=|~=|\\|=|\\^=|\\$=|\\*=))",
+      prefix: /\[\s*/.source,
+      suffix: /\s*(?:]|(?:=|~=|\|=|\^=|\$=|\*=))/.source,
     },
   };
 }
@@ -46,8 +46,8 @@ function getAttributeUsageExpressionFactory():
   return {
     name: "css-declaration-values",
     options: {
-      prefix: "(?:ATTR|ATTr|ATtR|AtTR|ATtr|AtTr|AttR|Attr|aTTR|aTTr|aTtR|atTR|aTtr|atTr|attR|attr)\\s*\\(\\s*",
-      suffix: "(\\s+([a-zA-Z]+|%))?\\s*(,[^)]+)?\\)",
+      prefix: /(?:ATTR|ATTr|ATtR|AtTR|ATtr|AtTr|AttR|Attr|aTTR|aTTr|aTtR|atTR|aTtr|atTr|attR|attr)\s*\(\s*/.source,
+      suffix: /(\s+([a-zA-Z]+|%))?\s*(,[^)]+)?\)/.source,
     },
   };
 }
