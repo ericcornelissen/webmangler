@@ -6,16 +6,20 @@ import type {
 import { NestedGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns, QUOTES_ARRAY } from "./common";
 
+type MultiValueAttributeConfig = Required<MultiValueAttributeOptions>;
+
 /**
  * Get {@link MangleExpression}s to match multi-value attribute selector values
  * in CSS, e.g. 'foo' and `bar` in `[class="foo bar"] { }`.
  *
- * @param attributesPattern The pattern of attribute names.
+ * @param config The {@link MultiValueAttributeConfig}.
  * @returns The {@link MangleExpression}s to match attribute values in CSS.
  */
 function newAttributeSelectorMultiValueExpression(
-  attributesPattern: string,
+  config: MultiValueAttributeConfig,
 ): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(config.attributeNames).join("|");
+
   return [
     ...QUOTES_ARRAY.map((quote) => {
       const captureGroup = NestedGroupMangleExpression.CAPTURE_GROUP({
@@ -58,15 +62,16 @@ function newAttributeSelectorMultiValueExpression(
  *
  * @param options The {@link MultiValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @version v0.1.29
  */
 function multiValueAttributeExpressionFactory(
   options: MultiValueAttributeOptions,
 ): Iterable<MangleExpression> {
-  const attributesPattern = Array.from(options.attributeNames).join("|");
+  const config: MultiValueAttributeConfig = {
+    attributeNames: options.attributeNames,
+  };
 
   return [
-    ...newAttributeSelectorMultiValueExpression(attributesPattern),
+    ...newAttributeSelectorMultiValueExpression(config),
   ];
 }
 

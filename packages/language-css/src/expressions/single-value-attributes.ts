@@ -6,6 +6,8 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
+type SingleValueAttributeConfig = Required<SingleValueAttributeOptions>
+
 const GROUP_QUOTE = "quote";
 
 /**
@@ -13,16 +15,14 @@ const GROUP_QUOTE = "quote";
  * e.g. `bar` in `[data-foo="bar"] { }` or `sun` in `[data-praise="thesun"] { }`
  * if the value prefix is "the".
  *
- * @param attributesPattern The pattern of attribute names.
- * @param valuePrefix An expression of the required prefix for values.
- * @param valueSuffix An expression of the required suffix for values.
+ * @param config The {@link newAttributeSelectorSingleValueExpression}.
  * @returns The {@link MangleExpression}s to match attribute values in CSS.
  */
 function newAttributeSelectorSingleValueExpression(
-  attributesPattern: string,
-  valuePrefix: string,
-  valueSuffix: string,
+  config: SingleValueAttributeConfig,
 ): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(config.attributeNames).join("|");
+
   return [
     new SingleGroupMangleExpression({
       patternTemplate: `
@@ -34,11 +34,11 @@ function newAttributeSelectorSingleValueExpression(
             (?:${attributesPattern})\\s*
             (?:${patterns.attributeOperators})\\s*
             (?<${GROUP_QUOTE}>${patterns.quotes})\\s*
-            ${valuePrefix}
+            ${config.valuePrefix}
           )
           ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?:
-            ${valueSuffix}
+            ${config.valueSuffix}
             \\s*\\k<${GROUP_QUOTE}>
             \\s*\\]
           )
@@ -55,22 +55,18 @@ function newAttributeSelectorSingleValueExpression(
  *
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @since v0.1.14
- * @version v0.1.29
  */
 function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
 ): Iterable<MangleExpression> {
-  const attributesPattern = Array.from(options.attributeNames).join("|");
-  const valuePrefix = options.valuePrefix ? options.valuePrefix : "";
-  const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
+  const config: SingleValueAttributeConfig = {
+    attributeNames: options.attributeNames,
+    valuePrefix: options.valuePrefix ? options.valuePrefix : "",
+    valueSuffix: options.valueSuffix ? options.valueSuffix : "",
+  };
 
   return [
-    ...newAttributeSelectorSingleValueExpression(
-      attributesPattern,
-      valuePrefix,
-      valueSuffix,
-    ),
+    ...newAttributeSelectorSingleValueExpression(config),
   ];
 }
 

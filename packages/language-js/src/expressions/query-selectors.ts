@@ -9,19 +9,21 @@ import {
 } from "@webmangler/language-utils";
 import { patterns, QUOTES_ARRAY } from "./common";
 
+type QuerySelectorConfig
+  = Required<Pick<QuerySelectorOptions, "caseSensitive">>
+  & Omit<QuerySelectorOptions, "caseSensitive">;
+
 const GROUP_QUOTE = "quote";
 
 /**
  * Get {@link MangleExpression}s to match query selectors in JavaScript, e.g.
  * `foobar` in `document.querySelectorAll(".foobar");`.
  *
- * @param [selectorPrefix] The query selector prefix, if any.
- * @param [selectorSuffix] The query selector suffix, if any.
+ * @param config The {@link QuerySelectorConfig}.
  * @returns The {@link MangleExpression}s to match query selectors in JS.
  */
 function newQuerySelectorExpressions(
-  selectorPrefix?: string,
-  selectorSuffix?: string,
+  config: QuerySelectorConfig,
 ): Iterable<MangleExpression> {
   return QUOTES_ARRAY.map((quote) => {
     const captureGroup = NestedGroupMangleExpression.CAPTURE_GROUP({
@@ -45,11 +47,11 @@ function newQuerySelectorExpressions(
       `,
       subPatternTemplate: `
         (?<=
-          ${selectorPrefix || `(?:${quote}|${patterns.allowedBeforeSelector})`}
+          ${config.prefix || `(?:${quote}|${patterns.allowedBeforeSelector})`}
         )
         ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
         (?=
-          ${selectorSuffix || `(?:${quote}|${patterns.allowedAfterSelector})`}
+          ${config.suffix || `(?:${quote}|${patterns.allowedAfterSelector})`}
         )
       `,
     });
@@ -93,14 +95,19 @@ function newSelectorAsStandaloneStringExpressions():
  *
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @since v0.1.14
- * @version v0.1.28
  */
 function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): Iterable<MangleExpression> {
+  const config: QuerySelectorConfig = {
+    ...options,
+    caseSensitive: options.caseSensitive === undefined
+      ? true
+      : options.caseSensitive,
+  };
+
   const result = [
-    ...newQuerySelectorExpressions(options.prefix, options.suffix),
+    ...newQuerySelectorExpressions(config),
   ];
 
   if (options.suffix || options.prefix) {

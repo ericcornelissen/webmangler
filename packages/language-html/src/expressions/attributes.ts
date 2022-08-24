@@ -50,8 +50,6 @@ function newElementAttributeExpressions(): Iterable<MangleExpression> {
  *
  * @param options The {@link AttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @since v0.1.14
- * @version v0.1.27
  */
 function attributeExpressionFactory(
   options: AttributeOptions, // eslint-disable-line @typescript-eslint/no-unused-vars

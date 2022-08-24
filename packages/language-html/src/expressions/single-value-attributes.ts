@@ -6,6 +6,8 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns, QUOTED_ATTRIBUTE_PATTERN } from "./common";
 
+type SingleValueAttributeConfig = Required<SingleValueAttributeOptions>;
+
 const GROUP_QUOTE = "quote";
 
 /**
@@ -13,16 +15,13 @@ const GROUP_QUOTE = "quote";
  * HTML, e.g. `bar` in `<div data-foo="bar"></div>` or `sun` in `<div data-
  * praise="thesun"></div>` if the value prefix is "the".
  *
- * @param attributesPattern The pattern of attribute names.
- * @param valuePrefix An pattern of the required prefix for values.
- * @param valueSuffix An pattern of the required suffix for values.
+ * @param config The {@link SingleValueAttributeConfig}.
  * @returns The {@link MangleExpression}s to match quoted attribute values.
  */
 function newQuotedValueExpressions(
-  attributesPattern: string,
-  valuePrefix: string,
-  valueSuffix: string,
+  config: SingleValueAttributeConfig,
 ): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(config.attributeNames).join("|");
   const quoteExpr = `(?<${GROUP_QUOTE}>${patterns.quotes})`;
   return [
     new SingleGroupMangleExpression({
@@ -34,11 +33,11 @@ function newQuotedValueExpressions(
             ${patterns.tagOpen}
             (?:${patterns.attributes})?
             ${QUOTED_ATTRIBUTE_PATTERN(attributesPattern, quoteExpr)}
-            ${valuePrefix}
+            ${config.valuePrefix}
           )
           ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
-            ${valueSuffix}
+            ${config.valueSuffix}
             \\s*\\k<${GROUP_QUOTE}>
             [^>]*
             >
@@ -54,16 +53,13 @@ function newQuotedValueExpressions(
  * HTML, e.g. `bar` in `<div data-foo=bar></div>` or `sun` in `<div data-
  * praise=thesun></div>` if the value prefix is "the".
  *
- * @param attributesPattern The pattern of attribute names.
- * @param valuePrefix An pattern of the required prefix for values.
- * @param valueSuffix An pattern of the required suffix for values.
+ * @param config The {@link SingleValueAttributeConfig}.
  * @returns The {@link MangleExpression}s to match unquoted attribute values.
  */
 function newUnquotedValueExpressions(
-  attributesPattern: string,
-  valuePrefix: string,
-  valueSuffix: string,
+  config: SingleValueAttributeConfig,
 ): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(config.attributeNames).join("|");
   return [
     new SingleGroupMangleExpression({
       patternTemplate: `
@@ -75,11 +71,11 @@ function newUnquotedValueExpressions(
             (?:${patterns.attributes})?
             (?:${attributesPattern})
             \\s*=\\s*
-            ${valuePrefix}
+            ${config.valuePrefix}
           )
           ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
-            ${valueSuffix}
+            ${config.valueSuffix}
             ${patterns.afterAttribute}
           )
         )
@@ -96,19 +92,19 @@ function newUnquotedValueExpressions(
  *
  * @param options The {@link SingleValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
- * @since v0.1.14
- * @version v0.1.27
  */
 function singleValueAttributeExpressionFactory(
   options: SingleValueAttributeOptions,
 ): Iterable<MangleExpression> {
-  const attributesPattern = Array.from(options.attributeNames).join("|");
-  const valuePrefix = options.valuePrefix ? options.valuePrefix : "";
-  const valueSuffix = options.valueSuffix ? options.valueSuffix : "";
+  const config: SingleValueAttributeConfig = {
+    attributeNames: options.attributeNames,
+    valuePrefix: options.valuePrefix ? options.valuePrefix : "",
+    valueSuffix: options.valueSuffix ? options.valueSuffix : "",
+  };
 
   return [
-    ...newQuotedValueExpressions(attributesPattern, valuePrefix, valueSuffix),
-    ...newUnquotedValueExpressions(attributesPattern, valuePrefix, valueSuffix),
+    ...newQuotedValueExpressions(config),
+    ...newUnquotedValueExpressions(config),
   ];
 }
 
