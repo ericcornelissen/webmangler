@@ -39,7 +39,6 @@
     "@typescript-eslint/parser": "5.33.1",
     "chai": "4.3.6",
     "commitlint": "17.0.3",
-    "del-cli": "5.0.0",
     "eslint": "8.22.0",
     "eslint-import-resolver-typescript": "3.4.2",
     "eslint-plugin-chai-expect": "3.0.0",
