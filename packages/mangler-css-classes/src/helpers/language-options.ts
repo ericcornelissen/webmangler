@@ -55,7 +55,7 @@ function getQuerySelectorExpressionOptions():
   return {
     name: "query-selectors",
     options: {
-      prefix: "\\.",
+      prefix: /\./.source,
     },
   };
 }

@@ -38,13 +38,15 @@ suite("CSS Variable Mangler language-options helpers", function() {
     test("the `prefix` option", function() {
       const result = getCssVariableUsageExpressionOptions();
       const prefix = result.options.prefix;
-      expect(prefix).to.equal("(VAR|VAr|VaR|Var|vAR|vAr|vaR|var)\\s*\\(\\s*--");
+      expect(prefix).to.equal(
+        "(?:VAR|VAr|VaR|Var|vAR|vAr|vaR|var)\\s*\\(\\s*--",
+      );
     });
 
     test("the `suffix` option", function() {
       const result = getCssVariableUsageExpressionOptions();
       const suffix = result.options.suffix;
-      expect(suffix).to.equal("\\s*(,[^\\)]+)?\\)");
+      expect(suffix).to.equal("\\s*(,[^)]+)?\\)");
     });
   });
 });

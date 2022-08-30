@@ -62,7 +62,7 @@ function getQuerySelectorExpressionOptions():
   return {
     name: "query-selectors",
     options: {
-      prefix: "#",
+      prefix: /#/.source,
     },
   };
 }
@@ -96,7 +96,7 @@ function getUrlAttributeExpressionOptions({
         ...STANDARD_URL_ATTRIBUTES,
         ...urlAttributes,
       ]),
-      valuePrefix: "[a-zA-Z0-9\\-\\_\\/\\.\\?]*(\\?[a-zA-Z0-9\\_\\-\\=\\%]+)?#",
+      valuePrefix: /[a-zA-Z0-9\-_/.?]*(\?[a-zA-Z0-9_\-=%]+)?#/.source,
     },
   };
 }

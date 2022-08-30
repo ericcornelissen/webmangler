@@ -13,7 +13,7 @@ const DEFAULT_IGNORE_PATTERNS: string[] = [
  * {@link CssClassMangler}.
  */
 const DEFAULT_PATTERNS: string[] = [
-  "cls-[a-zA-Z-_]+",
+  /cls-[a-zA-Z-_]+/.source,
 ];
 
 /**

@@ -11,13 +11,13 @@ const DEFAULT_IGNORE_PATTERNS: Iterable<string> = [
  * {@link CssVariableMangler}.
  */
 const DEFAULT_PATTERNS: Iterable<string> = [
-  "[a-zA-Z-]+",
+  /[a-zA-Z-]+/.source,
 ];
 
 /**
  * The options for CSS variable mangler ignore patterns.
  */
- interface IgnorePatternOptions {
+interface IgnorePatternOptions {
   /**
    * One or more patterns for CSS variables that should **never** be mangled, if
    * any.
@@ -45,7 +45,7 @@ function getIgnorePatterns({
 /**
  * The options for CSS variable mangler patterns.
  */
- interface PatternOptions {
+interface PatternOptions {
   /**
    * One or more patterns for CSS variables that should be mangled, if any.
    */

@@ -15,7 +15,7 @@ function getCssVariableDefinitionExpressionOptions():
   return {
     name: "css-declaration-properties",
     options: {
-      prefix: "--",
+      prefix: /--/.source,
     },
   };
 }
@@ -30,8 +30,8 @@ function getCssVariableUsageExpressionOptions():
   return {
     name: "css-declaration-values",
     options: {
-      prefix: "(VAR|VAr|VaR|Var|vAR|vAr|vaR|var)\\s*\\(\\s*--",
-      suffix: "\\s*(,[^\\)]+)?\\)",
+      prefix: /(?:VAR|VAr|VaR|Var|vAR|vAr|vaR|var)\s*\(\s*--/.source,
+      suffix: /\s*(,[^)]+)?\)/u.source,
     },
   };
 }
