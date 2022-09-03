@@ -47,6 +47,7 @@ function newCssSelectorExpression(
           )
         )
       `,
+      caseSensitive: config.caseSensitive,
     }),
   ];
 }

@@ -47,6 +47,7 @@ function newCssDeclarationValueExpression(
           )
         )
       `,
+      caseSensitive: config.caseSensitive,
     }),
   ];
 }
