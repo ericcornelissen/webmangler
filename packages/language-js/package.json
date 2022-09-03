@@ -22,7 +22,7 @@
     "url": "https://ericcornelissen.dev/"
   },
   "scripts": {
-    "clean": "del-cli lib/ *.tsbuildinfo",
+    "clean": "git clean -fqx ./lib/ ./*.tsbuildinfo",
     "compile": "tsc --build",
     "prepublishOnly": "npm run compile",
     "postpublish": "npm run clean"
