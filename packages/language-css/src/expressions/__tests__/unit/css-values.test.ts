@@ -26,4 +26,12 @@ suite("CSS Values Expression Factory", function() {
     const result = Array.from(_result);
     expect(result.length).to.be.greaterThan(0);
   });
+
+  for (const caseSensitive of [true, false]) {
+    test(`with caseSensitive=${caseSensitive}`, function() {
+      const _result = expressionsFactory({ caseSensitive });
+      const result = Array.from(_result);
+      expect(result.length).to.be.greaterThan(0);
+    });
+  }
 });

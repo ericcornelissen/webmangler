@@ -222,6 +222,22 @@ suite("CSS - CSS Value Expression Factory", function() {
         },
       ],
     },
+    {
+      name: "case insensitive",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        caseSensitive: false,
+      },
+      expected: ["red"],
+      getValuesSets: () => [
+        {
+          property: valuePresets.property,
+          beforeValue: valuePresets.beforeValue,
+          value: ["Red", "rEd", "reD", "REd", "ReD", "rED", "RED"],
+          afterValue: valuePresets.afterValue,
+        },
+      ],
+    },
   ];
 
   for (const scenario of scenarios) {

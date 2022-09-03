@@ -176,6 +176,21 @@ suite("CSS - Query Selector Expression Factory", function() {
         ];
       },
     },
+    {
+      name: "case insensitive",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        caseSensitive: false,
+      },
+      expected: ["div"],
+      getValuesSets: () => [
+        {
+          beforeSelector: valuePresets.beforeSelector,
+          selector: ["Div", "dIv", "diV", "DIv", "DiV", "dIV", "DIV"],
+          afterSelector: valuePresets.afterSelector,
+        },
+      ],
+    },
   ];
 
   for (const scenario of scenarios) {
