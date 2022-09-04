@@ -62,6 +62,7 @@ function getQuerySelectorExpressionOptions():
   return {
     name: "query-selectors",
     options: {
+      kind: "id",
       prefix: /#/.source,
     },
   };

@@ -29,6 +29,7 @@ function getAttributeSelectorExpressionOptions():
   return {
     name: "query-selectors",
     options: {
+      kind: "attribute",
       prefix: /\[\s*/.source,
       suffix: /\s*(?:]|(?:=|~=|\|=|\^=|\$=|\*=))/.source,
     },

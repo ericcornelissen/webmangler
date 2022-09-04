@@ -69,7 +69,9 @@ suite("The @webmangler/language-css plugin", function() {
     });
 
     test("has support for mangling 'query-selectors'", function() {
-      const options: QuerySelectorOptions = { };
+      const options: QuerySelectorOptions = {
+        kind: "class",
+      };
 
       const result = plugin.getExpressions("query-selectors", options);
       expect(result).to.have.length.above(0);

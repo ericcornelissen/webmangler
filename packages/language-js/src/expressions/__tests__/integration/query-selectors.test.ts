@@ -30,7 +30,9 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     {
       name: "without configuration",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "element",
+      },
       expected: ["div"],
       getValuesSets: () => [
         {
@@ -51,6 +53,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       name: "with prefix, as CSS selector",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "class",
         prefix: "\\.",
       },
       expected: ["foobar"],
@@ -73,6 +76,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       name: "with prefix, as standalone string",
       pattern: "[a-z][0-9][a-z][0-9]",
       factoryOptions: {
+        kind: "id",
         prefix: "\\#",
       },
       expected: ["r2d2"],
@@ -95,6 +99,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       name: "with suffix, as CSS selector",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "attribute",
         prefix: "\\[",
         suffix: "\\]",
       },
@@ -118,6 +123,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       name: "with suffix, as standalone string",
       pattern: "[a-z][0-9][a-z][0-9]",
       factoryOptions: {
+        kind: "attribute",
         prefix: "\\[",
         suffix: "\\]",
       },
@@ -140,7 +146,9 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     {
       name: "selector-like string in comments, no configuration",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "element",
+      },
       expected: [],
       getValuesSets: () => {
         const inlineCommentOfSelectorString = buildJsStrings("div")
@@ -171,6 +179,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       name: "selector-like string in comments, with prefix",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "class",
         prefix: "\\.",
       },
       expected: [],
@@ -203,6 +212,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       name: "selector string with an extra quote",
       pattern: "cls-[a-z]+",
       factoryOptions: {
+        kind: "class",
         prefix: "\\.",
       },
       expected: [
@@ -223,6 +233,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       name: "unrelated string with an extra quote",
       pattern: "cls-[a-z]+",
       factoryOptions: {
+        kind: "class",
         prefix: "\\.",
       },
       expected: [
@@ -257,7 +268,9 @@ suite("JavaScript - Query Selector Expression Factory", function() {
     {
       name: "no match due to unexpected character",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "element",
+      },
       expected: [],
       getValuesSets: () => [
         {
