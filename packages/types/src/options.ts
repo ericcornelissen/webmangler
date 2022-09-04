@@ -97,14 +97,6 @@ interface MultiValueAttributeOptions {
  */
 interface QuerySelectorOptions {
   /**
-   * Is the query selector case sensitive.
-   *
-   * @default `true`
-   * @since v0.1.27
-   */
-  readonly caseSensitive?: boolean;
-
-  /**
    * A regular expression as a string defining the prefix that query selectors
    * must have to be considered a match.
    *
@@ -114,6 +106,7 @@ interface QuerySelectorOptions {
    * @default `""`
    * @since v0.1.14
    * @version v0.1.26
+   * @deprecated
    */
   readonly prefix?: string;
 
@@ -126,8 +119,16 @@ interface QuerySelectorOptions {
    * @default `""`
    * @since v0.1.14
    * @version v0.1.26
+   * @deprecated
    */
   readonly suffix?: string;
+
+  /**
+   * The name of the kind of query selector.
+   *
+   * @since v0.1.27
+   */
+  readonly kind: "element" | "attribute" | "class" | "id";
 }
 
 /**
