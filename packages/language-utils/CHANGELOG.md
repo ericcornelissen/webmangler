@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.28] - 2022-09-10
+
 - BREAKING: Drop `groupName` parameter for `MangleExpression`s. ([#337])
 - BREAKING: Drop support for generators from `MultiLanguagePlugin`. ([#332])
 - BREAKING: Force readonly file contents in `EmbedsGetter` type. ([#332])

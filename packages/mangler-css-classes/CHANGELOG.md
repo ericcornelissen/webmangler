@@ -8,12 +8,19 @@ Versioning].
 
 ## [Unreleased]
 
-- Correct the default value for the `classAttributes` option. ([#327])
+- _No changes yet_
+
+## [0.1.24] - 2022-09-10
+
+- Add a README. ([#163])
+- Correct documented default value for the `classAttributes` option. ([#327])
 
 ## [0.1.23] - 2021-07-25
 
-- Extract the _Webmangler Core_ CSS class mangler into this package.
+- Extract the _Webmangler Core_ CSS class mangler into this package. ([#144])
 
+[#144]: https://github.com/ericcornelissen/webmangler/pull/144
+[#163]: https://github.com/ericcornelissen/webmangler/pull/163
 [#327]: https://github.com/ericcornelissen/webmangler/pull/327
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

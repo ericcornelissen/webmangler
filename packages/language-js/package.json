@@ -1,6 +1,6 @@
 {
   "name": "@webmangler/language-js",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "description": "JavaScript language support for WebMangler",
   "license": "MIT",
   "main": "./lib/index.js",
