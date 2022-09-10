@@ -12,91 +12,16 @@ import * as sinon from "sinon";
 
 import {
   buildExtractEmbedsFromContent,
-  compareStartIndex,
   generateUniqueString,
 } from "../../extract";
 
 suite("Embeds", function() {
-  suite("::compareStartIndex", function() {
-    interface TestCase {
-      readonly a: number;
-      readonly b: number;
-    }
-
-    test("a before b", function() {
-      const testCases: ReadonlyArray<TestCase> = [
-        { a: 1, b: 2 },
-        { a: 1, b: 3 },
-        { a: 2, b: 3 },
-        { a: -1, b: 42 },
-        { a: -2, b: -1 },
-      ];
-
-      for (const testCase of testCases) {
-        const a = {
-          startIndex: testCase.a,
-        };
-        const b = {
-          startIndex: testCase.b,
-        };
-
-        const result = compareStartIndex(a, b);
-        expect(result).to.be.below(0);
-      }
-    });
-
-    test("b before a", function() {
-      const testCases: ReadonlyArray<TestCase> = [
-        { a: 2, b: 1 },
-        { a: 3, b: 1 },
-        { a: 3, b: 2 },
-        { a: 42, b: -1 },
-        { a: -1, b: -2 },
-      ];
-
-      for (const testCase of testCases) {
-        const a = {
-          startIndex: testCase.a,
-        };
-        const b = {
-          startIndex: testCase.b,
-        };
-
-        const result = compareStartIndex(a, b);
-        expect(result).to.be.above(0);
-      }
-    });
-
-    test("a equal to b", function() {
-      const testCases: ReadonlyArray<number> = [
-        0,
-        1,
-        -1,
-        42,
-      ];
-
-      for (const testCase of testCases) {
-        const a = {
-          startIndex: testCase,
-        };
-        const b = a;
-
-        const result = compareStartIndex(a, b);
-        expect(result).to.equal(0);
-      }
-    });
-  });
-
   suite("::extractEmbedsFromContent", function() {
-    // TODO: This is currently an integration test suite because it integrates
-    // compareStartIndex and generateUniqueString into extractEmbedsFromContent.
-
     const idPrefix = "wm-embed@";
-    const idPattern = `${idPrefix}[a-zA-Z0-9]+-[0-9]+`;
+    const idUniqueString = "this-should-be-a-unique-string-for-this-test";
 
     const extractEmbedsFromContent = buildExtractEmbedsFromContent({
-      compareStartIndex,
-      generateUniqueString,
+      generateUniqueString: () => idUniqueString,
       idPrefix,
     });
 
@@ -144,12 +69,12 @@ suite("Embeds", function() {
                   startIndex: 7,
                   endIndex: 27,
                   getRaw(): string { return this.content; },
-                  id: "a-7",
+                  id: `${idUniqueString}-7`,
                 },
               ],
               file: {
                 type: "html",
-                content: `<style>${idPattern}</style>`,
+                content: `<style>${idPrefix}${idUniqueString}-7</style>`,
               },
             },
           };
@@ -187,12 +112,12 @@ suite("Embeds", function() {
                   startIndex: 8,
                   endIndex: 47,
                   getRaw(): string { return this.content; },
-                  id: "f-8",
+                  id: `${idUniqueString}-8`,
                 },
               ],
               file: {
                 type: "html",
-                content: `<script>${idPattern}</script>`,
+                content: `<script>${idPrefix}${idUniqueString}-8</script>`,
               },
             },
           };
@@ -240,7 +165,7 @@ suite("Embeds", function() {
                   startIndex: 7,
                   endIndex: 27,
                   getRaw(): string { return this.content; },
-                  id: "h-7",
+                  id: `${idUniqueString}-7`,
                 },
                 {
                   content: "var x = document.getElementById\\(\"bar\"\\);",
@@ -248,13 +173,13 @@ suite("Embeds", function() {
                   startIndex: 43,
                   endIndex: 82,
                   getRaw(): string { return this.content; },
-                  id: "h-43",
+                  id: `${idUniqueString}-43`,
                 },
               ],
               file: {
                 type: "html",
-                content: `<style>${idPattern}</style>` +
-                  `<script>${idPattern}</script>`,
+                content: `<style>${idPrefix}${idUniqueString}-7</style>` +
+                  `<script>${idPrefix}${idUniqueString}-43</script>`,
               },
             },
           };
@@ -302,7 +227,7 @@ suite("Embeds", function() {
                   startIndex: 7,
                   endIndex: 27,
                   getRaw(): string { return this.content; },
-                  id: "h-7",
+                  id: `${idUniqueString}-7`,
                 },
                 {
                   content: "var x = document.getElementById\\(\"bar\"\\);",
@@ -310,13 +235,13 @@ suite("Embeds", function() {
                   startIndex: 43,
                   endIndex: 82,
                   getRaw(): string { return this.content; },
-                  id: "h-43",
+                  id: `${idUniqueString}-43`,
                 },
               ],
               file: {
                 type: "html",
-                content: `<style>${idPattern}</style>` +
-                  `<script>${idPattern}</script>`,
+                content: `<style>${idPrefix}${idUniqueString}-7</style>` +
+                  `<script>${idPrefix}${idUniqueString}-43</script>`,
               },
             },
           };
@@ -348,8 +273,7 @@ suite("Embeds", function() {
 
         {
           const expectedFile = expected.file;
-          const expectedContent = new RegExp(`^${expectedFile.content}$`);
-          expect(file.content).to.match(expectedContent);
+          expect(file.content).to.equal(expectedFile.content);
           expect(file.type).to.equal(expectedFile.type);
         }
       });

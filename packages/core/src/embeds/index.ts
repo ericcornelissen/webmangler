@@ -12,7 +12,6 @@ import type {
 import { idPrefix } from "./constants";
 import {
   buildExtractEmbedsFromContent,
-  compareStartIndex,
   generateUniqueString,
 } from "./extract";
 import * as F from "./functional";
@@ -27,7 +26,6 @@ import { reEmbed } from "./insert";
  * @returns All {@link WebManglerEmbed}s in `file`.
  */
 const extractEmbedsFromContent = buildExtractEmbedsFromContent({
-  compareStartIndex,
   generateUniqueString,
   idPrefix,
 });

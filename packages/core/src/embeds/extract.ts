@@ -31,7 +31,7 @@ const idCharSet: CharSet = [
  * @param b A {@link WebManglerEmbed}.
  * @returns A integer representing which embed has the lowest `startIndex`.
  */
-function _compareStartIndex(
+function compareStartIndex(
   a: Pick<WebManglerEmbed, "startIndex">,
   b: Pick<WebManglerEmbed, "startIndex">,
 ): number {
@@ -59,17 +59,14 @@ function _generateUniqueString(s: string): string {
  * Build a function to extract embeds from a {@link WebManglerFile}.
  *
  * @param deps The dependency of the `extractEmbedsFromContent` function.
- * @param deps.compareStartIndex A function to compare {@link WebManglerFile}s.
  * @param deps.generateUniqueString A function to generate unique strings.
  * @param deps.idPrefix A string to be used as prefix for embed ids.
  * @returns A function to extract embeds from a {@link WebManglerFile}.
  */
 function buildExtractEmbedsFromContent({
-  compareStartIndex,
   generateUniqueString,
   idPrefix,
 }: {
-  compareStartIndex: typeof _compareStartIndex;
   generateUniqueString: typeof _generateUniqueString;
   idPrefix: string;
 }) {
@@ -103,7 +100,6 @@ function buildExtractEmbedsFromContent({
 
 export {
   buildExtractEmbedsFromContent,
-  _compareStartIndex as compareStartIndex,
   _generateUniqueString as generateUniqueString,
 };
 
