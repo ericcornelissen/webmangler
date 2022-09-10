@@ -1,5 +1,6 @@
 import type { TestScenarios } from "@webmangler/testing";
 import type {
+  CharSet,
   WebManglerFile,
   WebManglerLanguagePlugin,
 } from "@webmangler/types";
@@ -12,7 +13,7 @@ import * as sinon from "sinon";
 
 import {
   buildExtractEmbedsFromContent,
-  generateUniqueString,
+  buildGenerateUniqueString,
 } from "../../extract";
 
 suite("Embeds", function() {
@@ -281,6 +282,13 @@ suite("Embeds", function() {
   });
 
   suite("::generateUniqueString", function() {
+    const charSet: CharSet = [
+      "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+      "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+    ];
+
+    const generateUniqueString = buildGenerateUniqueString(charSet);
+
     interface TestCase {
       readonly testString: string;
       readonly expected: string;

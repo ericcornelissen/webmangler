@@ -13,17 +13,6 @@ import type {
 import NameGenerator from "../name-generator.class";
 
 /**
- * The {@link CharSet} used to generate unique identifiers for embed locations.
- */
-const idCharSet: CharSet = [
-  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-  "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
-  "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
-  "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7",
-  "8", "9",
-];
-
-/**
  * Compare the `startIndex` of two {@link WebManglerEmbed}s. Can be used to sort
  * {@link WebManglerEmbed}s by their starting index.
  *
@@ -39,20 +28,24 @@ function compareStartIndex(
 }
 
 /**
- * Generate a unique string that does not appear in a larger string.
+ * Build a function to generate unique substrings for given strings.
  *
- * @param s The string for which to generate a unique string.
- * @returns A unique string that does not appear in `s`.
+ * @param charSet A {@link CharSet} to generate names from.
+ * @returns A function to generate a unique substring for a given string.
  */
-function _generateUniqueString(s: string): string {
-  const nameGenerator = new NameGenerator({ charSet: idCharSet });
+function buildGenerateUniqueString(
+  charSet: CharSet,
+) {
+  return (str: string): string => {
+    const nameGenerator = new NameGenerator({ charSet });
 
-  let id = nameGenerator.nextName();
-  while (s.includes(id)) {
-    id = nameGenerator.nextName();
-  }
+    let subStr = nameGenerator.nextName();
+    while (str.includes(subStr)) {
+      subStr = nameGenerator.nextName();
+    }
 
-  return id;
+    return subStr;
+  };
 }
 
 /**
@@ -67,7 +60,7 @@ function buildExtractEmbedsFromContent({
   generateUniqueString,
   idPrefix,
 }: {
-  generateUniqueString: typeof _generateUniqueString;
+  generateUniqueString: ReturnType<typeof buildGenerateUniqueString>;
   idPrefix: string;
 }) {
   return function(
@@ -100,7 +93,7 @@ function buildExtractEmbedsFromContent({
 
 export {
   buildExtractEmbedsFromContent,
-  _generateUniqueString as generateUniqueString,
+  buildGenerateUniqueString,
 };
 
 export type {
