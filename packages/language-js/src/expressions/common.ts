@@ -26,7 +26,7 @@ const allowedBeforeSelector = /(?:${querySelectorCombiners}|\()/.source
 /**
  * Regular Expression pattern as a string for an inline comment in JavaScript.
  */
-const inlineComment = /(?:\/\*(.|\n|\r)*?\*\/)/.source;
+const inlineComment = /(?:\/\*[^]*?\*\/)/.source;
 
 /**
  * Regular Expression pattern as a string for a line comment in JavaScript.

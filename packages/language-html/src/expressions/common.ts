@@ -55,7 +55,7 @@ const attributes = /(?:[^>\s=]+(?:\s*=\s*(?:${anyString}|[^>\s"']*))?\s+)+/.sour
 /**
  * Regular Expression pattern as a string of a comment in HTML.
  */
-const comment = /(?:<!--(?:.|\n|\r)*?--!?>)/.source;
+const comment = /(?:<!--[^]*?--!?>)/.source;
 
 /**
  * Regular Expression pattern as a string for quotes in HTML.

@@ -46,7 +46,7 @@ const commentClose = /(?:\*\/)/.source;
 /**
  * Regular Expression pattern as a string of a comment in CSS.
  */
-const comment = /(?:${commentOpen}(?:.|\n|\r)*?${commentClose})/.source
+const comment = /(?:${commentOpen}[^]*?${commentClose})/.source
   .replace("${commentOpen}", commentOpen)
   .replace("${commentClose}", commentClose);
 

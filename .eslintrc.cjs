@@ -25,6 +25,7 @@ module.exports = {
 
   plugins: [
     "jsdoc",
+    "regexp",
     "security",
   ],
   extends: [
@@ -196,6 +197,11 @@ module.exports = {
     }],
     "jsdoc/tag-lines": ["error", "never"],
     "jsdoc/valid-types": "off",
+
+    // See: https://github.com/ota-meshi/eslint-plugin-regexp#readme
+    "regexp/match-any": ["error", {
+      allows: ["[^]", "dotAll"],
+    }],
 
     // See: https://github.com/nodesecurity/eslint-plugin-security#rules
     "security/detect-object-injection": "off", // Too many false positives
