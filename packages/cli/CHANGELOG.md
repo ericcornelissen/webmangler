@@ -8,7 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.9] - 2022-09-10
+
 - Add "pretty-print" option to the `JsonReporter`. ([#325])
+- Use relative paths for file references in reports. ([#333])
 
 ## [0.1.8] - 2022-07-02
 
@@ -71,5 +76,6 @@ Versioning].
 [#315]: https://github.com/ericcornelissen/webmangler/pull/315
 [#318]: https://github.com/ericcornelissen/webmangler/pull/318
 [#325]: https://github.com/ericcornelissen/webmangler/pull/325
+[#333]: https://github.com/ericcornelissen/webmangler/pull/333
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

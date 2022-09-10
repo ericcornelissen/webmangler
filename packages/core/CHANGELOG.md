@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.27] - 2022-09-10
+
 - Add support for detecting embeds inside of embeds. ([#341], [#344])
 
 ## [0.1.26] - 2022-07-02

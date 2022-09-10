@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.28] - 2022-09-10
+
 - Bump minimum `@webmangler/language-utils` version to `^0.1.27`. ([#322])
 
 ## [0.1.27] - 2022-01-29

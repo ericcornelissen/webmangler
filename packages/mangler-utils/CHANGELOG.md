@@ -8,7 +8,11 @@ Versioning].
 
 ## [Unreleased]
 
-- BREAKING: Drop support for generators from `MultiManglerPlugin`. (#334)
+- _No changes yet_
+
+## [0.1.28] - 2022-09-10
+
+- BREAKING: Drop support for generators from `MultiManglerPlugin`. ([#334])
 
 ## [0.1.27] - 2022-01-29
 
