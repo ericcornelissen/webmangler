@@ -55,6 +55,7 @@ function getQuerySelectorExpressionOptions():
   return {
     name: "query-selectors",
     options: {
+      kind: "class",
       prefix: /\./.source,
     },
   };

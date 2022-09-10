@@ -6,9 +6,7 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
-type QuerySelectorConfig
-  = Required<Pick<QuerySelectorOptions, "caseSensitive">>
-  & Omit<QuerySelectorOptions, "caseSensitive">;
+type QuerySelectorConfig = QuerySelectorOptions;
 
 /**
  * Get a {@link MangleExpression} to match query selectors in CSS, e.g. `foobar`
@@ -64,9 +62,6 @@ function querySelectorExpressionFactory(
 ): Iterable<MangleExpression> {
   const config: QuerySelectorConfig = {
     ...options,
-    caseSensitive: options.caseSensitive === undefined
-      ? true
-      : options.caseSensitive,
   };
 
   return [

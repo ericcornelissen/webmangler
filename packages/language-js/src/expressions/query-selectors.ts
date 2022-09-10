@@ -9,9 +9,7 @@ import {
 } from "@webmangler/language-utils";
 import { patterns, QUOTES_ARRAY } from "./common";
 
-type QuerySelectorConfig
-  = Required<Pick<QuerySelectorOptions, "caseSensitive">>
-  & Omit<QuerySelectorOptions, "caseSensitive">;
+type QuerySelectorConfig = QuerySelectorOptions;
 
 const GROUP_QUOTE = "quote";
 
@@ -101,9 +99,6 @@ function querySelectorExpressionFactory(
 ): Iterable<MangleExpression> {
   const config: QuerySelectorConfig = {
     ...options,
-    caseSensitive: options.caseSensitive === undefined
-      ? true
-      : options.caseSensitive,
   };
 
   const result = [

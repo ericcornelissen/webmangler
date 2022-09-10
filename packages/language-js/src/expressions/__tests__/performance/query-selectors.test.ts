@@ -24,6 +24,7 @@ suite("JavaScript - Query Selector Expression Factory", function() {
 
   suiteSetup(function() {
     expressions = querySelectorExpressionFactory({
+      kind: "class",
       prefix: "\\.",
     });
   });

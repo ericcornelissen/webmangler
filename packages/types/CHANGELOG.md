@@ -8,8 +8,8 @@ Versioning].
 
 ## [Unreleased]
 
-- Add case sensitivity flag to `CssDeclarationValueOptions` and
-  `QuerySelectorOptions`. ([#338])
+- Add case sensitivity flag to `CssDeclarationValueOptions`. ([#338])
+- Add `kind` field to `QuerySelectorOptions`. ([#366])
 
 ## [0.1.26] - 2022-07-02
 
@@ -39,5 +39,6 @@ Versioning].
 [#311]: https://github.com/ericcornelissen/webmangler/pull/311
 [#314]: https://github.com/ericcornelissen/webmangler/pull/314
 [#338]: https://github.com/ericcornelissen/webmangler/pull/338
+[#366]: https://github.com/ericcornelissen/webmangler/pull/366
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

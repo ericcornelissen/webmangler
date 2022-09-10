@@ -29,7 +29,9 @@ suite("CSS - Query Selector Expression Factory", function() {
     {
       name: "one selector, no configuration",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "element",
+      },
       expected: ["div"],
       getValuesSets: () => [
         {
@@ -44,6 +46,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       name: "one selector, prefix configured",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "class",
         prefix: "\\.",
       },
       expected: ["foobar"],
@@ -60,6 +63,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       name: "one selector, prefix & suffix configured",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "id",
         prefix: "\\#",
         suffix: "er",
       },
@@ -77,6 +81,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       name: "multiple selectors in one block",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "class",
         prefix: "\\.",
       },
       expected: ["foo", "bar"],
@@ -94,6 +99,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       name: "multiple selectors in separate blocks",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "id",
         prefix: "\\#",
       },
       expected: ["foo", "bar"],
@@ -112,6 +118,7 @@ suite("CSS - Query Selector Expression Factory", function() {
       name: "selector in media query",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "class",
         prefix: "\\.",
       },
       expected: [],
@@ -129,7 +136,9 @@ suite("CSS - Query Selector Expression Factory", function() {
     {
       name: "selector-like strings",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "element",
+      },
       expected: ["div"],
       getValuesSets: () => [
         {
@@ -155,7 +164,9 @@ suite("CSS - Query Selector Expression Factory", function() {
     {
       name: "selector-like comments",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "element",
+      },
       expected: ["div"],
       getValuesSets: () => {
         const commentWithSelector = buildCssComments("header { }");
