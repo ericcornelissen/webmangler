@@ -31,7 +31,7 @@ interface CssLanguagePluginDependencies {
    *
    * @returns The expression factories {@link Map}.
    */
-  getExpressionFactories(): Map<string, ExpressionFactory>;
+  getExpressionFactories(): ReadonlyMap<string, ExpressionFactory>;
 
   /**
    *

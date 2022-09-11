@@ -37,7 +37,7 @@ interface HtmlLanguagePluginDependencies {
    */
   getExpressionFactories(
     options: unknown,
-  ): Map<string, ExpressionFactory>;
+  ): ReadonlyMap<string, ExpressionFactory>;
 
   /**
    * Get all the languages for a new {@link HtmlLanguagePlugin} instance.

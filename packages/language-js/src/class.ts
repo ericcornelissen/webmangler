@@ -24,7 +24,7 @@ interface JavaScriptLanguagePluginDependencies {
    */
   getExpressionFactories(
     options: Record<never, never>,
-  ): Map<string, ExpressionFactory>;
+  ): ReadonlyMap<string, ExpressionFactory>;
 
   /**
    * Get all the languages for a new {@link JavaScriptLanguagePlugin} instance.
