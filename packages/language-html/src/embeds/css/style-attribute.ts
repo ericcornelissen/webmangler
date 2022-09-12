@@ -53,7 +53,7 @@ function styleAttributeMatchToEmbed(
  * @returns Zero or more {@link WebManglerEmbed}s.
  */
 function matchAndGetEmbeds(
-  file: WebManglerFile,
+  file: Readonly<WebManglerFile>,
   regExp: RegExp,
 ): Iterable<WebManglerEmbed> {
   const result: WebManglerEmbed[] = [];
@@ -81,7 +81,7 @@ function matchAndGetEmbeds(
  * @since v0.1.21
  */
 export function getStyleAttributesAsEmbeds(
-  file: WebManglerFile,
+  file: Readonly<WebManglerFile>,
 ): Iterable<WebManglerEmbed> {
   return [
     ...matchAndGetEmbeds(file, REGEXP_QUOTED),

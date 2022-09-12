@@ -34,7 +34,7 @@ import * as helpers from "./helpers";
  *   ],
  * });
  * @since v0.1.0
- * @version v0.1.23
+ * @version v0.1.28
  */
 const HtmlLanguagePlugin = initHtmlLanguagePlugin({
   getEmbedFinders: helpers.getEmbedFinders,

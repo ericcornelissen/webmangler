@@ -63,7 +63,7 @@ function getExpressionFactories(): Map<string, ExpressionFactory> {
  * @returns The languages for the instances.
  */
 function getLanguages(options: {
-  htmlExtensions?: Iterable<string>;
+  readonly htmlExtensions?: Iterable<string>;
 }): Iterable<string> {
   const configuredLanguages = options.htmlExtensions || [];
   return new Set([
