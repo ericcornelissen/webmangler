@@ -33,7 +33,7 @@ interface JavaScriptLanguagePluginDependencies {
    * @param [options.jsExtensions] The configured languages, if any.
    */
   getLanguages(options: {
-    jsExtensions?: Iterable<string>;
+    readonly jsExtensions?: Iterable<string>;
   }): Iterable<string>;
 }
 
@@ -41,6 +41,7 @@ interface JavaScriptLanguagePluginDependencies {
  * The options for _WebMangler_'s built-in {@link JavaScriptLanguagePlugin}.
  *
  * @since v0.1.17
+ * @version v0.1.29
  */
 interface JavaScriptLanguagePluginOptions {
   /**
@@ -53,8 +54,9 @@ interface JavaScriptLanguagePluginOptions {
    *
    * @default `[]`
    * @since v0.1.17
+   * @version v0.1.29
    */
-  jsExtensions?: Iterable<string>;
+  readonly jsExtensions?: Iterable<string>;
 }
 
 /**
