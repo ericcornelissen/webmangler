@@ -51,7 +51,7 @@ interface JavaScriptLanguagePluginOptions {
    * NOTE: the default extensions are always included and do not need to be
    * specified when using this option.
    *
-   * @default `[]`
+   * @default ["js", "cjs", "mjs"]
    * @since v0.1.17
    */
   jsExtensions?: Iterable<string>;
