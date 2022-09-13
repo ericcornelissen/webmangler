@@ -1,5 +1,7 @@
 import { getScriptTagsAsEmbeds } from "./script-tag";
 
-export default [
+const embeddedJsFinders = [
   getScriptTagsAsEmbeds,
 ];
+
+export default embeddedJsFinders;
