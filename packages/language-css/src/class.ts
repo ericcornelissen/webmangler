@@ -34,6 +34,7 @@ interface CssLanguagePluginDependencies {
   getExpressionFactories(): Map<string, ExpressionFactory>;
 
   /**
+   * Get all the languages for a new {@link CssLanguagePlugin} instance.
    *
    * @param [configuredLanguages] The configured languages, if any.
    * @returns The languages for the instances.
@@ -57,7 +58,7 @@ interface CssLanguagePluginOptions {
    * NOTE: the default extensions are always included and do not need to be
    * specified when using this option.
    *
-   * @default `["css"]`
+   * @default ["css"]
    * @since v0.1.17
    */
   cssExtensions?: Iterable<string>;

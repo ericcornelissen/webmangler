@@ -14,7 +14,7 @@ const DEFAULT_LANGUAGES: Iterable<string> = [
 ];
 
 /**
- * Get the embed finders for a new {@link HtmlLanguagePlugin} instance.
+ * Get the embed finders for a new {@link CssLanguagePlugin} instance.
  *
  * @returns The embed finders.
  */
