@@ -392,9 +392,14 @@ module.exports = {
 
         // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/
         "yml/block-mapping": ["error", "always"],
+        "yml/block-mapping-colon-indicator-newline": ["error", "never"],
         "yml/block-mapping-question-indicator-newline": ["error", "never"],
         "yml/block-sequence": ["error", "always"],
         "yml/block-sequence-hyphen-indicator-newline": ["error", "never"],
+        "yml/file-extension": ["error", {
+          extension: "yml",
+          caseSensitive: true,
+        }],
         "yml/indent": ["error", INDENT_SIZE],
         "yml/key-name-casing": "off",
         "yml/key-spacing": ["error", {
