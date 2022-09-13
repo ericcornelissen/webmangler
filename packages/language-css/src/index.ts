@@ -33,7 +33,7 @@ import * as helpers from "./helpers";
  *   ],
  * });
  * @since v0.1.0
- * @version v0.1.26
+ * @version v0.1.30
  */
 const CssLanguagePlugin = initCssLanguagePlugin({
   getEmbedFinders: helpers.getEmbedFinders,

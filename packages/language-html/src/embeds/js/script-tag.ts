@@ -47,7 +47,7 @@ function scriptTagMatchToEmbed(match: RegExpExecArray): WebManglerEmbed | null {
  * @since v0.1.21
  */
 export function getScriptTagsAsEmbeds(
-  file: WebManglerFile,
+  file: Readonly<WebManglerFile>,
 ): Iterable<WebManglerEmbed> {
   const result: WebManglerEmbed[] = [];
 
