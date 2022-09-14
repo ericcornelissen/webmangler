@@ -8,6 +8,43 @@ import { expect } from "chai";
 import expressionsFactory from "../../query-selectors";
 
 suite("CSS Values Expression Factory", function() {
+  test("kind is 'element'", function() {
+    const _result = expressionsFactory({
+      kind: "element",
+    });
+    const result = Array.from(_result);
+    expect(result.length).to.be.greaterThan(0);
+  });
+
+  test("kind is 'attribute'", function() {
+    const _result = expressionsFactory({
+      kind: "attribute",
+    });
+    const result = Array.from(_result);
+    expect(result.length).to.be.greaterThan(0);
+  });
+
+  test("kind is 'class'", function() {
+    const _result = expressionsFactory({
+      kind: "class",
+    });
+    const result = Array.from(_result);
+    expect(result.length).to.be.greaterThan(0);
+  });
+
+  test("kind is 'id'", function() {
+    const _result = expressionsFactory({
+      kind: "id",
+    });
+    const result = Array.from(_result);
+    expect(result.length).to.be.greaterThan(0);
+  });
+});
+
+// We allow an extra top-level suite temporarily to keep the tests for the old
+// functionality around until it's removed.
+// eslint-disable-next-line mocha/max-top-level-suites
+suite("CSS Values Expression Factory (old)", function() {
   let newExpressions: Iterable<ReadonlyArray<MangleExpression>>;
 
   suiteSetup(function() {
