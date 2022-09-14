@@ -71,18 +71,22 @@ suite("CssLanguagePlugin class", function() {
 
       test("the `getEmbedFinders` function is used", function() {
         expect(getEmbedFinders).to.have.callCount(1);
-        expect(getEmbedFinders).to.have.been.calledWithExactly();
+        expect(getEmbedFinders).to.have.been.calledWithExactly(
+          options || {},
+        );
       });
 
       test("the `getExpressionFactories` function is used", function() {
         expect(getExpressionFactories).to.have.callCount(1);
-        expect(getExpressionFactories).to.have.been.calledWithExactly();
+        expect(getExpressionFactories).to.have.been.calledWithExactly(
+          options || {},
+        );
       });
 
       test("the `getLanguages` function is used", function() {
         expect(getLanguages).to.have.callCount(1);
         expect(getLanguages).to.have.been.calledWithExactly(
-          options?.cssExtensions,
+          options || {},
         );
       });
     });
