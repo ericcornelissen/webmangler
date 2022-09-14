@@ -44,7 +44,7 @@ function matchToEmbed(
  * @returns Zero or more {@link WebManglerEmbed}s.
  */
 function matchAndGetEmbeds(
-  file: WebManglerFile,
+  file: Readonly<WebManglerFile>,
   regExp: RegExp,
 ): Iterable<WebManglerEmbed> {
   const result: WebManglerEmbed[] = [];
@@ -71,7 +71,7 @@ function matchAndGetEmbeds(
  * @returns Zero or more {@link WebManglerEmbed}s.
  */
 function getMediaQueriesAsEmbeds(
-  file: WebManglerFile,
+  file: Readonly<WebManglerFile>,
 ): Iterable<WebManglerEmbed> {
   return [
     ...matchAndGetEmbeds(file, REGEXP_MEDIA_QUERY),

@@ -31,7 +31,7 @@ interface CssLanguagePluginDependencies {
    *
    * @returns The expression factories {@link Map}.
    */
-  getExpressionFactories(): Map<string, ExpressionFactory>;
+  getExpressionFactories(): ReadonlyMap<string, ExpressionFactory>;
 
   /**
    * Get all the languages for a new {@link CssLanguagePlugin} instance.
@@ -48,6 +48,7 @@ interface CssLanguagePluginDependencies {
  * The options for _WebMangler_'s built-in {@link CssLanguagePlugin}.
  *
  * @since v0.1.17
+ * @version v0.1.30
  */
 interface CssLanguagePluginOptions {
   /**
@@ -60,8 +61,9 @@ interface CssLanguagePluginOptions {
    *
    * @default ["css"]
    * @since v0.1.17
+   * @version v0.1.30
    */
-  cssExtensions?: Iterable<string>;
+  readonly cssExtensions?: Iterable<string>;
 }
 
 /**

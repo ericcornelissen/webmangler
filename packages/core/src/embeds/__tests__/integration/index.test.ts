@@ -8,7 +8,7 @@ import { WebManglerLanguagePluginMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import { getEmbeds, reEmbed } from "../../embeds";
+import { getEmbeds, reEmbed } from "../../index";
 
 suite("Embeds", function() {
   interface TestCase {
@@ -147,6 +147,42 @@ suite("Embeds", function() {
           },
         ];
       },
+    },
+    {
+      testName: "zero files",
+      getScenario: () => [
+        {
+          files: [],
+          plugins: [
+            new WebManglerLanguagePluginMock(),
+          ],
+          expected: [],
+        },
+      ],
+    },
+    {
+      testName: "zero plugins",
+      getScenario: () => [
+        {
+          files: [
+            { type: "type", content: "content" },
+          ],
+          plugins: [],
+          expected: [
+            { type: "type", content: "content" },
+          ],
+        },
+      ],
+    },
+    {
+      testName: "zero files & plugins",
+      getScenario: () => [
+        {
+          files: [],
+          plugins: [],
+          expected: [],
+        },
+      ],
     },
   ];
 

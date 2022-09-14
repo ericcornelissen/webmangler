@@ -37,7 +37,7 @@ interface HtmlLanguagePluginDependencies {
    */
   getExpressionFactories(
     options: unknown,
-  ): Map<string, ExpressionFactory>;
+  ): ReadonlyMap<string, ExpressionFactory>;
 
   /**
    * Get all the languages for a new {@link HtmlLanguagePlugin} instance.
@@ -47,7 +47,7 @@ interface HtmlLanguagePluginDependencies {
    * @returns All languages the {@link HtmlLanguagePlugin} should support.
    */
   getLanguages(options: {
-    htmlExtensions?: Iterable<string>;
+    readonly htmlExtensions?: Iterable<string>;
   }): Iterable<string>;
 }
 
@@ -55,6 +55,7 @@ interface HtmlLanguagePluginDependencies {
  * The options for _WebMangler_'s built-in {@link HtmlLanguagePlugin}.
  *
  * @since v0.1.17
+ * @version v0.1.28
  */
 interface HtmlLanguagePluginOptions {
   /**
@@ -67,8 +68,9 @@ interface HtmlLanguagePluginOptions {
    *
    * @default ["html", "xhtml"]
    * @since v0.1.17
+   * @version v0.1.28
    */
-  htmlExtensions?: Iterable<string>;
+  readonly htmlExtensions?: Iterable<string>;
 }
 
 /**
