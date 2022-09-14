@@ -7,12 +7,16 @@ import type { IdentifiableWebManglerEmbed } from "../../types";
 
 import { expect } from "chai";
 
-import { reEmbed } from "../../insert";
+import { buildReEmbed } from "../../insert";
 
 suite("Embeds", function() {
-  const idPrefix = "wm-embed@";
-
   suite("::reEmbed", function() {
+    const idPrefix = "this-is-the-id-prefix";
+
+    const reEmbed = buildReEmbed({
+      idPrefix,
+    });
+
     interface TestCase {
       readonly embeds: IdentifiableWebManglerEmbed[];
       readonly file: WebManglerFile;

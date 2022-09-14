@@ -15,7 +15,7 @@ import {
   buildGenerateUniqueString,
 } from "./extract";
 import * as F from "./functional";
-import { reEmbed } from "./insert";
+import { buildReEmbed } from "./insert";
 
 /**
  * Generate a unique string that does not appear in a larger string.
@@ -85,6 +85,19 @@ const getEmbeds = (
   F.reverse,
   F.merge,
 )([files]);
+
+/**
+ * Re-embed a collection of {@link WebManglerEmbed} into the origin
+ * {@link WebManglerFile}.
+ *
+ * NOTE: This function does not verify the embeds belong in the file.
+ *
+ * @param embeds The {@link WebManglerEmbed}s to re-embed.
+ * @param file The {@link WebManglerFile} to embed into.
+ */
+const reEmbed = buildReEmbed({
+  idPrefix,
+});
 
 export {
   getEmbeds,
