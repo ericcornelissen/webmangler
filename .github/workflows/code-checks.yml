@@ -209,7 +209,7 @@ jobs:
       - name: Run test suite for packages/${{ matrix.package }}
         run: npm run coverage -- ${{ matrix.package }}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3.1.0
+        uses: codecov/codecov-action@v3.1.1
         if: ${{ always() }}
         with:
           file: ./_reports/coverage/lcov.info
