@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add support for the `kind` field of `QuerySelectorOptions`. ([#374])
 
 ## [0.1.29] - 2022-09-10
 
@@ -55,5 +55,6 @@ Versioning].
 [#304]: https://github.com/ericcornelissen/webmangler/pull/304
 [#322]: https://github.com/ericcornelissen/webmangler/pull/322
 [#351]: https://github.com/ericcornelissen/webmangler/pull/351
+[#374]: https://github.com/ericcornelissen/webmangler/pull/374
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
