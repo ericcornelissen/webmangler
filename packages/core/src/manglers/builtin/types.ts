@@ -8,6 +8,7 @@ import type { WebManglerPlugin } from "@webmangler/types";
  * The configuration of the {@link BuiltInManglers}.
  *
  * @since v0.1.0
+ * @version v0.1.28
  */
 interface BuiltInManglersOptions extends
     CssClassManglerOptions,
@@ -18,29 +19,33 @@ interface BuiltInManglersOptions extends
    * Disable the {@see CssClassMangler}.
    *
    * @since v0.1.0
+   * @version v0.1.28
    */
-  disableCssClassMangling?: boolean;
+  readonly disableCssClassMangling?: boolean;
 
   /**
    * Disable the {@see CssVariableMangler}.
    *
    * @since v0.1.0
+   * @version v0.1.28
    */
-  disableCssVarMangling?: boolean;
+   readonly disableCssVarMangling?: boolean;
 
   /**
    * Disable the {@see HtmlAttributeMangler}.
    *
    * @since v0.1.0
+   * @version v0.1.28
    */
-  disableHtmlAttrMangling?: boolean;
+   readonly disableHtmlAttrMangling?: boolean;
 
   /**
    * Disable the {@see HtmlIdMangler}.
    *
    * @since v0.1.0
+   * @version v0.1.28
    */
-  disableHtmlIdMangling?: boolean;
+   readonly disableHtmlIdMangling?: boolean;
 }
 
 /**
@@ -50,7 +55,7 @@ interface WebManglerPluginClass {
   new(options?: unknown): WebManglerPlugin;
 }
 
-export {
+export type {
   BuiltInManglersOptions,
   WebManglerPluginClass,
 };
