@@ -40,17 +40,9 @@ interface CssDeclarationPropertyOptions {
  * The {@link MangleExpression} options for CSS property values.
  *
  * @since v0.1.14
- * @version v0.1.27
+ * @version v0.1.26
  */
 interface CssDeclarationValueOptions {
-  /**
-   * Is the value case sensitive.
-   *
-   * @default `true`
-   * @since v0.1.27
-   */
-  readonly caseSensitive?: boolean;
-
   /**
    * A regular expression as a string defining the prefix that property values
    * must have to be considered a match.
