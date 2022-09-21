@@ -66,7 +66,7 @@ interface HtmlLanguagePluginOptions {
    * NOTE: the default extensions are always included and do not need to be
    * specified when using this option.
    *
-   * @default `[]`
+   * @default ["html", "xhtml"]
    * @since v0.1.17
    * @version v0.1.28
    */

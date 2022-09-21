@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Document defaults for the `htmlExtensions` option. ([#373])
 
 ## [0.1.27] - 2022-09-10
 
@@ -42,5 +42,6 @@ Versioning].
 [#250]: https://github.com/ericcornelissen/webmangler/pull/250
 [#322]: https://github.com/ericcornelissen/webmangler/pull/322
 [#326]: https://github.com/ericcornelissen/webmangler/pull/326
+[#373]: https://github.com/ericcornelissen/webmangler/pull/373
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

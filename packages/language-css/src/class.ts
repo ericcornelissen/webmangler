@@ -23,24 +23,31 @@ interface CssLanguagePluginDependencies {
    *
    * @returns The embed finders.
    */
-  getEmbedFinders(): Iterable<EmbedsGetter>;
+  getEmbedFinders(
+    options: unknown,
+  ): Iterable<EmbedsGetter>;
 
   /**
    * Get all the expression factories for a new {@link CssLanguagePlugin}
    * instance.
    *
+   * @param options The plugin options.
    * @returns The expression factories {@link Map}.
    */
-  getExpressionFactories(): ReadonlyMap<string, ExpressionFactory>;
+  getExpressionFactories(
+    options: unknown,
+  ): ReadonlyMap<string, ExpressionFactory>;
 
   /**
+   * Get all the languages for a new {@link CssLanguagePlugin} instance.
    *
-   * @param [configuredLanguages] The configured languages, if any.
+   * @param options The plugin options.
+   * @param [options.cssExtensions] The configured extensions, if any.
    * @returns The languages for the instances.
    */
-  getLanguages(
-    configuredLanguages?: Iterable<string>,
-  ): Iterable<string>;
+  getLanguages(options: {
+    readonly cssExtensions?: Iterable<string>;
+  }): Iterable<string>;
 }
 
 /**
@@ -58,7 +65,7 @@ interface CssLanguagePluginOptions {
    * NOTE: the default extensions are always included and do not need to be
    * specified when using this option.
    *
-   * @default `["css"]`
+   * @default ["css"]
    * @since v0.1.17
    * @version v0.1.30
    */
@@ -89,9 +96,9 @@ function initCssLanguagePlugin({
      */
     constructor(options: CssLanguagePluginOptions={}) {
       super({
-        embedsGetters: getEmbedFinders(),
-        expressionFactories: getExpressionFactories(),
-        languages: getLanguages(options.cssExtensions),
+        embedsGetters: getEmbedFinders(options),
+        expressionFactories: getExpressionFactories(options),
+        languages: getLanguages(options),
       });
     }
   };

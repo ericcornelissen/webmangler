@@ -14,7 +14,7 @@ const DEFAULT_LANGUAGES: Iterable<string> = [
 ];
 
 /**
- * Get the embed finders for a new {@link HtmlLanguagePlugin} instance.
+ * Get the embed finders for a new {@link CssLanguagePlugin} instance.
  *
  * @returns The embed finders.
  */
@@ -59,12 +59,14 @@ function getExpressionFactories(): Map<string, ExpressionFactory> {
 /**
  * Get all the languages for a new {@link CssLanguagePlugin} instance.
  *
- * @param [configuredLanguages] The configured languages, if any.
+ * @param options The options.
+ * @param [options.cssExtensions] The configured languages, if any.
  * @returns The languages for the instances.
  */
-function getLanguages(
-  configuredLanguages: Iterable<string> = [],
-): Iterable<string> {
+function getLanguages(options: {
+  readonly cssExtensions?: Iterable<string>;
+}): Iterable<string> {
+  const configuredLanguages = options.cssExtensions || [];
   return new Set([
     ...DEFAULT_LANGUAGES,
     ...configuredLanguages,

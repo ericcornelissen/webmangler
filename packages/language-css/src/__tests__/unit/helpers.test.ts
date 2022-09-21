@@ -56,8 +56,10 @@ suite("CSS language plugin helpers", function() {
     interface TestScenario {
       readonly testName: string;
       getScenario(): {
-        configuredLanguages: Iterable<string> | undefined;
-        expectedLanguages: Iterable<string>;
+        readonly options: {
+          readonly cssExtensions: Iterable<string> | undefined;
+        };
+        readonly expectedLanguages: Iterable<string>;
       };
     }
 
@@ -65,7 +67,9 @@ suite("CSS language plugin helpers", function() {
       {
         testName: "without configured languages",
         getScenario: () => ({
-          configuredLanguages: undefined,
+          options: {
+            cssExtensions: undefined,
+          },
           expectedLanguages: [
             ...DEFAULT_LANGUAGES,
           ],
@@ -74,7 +78,9 @@ suite("CSS language plugin helpers", function() {
       {
         testName: "with zero configured languages",
         getScenario: () => ({
-          configuredLanguages: [],
+          options: {
+            cssExtensions: [],
+          },
           expectedLanguages: [
             ...DEFAULT_LANGUAGES,
           ],
@@ -86,7 +92,9 @@ suite("CSS language plugin helpers", function() {
           const configuredLanguage = "style";
 
           return {
-            configuredLanguages: [configuredLanguage],
+            options: {
+              cssExtensions: [configuredLanguage],
+            },
             expectedLanguages: [
               ...DEFAULT_LANGUAGES,
               configuredLanguage,
@@ -103,7 +111,9 @@ suite("CSS language plugin helpers", function() {
           ];
 
           return {
-            configuredLanguages,
+            options: {
+              cssExtensions: configuredLanguages,
+            },
             expectedLanguages: [
               ...DEFAULT_LANGUAGES,
               ...configuredLanguages,
@@ -114,9 +124,11 @@ suite("CSS language plugin helpers", function() {
       {
         testName: "configured languages equal default languages",
         getScenario: () => ({
-          configuredLanguages: [
-            ...DEFAULT_LANGUAGES,
-          ],
+          options: {
+            cssExtensions: [
+              ...DEFAULT_LANGUAGES,
+            ],
+          },
           expectedLanguages: [
             ...DEFAULT_LANGUAGES,
           ],
@@ -132,7 +144,9 @@ suite("CSS language plugin helpers", function() {
           ];
 
           return {
-            configuredLanguages,
+            options: {
+              cssExtensions: configuredLanguages,
+            },
             expectedLanguages: new Set([
               ...DEFAULT_LANGUAGES,
               ...configuredLanguages,
@@ -145,13 +159,13 @@ suite("CSS language plugin helpers", function() {
     for (const { getScenario, testName } of scenarios) {
       test(testName, function() {
         const {
-          configuredLanguages,
+          options,
           expectedLanguages,
         } = getScenario();
 
         const expectedLength = Array.from(expectedLanguages).length;
 
-        const result = getLanguages(configuredLanguages);
+        const result = getLanguages(options);
         const resultAsArray = Array.from(result);
 
         expect(resultAsArray).to.have.lengthOf(expectedLength);
