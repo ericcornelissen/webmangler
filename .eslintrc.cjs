@@ -238,7 +238,7 @@ module.exports = {
       rules: {
         "space-before-blocks": "off",
 
-        // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+        // See: https://typescript-eslint.io/rules/
         "@typescript-eslint/consistent-type-exports": ["error", {
           fixMixedExportsWithInlineTypeSpecifier: false,
         }],
@@ -261,6 +261,7 @@ module.exports = {
         "@typescript-eslint/no-redundant-type-constituents": "error",
         "@typescript-eslint/no-useless-empty-export": "error",
         "@typescript-eslint/space-before-blocks": "error",
+        "@typescript-eslint/switch-exhaustiveness-check": "error",
       },
     },
     { // packages/cli
