@@ -94,7 +94,7 @@ function newSelectorAsStandaloneStringExpressions():
  * @param options The {@link QuerySelectorOptions}.
  * @returns A set of {@link MangleExpression}s.
  */
-function querySelectorExpressionFactory(
+function fallback(
   options: QuerySelectorOptions,
 ): Iterable<MangleExpression> {
   const config: QuerySelectorConfig = {
@@ -110,6 +110,34 @@ function querySelectorExpressionFactory(
   }
 
   return result;
+}
+
+/**
+ * Get the set of {@link MangleExpression}s to match query selectors in
+ * JavaScript. This will match:
+ * - Attribute selectors (e.g. `foobar` in `querySelector("[foobar]")`).
+ * - Class selectors (e.g. `foobar` in `querySelector(".foobar")`).
+ * - Element selectors (e.g. `div` in `querySelector("div")`).
+ * - ID selectors (e.g. `foobar` in `querySelector("#foobar")`).
+ * - Standalone strings (e.g. `foobar` in `getElementById("foobar");`).
+ *
+ * If no `kind` is specified, this will fall back to the behaviour of v0.1.28 of
+ * the plugin.
+ *
+ * @param options The {@link QuerySelectorOptions}.
+ * @returns A set of {@link MangleExpression}s.
+ */
+function querySelectorExpressionFactory(
+  options: QuerySelectorOptions,
+): Iterable<MangleExpression> {
+  switch (options.kind) {
+  case undefined:
+    return fallback(options);
+  }
+
+  return [
+    // TODO: Add implementation
+  ];
 }
 
 export default querySelectorExpressionFactory;
