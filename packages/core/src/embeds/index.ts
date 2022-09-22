@@ -1,5 +1,5 @@
 import type {
-  Collection,
+  ReadonlyCollection,
   WebManglerFile,
   WebManglerLanguagePlugin,
 } from "@webmangler/types";
@@ -49,7 +49,7 @@ const extractEmbedsFromContent = buildExtractEmbedsFromContent({
 const getEmbedsOnce: (
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
 ) => (
-  files: Collection<WebManglerFile>,
+  files: ReadonlyCollection<WebManglerFile>,
 ) => EmbedsMap = F.partialRight2(
   F.pipe(
     F.crossProduct,
@@ -73,7 +73,7 @@ const getEmbedsOnce: (
  * @returns All {@link WebManglerEmbed}s per file in `files`.
  */
 const getEmbeds = (
-  files: Collection<WebManglerFile>,
+  files: ReadonlyCollection<WebManglerFile>,
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
 ): EmbedsMap => F.pipe(
   F.recurse(

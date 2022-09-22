@@ -1,5 +1,5 @@
 import type {
-  Collection,
+  ReadonlyCollection,
   WebManglerEmbed,
   WebManglerFile,
 } from "@webmangler/types";
@@ -8,7 +8,10 @@ import type {
  * A mapping from {@link WebManglerFile}s to {@link WebManglerEmbed}s in that
  * file.
  */
-type EmbedsMap = Map<WebManglerFile, Collection<IdentifiableWebManglerEmbed>>;
+type EmbedsMap = Map<
+  Readonly<WebManglerFile>,
+  ReadonlyCollection<IdentifiableWebManglerEmbed>
+>;
 
 /**
  * Extension of {@link WebManglerEmbed} with an identifier.
