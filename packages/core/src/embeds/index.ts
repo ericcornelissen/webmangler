@@ -9,7 +9,8 @@ import type {
   IdentifiableWebManglerEmbed,
 } from "./types";
 
-import { idCharSet, idPrefix } from "./constants";
+import { base58CharSet } from "../constants";
+import { idPrefix } from "./constants";
 import {
   buildExtractEmbedsFromContent,
   buildGenerateUniqueString,
@@ -23,7 +24,7 @@ import { buildReEmbed } from "./insert";
  * @param s The string for which to generate a unique string.
  * @returns A unique string that does not appear in `s`.
  */
-const generateUniqueString = buildGenerateUniqueString(idCharSet);
+const generateUniqueString = buildGenerateUniqueString(base58CharSet);
 
 /**
  * Get all {@link WebManglerEmbed}s in a {@link WebManglerFile} found by
