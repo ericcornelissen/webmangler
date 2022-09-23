@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Add support for the `kind` field of `QuerySelectorOptions`. ([#380])
 - Document defaults for the `jsExtensions` option. ([#373])
 
 ## [0.1.28] - 2022-09-10
@@ -43,5 +44,6 @@ Versioning].
 [#250]: https://github.com/ericcornelissen/webmangler/pull/250
 [#322]: https://github.com/ericcornelissen/webmangler/pull/322
 [#373]: https://github.com/ericcornelissen/webmangler/pull/373
+[#380]: https://github.com/ericcornelissen/webmangler/pull/380
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
