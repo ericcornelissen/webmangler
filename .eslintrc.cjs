@@ -305,14 +305,26 @@ module.exports = {
         `${packagesDir}/**/${testsDir}/**/*`,
       ],
       plugins: [
-        "mocha",
         "chai-expect",
-      ],
-      extends: [
-        "plugin:chai-expect/recommended",
+        "mocha",
       ],
       rules: {
         "prefer-arrow-callback": "off",
+
+        // See: https://github.com/turbo87/eslint-plugin-chai-expect#readme
+        "chai-expect/missing-assertion": ["error"],
+        "chai-expect/no-inner-compare": ["error"],
+        "chai-expect/no-inner-literal": ["error"],
+        "chai-expect/terminating-properties": ["error", {
+          properties: [
+            // from 'sinon-chai'
+            "called",
+            "calledOnce",
+            "calledTwice",
+            "calledThrice",
+            "calledWithNew",
+          ],
+        }],
 
         // See https://github.com/import-js/eslint-plugin-import#rules
         "import/no-extraneous-dependencies": "off",
