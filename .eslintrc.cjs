@@ -310,6 +310,7 @@ module.exports = {
       ],
       rules: {
         "prefer-arrow-callback": "off",
+        "import/no-extraneous-dependencies": "off",
 
         // See: https://github.com/turbo87/eslint-plugin-chai-expect#readme
         "chai-expect/missing-assertion": ["error"],
@@ -325,9 +326,6 @@ module.exports = {
             "calledWithNew",
           ],
         }],
-
-        // See https://github.com/import-js/eslint-plugin-import#rules
-        "import/no-extraneous-dependencies": "off",
 
         // See: https://github.com/lo1tuma/eslint-plugin-mocha/tree/master/docs/rules#readme
         "mocha/handle-done-callback": ["error", {
@@ -357,9 +355,6 @@ module.exports = {
         "mocha/prefer-arrow-callback": ["error"],
         "mocha/valid-suite-description": ["error", "^[A-Z:]"],
         "mocha/valid-test-description": ["error", "^[a-z0-9]"],
-
-        // See: https://github.com/nodesecurity/eslint-plugin-security#rules
-        "security/detect-non-literal-fs-filename": "off",
       },
     },
     { // Configuration files (JS)
