@@ -113,6 +113,69 @@ function fallback(
 }
 
 /**
+ * Get {@link MangleExpression}s to match query selectors for attributes in
+ * JavaScript, e.g. `foobar` in `[foobar] { }`.
+ *
+ * @returns The {@link MangleExpression}s.
+ */
+function newAttributeSelectorExpression(): Iterable<MangleExpression> {
+  return [
+    ...newQuerySelectorExpressions({
+      kind: "attribute",
+      prefix: /\[\s*/.source,
+      suffix: /\s*(?:]|=|~=|\|=|\^=|\$=|\*=)/.source,
+    }),
+    ...newSelectorAsStandaloneStringExpressions(),
+  ];
+}
+
+/**
+ * Get {@link MangleExpression}s to match query selectors for classes in
+ * JavaScript, e.g. `foobar` in `.foobar { }`.
+ *
+ * @returns The {@link MangleExpression}s.
+ */
+function newClassSelectorExpression(): Iterable<MangleExpression> {
+  return [
+    ...newQuerySelectorExpressions({
+      kind: "class",
+      prefix: /\./.source,
+    }),
+    ...newSelectorAsStandaloneStringExpressions(),
+  ];
+}
+
+/**
+ * Get {@link MangleExpression}s to match query selectors for elements in
+ * JavaScript, e.g. `div` in `div { }`.
+ *
+ * @returns The {@link MangleExpression}s.
+ */
+function newElementSelectorExpression(): Iterable<MangleExpression> {
+  return [
+    ...newQuerySelectorExpressions({
+      kind: "element",
+    }),
+  ];
+}
+
+/**
+ * Get {@link MangleExpression}s to match query selectors for IDs in JavaScript,
+ * e.g. `foobar` in `#foobar { }`.
+ *
+ * @returns The {@link MangleExpression}s.
+ */
+function newIdSelectorExpression(): Iterable<MangleExpression> {
+  return [
+    ...newQuerySelectorExpressions({
+      kind: "id",
+      prefix: /#/.source,
+    }),
+    ...newSelectorAsStandaloneStringExpressions(),
+  ];
+}
+
+/**
  * Get the set of {@link MangleExpression}s to match query selectors in
  * JavaScript. This will match:
  * - Attribute selectors (e.g. `foobar` in `querySelector("[foobar]")`).
@@ -131,13 +194,17 @@ function querySelectorExpressionFactory(
   options: QuerySelectorOptions,
 ): Iterable<MangleExpression> {
   switch (options.kind) {
+  case "attribute":
+    return newAttributeSelectorExpression();
+  case "class":
+    return newClassSelectorExpression();
+  case "element":
+    return newElementSelectorExpression();
+  case "id":
+    return newIdSelectorExpression();
   case undefined:
     return fallback(options);
   }
-
-  return [
-    // TODO: Add implementation
-  ];
 }
 
 export default querySelectorExpressionFactory;
