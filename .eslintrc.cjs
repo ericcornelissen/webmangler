@@ -306,27 +306,56 @@ module.exports = {
         `${packagesDir}/**/${testsDir}/**/*`,
       ],
       plugins: [
-        "mocha",
         "chai-expect",
-      ],
-      extends: [
-        "plugin:mocha/recommended",
-        "plugin:chai-expect/recommended",
+        "mocha",
       ],
       rules: {
-        // See https://github.com/import-js/eslint-plugin-import#rules
+        "prefer-arrow-callback": "off",
         "import/no-extraneous-dependencies": "off",
 
+        // See: https://github.com/turbo87/eslint-plugin-chai-expect#readme
+        "chai-expect/missing-assertion": ["error"],
+        "chai-expect/no-inner-compare": ["error"],
+        "chai-expect/no-inner-literal": ["error"],
+        "chai-expect/terminating-properties": ["error", {
+          properties: [
+            // from 'sinon-chai'
+            "called",
+            "calledOnce",
+            "calledTwice",
+            "calledThrice",
+            "calledWithNew",
+          ],
+        }],
+
         // See: https://github.com/lo1tuma/eslint-plugin-mocha/tree/master/docs/rules#readme
+        "mocha/handle-done-callback": ["error", {
+          ignoreSkipped: false,
+        }],
+        "mocha/max-top-level-suites": ["error", {
+          limit: 1,
+        }],
+        "mocha/no-async-describe": ["error"],
+        "mocha/no-empty-description": "off",
         "mocha/no-exclusive-tests": ["error"],
+        "mocha/no-exports": ["error"],
+        "mocha/no-global-tests": ["error"],
+        "mocha/no-hooks": "off",
+        "mocha/no-hooks-for-single-case": "off",
+        "mocha/no-identical-title": ["error"],
+        "mocha/no-mocha-arrows": ["error"],
+        "mocha/no-nested-tests": ["error"],
+        "mocha/no-pending-tests": ["warn"],
+        "mocha/no-return-and-callback": ["error"],
+        "mocha/no-return-from-async": ["error"],
+        "mocha/no-setup-in-describe": "off",
+        "mocha/no-sibling-hooks": "off",
+        "mocha/no-skipped-tests": ["warn"],
+        "mocha/no-synchronous-tests": "off",
+        "mocha/no-top-level-hooks": ["error"],
+        "mocha/prefer-arrow-callback": ["error"],
         "mocha/valid-suite-description": ["error", "^[A-Z:]"],
         "mocha/valid-test-description": ["error", "^[a-z0-9]"],
-
-        // Disabled because tests are dynamically generated. See: https://github.com/lo1tuma/eslint-plugin-mocha/blob/master/docs/rules/no-setup-in-describe.md
-        "mocha/no-setup-in-describe": "off",
-
-        // See: https://github.com/nodesecurity/eslint-plugin-security#rules
-        "security/detect-non-literal-fs-filename": "off",
       },
     },
     { // Configuration files (JS)
