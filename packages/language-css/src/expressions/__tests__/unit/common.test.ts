@@ -223,68 +223,6 @@ suite("CSS - common expressions", function() {
       });
     });
 
-    suite("::commentClose", function() {
-      const getRegExp = () => {
-        return new RegExp(patterns.commentClose, "gm");
-      };
-
-      test("comments", function() {
-        const testCases = [
-          ...sampleValues.comments,
-        ];
-
-        for (const testCase of testCases) {
-          const regExp = getRegExp();
-          const result = regExp.test(testCase);
-          expect(result).to.equal(true, `in "${testCase}"`);
-        }
-      });
-
-      test("no comments", function() {
-        const testCases = [
-          "",
-          ".foobar{}",
-        ];
-
-        for (const testCase of testCases) {
-          const regExp = getRegExp();
-          const result = regExp.test(testCase);
-          expect(result).to.equal(false, `in "${testCase}"`);
-        }
-      });
-    });
-
-    suite("::commentOpen", function() {
-      const getRegExp = () => {
-        return new RegExp(patterns.commentOpen, "gm");
-      };
-
-      test("comments", function() {
-        const testCases = [
-          ...sampleValues.comments,
-        ];
-
-        for (const testCase of testCases) {
-          const regExp = getRegExp();
-          const result = regExp.test(testCase);
-          expect(result).to.equal(true, `in "${testCase}"`);
-        }
-      });
-
-      test("no comments", function() {
-        const testCases = [
-          "",
-          ".foobar{}",
-        ];
-
-        for (const testCase of testCases) {
-          const regExp = getRegExp();
-          const result = regExp.test(testCase);
-          expect(result).to.equal(false, `in "${testCase}"`);
-        }
-      });
-    });
-
     suite("::doubleQuotedString", function() {
       const getRegExp = () => {
         return new RegExp(patterns.doubleQuotedString, "gm");

@@ -29,7 +29,7 @@ function newCssSelectorExpression(
               (?:
                 ^|\\}|
                 ${patterns.allowedBeforeSelector}|
-                ${patterns.commentClose}
+                ${patterns.comment}
               )
             `}
           )
@@ -39,7 +39,7 @@ function newCssSelectorExpression(
               (?:
                 $|\\{|
                 ${patterns.allowedAfterSelector}|
-                ${patterns.commentOpen}
+                ${patterns.comment}
               )
             `}
           )
