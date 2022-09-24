@@ -118,7 +118,10 @@ function getLintersForLanguages(languages) {
 
 function newEslintConfig(exts) {
   return {
-    args: ["--ext", exts.join(",")],
+    args: [
+      "--report-unused-disable-directives",
+      "--ext", exts.join(","),
+    ],
     bin: eslintBin,
     exts,
     fixArg: "--fix",
