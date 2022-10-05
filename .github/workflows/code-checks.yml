@@ -1,7 +1,9 @@
 name: Validate Source Code
 on:
-  - pull_request
-  - push
+  pull_request: ~
+  push:
+    branches:
+      - main
 
 permissions: read-all
 
