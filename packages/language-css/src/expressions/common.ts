@@ -34,21 +34,9 @@ const arithmeticOperators = /(?:\+|-|\*|\/)/.source;
 const attributeOperators = /(?:=|~=|\|=|\^=|\$=|\*=)/.source;
 
 /**
- * Regular Expression pattern as a string of a comment opening in CSS.
- */
-const commentOpen = /(?:\/\*)/.source;
-
-/**
- * Regular Expression pattern as a string of a comment closing in CSS.
- */
-const commentClose = /(?:\*\/)/.source;
-
-/**
  * Regular Expression pattern as a string of a comment in CSS.
  */
-const comment = /(?:${commentOpen}[^]*?${commentClose})/.source
-  .replace("${commentOpen}", commentOpen)
-  .replace("${commentClose}", commentClose);
+const comment = /(?:\/\*[^]*?\*\/)/.source;
 
 /**
  * Regular Expression pattern as a string for a double quoted string in CSS.
@@ -88,8 +76,6 @@ const patterns = {
   attributeOperators,
   anyString,
   comment,
-  commentClose,
-  commentOpen,
   doubleQuotedString,
   quotes,
   ruleset,
