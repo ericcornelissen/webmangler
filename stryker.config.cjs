@@ -10,7 +10,9 @@ const {
   reportsDir,
   srcDir,
   tempDir,
+  testDirUnit,
   testsDir,
+  testSuffix,
 } = values;
 
 module.exports = {
@@ -21,8 +23,20 @@ module.exports = {
     `!**/${testsDir}/**/*.ts`,
     ...packagesCoverageExclusions.map((exclusion) => `!${exclusion}`),
   ],
-  commandRunner: {
-    command: `npm run test -- ${packagesList.join(" ")} --unit`,
+
+  testRunner: "mocha",
+  mochaOptions: {
+    config: ".mocharc.cjs",
+    spec: [
+      [
+        packagesDir,
+        packagesExpr,
+        "**",
+        testsDir,
+        testDirUnit,
+        `*.${testSuffix}.ts`,
+      ].join("/"),
+    ],
   },
 
   timeoutMS: 25000,
