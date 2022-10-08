@@ -3,6 +3,7 @@
 const values = require("./.values.cjs");
 
 const {
+  cacheDir,
   packagesCoverageExclusions,
   packagesDir,
   packagesExpr,
@@ -38,6 +39,9 @@ module.exports = {
       ].join("/"),
     ],
   },
+
+  incremental: true,
+  incrementalFile: `${cacheDir}/mutation/${packagesList.join(",")}.json`,
 
   timeoutMS: 25000,
   timeoutFactor: 2.5,
