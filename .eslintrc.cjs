@@ -475,16 +475,10 @@ module.exports = {
       ],
       processor: "markdown/markdown",
     },
-    { // Documentation Snippets (MarkDown.*)
+    { // Documentation Snippets, JavaScript (MarkDown.*)
       files: [
         "**/*.md/*.js",
-        "**/*.md/*.ts",
       ],
-      parser: "@typescript-eslint/parser",
-      parserOptions: {
-        // Remove the project as snippets are not part of any project
-        project: null,
-      },
       globals: {
         ...COMMON_JS_GLOBALS,
         console: "readonly",
@@ -493,9 +487,40 @@ module.exports = {
         // See: https://eslint.org/docs/rules/
         "no-console": "off",
 
-        // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
-        "@typescript-eslint/no-unused-vars": "off",
+        // See: https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-commonjs": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-unresolved": "off",
+
+        // See: https://typescript-eslint.io/rules/
         "@typescript-eslint/no-var-requires": "off",
+      },
+    },
+    { // Documentation Snippets, TypeScript (MarkDown.*)
+      files: [
+        "**/*.md/*.ts",
+      ],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        project: null,
+      },
+      globals: {
+        console: "readonly",
+      },
+      rules: {
+        // See: https://eslint.org/docs/rules/
+        "no-console": "off",
+
+        // See: https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-commonjs": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-unresolved": "off",
+
+        // See: https://typescript-eslint.io/rules/
+        "@typescript-eslint/consistent-type-exports": "off",
+        "@typescript-eslint/no-redundant-type-constituents": "off",
+        "@typescript-eslint/switch-exhaustiveness-check": "off",
+        "@typescript-eslint/no-unused-vars": "off",
       },
     },
   ],
