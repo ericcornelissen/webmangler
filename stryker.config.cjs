@@ -3,6 +3,7 @@
 const values = require("./.values.cjs");
 
 const {
+  cacheDir,
   packagesCoverageExclusions,
   packagesDir,
   packagesExpr,
@@ -10,7 +11,9 @@ const {
   reportsDir,
   srcDir,
   tempDir,
+  testDirUnit,
   testsDir,
+  testSuffix,
 } = values;
 
 module.exports = {
@@ -21,9 +24,24 @@ module.exports = {
     `!**/${testsDir}/**/*.ts`,
     ...packagesCoverageExclusions.map((exclusion) => `!${exclusion}`),
   ],
-  commandRunner: {
-    command: `npm run test -- ${packagesList.join(" ")} --unit`,
+
+  testRunner: "mocha",
+  mochaOptions: {
+    config: ".mocharc.cjs",
+    spec: [
+      [
+        packagesDir,
+        packagesExpr,
+        "**",
+        testsDir,
+        testDirUnit,
+        `*.${testSuffix}.ts`,
+      ].join("/"),
+    ],
   },
+
+  incremental: true,
+  incrementalFile: `${cacheDir}/mutation/${packagesList.join(",")}.json`,
 
   timeoutMS: 25000,
   timeoutFactor: 2.5,
