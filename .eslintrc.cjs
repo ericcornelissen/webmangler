@@ -479,13 +479,20 @@ module.exports = {
       files: [
         "**/*.md/*.js",
       ],
+      parserOptions: {
+        ecmaFeatures: {
+          impliedStrict: true,
+        },
+      },
       globals: {
         ...COMMON_JS_GLOBALS,
         console: "readonly",
       },
       rules: {
         // See: https://eslint.org/docs/rules/
+        "eol-last": "off",
         "no-console": "off",
+        "unicode-bom": "off",
 
         // See: https://github.com/import-js/eslint-plugin-import#rules
         "import/no-commonjs": "off",
