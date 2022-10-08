@@ -34,7 +34,6 @@ module.exports = {
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:jsdoc/recommended",
-    "plugin:markdown/recommended",
     "plugin:security/recommended",
   ],
   rules: {
@@ -466,6 +465,15 @@ module.exports = {
         "yml/spaced-comment": ["error", "always"],
         "yml/vue-custom-block/no-parsing-error": "off",
       },
+    },
+    { // Documentation (MarkDown)
+      files: [
+        "**/*.md",
+      ],
+      plugins: [
+        "markdown",
+      ],
+      processor: "markdown/markdown",
     },
     { // Documentation Snippets (MarkDown.*)
       files: [
