@@ -133,7 +133,7 @@ const whitespace: string[] = [
 /**
  * The full list of CSS attribute selector operators.
  */
-export const attributeSelectorOperators: string[] = [
+const attributeSelectorOperators: string[] = [
   "=",
   "~=",
   "|=",
@@ -145,7 +145,7 @@ export const attributeSelectorOperators: string[] = [
 /**
  * The full list of CSS selector combinators.
  */
-export const selectorCombinators: string[] = [
+const selectorCombinators: string[] = [
   ...whitespace.filter((s) => s !== ""),
   ",",
   ">",
@@ -168,7 +168,7 @@ export const selectorCombinators: string[] = [
 /**
  * A collection of sample values for testing the CSS language plugin.
  */
-export const sampleValues = {
+const sampleValues = {
   attributeSelectors,
   classSelectors,
   comments,
@@ -187,7 +187,7 @@ export const sampleValues = {
 /**
  * A collection of preset values for testing the CSS language plugin.
  */
-export const valuePresets: CssValuesPresets = {
+const valuePresets: CssValuesPresets = {
   beforeRuleset: new Set(),
   beforeSelector: new Set([
     ...comments,
@@ -238,4 +238,11 @@ export const valuePresets: CssValuesPresets = {
     ...whitespace,
   ]),
   afterRuleset: new Set(),
+};
+
+export {
+  attributeSelectorOperators,
+  sampleValues,
+  selectorCombinators,
+  valuePresets,
 };
