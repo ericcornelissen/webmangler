@@ -101,7 +101,10 @@ function getLintersForLanguages(languages) {
       ];
     case "md":
       return [
-        newEslintConfig(mdExts),
+        newEslintConfig({
+          eslint: ["js", "ts"],
+          files: mdExts,
+        }),
         newMarkDownLintConfig(mdExts),
       ];
     case "ts":
@@ -117,13 +120,20 @@ function getLintersForLanguages(languages) {
 }
 
 function newEslintConfig(exts) {
+  let eslintExts = exts;
+  let fileExts = exts;
+  if (!Array.isArray(exts)) {
+    eslintExts = exts.eslint;
+    fileExts = exts.files;
+  }
+
   return {
     args: [
       "--report-unused-disable-directives",
-      "--ext", exts.join(","),
+      "--ext", eslintExts.join(","),
     ],
     bin: eslintBin,
-    exts,
+    exts: fileExts,
     fixArg: "--fix",
   };
 }
@@ -139,7 +149,7 @@ function newMarkDownLintConfig(exts) {
 
 async function getFilesToLint(argv, exts) {
   if (argv.includes(FLAGS.ALL)) {
-    return ["."];
+    return [`**/*.${exts.length > 1 ? `{${exts.join(",")}}` : exts[0]}`];
   } else {
     const changedFiles = await vcs.getChangedFiles();
     return changedFiles.filter(

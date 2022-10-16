@@ -34,7 +34,6 @@ module.exports = {
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:jsdoc/recommended",
-    "plugin:markdown/recommended",
     "plugin:security/recommended",
   ],
   rules: {
@@ -467,15 +466,23 @@ module.exports = {
         "yml/vue-custom-block/no-parsing-error": "off",
       },
     },
-    { // Documentation Snippets (MarkDown.*)
+    { // Documentation (MarkDown)
+      files: [
+        "**/*.md",
+      ],
+      plugins: [
+        "markdown",
+      ],
+      processor: "markdown/markdown",
+    },
+    { // Documentation Snippets, JavaScript (MarkDown.*)
       files: [
         "**/*.md/*.js",
-        "**/*.md/*.ts",
       ],
-      parser: "@typescript-eslint/parser",
       parserOptions: {
-        // Remove the project as snippets are not part of any project
-        project: null,
+        ecmaFeatures: {
+          impliedStrict: true,
+        },
       },
       globals: {
         ...COMMON_JS_GLOBALS,
@@ -483,11 +490,44 @@ module.exports = {
       },
       rules: {
         // See: https://eslint.org/docs/rules/
+        "eol-last": "off",
+        "no-console": "off",
+        "unicode-bom": "off",
+
+        // See: https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-commonjs": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-unresolved": "off",
+
+        // See: https://typescript-eslint.io/rules/
+        "@typescript-eslint/no-var-requires": "off",
+      },
+    },
+    { // Documentation Snippets, TypeScript (MarkDown.*)
+      files: [
+        "**/*.md/*.ts",
+      ],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        project: null,
+      },
+      globals: {
+        console: "readonly",
+      },
+      rules: {
+        // See: https://eslint.org/docs/rules/
         "no-console": "off",
 
-        // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+        // See: https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-commonjs": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-unresolved": "off",
+
+        // See: https://typescript-eslint.io/rules/
+        "@typescript-eslint/consistent-type-exports": "off",
+        "@typescript-eslint/no-redundant-type-constituents": "off",
+        "@typescript-eslint/switch-exhaustiveness-check": "off",
         "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/no-var-requires": "off",
       },
     },
   ],
