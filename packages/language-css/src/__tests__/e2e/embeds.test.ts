@@ -18,17 +18,17 @@ suite("CssLanguagePlugin class", function() {
   interface TestCase {
     readonly input: {
       readonly config: CssLanguagePluginOptions;
-      readonly files: WebManglerFile[];
-      readonly plugins: WebManglerPlugin[];
+      readonly files: ReadonlyArray<WebManglerFile>;
+      readonly plugins: ReadonlyArray<WebManglerPlugin>;
     };
     readonly expected: {
-      readonly files: WebManglerFile[];
+      readonly files: ReadonlyArray<WebManglerFile>;
     };
   }
 
   const testScenarios: TestScenarios<TestCase> = [
     {
-      testName: "basic stylesheet",
+      testName: "no embeds",
       getScenario: () => {
         return {
           input: {
@@ -123,10 +123,10 @@ suite("CssLanguagePlugin class", function() {
         languages: [
           new CssLanguagePlugin(input.config),
         ],
-        plugins: input.plugins,
+        plugins: [...input.plugins],
       };
 
-      const result = webmangler(input.files, options);
+      const result = webmangler([...input.files], options);
       expect(result.files).to.deep.equal(expected.files);
     });
   }
