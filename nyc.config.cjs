@@ -8,12 +8,15 @@ const {
   packagesCoverageExclusions,
   packagesDir,
   packagesExpr,
+  packagesList,
   reportsDir,
   tempDir,
   testDirCommon,
   testsDir,
   testSuffix,
 } = values;
+
+const reportIdentifier = packagesList.length > 1 ? "_mixed" : packagesList[0];
 
 module.exports = {
   all: true,
@@ -53,6 +56,6 @@ module.exports = {
     ...packagesCoverageExclusions,
   ],
 
-  reportDir: `./${reportsDir}/coverage`,
-  tempDir: `./${tempDir}/nyc`,
+  reportDir: `./${reportsDir}/coverage/${reportIdentifier}`,
+  tempDir: `./${tempDir}/nyc/${reportIdentifier}`,
 };
