@@ -21,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.1.0
       - name: Install Node.js
-        uses: actions/setup-node@v3.5.0
+        uses: actions/setup-node@v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -38,7 +38,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in all packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@v2.11.1
         id: all-filter
         with:
           filters: |
@@ -54,7 +54,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in e2e tested packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@v2.11.1
         id: e2e-filter
         with:
           filters: |
@@ -70,7 +70,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in performance tested packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@v2.11.1
         id: performance-filter
         with:
           filters: |
@@ -84,7 +84,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in mutation tested packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@v2.11.1
         id: mutation-filter
         with:
           filters: |
@@ -100,7 +100,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in tested packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@v2.11.1
         id: tested-filter
         with:
           filters: |
@@ -120,7 +120,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.1.0
       - name: Cache compiled package
-        uses: actions/cache@v3.0.10
+        uses: actions/cache@v3.0.11
         with:
           path: |
             packages/*/build
@@ -133,7 +133,7 @@ jobs:
           restore-keys: |
             compiled ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.5.0
+        uses: actions/setup-node@v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -154,7 +154,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.1.0
       - name: Cache compiled package
-        uses: actions/cache@v3.0.10
+        uses: actions/cache@v3.0.11
         with:
           path: |
             packages/*/build
@@ -167,7 +167,7 @@ jobs:
           restore-keys: |
             compiled ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.5.0
+        uses: actions/setup-node@v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -189,7 +189,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.1.0
       - name: Cache compiled package
-        uses: actions/cache@v3.0.10
+        uses: actions/cache@v3.0.11
         with:
           path: |
             packages/*/build
@@ -202,7 +202,7 @@ jobs:
           restore-keys: |
             compiled ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.5.0
+        uses: actions/setup-node@v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -231,7 +231,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.1.0
       - name: Cache compiled packages
-        uses: actions/cache@v3.0.10
+        uses: actions/cache@v3.0.11
         with:
           path: |
             packages/*/build
@@ -243,7 +243,7 @@ jobs:
           restore-keys: |
             e2e
       - name: Install Node.js
-        uses: actions/setup-node@v3.5.0
+        uses: actions/setup-node@v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -266,7 +266,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3.1.0
       - name: Cache compiled package
-        uses: actions/cache@v3.0.10
+        uses: actions/cache@v3.0.11
         with:
           path: |
             packages/*/build
@@ -278,7 +278,7 @@ jobs:
           restore-keys: |
             mutation
       - name: Install Node.js
-        uses: actions/setup-node@v3.5.0
+        uses: actions/setup-node@v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
