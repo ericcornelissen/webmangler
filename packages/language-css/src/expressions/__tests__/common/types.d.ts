@@ -23,28 +23,35 @@ type CssRulesetKey =
 /**
  * Type representing the values for the different parts of a CSS declaration.
  */
-export type CssDeclarationValues = TestValues<CssDeclarationKey>;
+type CssDeclarationValues = TestValues<CssDeclarationKey>;
 
 /**
  * Type representing a collection of possible values for the different parts of
  * a CSS declaration.
  */
-export type CssDeclarationValuesSets = TestValuesSets<CssDeclarationKey>;
+type CssDeclarationValuesSets = TestValuesSets<CssDeclarationKey>;
 
 /**
  * Type representing the values for the different parts of a CSS ruleset.
  */
-export type CssRulesetValues = TestValues<CssRulesetKey>;
+type CssRulesetValues = TestValues<CssRulesetKey>;
 
 /**
  * Type representing a collection of possible values for the different parts of
  * a CSS ruleset.
  */
-export type CssRulesetValuesSets = TestValuesSets<CssRulesetKey>;
+type CssRulesetValuesSets = TestValuesSets<CssRulesetKey>;
 
 /**
  * Type representing a preset of values for the different parts of a CSS
  * document.
  */
-export type CssValuesPresets =
-  TestValuesPresets<CssDeclarationKey | CssRulesetKey>;
+type CssValuesPresets = TestValuesPresets<CssDeclarationKey | CssRulesetKey>;
+
+export type {
+  CssValuesPresets,
+  CssRulesetValuesSets,
+  CssRulesetValues,
+  CssDeclarationValues,
+  CssDeclarationValuesSets,
+};
