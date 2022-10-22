@@ -16,6 +16,8 @@ const {
   testSuffix,
 } = values;
 
+const reportIdentifier = packagesList.length > 1 ? "_mixed" : packagesList[0];
+
 module.exports = {
   coverageAnalysis: "perTest",
   inPlace: false,
@@ -60,7 +62,7 @@ module.exports = {
     module: packagesList[0],
   },
   htmlReporter: {
-    fileName: `${reportsDir}/mutation/index.html`,
+    fileName: `${reportsDir}/mutation/${reportIdentifier}/index.html`,
   },
   thresholds: {
     high: 80,
