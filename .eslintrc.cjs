@@ -34,7 +34,6 @@ module.exports = {
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:jsdoc/recommended",
-    "plugin:security/recommended",
   ],
   rules: {
     // See: https://eslint.org/docs/rules/
@@ -203,9 +202,19 @@ module.exports = {
     }],
 
     // See: https://github.com/nodesecurity/eslint-plugin-security#rules
-    "security/detect-object-injection": "off", // Too many false positives
-    "security/detect-non-literal-regexp": "off", // Risk tolerated, DOS out-of-scope
-    "security/detect-unsafe-regex": "off", // Rely on CodeQL instead
+    "security/detect-buffer-noassert": "error",
+    "security/detect-child-process": "error",
+    "security/detect-disable-mustache-escape": "off",
+    "security/detect-eval-with-expression": "error",
+    "security/detect-new-buffer": "error",
+    "security/detect-no-csrf-before-method-override": "off",
+    "security/detect-non-literal-fs-filename": "error",
+    "security/detect-non-literal-regexp": "off",
+    "security/detect-non-literal-require": "error",
+    "security/detect-object-injection": "off",
+    "security/detect-possible-timing-attacks": "error",
+    "security/detect-pseudoRandomBytes": "error",
+    "security/detect-unsafe-regex": "off",
   },
   settings: {
     jsdoc: {
@@ -268,6 +277,7 @@ module.exports = {
         `${packagesDir}/cli/**/*.ts`,
       ],
       rules: {
+        // See: https://github.com/nodesecurity/eslint-plugin-security#rules
         "security/detect-non-literal-fs-filename": "off",
       },
     },
@@ -288,7 +298,6 @@ module.exports = {
         "jsdoc/require-jsdoc": "off",
 
         // See: https://github.com/nodesecurity/eslint-plugin-security#rules
-        "security/detect-child-process": "off",
         "security/detect-non-literal-fs-filename": "off",
 
         // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
