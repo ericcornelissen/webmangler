@@ -1,0 +1,27 @@
+name: Audit
+on:
+  pull_request: ~
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 3 * * 0"
+
+permissions: read-all
+
+jobs:
+  secrets:
+    name: Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
+        with:
+          fetch-depth: 0
+      - name: Scan for secrets
+        uses: gitleaks/gitleaks-action@1938557f6a58837331b99822ab17b8e536e7bef9 # tag=v2.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: false
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: false
+          GITLEAKS_ENABLE_SUMMARY: false
