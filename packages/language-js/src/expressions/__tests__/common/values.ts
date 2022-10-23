@@ -72,7 +72,7 @@ const whitespace: string[] = [
 /**
  * The full list of CSS selector combinators.
  */
-export const selectorCombinators: string[] = [
+const selectorCombinators: string[] = [
   ...whitespace.filter((s) => s !== ""),
   ",",
   ">",
@@ -95,7 +95,7 @@ export const selectorCombinators: string[] = [
 /**
  * A collection of sample values for testing the JavaScript language plugin.
  */
-export const sampleValues = {
+const sampleValues = {
   emptyStrings,
   functionCalls,
   inlineComments,
@@ -108,7 +108,7 @@ export const sampleValues = {
 /**
  * A collection of preset values for testing the JavaScript language plugin.
  */
-export const valuePresets: JsStatementValuesPresets = {
+const valuePresets: JsStatementValuesPresets = {
   beforeStatement: new Set([
     ...emptyStrings,
   ]),
@@ -139,4 +139,10 @@ export const valuePresets: JsStatementValuesPresets = {
     ...inlineComments,
     ...lineComments,
   ]),
+};
+
+export {
+  sampleValues,
+  selectorCombinators,
+  valuePresets,
 };
