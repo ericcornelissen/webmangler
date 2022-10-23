@@ -412,7 +412,7 @@ module.exports = {
         ".markdownlint.yml",
       ],
       extends: [
-        "plugin:yml/standard",
+        "plugin:yml/base",
       ],
       rules: {
         // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
