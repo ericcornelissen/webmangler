@@ -24,6 +24,7 @@ module.exports = {
   root: true,
 
   plugins: [
+    "import",
     "jsdoc",
     "regexp",
     "security",
@@ -31,7 +32,6 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:jsdoc/recommended",
     "plugin:security/recommended",
