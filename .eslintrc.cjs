@@ -425,8 +425,9 @@ module.exports = {
         "plugin:yml/standard",
       ],
       rules: {
-        // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
-        "spaced-comment": "off",
+        // See: https://eslint.org/docs/rules/
+        "max-len": "off",
+        "spaced-comment": "off", // Per https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
 
         // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/
         "yml/block-mapping": ["error", "always"],
