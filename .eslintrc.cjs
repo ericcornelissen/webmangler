@@ -24,6 +24,7 @@ module.exports = {
   root: true,
 
   plugins: [
+    "import",
     "jsdoc",
     "regexp",
     "security",
@@ -31,9 +32,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:import/recommended",
     "plugin:import/typescript",
-    "plugin:jsdoc/recommended",
   ],
   rules: {
     // See: https://eslint.org/docs/rules/
@@ -422,7 +421,7 @@ module.exports = {
         ".markdownlint.yml",
       ],
       extends: [
-        "plugin:yml/standard",
+        "plugin:yml/base",
       ],
       rules: {
         // See: https://eslint.org/docs/rules/
