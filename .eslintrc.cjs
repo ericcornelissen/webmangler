@@ -266,6 +266,7 @@ module.exports = {
           multilineDetection: "brackets",
         }],
         "@typescript-eslint/no-redundant-type-constituents": "error",
+        "@typescript-eslint/no-unsafe-declaration-merging": "error",
         "@typescript-eslint/no-useless-empty-export": "error",
         "@typescript-eslint/space-before-blocks": "error",
         "@typescript-eslint/switch-exhaustiveness-check": "error",
