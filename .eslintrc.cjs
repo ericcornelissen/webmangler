@@ -199,6 +199,13 @@ module.exports = {
     "regexp/match-any": ["error", {
       allows: ["[^]", "dotAll"],
     }],
+    "regexp/no-super-linear-backtracking": ["error", {
+      report: "potential",
+    }],
+    "regexp/no-super-linear-move": ["error", {
+      ignoreSticky: false,
+      report: "potential",
+    }],
 
     // See: https://github.com/nodesecurity/eslint-plugin-security#rules
     "security/detect-buffer-noassert": "error",
