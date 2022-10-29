@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Add support for the `kind` field of `QuerySelectorOptions`. ([#374])
+- Fix bug where attribute selectors would be removed when mangled. ([#404])
 
 ## [0.1.29] - 2022-09-10
 
@@ -56,5 +57,6 @@ Versioning].
 [#322]: https://github.com/ericcornelissen/webmangler/pull/322
 [#351]: https://github.com/ericcornelissen/webmangler/pull/351
 [#374]: https://github.com/ericcornelissen/webmangler/pull/374
+[#404]: https://github.com/ericcornelissen/webmangler/pull/404
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

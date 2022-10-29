@@ -3,7 +3,7 @@ import type {
   SingleValueAttributeOptions,
 } from "@webmangler/types";
 
-import { SingleGroupMangleExpression } from "@webmangler/language-utils";
+import { NestedGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
 type SingleValueAttributeConfig = Required<SingleValueAttributeOptions>
@@ -24,7 +24,7 @@ function newAttributeSelectorSingleValueExpression(
   const attributesPattern = Array.from(config.attributeNames).join("|");
 
   return [
-    new SingleGroupMangleExpression({
+    new NestedGroupMangleExpression({
       patternTemplate: `
         (?:
           (?:${patterns.anyString}|${patterns.comment}|${patterns.ruleset})
@@ -36,13 +36,18 @@ function newAttributeSelectorSingleValueExpression(
             (?<${GROUP_QUOTE}>${patterns.quotes})\\s*
             ${config.valuePrefix}
           )
-          ${SingleGroupMangleExpression.CAPTURE_GROUP}
+          ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "", after: "" })}
           (?:
             ${config.valueSuffix}
             \\s*\\k<${GROUP_QUOTE}>
             \\s*\\]
           )
         )
+      `,
+      subPatternTemplate: `
+        ^
+        ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+        $
       `,
     }),
   ];

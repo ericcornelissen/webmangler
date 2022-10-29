@@ -357,64 +357,63 @@ suite("Expressions", function() {
         };
       },
     },
-    // TODO: test for https://github.com/ericcornelissen/webmangler/issues/395
-    // {
-    //   testName: "single-value-attributes",
-    //   getScenario: () => {
-    //     return {
-    //       input: {
-    //         config: { },
-    //         files: [
-    //           {
-    //             type: "css",
-    //             content: `
-    //               #foo[id="foobar"] {
-    //                 color: red;
-    //               }
-    //               .bar[id="helloworld"] {
-    //                 color: blue;
-    //               }
-    //             `,
-    //           },
-    //         ],
-    //         plugins: [
-    //           new WebManglerPluginMock({
-    //             options: sinon.stub().returns({
-    //               patterns: "[a-z]+",
-    //               ignorePatterns: [],
-    //               charSet: ["a", "b", "c", "d", "e"],
-    //               manglePrefix: "",
-    //               reservedNames: [],
-    //               languageOptions: [
-    //                 {
-    //                   name: "single-value-attributes",
-    //                   options: {
-    //                     attributeNames: ["id"],
-    //                   },
-    //                 },
-    //               ],
-    //             }),
-    //           }),
-    //         ],
-    //       },
-    //       expected: {
-    //         files: [
-    //           {
-    //             type: "css",
-    //             content: `
-    //               #foo[id="a"] {
-    //                 color: red;
-    //               }
-    //               .bar[id="b"] {
-    //                 color: blue;
-    //               }
-    //             `,
-    //           },
-    //         ],
-    //       },
-    //     };
-    //   },
-    // },
+    {
+      testName: "single-value-attributes",
+      getScenario: () => {
+        return {
+          input: {
+            config: { },
+            files: [
+              {
+                type: "css",
+                content: `
+                  #foo[id="foobar"] {
+                    color: red;
+                  }
+                  .bar[id="helloworld"] {
+                    color: blue;
+                  }
+                `,
+              },
+            ],
+            plugins: [
+              new WebManglerPluginMock({
+                options: sinon.stub().returns({
+                  patterns: "[a-z]+",
+                  ignorePatterns: [],
+                  charSet: ["a", "b", "c", "d", "e"],
+                  manglePrefix: "",
+                  reservedNames: [],
+                  languageOptions: [
+                    {
+                      name: "single-value-attributes",
+                      options: {
+                        attributeNames: ["id"],
+                      },
+                    },
+                  ],
+                }),
+              }),
+            ],
+          },
+          expected: {
+            files: [
+              {
+                type: "css",
+                content: `
+                  #foo[id="a"] {
+                    color: red;
+                  }
+                  .bar[id="b"] {
+                    color: blue;
+                  }
+                `,
+              },
+            ],
+          },
+        };
+      },
+    },
   ];
 
   for (const { testName, getScenario } of testScenarios) {
