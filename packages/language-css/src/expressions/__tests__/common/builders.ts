@@ -18,6 +18,11 @@ function *buildCssAttributeSelectors(
   attributeValue: string,
 ): IterableIterator<string> {
   const quotes = ["\"", "'"];
+
+  if (!/\s/.test(attributeValue)) {
+    quotes.push("");
+  }
+
   for (const operator of attributeSelectorOperators) {
     for (const q of quotes) {
       yield `[${attributeName}${operator}${q}${attributeValue}${q}]`;
