@@ -213,7 +213,10 @@ suite("Expressions", function() {
                   #foo[class="foo bar"] {
                     color: red;
                   }
-                  .bar[data-test="hello world"] {
+                  .bar[data-test='hello world'] {
+                    color: white;
+                  }
+                  .no[data-test=quotes] {
                     color: blue;
                   }
                 `,
@@ -247,7 +250,10 @@ suite("Expressions", function() {
                   #foo[class="a b"] {
                     color: red;
                   }
-                  .bar[data-test="c d"] {
+                  .bar[data-test='c d'] {
+                    color: white;
+                  }
+                  .no[data-test=e] {
                     color: blue;
                   }
                 `,
@@ -370,7 +376,10 @@ suite("Expressions", function() {
                   #foo[id="foobar"] {
                     color: red;
                   }
-                  .bar[id="helloworld"] {
+                  .bar[id='helloworld'] {
+                    color: white;
+                  }
+                  .no[id=quotes] {
                     color: blue;
                   }
                 `,
@@ -404,7 +413,10 @@ suite("Expressions", function() {
                   #foo[id="a"] {
                     color: red;
                   }
-                  .bar[id="b"] {
+                  .bar[id='b'] {
+                    color: white;
+                  }
+                  .no[id=c] {
                     color: blue;
                   }
                 `,
