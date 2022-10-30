@@ -9,7 +9,7 @@ import type { MangleExpression } from "@webmangler/types";
  * @param pattern The pattern to match with.
  * @returns The matches found.
  */
-export function getAllMatches(
+function getAllMatches(
   expressions: Iterable<MangleExpression>,
   input: string,
   pattern: string,
@@ -23,3 +23,7 @@ export function getAllMatches(
 
   return matches;
 }
+
+export {
+  getAllMatches,
+};
