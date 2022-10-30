@@ -15,6 +15,7 @@ import * as paths from "./utilities/paths.js";
 import values from "../.values.cjs";
 
 const {
+  cacheDir,
   reportsDir,
   tempDir,
   testDataDir,
@@ -31,6 +32,7 @@ const ALWAYS_DELETE = [
 ];
 
 const HARD_DELETE_ONLY = [
+  `${cacheDir}/`,
   `${reportsDir}/`,
   ".eslintcache",
 ];

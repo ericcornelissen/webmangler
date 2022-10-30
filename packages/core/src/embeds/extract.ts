@@ -60,8 +60,8 @@ function buildExtractEmbedsFromContent({
   generateUniqueString,
   idPrefix,
 }: {
-  generateUniqueString: ReturnType<typeof buildGenerateUniqueString>;
-  idPrefix: string;
+  readonly generateUniqueString: ReturnType<typeof buildGenerateUniqueString>;
+  readonly idPrefix: string;
 }) {
   return function(
     file: WebManglerFile,

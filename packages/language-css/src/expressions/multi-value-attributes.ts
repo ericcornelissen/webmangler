@@ -9,13 +9,14 @@ import { patterns, QUOTES_ARRAY } from "./common";
 type MultiValueAttributeConfig = Required<MultiValueAttributeOptions>;
 
 /**
- * Get {@link MangleExpression}s to match multi-value attribute selector values
- * in CSS, e.g. 'foo' and `bar` in `[class="foo bar"] { }`.
+ * Get {@link MangleExpression}s to match quoted multi-value attribute selector
+ * values in CSS, e.g. 'foo' and `bar` in `[data="foo bar"]` or
+ * `[data='foo bar']`.
  *
  * @param config The {@link MultiValueAttributeConfig}.
- * @returns The {@link MangleExpression}s to match attribute values in CSS.
+ * @returns The {@link MangleExpression}s to match quoted attribute values.
  */
-function newAttributeSelectorMultiValueExpression(
+function newAttributeSelectorQuotedMultiValueExpression(
   config: MultiValueAttributeConfig,
 ): Iterable<MangleExpression> {
   const attributesPattern = Array.from(config.attributeNames).join("|");
@@ -56,9 +57,50 @@ function newAttributeSelectorMultiValueExpression(
 }
 
 /**
+ * Get {@link MangleExpression}s to match unquoted multi-value attribute
+ * selector values in CSS, e.g. 'foobar` in `[data=foobar] { }`.
+ *
+ * @param config The {@link MultiValueAttributeConfig}.
+ * @returns The {@link MangleExpression}s to match unquoted attribute values.
+ */
+function newAttributeSelectorUnquotedMultiValueExpression(
+  config: MultiValueAttributeConfig,
+): Iterable<MangleExpression> {
+  const attributesPattern = Array.from(config.attributeNames).join("|");
+
+  return [
+    new NestedGroupMangleExpression({
+      patternTemplate: `
+        (?:
+          (?:${patterns.anyString}|${patterns.comment}|${patterns.ruleset})
+          |
+          (?:
+            \\[\\s*
+            (?:${attributesPattern})\\s*
+            (?:${patterns.attributeOperators})\\s*
+          )
+          ${NestedGroupMangleExpression.CAPTURE_GROUP({ before: "", after: "" })}
+          (?:
+            \\s*\\]
+          )
+        )
+      `,
+      subPatternTemplate: `
+        ^
+        ${NestedGroupMangleExpression.SUB_CAPTURE_GROUP}
+        $
+      `,
+    }),
+  ];
+}
+/**
  * Get the set of {@link MangleExpression}s to match multi-value attribute
  * values in CSS. This will match:
- * - Attribute selector values (e.g. `foo` and `bar` in `[data="foo bar"] { }`).
+ * - Double quoted attribute selector values (e.g. `foo` and `bar` in
+ * `[data="foo bar"] { }`).
+ * - Single quoted attribute selector values (e.g. `foo` and `bar` in
+ * `[data='foo bar'] { }`).
+ * - Unquoted attribute selector values (e.g. `foobar` in `[data=foobar] { }`).
  *
  * @param options The {@link MultiValueAttributeOptions}.
  * @returns A set of {@link MangleExpression}s.
@@ -71,7 +113,8 @@ function multiValueAttributeExpressionFactory(
   };
 
   return [
-    ...newAttributeSelectorMultiValueExpression(config),
+    ...newAttributeSelectorQuotedMultiValueExpression(config),
+    ...newAttributeSelectorUnquotedMultiValueExpression(config),
   ];
 }
 

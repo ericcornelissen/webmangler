@@ -1,5 +1,5 @@
 import type {
-  Collection,
+  ReadonlyCollection,
   WebManglerFile,
   WebManglerLanguagePlugin,
 } from "@webmangler/types";
@@ -9,7 +9,8 @@ import type {
   IdentifiableWebManglerEmbed,
 } from "./types";
 
-import { idCharSet, idPrefix } from "./constants";
+import { base58CharSet } from "../constants";
+import { idPrefix } from "./constants";
 import {
   buildExtractEmbedsFromContent,
   buildGenerateUniqueString,
@@ -23,7 +24,7 @@ import { buildReEmbed } from "./insert";
  * @param s The string for which to generate a unique string.
  * @returns A unique string that does not appear in `s`.
  */
-const generateUniqueString = buildGenerateUniqueString(idCharSet);
+const generateUniqueString = buildGenerateUniqueString(base58CharSet);
 
 /**
  * Get all {@link WebManglerEmbed}s in a {@link WebManglerFile} found by
@@ -49,7 +50,7 @@ const extractEmbedsFromContent = buildExtractEmbedsFromContent({
 const getEmbedsOnce: (
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
 ) => (
-  files: Collection<WebManglerFile>,
+  files: ReadonlyCollection<WebManglerFile>,
 ) => EmbedsMap = F.partialRight2(
   F.pipe(
     F.crossProduct,
@@ -73,7 +74,7 @@ const getEmbedsOnce: (
  * @returns All {@link WebManglerEmbed}s per file in `files`.
  */
 const getEmbeds = (
-  files: Collection<WebManglerFile>,
+  files: ReadonlyCollection<WebManglerFile>,
   languagePlugins: Iterable<WebManglerLanguagePlugin>,
 ): EmbedsMap => F.pipe(
   F.recurse(

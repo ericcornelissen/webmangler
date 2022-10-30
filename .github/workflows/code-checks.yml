@@ -1,7 +1,9 @@
 name: Validate Source Code
 on:
-  - pull_request
-  - push
+  pull_request: ~
+  push:
+    branches:
+      - main
 
 permissions: read-all
 
@@ -17,9 +19,9 @@ jobs:
       tested-packages: ${{ steps.tested-filter.outputs.changes }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
       - name: Install Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -36,7 +38,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in all packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: all-filter
         with:
           filters: |
@@ -52,7 +54,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in e2e tested packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: e2e-filter
         with:
           filters: |
@@ -68,7 +70,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in performance tested packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: performance-filter
         with:
           filters: |
@@ -82,7 +84,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in mutation tested packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: mutation-filter
         with:
           filters: |
@@ -98,7 +100,7 @@ jobs:
           FILTERS="${FILTERS//$'\r'/'%0D'}"
           echo "::set-output name=filters::$FILTERS"
       - name: Check for file changes in tested packages
-        uses: dorny/paths-filter@v2.10.2
+        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: tested-filter
         with:
           filters: |
@@ -116,9 +118,9 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.performance-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
       - name: Cache compiled package
-        uses: actions/cache@v3.0.8
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3.0.11
         with:
           path: |
             packages/*/build
@@ -131,7 +133,7 @@ jobs:
           restore-keys: |
             compiled ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -150,9 +152,9 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.all-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
       - name: Cache compiled package
-        uses: actions/cache@v3.0.8
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3.0.11
         with:
           path: |
             packages/*/build
@@ -165,7 +167,7 @@ jobs:
           restore-keys: |
             compiled ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -185,9 +187,9 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.tested-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
       - name: Cache compiled package
-        uses: actions/cache@v3.0.8
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3.0.11
         with:
           path: |
             packages/*/build
@@ -200,7 +202,7 @@ jobs:
           restore-keys: |
             compiled ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -209,10 +211,10 @@ jobs:
       - name: Run test suite for packages/${{ matrix.package }}
         run: npm run coverage -- ${{ matrix.package }}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3.1.0
+        uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # tag=v3.1.1
         if: ${{ always() }}
         with:
-          file: ./_reports/coverage/lcov.info
+          file: ./_reports/coverage/${{ matrix.package }}/lcov.info
           flags: package-${{ matrix.package }}
   test-e2e:
     name: End-to-end
@@ -227,21 +229,22 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.e2e-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
       - name: Cache compiled packages
-        uses: actions/cache@v3.0.8
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3.0.11
         with:
           path: |
             packages/*/build
             packages/*/lib
             packages/*/tsconfig.tsbuildinfo
           key: >-
-            e2e
+            compiled
+            all
             ${{ hashFiles('packages/*/src/**') }}
           restore-keys: |
-            e2e
+            compiled all
       - name: Install Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -262,21 +265,33 @@ jobs:
         package: ${{ fromJSON(needs.changes.outputs.mutation-packages) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.2
-      - name: Cache compiled package
-        uses: actions/cache@v3.0.8
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
+      - name: Cache compiled packages
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3.0.11
         with:
           path: |
             packages/*/build
             packages/*/lib
             packages/*/tsconfig.tsbuildinfo
           key: >-
-            mutation
+            compiled
+            all
             ${{ hashFiles('packages/*/src/**') }}
           restore-keys: |
+            compiled all
+      - name: Cache incremental data
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3.0.11
+        with:
+          path: .cache/mutation/${{ matrix.package }}.json
+          key: >-
             mutation
+            incremental
+            ${{ matrix.package }}
+            ${{ github.run_number }}
+          restore-keys: |
+            mutation incremental ${{ matrix.package }}
       - name: Install Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm

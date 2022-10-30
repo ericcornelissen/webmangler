@@ -31,7 +31,7 @@ function newCssDeclarationValueExpression(
             (?:${patterns.comment}|[^;])*
             (?<=
               :|\\s|\\(|,|
-              ${patterns.commentClose}|
+              ${patterns.comment}|
               ${patterns.arithmeticOperators}
             )
             ${config.prefix}
@@ -41,7 +41,7 @@ function newCssDeclarationValueExpression(
             ${config.suffix}
             (?:
               \\s|,|\\)|\\!|\\;|\\}|
-              ${patterns.commentClose}|
+              ${patterns.comment}|
               ${patterns.arithmeticOperators}
             )
           )

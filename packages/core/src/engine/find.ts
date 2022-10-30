@@ -11,7 +11,7 @@ import type { MangleExpression, WebManglerFile } from "@webmangler/types";
  * @since v0.1.25
  */
 function countInstances(
-  files: Iterable<WebManglerFile>,
+  files: Iterable<Readonly<WebManglerFile>>,
   expressions: ReadonlyMap<string, Iterable<MangleExpression>>,
   patterns: Iterable<string>,
 ): ReadonlyMap<string, number> {

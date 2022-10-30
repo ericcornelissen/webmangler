@@ -24,6 +24,7 @@ module.exports = {
   root: true,
 
   plugins: [
+    "import",
     "jsdoc",
     "regexp",
     "security",
@@ -31,11 +32,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:import/recommended",
     "plugin:import/typescript",
-    "plugin:jsdoc/recommended",
-    "plugin:markdown/recommended",
-    "plugin:security/recommended",
   ],
   rules: {
     // See: https://eslint.org/docs/rules/
@@ -202,11 +199,28 @@ module.exports = {
     "regexp/match-any": ["error", {
       allows: ["[^]", "dotAll"],
     }],
+    "regexp/no-super-linear-backtracking": ["error", {
+      report: "potential",
+    }],
+    "regexp/no-super-linear-move": ["error", {
+      ignoreSticky: false,
+      report: "potential",
+    }],
 
     // See: https://github.com/nodesecurity/eslint-plugin-security#rules
-    "security/detect-object-injection": "off", // Too many false positives
-    "security/detect-non-literal-regexp": "off", // Risk tolerated, DOS out-of-scope
-    "security/detect-unsafe-regex": "off", // Rely on CodeQL instead
+    "security/detect-buffer-noassert": "error",
+    "security/detect-child-process": "error",
+    "security/detect-disable-mustache-escape": "off",
+    "security/detect-eval-with-expression": "error",
+    "security/detect-new-buffer": "error",
+    "security/detect-no-csrf-before-method-override": "off",
+    "security/detect-non-literal-fs-filename": "error",
+    "security/detect-non-literal-regexp": "off",
+    "security/detect-non-literal-require": "error",
+    "security/detect-object-injection": "off",
+    "security/detect-possible-timing-attacks": "error",
+    "security/detect-pseudoRandomBytes": "error",
+    "security/detect-unsafe-regex": "off",
   },
   settings: {
     jsdoc: {
@@ -238,7 +252,7 @@ module.exports = {
       rules: {
         "space-before-blocks": "off",
 
-        // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+        // See: https://typescript-eslint.io/rules/
         "@typescript-eslint/consistent-type-exports": ["error", {
           fixMixedExportsWithInlineTypeSpecifier: false,
         }],
@@ -259,8 +273,10 @@ module.exports = {
           multilineDetection: "brackets",
         }],
         "@typescript-eslint/no-redundant-type-constituents": "error",
+        "@typescript-eslint/no-unsafe-declaration-merging": "error",
         "@typescript-eslint/no-useless-empty-export": "error",
         "@typescript-eslint/space-before-blocks": "error",
+        "@typescript-eslint/switch-exhaustiveness-check": "error",
       },
     },
     { // packages/cli
@@ -268,6 +284,7 @@ module.exports = {
         `${packagesDir}/cli/**/*.ts`,
       ],
       rules: {
+        // See: https://github.com/nodesecurity/eslint-plugin-security#rules
         "security/detect-non-literal-fs-filename": "off",
       },
     },
@@ -288,7 +305,6 @@ module.exports = {
         "jsdoc/require-jsdoc": "off",
 
         // See: https://github.com/nodesecurity/eslint-plugin-security#rules
-        "security/detect-child-process": "off",
         "security/detect-non-literal-fs-filename": "off",
 
         // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
@@ -305,27 +321,60 @@ module.exports = {
         `${packagesDir}/**/${testsDir}/**/*`,
       ],
       plugins: [
-        "mocha",
         "chai-expect",
-      ],
-      extends: [
-        "plugin:mocha/recommended",
-        "plugin:chai-expect/recommended",
+        "mocha",
       ],
       rules: {
-        // See https://github.com/import-js/eslint-plugin-import#rules
+        "prefer-arrow-callback": "off",
         "import/no-extraneous-dependencies": "off",
 
+        // See: https://github.com/turbo87/eslint-plugin-chai-expect#readme
+        "chai-expect/missing-assertion": ["error"],
+        "chai-expect/no-inner-compare": ["error"],
+        "chai-expect/no-inner-literal": ["error"],
+        "chai-expect/terminating-properties": ["error", {
+          properties: [
+            // from 'sinon-chai'
+            "called",
+            "calledOnce",
+            "calledTwice",
+            "calledThrice",
+            "calledWithNew",
+          ],
+        }],
+
         // See: https://github.com/lo1tuma/eslint-plugin-mocha/tree/master/docs/rules#readme
+        "mocha/handle-done-callback": ["error", {
+          ignoreSkipped: false,
+        }],
+        "mocha/max-top-level-suites": ["error", {
+          limit: 1,
+        }],
+        "mocha/no-async-describe": ["error"],
+        "mocha/no-empty-description": "off",
         "mocha/no-exclusive-tests": ["error"],
+        "mocha/no-exports": ["error"],
+        "mocha/no-global-tests": ["error"],
+        "mocha/no-hooks": "off",
+        "mocha/no-hooks-for-single-case": "off",
+        "mocha/no-identical-title": ["error"],
+        "mocha/no-mocha-arrows": ["error"],
+        "mocha/no-nested-tests": ["error"],
+        "mocha/no-pending-tests": ["warn"],
+        "mocha/no-return-and-callback": ["error"],
+        "mocha/no-return-from-async": ["error"],
+        "mocha/no-setup-in-describe": "off",
+        "mocha/no-sibling-hooks": "off",
+        "mocha/no-skipped-tests": ["warn"],
+        "mocha/no-synchronous-tests": "off",
+        "mocha/no-top-level-hooks": ["error"],
+        "mocha/prefer-arrow-callback": ["error"],
         "mocha/valid-suite-description": ["error", "^[A-Z:]"],
         "mocha/valid-test-description": ["error", "^[a-z0-9]"],
 
-        // Disabled because tests are dynamically generated. See: https://github.com/lo1tuma/eslint-plugin-mocha/blob/master/docs/rules/no-setup-in-describe.md
-        "mocha/no-setup-in-describe": "off",
-
-        // See: https://github.com/nodesecurity/eslint-plugin-security#rules
-        "security/detect-non-literal-fs-filename": "off",
+        // See: https://github.com/ota-meshi/eslint-plugin-regexp#readme
+        "regexp/no-super-linear-backtracking": "off",
+        "regexp/no-super-linear-move": "off",
       },
     },
     { // Configuration files (JS)
@@ -384,11 +433,12 @@ module.exports = {
         ".markdownlint.yml",
       ],
       extends: [
-        "plugin:yml/standard",
+        "plugin:yml/base",
       ],
       rules: {
-        // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
-        "spaced-comment": "off",
+        // See: https://eslint.org/docs/rules/
+        "max-len": "off",
+        "spaced-comment": "off", // Per https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
 
         // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/
         "yml/block-mapping": ["error", "always"],
@@ -437,15 +487,23 @@ module.exports = {
         "yml/vue-custom-block/no-parsing-error": "off",
       },
     },
-    { // Documentation Snippets (MarkDown.*)
+    { // Documentation (MarkDown)
+      files: [
+        "**/*.md",
+      ],
+      plugins: [
+        "markdown",
+      ],
+      processor: "markdown/markdown",
+    },
+    { // Documentation Snippets, JavaScript (MarkDown.*)
       files: [
         "**/*.md/*.js",
-        "**/*.md/*.ts",
       ],
-      parser: "@typescript-eslint/parser",
       parserOptions: {
-        // Remove the project as snippets are not part of any project
-        project: null,
+        ecmaFeatures: {
+          impliedStrict: true,
+        },
       },
       globals: {
         ...COMMON_JS_GLOBALS,
@@ -453,11 +511,44 @@ module.exports = {
       },
       rules: {
         // See: https://eslint.org/docs/rules/
+        "eol-last": "off",
+        "no-console": "off",
+        "unicode-bom": "off",
+
+        // See: https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-commonjs": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-unresolved": "off",
+
+        // See: https://typescript-eslint.io/rules/
+        "@typescript-eslint/no-var-requires": "off",
+      },
+    },
+    { // Documentation Snippets, TypeScript (MarkDown.*)
+      files: [
+        "**/*.md/*.ts",
+      ],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        project: null,
+      },
+      globals: {
+        console: "readonly",
+      },
+      rules: {
+        // See: https://eslint.org/docs/rules/
         "no-console": "off",
 
-        // See: https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
+        // See: https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-commonjs": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-unresolved": "off",
+
+        // See: https://typescript-eslint.io/rules/
+        "@typescript-eslint/consistent-type-exports": "off",
+        "@typescript-eslint/no-redundant-type-constituents": "off",
+        "@typescript-eslint/switch-exhaustiveness-check": "off",
         "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/no-var-requires": "off",
       },
     },
   ],

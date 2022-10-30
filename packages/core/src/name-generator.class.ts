@@ -36,12 +36,12 @@ class NameGenerator {
   /**
    * The list of reserved names and patterns.
    */
-  private readonly reserved: RegExp[];
+  private readonly reserved: ReadonlyArray<RegExp>;
 
   /**
    * The list of characters available to generate names with.
    */
-  private readonly charList: Char[];
+  private readonly charList: ReadonlyArray<Char>;
 
   /**
    * The last returned name.

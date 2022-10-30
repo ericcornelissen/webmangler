@@ -3,6 +3,7 @@
 const values = require("./.values.cjs");
 
 const {
+  cacheDir,
   packagesCoverageExclusions,
   packagesDir,
   packagesExpr,
@@ -10,8 +11,12 @@ const {
   reportsDir,
   srcDir,
   tempDir,
+  testDirUnit,
   testsDir,
+  testSuffix,
 } = values;
+
+const reportIdentifier = packagesList.length > 1 ? "_mixed" : packagesList[0];
 
 module.exports = {
   coverageAnalysis: "perTest",
@@ -21,9 +26,24 @@ module.exports = {
     `!**/${testsDir}/**/*.ts`,
     ...packagesCoverageExclusions.map((exclusion) => `!${exclusion}`),
   ],
-  commandRunner: {
-    command: `npm run test -- ${packagesList.join(" ")} --unit`,
+
+  testRunner: "mocha",
+  mochaOptions: {
+    config: ".mocharc.cjs",
+    spec: [
+      [
+        packagesDir,
+        packagesExpr,
+        "**",
+        testsDir,
+        testDirUnit,
+        `*.${testSuffix}.ts`,
+      ].join("/"),
+    ],
   },
+
+  incremental: true,
+  incrementalFile: `${cacheDir}/mutation/${packagesList.join(",")}.json`,
 
   timeoutMS: 25000,
   timeoutFactor: 2.5,
@@ -42,7 +62,7 @@ module.exports = {
     module: packagesList[0],
   },
   htmlReporter: {
-    fileName: `${reportsDir}/mutation/index.html`,
+    fileName: `${reportsDir}/mutation/${reportIdentifier}/index.html`,
   },
   thresholds: {
     high: 80,

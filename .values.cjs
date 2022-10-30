@@ -10,6 +10,7 @@ const testTypePerformance = "performance";
 const testTypeIntegration = "integration";
 const testTypeUnit = "unit";
 
+const cacheDir = ".cache";
 const compiledDir = "{build,lib}";
 const dependenciesDir = "node_modules";
 const githubDir = ".github";
@@ -62,6 +63,7 @@ function getAllPackagesAsArray() {
 
 module.exports = {
   // Directories
+  cacheDir,
   compiledDir,
   dependenciesDir,
   githubDir,

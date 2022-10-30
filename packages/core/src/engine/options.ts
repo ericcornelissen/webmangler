@@ -2,9 +2,9 @@ import type { CharSet, MangleEngineOptions } from "@webmangler/types";
 
 import { toArrayIfNeeded } from "../helpers";
 
-const DEFAULT_IGNORE_PATTERNS: string[] = [];
+const DEFAULT_IGNORE_PATTERNS: Iterable<string> = [];
 const DEFAULT_MANGLE_PREFIX = "";
-const DEFAULT_RESERVED_NAMES: string[] = [];
+const DEFAULT_RESERVED_NAMES: Iterable<string> = [];
 
 /**
  * Parse all values of {@link MangleEngineOptions} into either the configured or

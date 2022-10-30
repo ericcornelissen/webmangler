@@ -13,11 +13,16 @@ const DEFAULT_VALUE = "red";
  * @param attributeValue The value to use.
  * @yields Valid attribute selectors from the provided name and value.
  */
-export function *buildCssAttributeSelectors(
+function *buildCssAttributeSelectors(
   attributeName: string,
   attributeValue: string,
 ): IterableIterator<string> {
   const quotes = ["\"", "'"];
+
+  if (!/\s/.test(attributeValue)) {
+    quotes.push("");
+  }
+
   for (const operator of attributeSelectorOperators) {
     for (const q of quotes) {
       yield `[${attributeName}${operator}${q}${attributeValue}${q}]`;
@@ -35,7 +40,7 @@ export function *buildCssAttributeSelectors(
  * @param commentText The comment text.
  * @returns The text as various CSS comments.
  */
-export function buildCssComments(commentText: string): string[] {
+function buildCssComments(commentText: string): string[] {
   return [
     `/*${commentText}*/`,
     `/* ; ${commentText}*/`,
@@ -55,7 +60,7 @@ export function buildCssComments(commentText: string): string[] {
  * @param declarationValues The values to construct a CSS declaration from.
  * @returns One CSS declaration as a string.
  */
-export function buildCssDeclaration(
+function buildCssDeclaration(
   declarationValues: CssDeclarationValues,
 ): string {
   const {
@@ -84,7 +89,7 @@ export function buildCssDeclaration(
  * @param declarationsValues Zero or more {@link CssDeclarationValues}.
  * @returns A string of CSS declarations.
  */
-export function buildCssDeclarations(
+function buildCssDeclarations(
   declarationsValues: Iterable<CssDeclarationValues>,
 ): string {
   let declarations = "";
@@ -104,7 +109,7 @@ export function buildCssDeclarations(
  * @param rulesetValues The values to construct a CSS ruleset block from.
  * @returns A CSS ruleset as a string.
  */
-export function buildCssRuleset(
+function buildCssRuleset(
   rulesetValues: CssRulesetValues,
 ): string {
   const {
@@ -133,7 +138,7 @@ export function buildCssRuleset(
  * @param rulesetsValues Zero or more {@link CssRulesetValues}.
  * @returns A string of CSS rulesets.
  */
-export function buildCssRulesets(
+function buildCssRulesets(
   rulesetsValues: Iterable<CssRulesetValues>,
 ): string {
   let rulesets = "";
@@ -143,3 +148,12 @@ export function buildCssRulesets(
 
   return rulesets;
 }
+
+export {
+  buildCssAttributeSelectors,
+  buildCssComments,
+  buildCssDeclaration,
+  buildCssDeclarations,
+  buildCssRuleset,
+  buildCssRulesets,
+};

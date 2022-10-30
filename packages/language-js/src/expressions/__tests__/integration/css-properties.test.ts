@@ -35,7 +35,6 @@ suite("JavaScript - CSS Property Expression Factory", function() {
       getValuesSets: () => [
         {
           leftHand: valuePresets.leftHand,
-          afterLeftHand: valuePresets.afterLeftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
             ...buildJsStrings("color"),
@@ -56,7 +55,6 @@ suite("JavaScript - CSS Property Expression Factory", function() {
       getValuesSets: () => [
         {
           leftHand: valuePresets.leftHand,
-          afterLeftHand: valuePresets.afterLeftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
             ...buildJsStrings("font-size"),
@@ -77,7 +75,6 @@ suite("JavaScript - CSS Property Expression Factory", function() {
       getValuesSets: () => [
         {
           leftHand: valuePresets.leftHand,
-          afterLeftHand: valuePresets.afterLeftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
             ...buildJsStrings("margin-left"),

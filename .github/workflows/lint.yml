@@ -1,7 +1,9 @@
 name: Lint
 on:
-  - pull_request
-  - push
+  pull_request: ~
+  push:
+    branches:
+      - main
 
 permissions: read-all
 
@@ -11,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
         with:
           fetch-depth: 0
-      - name: Cache compiled package
-        uses: actions/cache@v3.0.8
+      - name: Cache compiled packages
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3.0.11
         with:
           path: |
             packages/*/build
@@ -24,14 +26,14 @@ jobs:
           key: >-
             compiled
             all
-            ${{ hashFiles('packages/**/src/**') }}
+            ${{ hashFiles('packages/*/src/**') }}
           restore-keys: |
             compiled all
       - name: Fetch main branch
         if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main
       - name: Install Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
           node-version-file: .nvmrc
           cache: npm

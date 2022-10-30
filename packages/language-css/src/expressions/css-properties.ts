@@ -27,7 +27,7 @@ function newCssDeclarationPropertyExpression(
           (?<=
             (?:
               \\;|\\{|
-              ${patterns.commentClose}
+              ${patterns.comment}
             )\\s*
             ${config.prefix}
           )
