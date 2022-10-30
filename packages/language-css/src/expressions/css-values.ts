@@ -63,6 +63,7 @@ function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,
 ): Iterable<MangleExpression> {
   const config: CssDeclarationValueConfig = {
+    kind: options.kind,
     prefix: options.prefix ? options.prefix : "",
     suffix: options.suffix ? options.suffix : "",
   };

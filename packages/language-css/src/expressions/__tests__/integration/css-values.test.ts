@@ -29,7 +29,9 @@ suite("CSS - CSS Value Expression Factory", function() {
     {
       name: "one declaration, no configuration",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "value",
+      },
       expected: ["red"],
       getValuesSets: () => [
         {
@@ -44,6 +46,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       name: "one declaration, prefix configured",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "value",
         prefix: "[0-9]+",
       },
       expected: ["px"],
@@ -60,6 +63,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       name: "one declaration, suffix configured",
       pattern: "[0-9]+",
       factoryOptions: {
+        kind: "value",
         suffix: "px",
       },
       expected: ["36"],
@@ -75,7 +79,9 @@ suite("CSS - CSS Value Expression Factory", function() {
     {
       name: "one declaration in a CSS function",
       pattern: "[0-9]+px",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "value",
+      },
       expected: ["42px"],
       getValuesSets: () => [
         {
@@ -105,6 +111,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       name: "one declaration, multi-value",
       pattern: "[0-9]+",
       factoryOptions: {
+        kind: "value",
         suffix: "px",
       },
       expected: ["3", "14"],
@@ -120,7 +127,9 @@ suite("CSS - CSS Value Expression Factory", function() {
     {
       name: "declaration between strings and comments",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "value",
+      },
       expected: ["red"],
       getValuesSets: () => [
         {
@@ -148,7 +157,9 @@ suite("CSS - CSS Value Expression Factory", function() {
     {
       name: "declaration-like strings",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "value",
+      },
       expected: ["red"],
       getValuesSets: () => [
         {
@@ -169,7 +180,9 @@ suite("CSS - CSS Value Expression Factory", function() {
     {
       name: "declaration-like comments",
       pattern: "[a-z]+",
-      factoryOptions: { },
+      factoryOptions: {
+        kind: "value",
+      },
       expected: ["red"],
       getValuesSets: () => {
         const commentWithDeclarations = buildCssComments("color: green;");
@@ -206,6 +219,7 @@ suite("CSS - CSS Value Expression Factory", function() {
       name: "value-like strings",
       pattern: "[a-z]+",
       factoryOptions: {
+        kind: "variable",
         prefix: "var\\(--",
         suffix: "\\)",
       },

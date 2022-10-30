@@ -47,6 +47,7 @@ function getAttributeUsageExpressionFactory():
   return {
     name: "css-declaration-values",
     options: {
+      kind: "function",
       prefix: /(?:ATTR|ATTr|ATtR|AtTR|ATtr|AtTr|AttR|Attr|aTTR|aTTr|aTtR|atTR|aTtr|atTr|attR|attr)\s*\(\s*/.source,
       suffix: /(\s+([a-zA-Z]+|%))?\s*(,[^)]+)?\)/.source,
     },

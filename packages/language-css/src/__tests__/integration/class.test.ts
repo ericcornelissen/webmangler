@@ -62,7 +62,9 @@ suite("The @webmangler/language-css plugin", function() {
     });
 
     test("has support for mangling 'css-declaration-values'", function() {
-      const options: CssDeclarationValueOptions = { };
+      const options: CssDeclarationValueOptions = {
+        kind: "value",
+      };
 
       const result = plugin.getExpressions("css-declaration-values", options);
       expect(result).to.have.length.above(0);
