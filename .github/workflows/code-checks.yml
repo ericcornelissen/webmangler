@@ -238,10 +238,11 @@ jobs:
             packages/*/lib
             packages/*/tsconfig.tsbuildinfo
           key: >-
-            e2e
+            compiled
+            all
             ${{ hashFiles('packages/*/src/**') }}
           restore-keys: |
-            e2e
+            compiled all
       - name: Install Node.js
         uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
@@ -265,7 +266,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
-      - name: Cache compiled package
+      - name: Cache compiled packages
         uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3.0.11
         with:
           path: |
@@ -273,11 +274,11 @@ jobs:
             packages/*/lib
             packages/*/tsconfig.tsbuildinfo
           key: >-
-            mutation
             compiled
+            all
             ${{ hashFiles('packages/*/src/**') }}
           restore-keys: |
-            mutation compiled
+            compiled all
       - name: Cache incremental data
         uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3.0.11
         with:
