@@ -49,7 +49,7 @@ const afterAttributeName = /(?:=|${afterAttribute})/.source
 /**
  * Regular Expression pattern as a string for any number of attributes in HTML.
  */
-const attributes = /(?:[^>\s=]+(?:\s*=\s*(?:${anyString}|[^>\s"']*))?\s+)+/.source
+const attributes = /(?:[^>\s=]+(?:\s*=\s*(?:${anyString}|[^>\s"']+))?\s+)+/.source
   .replace("${anyString}", anyString);
 
 /**
