@@ -371,6 +371,10 @@ module.exports = {
         "mocha/prefer-arrow-callback": ["error"],
         "mocha/valid-suite-description": ["error", "^[A-Z:]"],
         "mocha/valid-test-description": ["error", "^[a-z0-9]"],
+
+        // See: https://github.com/ota-meshi/eslint-plugin-regexp#readme
+        "regexp/no-super-linear-backtracking": "off",
+        "regexp/no-super-linear-move": "off",
       },
     },
     { // Configuration files (JS)
