@@ -1,4 +1,4 @@
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 import type { MangleExpression } from "@webmangler/types";
 
 import { MangleExpressionMock } from "@webmangler/testing";
@@ -9,17 +9,17 @@ import { getAllMatches } from "./test-helpers";
 
 suite("Language Plugins Test Helpers", function() {
   suite("::getAllMatches", function() {
-    type TestCase = {
-      expressions: MangleExpression[];
-      input: string;
-      pattern: string;
-      expected: string[];
-    };
+    interface TestCase {
+      readonly expressions: ReadonlyArray<MangleExpression>;
+      readonly input: string;
+      readonly pattern: string;
+      readonly expected: string[];
+    }
 
-    const scenarios: TestScenario<TestCase>[] = [
+    const scenarios: TestScenarios<Iterable<TestCase>> = [
       {
-        name: "sample",
-        cases: [
+        testName: "sample",
+        getScenario: () => [
           {
             expressions: [
               new MangleExpressionMock({
@@ -47,9 +47,9 @@ suite("Language Plugins Test Helpers", function() {
       },
     ];
 
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
+    for (const { getScenario, testName } of scenarios) {
+      test(testName, function() {
+        for (const testCase of getScenario()) {
           const {
             expressions,
             input,
