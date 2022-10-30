@@ -10,7 +10,7 @@ const REGEXP_QUOTED = /(?:<!--[^]*?--!?>|(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(
 /**
  * A regular expression to find style attribute with unquoted values in HTML.
  */
-const REGEXP_UNQUOTED = /(?:<!--[^]*?--!?>|(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s*)(?<v>[^"'\s/>]+))/gmi;
+const REGEXP_UNQUOTED = /(?:<!--[^]*?--!?>|(?<=<\s*[a-z]+\s+(?:[^>\s=]+(?:\s*=\s*(?:"|')[^"']*(?:"|'))?\s+)*style\s*=\s{0,32})(?<v>[^"'\s/>]+))/gmi;
 
 /**
  * Convert a {@link REGEXP_QUOTED} or {@link REGEXP_UNQUOTED} match into a
