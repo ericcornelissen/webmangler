@@ -195,10 +195,51 @@ module.exports = {
     "jsdoc/tag-lines": ["error", "never"],
     "jsdoc/valid-types": "off",
 
-    // See: https://github.com/ota-meshi/eslint-plugin-regexp#readme
+    // See: https://ota-meshi.github.io/eslint-plugin-regexp/
+    "regexp/confusing-quantifier": "error",
+    "regexp/control-character-escape": "error",
+    "regexp/hexadecimal-escape": ["error", "never"],
+    "regexp/letter-case": ["error", {
+      caseInsensitive: "lowercase",
+      controlEscape: "lowercase",
+      hexadecimalEscape: "uppercase",
+      unicodeEscape: "uppercase",
+    }],
     "regexp/match-any": ["error", {
       allows: ["[^]", "dotAll"],
     }],
+    "regexp/negation": "error",
+    "regexp/no-contradiction-with-assertion": "error",
+    "regexp/no-control-character": "error",
+    "regexp/no-dupe-characters-character-class": "error",
+    "regexp/no-dupe-disjunctions": ["error", {
+      report: "all",
+      reportExponentialBacktracking: "potential",
+      reportUnreachable: "potential",
+    }],
+    "regexp/no-empty-alternative": "error",
+    "regexp/no-empty-capturing-group": "error",
+    "regexp/no-empty-character-class": "error",
+    "regexp/no-empty-group": "error",
+    "regexp/no-empty-lookarounds-assertion": "error",
+    "regexp/no-escape-backspace": "error",
+    "regexp/no-invalid-regexp": "error",
+    "regexp/no-invisible-character": "error",
+    "regexp/no-lazy-ends": ["error", {
+      ignorePartial: false,
+    }],
+    "regexp/no-legacy-features": "error",
+    "regexp/no-misleading-unicode-character": ["error", {
+      fixable: false,
+    }],
+    "regexp/no-non-standard-flag": "error",
+    "regexp/no-obscure-range": ["error", {
+      allowed: "alphanumeric",
+    }],
+    "regexp/no-octal": "error",
+    "regexp/no-optional-assertion": "error",
+    "regexp/no-potentially-useless-backreference": "error",
+    "regexp/no-standalone-backslash": "error",
     "regexp/no-super-linear-backtracking": ["error", {
       report: "potential",
     }],
@@ -372,7 +413,7 @@ module.exports = {
         "mocha/valid-suite-description": ["error", "^[A-Z:]"],
         "mocha/valid-test-description": ["error", "^[a-z0-9]"],
 
-        // See: https://github.com/ota-meshi/eslint-plugin-regexp#readme
+        // See: https://ota-meshi.github.io/eslint-plugin-regexp/
         "regexp/no-super-linear-backtracking": "off",
         "regexp/no-super-linear-move": "off",
       },
