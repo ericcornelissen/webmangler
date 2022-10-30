@@ -1,4 +1,4 @@
-import type { TestScenario } from "@webmangler/testing";
+import type { TestScenarios } from "@webmangler/testing";
 
 import { expect } from "chai";
 
@@ -6,15 +6,15 @@ import {
   embedContentInContext,
 } from "./benchmark-helpers";
 
-type TestCase = {
-  input: string;
-}
-
 suite("JavaScript Benchmark Helpers", function() {
-  const scenarios: TestScenario<TestCase>[] = [
+  interface TestCase {
+    readonly input: string;
+  }
+
+  const scenarios: TestScenarios<Iterable<TestCase>> = [
     {
-      name: "sample",
-      cases: [
+      testName: "sample",
+      getScenario: () => [
         {
           input: "var foo = \"bar\";",
         },
@@ -32,9 +32,9 @@ suite("JavaScript Benchmark Helpers", function() {
   ];
 
   suite("::embedContentInContext", function() {
-    for (const { name, cases } of scenarios) {
-      test(name, function() {
-        for (const testCase of cases) {
+    for (const { getScenario, testName } of scenarios) {
+      test(testName, function() {
+        for (const testCase of getScenario()) {
           const { input } = testCase;
 
           const result = embedContentInContext(input);

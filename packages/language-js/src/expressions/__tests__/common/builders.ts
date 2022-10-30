@@ -12,7 +12,7 @@ const DEFAULT_LEFT_HAND = "var x";
  * @param functionValues The values to build a function call from.
  * @returns A string of a function call.
  */
-export function buildJsFunctionCall(functionValues: JsFunctionValues): string {
+function buildJsFunctionCall(functionValues: JsFunctionValues): string {
   const {
     beforeName = "",
     name = DEFAULT_FUNCTION_NAME,
@@ -43,7 +43,7 @@ export function buildJsFunctionCall(functionValues: JsFunctionValues): string {
  * @param commentText The comment text.
  * @returns The text as various inline JavaScript comments.
  */
-export function buildJsInlineComments(commentText: string): string[] {
+function buildJsInlineComments(commentText: string): string[] {
   return [
     `/*${commentText}*/`,
     `/* * ${commentText}*/`,
@@ -61,7 +61,7 @@ export function buildJsInlineComments(commentText: string): string[] {
  * @param commentText The comment text.
  * @returns The text as a JavaScript line comment.
  */
-export function buildJsLineComment(commentText: string): string {
+function buildJsLineComment(commentText: string): string {
   return `//${commentText}`;
 }
 
@@ -76,7 +76,7 @@ export function buildJsLineComment(commentText: string): string {
  * @param statementValues The values to build a statement from.
  * @returns A string of a function call.
  */
-export function buildJsStatement(
+function buildJsStatement(
   statementValues: JsStatementValues,
 ): string {
   const {
@@ -120,7 +120,7 @@ export function buildJsStatement(
  * @param statementsValues Zero or more {@link JsStatementValues}.
  * @returns A string of HTML elements.
  */
-export function buildJsStatements(
+function buildJsStatements(
   statementsValues: Iterable<JsStatementValues>,
 ): string {
   let script = "";
@@ -138,10 +138,19 @@ export function buildJsStatements(
  * @param stringText The string text.
  * @returns A list of strings of `stringText` as a JavaScript string.
  */
-export function buildJsStrings(stringText: string): string[] {
+function buildJsStrings(stringText: string): string[] {
   return [
     `"${stringText.replace(/"/g, "\\\"")}"`,
     `'${stringText.replace(/'/g, "\\'")}'`,
     `\`${stringText.replace(/`/g, "\\`")}\``,
   ];
 }
+
+export {
+  buildJsFunctionCall,
+  buildJsInlineComments,
+  buildJsLineComment,
+  buildJsStatement,
+  buildJsStatements,
+  buildJsStrings,
+};

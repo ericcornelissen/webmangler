@@ -36,7 +36,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       expected: ["div"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -45,7 +44,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -58,7 +56,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       expected: ["foobar"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -67,7 +64,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -80,7 +76,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       expected: ["r2d2"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -89,7 +84,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -102,7 +96,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       expected: ["foobar"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -111,7 +104,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -124,7 +116,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
       expected: ["r2d2"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -133,7 +124,6 @@ suite("JavaScript - Query Selector Expression Factory", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -309,7 +299,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
       expected: ["div"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -318,7 +307,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -331,7 +319,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
       expected: ["foobar"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -340,7 +327,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -353,7 +339,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
       expected: ["r2d2"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -362,7 +347,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -376,7 +360,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
       expected: ["foobar"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -385,7 +368,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },
@@ -399,7 +381,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
       expected: ["r2d2"],
       getValuesSets: () => [
         {
-          beforeStatement: valuePresets.beforeStatement,
           leftHand: valuePresets.leftHand,
           beforeRightHand: valuePresets.beforeRightHand,
           rightHand: [
@@ -408,7 +389,6 @@ suite("JavaScript - Query Selector Expression Factory (old)", function() {
               .map(asQuerySelectorAll),
           ],
           afterRightHand: valuePresets.afterRightHand,
-          afterStatement: valuePresets.afterStatement,
         },
       ],
     },

@@ -27,34 +27,43 @@ type JsStatementKey =
  * Type representing the values for the different parts of a JavaScript
  * function.
  */
-export type JsFunctionValues = TestValues<JsFunctionKey>;
+type JsFunctionValues = TestValues<JsFunctionKey>;
 
 /**
  * Type representing a collection of possible values for the different parts of
  * a JavaScript function.
  */
-export type JsFunctionValuesSets = TestValuesSets<JsFunctionKey>;
+type JsFunctionValuesSets = TestValuesSets<JsFunctionKey>;
 
 /**
  * Type representing a preset of values for the different parts of a JavaScript
  * function.
  */
-export type JsFunctionValuesPresets = TestValuesPresets<JsFunctionKey>;
+type JsFunctionValuesPresets = TestValuesPresets<JsFunctionKey>;
 
 /**
  * Type representing the values for the different parts of a JavaScript
  * statement.
  */
-export type JsStatementValues = TestValues<JsStatementKey>;
+type JsStatementValues = TestValues<JsStatementKey>;
 
 /**
  * Type representing a collection of possible values for the different parts of
  * a JavaScript statement.
  */
-export type JsStatementValuesSets = TestValuesSets<JsStatementKey>;
+type JsStatementValuesSets = TestValuesSets<JsStatementKey>;
 
 /**
  * Type representing a preset of values for the different parts of a JavaScript
  * statement.
  */
-export type JsStatementValuesPresets = TestValuesPresets<JsStatementKey>;
+type JsStatementValuesPresets = TestValuesPresets<JsStatementKey>;
+
+export type {
+  JsFunctionValues,
+  JsFunctionValuesPresets,
+  JsFunctionValuesSets,
+  JsStatementValues,
+  JsStatementValuesPresets,
+  JsStatementValuesSets,
+};
