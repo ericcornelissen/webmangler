@@ -40,9 +40,16 @@ interface CssDeclarationPropertyOptions {
  * The {@link MangleExpression} options for CSS property values.
  *
  * @since v0.1.14
- * @version v0.1.26
+ * @version v0.1.27
  */
 interface CssDeclarationValueOptions {
+  /**
+   * The name of the kind of CSS value.
+   *
+   * @since v0.1.27
+   */
+  readonly kind: "function" | "value" | "variable";
+
   /**
    * A regular expression as a string defining the prefix that property values
    * must have to be considered a match.
@@ -50,6 +57,7 @@ interface CssDeclarationValueOptions {
    * @default `""`
    * @since v0.1.14
    * @version v0.1.26
+   * @deprecated
    */
   readonly prefix?: string;
 
@@ -60,6 +68,7 @@ interface CssDeclarationValueOptions {
    * @default `""`
    * @since v0.1.14
    * @version v0.1.26
+   * @deprecated
    */
   readonly suffix?: string;
 }
