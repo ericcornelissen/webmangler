@@ -29,7 +29,7 @@ suite("CSS - Embeds - Find Style Attribute Embeds", function() {
     const budget = getRuntimeBudget(1);
     const fileContent = embedContentInBody(contentWithStyleTags);
 
-    let file: WebManglerFile;
+    let file: Readonly<WebManglerFile>;
     let embeds: Iterable<WebManglerEmbed> = [];
     const result = benchmarkFn({
       setup: () => file = { type: "html", content: fileContent },
@@ -46,7 +46,7 @@ suite("CSS - Embeds - Find Style Attribute Embeds", function() {
     const largeContent = contentWithStyleTags.repeat(100);
     const fileContent = embedContentInBody(largeContent);
 
-    let file: WebManglerFile;
+    let file: Readonly<WebManglerFile>;
     let embeds: Iterable<WebManglerEmbed> = [];
     const result = benchmarkFn({
       setup: () => file = { type: "html", content: fileContent },
@@ -63,7 +63,7 @@ suite("CSS - Embeds - Find Style Attribute Embeds", function() {
     const largeContent = contentWithoutStyleTags.repeat(100);
     const fileContent = embedContentInBody(largeContent);
 
-    let file: WebManglerFile;
+    let file: Readonly<WebManglerFile>;
     let embeds: Iterable<WebManglerEmbed> = [];
     const result = benchmarkFn({
       setup: () => file = { type: "html", content: fileContent },

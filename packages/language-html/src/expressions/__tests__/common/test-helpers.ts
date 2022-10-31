@@ -13,7 +13,7 @@ function getAllMatches(
   expressions: Iterable<MangleExpression>,
   input: string,
   pattern: string,
-): string[] {
+): ReadonlyArray<string> {
   const matches: string[] = [];
   Array.from(expressions).some((expression) => {
     for (const match of expression.findAll(input, pattern)) {

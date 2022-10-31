@@ -30,7 +30,7 @@ suite("HTML - Embeds - Find <script> Tag Embeds", function() {
     const budget = getRuntimeBudget(1);
     const fileContent = embedContentInBody(contentWithScriptTags);
 
-    let file: WebManglerFile;
+    let file: Readonly<WebManglerFile>;
     let embeds: Iterable<WebManglerEmbed> = [];
     const result = benchmarkFn({
       setup: () => file = { type: "html", content: fileContent },
@@ -47,7 +47,7 @@ suite("HTML - Embeds - Find <script> Tag Embeds", function() {
     const largeContent = contentWithScriptTags.repeat(100);
     const fileContent = embedContentInBody(largeContent);
 
-    let file: WebManglerFile;
+    let file: Readonly<WebManglerFile>;
     let embeds: Iterable<WebManglerEmbed> = [];
     const result = benchmarkFn({
       setup: () => file = { type: "html", content: fileContent },
@@ -64,7 +64,7 @@ suite("HTML - Embeds - Find <script> Tag Embeds", function() {
     const largeContent = contentWithoutScriptTags.repeat(100);
     const fileContent = embedContentInBody(largeContent);
 
-    let file: WebManglerFile;
+    let file: Readonly<WebManglerFile>;
     let embeds: Iterable<WebManglerEmbed> = [];
     const result = benchmarkFn({
       setup: () => file = { type: "html", content: fileContent },

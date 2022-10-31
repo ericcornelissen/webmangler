@@ -26,11 +26,11 @@ suite("Embeds", function() {
           readonly cssPlugin: CssLanguagePluginOptions;
           readonly htmlPlugin: HtmlLanguagePluginOptions;
         };
-        readonly files: ReadonlyArray<WebManglerFile>;
+        readonly files: ReadonlyArray<Readonly<WebManglerFile>>;
         readonly plugins: ReadonlyArray<WebManglerPlugin>;
       };
       readonly expected: {
-        readonly files: ReadonlyArray<WebManglerFile>;
+        readonly files: ReadonlyArray<Readonly<WebManglerFile>>;
       };
     }
 
@@ -124,11 +124,11 @@ suite("Embeds", function() {
           readonly htmlPlugin: HtmlLanguagePluginOptions;
           readonly jsPlugin: JavaScriptLanguagePluginOptions;
         };
-        readonly files: ReadonlyArray<WebManglerFile>;
+        readonly files: ReadonlyArray<Readonly<WebManglerFile>>;
         readonly plugins: ReadonlyArray<WebManglerPlugin>;
       };
       readonly expected: {
-        readonly files: ReadonlyArray<WebManglerFile>;
+        readonly files: ReadonlyArray<Readonly<WebManglerFile>>;
       };
     }
 

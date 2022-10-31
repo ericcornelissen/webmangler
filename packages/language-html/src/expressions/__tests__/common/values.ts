@@ -95,8 +95,8 @@ const sampleValues = {
  * A collection of preset values for testing the HTML language plugin.
  */
 const valuePresets: {
-  attributes: HtmlAttributeValuesPresets;
-  elements: HtmlElementValuesPresets;
+  readonly attributes: HtmlAttributeValuesPresets;
+  readonly elements: HtmlElementValuesPresets;
 } = {
   attributes: {
     beforeName: new Set([

@@ -20,15 +20,15 @@ import {
 import expressionsFactory from "../../multi-value-attributes";
 
 suite("HTML - Multi Value Attribute Expression Factory", function() {
-  type TestScenario = {
+  interface TestScenario {
     readonly name: string;
     readonly pattern: string;
     readonly factoryOptions: MultiValueAttributeOptions;
-    readonly expected: string[];
-    getValuesSets(): HtmlElementValuesSets[];
+    readonly expected: ReadonlyArray<string>;
+    getValuesSets(): ReadonlyArray<HtmlElementValuesSets>;
   }
 
-  const scenarios: TestScenario[] = [
+  const scenarios: ReadonlyArray<TestScenario> = [
     {
       name: "one element, multiple values",
       pattern: "[a-z]+",

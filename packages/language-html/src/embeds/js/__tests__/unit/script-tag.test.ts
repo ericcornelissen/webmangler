@@ -9,7 +9,7 @@ import { getScriptTagsAsEmbeds } from "../../script-tag";
 const EMBED_TYPE_JS = "js";
 
 suite("HTML JavaScript Embeds - <script> tag", function() {
-  const scenarios: TestScenarios<TestCase[]> = [
+  const scenarios: TestScenarios<ReadonlyArray<TestCase>> = [
     {
       testName: "sample",
       getScenario: () => [

@@ -52,10 +52,10 @@ suite("HTML language plugin helpers", function() {
     ];
 
     interface TestCase {
-      options: {
-        htmlExtensions: Iterable<string> | undefined;
+      readonly options: {
+        readonly htmlExtensions: Iterable<string> | undefined;
       };
-      expectedLanguages: Iterable<string>;
+      readonly expectedLanguages: Iterable<string>;
     }
 
     const scenarios: TestScenarios<TestCase> = [

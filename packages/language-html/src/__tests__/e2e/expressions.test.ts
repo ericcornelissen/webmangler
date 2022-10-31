@@ -18,11 +18,11 @@ suite("Expressions", function() {
   interface TestCase {
     readonly input: {
       readonly config: HtmlLanguagePluginOptions;
-      readonly files: ReadonlyArray<WebManglerFile>;
+      readonly files: ReadonlyArray<Readonly<WebManglerFile>>;
       readonly plugins: ReadonlyArray<WebManglerPlugin>;
     };
     readonly expected: {
-      readonly files: ReadonlyArray<WebManglerFile>;
+      readonly files: ReadonlyArray<Readonly<WebManglerFile>>;
     };
   }
 

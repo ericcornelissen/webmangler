@@ -15,7 +15,7 @@ const DEFAULT_ELEMENT_TAG = "div";
  */
 function buildHtmlAttributes(
   attributeValues: HtmlAttributeValues,
-): string[] {
+): ReadonlyArray<string> {
   const {
     beforeName = "",
     name = DEFAULT_ATTRIBUTE_NAME,
@@ -55,7 +55,7 @@ function buildHtmlAttributes(
  * @param commentText The comment text.
  * @returns The text as various HTML comments.
  */
-function buildHtmlComments(commentText: string): string[] {
+function buildHtmlComments(commentText: string): ReadonlyArray<string> {
   return [
     `<!--${commentText}-->`,
     `<!-- \n ${commentText}-->`,

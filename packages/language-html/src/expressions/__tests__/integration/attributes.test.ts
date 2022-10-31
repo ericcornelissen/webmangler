@@ -20,15 +20,15 @@ import {
 import expressionsFactory from "../../attributes";
 
 suite("HTML - Attribute Expression Factory", function() {
-  type TestScenario = {
+  interface TestScenario {
     readonly name: string;
     readonly pattern: string;
     readonly factoryOptions: AttributeOptions;
-    readonly expected: string[];
-    getValuesSets(): HtmlElementValuesSets[];
+    readonly expected: ReadonlyArray<string>;
+    getValuesSets(): ReadonlyArray<HtmlElementValuesSets>;
   }
 
-  const scenarios: TestScenario[] = [
+  const scenarios: ReadonlyArray<TestScenario> = [
     {
       name: "one element, one attribute",
       pattern: "[a-z\\-]+",

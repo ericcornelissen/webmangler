@@ -20,15 +20,15 @@ import {
 import expressionsFactory from "../../single-value-attributes";
 
 suite("HTML - Single Value Attribute Expression Factory", function() {
-  type TestScenario = {
+  interface TestScenario {
     readonly name: string;
     readonly pattern: string;
     readonly factoryOptions: SingleValueAttributeOptions;
-    readonly expected: string[];
-    getValuesSets(): HtmlElementValuesSets[];
+    readonly expected: ReadonlyArray<string>;
+    getValuesSets(): ReadonlyArray<HtmlElementValuesSets>;
   }
 
-  const scenarios: TestScenario[] = [
+  const scenarios: ReadonlyArray<TestScenario> = [
     {
       name: "one element, no configuration",
       pattern: "[a-z]+",

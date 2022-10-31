@@ -7,12 +7,12 @@ import {
   embedContentInContext,
 } from "./benchmark-helpers";
 
-type TestCase = {
-  input: string;
-}
-
 suite("HTML Benchmark Helpers", function() {
-  const scenarios: TestScenarios<TestCase[]> = [
+  interface TestCase {
+    readonly input: string;
+  }
+
+  const scenarios: TestScenarios<ReadonlyArray<TestCase>> = [
     {
       testName: "sample",
       getScenario: () => [
