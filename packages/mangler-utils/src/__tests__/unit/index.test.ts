@@ -25,12 +25,6 @@ suite("Exports of @webmangler/manglers-utils", function() {
     });
   });
 
-  suite("Miscellaneous utilities", function() {
-    test("has ::providedOrDefault", function() {
-      expect(utils).to.haveOwnProperty("providedOrDefault");
-    });
-  });
-
   suite("WebManglerPlugins", function() {
     test("has MultiManglerPlugin", function() {
       expect(utils).to.haveOwnProperty("MultiManglerPlugin");

@@ -18,7 +18,7 @@ type Char =
  */
 type CharSet = Iterable<Char>;
 
-export {
+export type {
   Char,
   CharSet,
 };

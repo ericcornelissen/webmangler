@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- BREAKING: Drop support for generators from `providedOrDefault`. ([#413])
 
 ## [0.1.28] - 2022-09-10
 
@@ -40,5 +40,6 @@ Versioning].
 [#210]: https://github.com/ericcornelissen/webmangler/pull/210
 [#247]: https://github.com/ericcornelissen/webmangler/pull/247
 [#334]: https://github.com/ericcornelissen/webmangler/pull/334
+[#413]: https://github.com/ericcornelissen/webmangler/pull/413
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
