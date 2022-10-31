@@ -64,7 +64,7 @@ suite("CSS - Multi Value Attribute Expression Factory", function() {
   });
 
   test("large file", function() {
-    const budget = getRuntimeBudget(1);
+    const budget = getRuntimeBudget(2);
     const fileContent = contentWithMultiValueAttribute.repeat(100);
 
     let found: string[] = [];

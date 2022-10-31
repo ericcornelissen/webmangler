@@ -44,12 +44,11 @@ interface CssDeclarationPropertyOptions {
  */
 interface CssDeclarationValueOptions {
   /**
-   * Is the value case sensitive.
+   * The name of the kind of CSS value.
    *
-   * @default `true`
    * @since v0.1.27
    */
-  readonly caseSensitive?: boolean;
+  readonly kind: "function" | "value" | "variable";
 
   /**
    * A regular expression as a string defining the prefix that property values
@@ -58,6 +57,7 @@ interface CssDeclarationValueOptions {
    * @default `""`
    * @since v0.1.14
    * @version v0.1.26
+   * @deprecated
    */
   readonly prefix?: string;
 
@@ -68,6 +68,7 @@ interface CssDeclarationValueOptions {
    * @default `""`
    * @since v0.1.14
    * @version v0.1.26
+   * @deprecated
    */
   readonly suffix?: string;
 }

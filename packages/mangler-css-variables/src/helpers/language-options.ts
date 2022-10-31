@@ -30,6 +30,7 @@ function getCssVariableUsageExpressionOptions():
   return {
     name: "css-declaration-values",
     options: {
+      kind: "function",
       prefix: /(?:VAR|VAr|VaR|Var|vAR|vAr|vaR|var)\s*\(\s*--/.source,
       suffix: /\s*(,[^)]+)?\)/u.source,
     },

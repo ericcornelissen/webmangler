@@ -63,9 +63,7 @@ function cssDeclarationValueExpressionFactory(
   options: CssDeclarationValueOptions,
 ): Iterable<MangleExpression> {
   const config: CssDeclarationValueConfig = {
-    caseSensitive: options.caseSensitive === undefined
-      ? true
-      : options.caseSensitive,
+    kind: options.kind,
     prefix: options.prefix ? options.prefix : "",
     suffix: options.suffix ? options.suffix : "",
   };

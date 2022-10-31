@@ -41,6 +41,7 @@ suite("CSS - CSS Value Expression Factory", function() {
 
   suiteSetup(function() {
     expressions = cssDeclarationValueExpressionFactory({
+      kind: "variable",
       prefix: "var\\(--",
       suffix: "\\)",
     });
