@@ -8,7 +8,6 @@ import {
   ALL_UPPERCASE_CHARS,
 } from "./characters";
 import { toArrayIfNeeded } from "./helpers";
-import { providedOrDefault } from "./inputs";
 import initMultiManglerPlugin from "./multi-mangler.class";
 import initSimpleManglerPlugin from "./simple-mangler.class";
 
@@ -45,7 +44,6 @@ export {
   ALL_NUMBER_CHARS,
   ALL_UPPERCASE_CHARS,
   MultiManglerPlugin,
-  providedOrDefault,
   SimpleManglerPlugin,
 };
 
