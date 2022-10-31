@@ -516,6 +516,7 @@ module.exports = {
     { // Configuration files (JSON)
       files: [
         ".github/renovate.json",
+        ".licensee.json",
         "package.json",
         "package-lock.json",
         "tsconfig.json",
@@ -672,6 +673,7 @@ module.exports = {
     `!${githubDir}/`,
     "!.*.cjs",
     "!.*.js",
+    "!.*.json",
     "!.*.yml",
   ],
 };
