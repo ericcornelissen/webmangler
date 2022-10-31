@@ -36,7 +36,7 @@ jobs:
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "::set-output name=filters::$FILTERS"
+          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
       - name: Check for file changes in all packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: all-filter
@@ -52,7 +52,7 @@ jobs:
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "::set-output name=filters::$FILTERS"
+          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
       - name: Check for file changes in e2e tested packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: e2e-filter
@@ -68,7 +68,7 @@ jobs:
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "::set-output name=filters::$FILTERS"
+          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
       - name: Check for file changes in performance tested packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: performance-filter
@@ -82,7 +82,7 @@ jobs:
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "::set-output name=filters::$FILTERS"
+          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
       - name: Check for file changes in mutation tested packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: mutation-filter
@@ -98,7 +98,7 @@ jobs:
           FILTERS="${FILTERS//'%'/'%25'}"
           FILTERS="${FILTERS//$'\n'/'%0A'}"
           FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "::set-output name=filters::$FILTERS"
+          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
       - name: Check for file changes in tested packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: tested-filter
