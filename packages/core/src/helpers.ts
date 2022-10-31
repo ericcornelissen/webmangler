@@ -8,7 +8,7 @@ import * as path from "path";
  * @returns The file type.
  * @since v0.1.16
  */
-export function getTypeFromFilePath(filePath: string): string {
+function getTypeFromFilePath(filePath: string): string {
   return path.extname(filePath).substring(1);
 }
 
@@ -26,7 +26,7 @@ export function getTypeFromFilePath(filePath: string): string {
  * @since v0.1.0
  * @version v0.1.17
  */
-export function toArrayIfNeeded<T>(input: T | Iterable<T>): Iterable<T> {
+function toArrayIfNeeded<T>(input: T | Iterable<T>): Iterable<T> {
   if (typeof input === "string") {
     return [input];
   }
@@ -39,3 +39,8 @@ export function toArrayIfNeeded<T>(input: T | Iterable<T>): Iterable<T> {
   const inputAsValue = input as T;
   return [inputAsValue];
 }
+
+export {
+  getTypeFromFilePath,
+  toArrayIfNeeded,
+};
