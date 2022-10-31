@@ -7,6 +7,6 @@ import type { SinonStub } from "sinon";
  */
 type Stub = SinonStub;
 
-export {
+export type {
   Stub,
 };
