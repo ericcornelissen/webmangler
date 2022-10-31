@@ -18,6 +18,7 @@
     "clean": "node scripts/clean.js",
     "coverage": "node scripts/test.js --coverage",
     "format": "node scripts/lint.js --format",
+    "license-check": "licensee",
     "lint": "node scripts/lint.js",
     "postinstall": "husky install scripts/hooks",
     "test": "node scripts/test.js",
