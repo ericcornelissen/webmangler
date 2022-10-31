@@ -33,10 +33,9 @@ jobs:
           export FILTERS=$( \
             node scripts/ci/get-filters.js all ${{ github.ref }} \
           )
-          FILTERS="${FILTERS//'%'/'%25'}"
-          FILTERS="${FILTERS//$'\n'/'%0A'}"
-          FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
+          echo 'filters<<EOF' >> $GITHUB_OUTPUT
+          echo "$FILTERS" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
       - name: Check for file changes in all packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: all-filter
@@ -49,10 +48,9 @@ jobs:
           export FILTERS=$( \
             node scripts/ci/get-filters.js e2e ${{ github.ref }} \
           )
-          FILTERS="${FILTERS//'%'/'%25'}"
-          FILTERS="${FILTERS//$'\n'/'%0A'}"
-          FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
+          echo 'filters<<EOF' >> $GITHUB_OUTPUT
+          echo "$FILTERS" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
       - name: Check for file changes in e2e tested packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: e2e-filter
@@ -65,10 +63,9 @@ jobs:
           export FILTERS=$( \
             node scripts/ci/get-filters.js performance ${{ github.ref }} \
           )
-          FILTERS="${FILTERS//'%'/'%25'}"
-          FILTERS="${FILTERS//$'\n'/'%0A'}"
-          FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
+          echo 'filters<<EOF' >> $GITHUB_OUTPUT
+          echo "$FILTERS" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
       - name: Check for file changes in performance tested packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: performance-filter
@@ -79,10 +76,9 @@ jobs:
         id: mutation-filters
         run: |
           export FILTERS=$(node scripts/ci/get-filters.js mutation)
-          FILTERS="${FILTERS//'%'/'%25'}"
-          FILTERS="${FILTERS//$'\n'/'%0A'}"
-          FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
+          echo 'filters<<EOF' >> $GITHUB_OUTPUT
+          echo "$FILTERS" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
       - name: Check for file changes in mutation tested packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: mutation-filter
@@ -95,10 +91,9 @@ jobs:
           export FILTERS=$( \
             node scripts/ci/get-filters.js test ${{ github.ref }} \
           )
-          FILTERS="${FILTERS//'%'/'%25'}"
-          FILTERS="${FILTERS//$'\n'/'%0A'}"
-          FILTERS="${FILTERS//$'\r'/'%0D'}"
-          echo "filters=$FILTERS" >> $GITHUB_OUTPUT
+          echo 'filters<<EOF' >> $GITHUB_OUTPUT
+          echo "$FILTERS" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
       - name: Check for file changes in tested packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
         id: tested-filter
