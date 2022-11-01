@@ -1,5 +1,7 @@
 "use strict";
 
+const process = require("node:process");
+
 const values = require("./.values.cjs");
 
 const {
@@ -56,6 +58,12 @@ module.exports = {
     ...packagesCoverageExclusions,
   ],
 
-  reportDir: `./${reportsDir}/coverage/${reportIdentifier}`,
+  reportDir: [
+    ".",
+    reportsDir,
+    "coverage",
+    process.env.TEST_TYPE,
+    reportIdentifier,
+  ].join("/"),
   tempDir: `./${tempDir}/nyc/${reportIdentifier}`,
 };

@@ -209,7 +209,7 @@ jobs:
         uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # tag=v3.1.1
         if: ${{ always() }}
         with:
-          file: ./_reports/coverage/${{ matrix.package }}/lcov.info
+          file: ./_reports/coverage/tests/${{ matrix.package }}/lcov.info
           flags: package-${{ matrix.package }}
   test-e2e:
     name: End-to-end
