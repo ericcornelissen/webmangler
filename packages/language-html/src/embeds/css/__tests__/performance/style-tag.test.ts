@@ -11,25 +11,30 @@ import {
 import { getStyleTagsAsEmbeds } from "../../style-tag";
 
 suite("CSS - Embeds - Find <style> Tag Embeds", function() {
-  const contentWithStyleTags = embedContentInContext(`
-    <style>
-    a[target="_blank"] {
-      text-decoration: underline;
-    }
+  let contentWithStyleTags: string;
+  let contentWithoutStyleTags: string;
 
-    #foo {
-      color: red;
-    }
+  suiteSetup(function() {
+    contentWithStyleTags = embedContentInContext(`
+      <style>
+      a[target="_blank"] {
+        text-decoration: underline;
+      }
 
-    .bar {
-      font: serif;
-    }
-    </style>
-  `);
-  const contentWithoutStyleTags = `
-    <h1>Title</h1>
-    <p>Lorem ipsum dolor ...</p>
-  `;
+      #foo {
+        color: red;
+      }
+
+      .bar {
+        font: serif;
+      }
+      </style>
+    `);
+    contentWithoutStyleTags = `
+      <h1>Title</h1>
+      <p>Lorem ipsum dolor ...</p>
+    `;
+  });
 
   test("simple file", function() {
     const budget = getRuntimeBudget(1);

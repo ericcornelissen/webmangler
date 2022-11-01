@@ -11,20 +11,25 @@ import {
 import { getScriptTagsAsEmbeds } from "../../script-tag";
 
 suite("HTML - Embeds - Find <script> Tag Embeds", function() {
-  const contentWithScriptTags = embedContentInContext(`
-    <script>
-    var button = document.getElementById("button");
-    ar elements = document.querySelectorAll(".item");
-    button.addEventListener("click", function() {
-      elements.forEach(element => element.classList.add("foo"));
-      console.log("bar");
-    });
-    </script>
-  `);
-  const contentWithoutScriptTags = `
-    <h1>Title</h1>
-    <p>Lorem ipsum dolor ...</p>
-  `;
+  let contentWithScriptTags: string;
+  let contentWithoutScriptTags: string;
+
+  suiteSetup(function() {
+    contentWithScriptTags = embedContentInContext(`
+      <script>
+      var button = document.getElementById("button");
+      ar elements = document.querySelectorAll(".item");
+      button.addEventListener("click", function() {
+        elements.forEach(element => element.classList.add("foo"));
+        console.log("bar");
+      });
+      </script>
+    `);
+    contentWithoutScriptTags = `
+      <h1>Title</h1>
+      <p>Lorem ipsum dolor ...</p>
+    `;
+  });
 
   test("simple file", function() {
     const budget = getRuntimeBudget(1);

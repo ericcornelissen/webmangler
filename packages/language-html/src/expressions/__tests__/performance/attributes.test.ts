@@ -13,21 +13,24 @@ import expressionsFactory from "../../attributes";
 suite("HTML - Attribute Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "data-[a-z-]+";
+  let contentWithAttributes: string;
+  let contentWithoutAttributes: string;
 
-  const contentWithAttributes = embedContentInContext(`
-    <div data-foo="bar">
-      <p data-style="italics">Lorem ipsum dolor ...</p>
-      <img data-hello="world"/>
-    </div>
-  `);
-  const contentWithoutAttributes = `
-    <h1>Title</h1>
-    <p>Lorem ipsum dolor ...</p>
-  `;
+  const patterns = "data-[a-z-]+";
 
   suiteSetup(function() {
     expressions = expressionsFactory({ });
+
+    contentWithAttributes = embedContentInContext(`
+      <div data-foo="bar">
+        <p data-style="italics">Lorem ipsum dolor ...</p>
+        <img data-hello="world"/>
+      </div>
+    `);
+    contentWithoutAttributes = `
+      <h1>Title</h1>
+      <p>Lorem ipsum dolor ...</p>
+    `;
   });
 
   test("benchmark validity", function() {
