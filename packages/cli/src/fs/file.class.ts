@@ -1,6 +1,6 @@
 import type { WebManglerCliFile } from "./types";
 
-import * as path from "path";
+import * as path from "node:path";
 
 /**
  * Get the type from a file path based on its extension.
