@@ -18,6 +18,14 @@ const {
 
 const reportIdentifier = packagesList.length > 1 ? "_mixed" : packagesList[0];
 
+const oldThreshold = [
+  // NOTE: It is not allowed to add new items to this list.
+  "language-css",
+  "language-html",
+  "language-js",
+  "mangler-html-attributes",
+];
+
 module.exports = {
   coverageAnalysis: "perTest",
   inPlace: false,
@@ -65,9 +73,9 @@ module.exports = {
     fileName: `${reportsDir}/mutation/${reportIdentifier}/index.html`,
   },
   thresholds: {
-    high: 80,
-    low: 70,
-    break: 50,
+    high: 95,
+    low: 90,
+    break: oldThreshold.includes(packagesList[0]) ? 50 : 90,
   },
 
   tempDirName: `${tempDir}/stryker`,
