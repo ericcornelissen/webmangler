@@ -16,9 +16,27 @@ const {
   testDirCommon,
   testsDir,
   testSuffix,
+  testTypeEndToEnd,
+  testTypeIntegration,
 } = values;
 
 const reportIdentifier = packagesList.length > 1 ? "_mixed" : packagesList[0];
+
+let testTypeCoverageExclusions;
+switch (process.env.TEST_TYPE) {
+case testTypeEndToEnd:
+  testTypeCoverageExclusions = [
+    `${packagesDir}/**/__tests__/`,
+  ];
+  break;
+case testTypeIntegration:
+  testTypeCoverageExclusions = [
+    `${packagesDir}/**/__tests__/`,
+  ];
+  break;
+default:
+  testTypeCoverageExclusions = [];
+}
 
 module.exports = {
   all: true,
@@ -56,6 +74,7 @@ module.exports = {
     `${packagesDir}/**/${testsDir}/${testDirCommon}/index.ts`,
     `${packagesDir}/**/${compiledDir}/`,
     ...packagesCoverageExclusions,
+    ...testTypeCoverageExclusions,
   ],
 
   reportDir: [
