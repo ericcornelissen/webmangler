@@ -13,9 +13,9 @@ const DEFAULT_ELEMENT_TAG = "div";
  * @param attributeValues The values to construct a HTML attribute from.
  * @returns A list of attribute-value strings.
  */
-export function buildHtmlAttributes(
+function buildHtmlAttributes(
   attributeValues: HtmlAttributeValues,
-): string[] {
+): ReadonlyArray<string> {
   const {
     beforeName = "",
     name = DEFAULT_ATTRIBUTE_NAME,
@@ -55,7 +55,7 @@ export function buildHtmlAttributes(
  * @param commentText The comment text.
  * @returns The text as various HTML comments.
  */
-export function buildHtmlComments(commentText: string): string[] {
+function buildHtmlComments(commentText: string): ReadonlyArray<string> {
   return [
     `<!--${commentText}-->`,
     `<!-- \n ${commentText}-->`,
@@ -74,7 +74,7 @@ export function buildHtmlComments(commentText: string): string[] {
  * @param elementValues The values to construct a HTML element from.
  * @returns A HTML element as a string.
  */
-export function buildHtmlElement(
+function buildHtmlElement(
   elementValues: HtmlElementValues,
 ): string {
   const {
@@ -119,7 +119,7 @@ export function buildHtmlElement(
  * @param elementsValues Zero or more {@link HtmlElementValues}.
  * @returns A string of HTML elements.
  */
-export function buildHtmlElements(
+function buildHtmlElements(
   elementsValues: Iterable<HtmlElementValues>,
 ): string {
   let document = "";
@@ -129,3 +129,10 @@ export function buildHtmlElements(
 
   return document;
 }
+
+export {
+  buildHtmlAttributes,
+  buildHtmlComments,
+  buildHtmlElement,
+  buildHtmlElements,
+};

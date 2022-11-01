@@ -24,33 +24,42 @@ type HtmlElementKey =
 /**
  * Type representing the values for the different parts of an HTML attribute.
  */
-export type HtmlAttributeValues = TestValues<HtmlAttributeKey>;
+type HtmlAttributeValues = TestValues<HtmlAttributeKey>;
 
 /**
  * Type representing a collection of possible values for the different parts of
  * an HTML attribute.
  */
-export type HtmlAttributeValuesSets = TestValuesSets<HtmlAttributeKey>;
+type HtmlAttributeValuesSets = TestValuesSets<HtmlAttributeKey>;
 
 /**
  * Type representing a preset of values for the different parts of an HTML
  * attribute.
  */
-export type HtmlAttributeValuesPresets = TestValuesPresets<HtmlAttributeKey>;
+type HtmlAttributeValuesPresets = TestValuesPresets<HtmlAttributeKey>;
 
 /**
  * Type representing the values for the different parts of an HTML element.
  */
-export type HtmlElementValues = TestValues<HtmlElementKey>;
+type HtmlElementValues = TestValues<HtmlElementKey>;
 
 /**
  * Type representing a collection of possible values for the different parts of
  * an HTML element.
  */
-export type HtmlElementValuesSets = TestValuesSets<HtmlElementKey>;
+type HtmlElementValuesSets = TestValuesSets<HtmlElementKey>;
 
 /**
  * Type representing a preset of values for the different parts of an HTML
  * element.
  */
-export type HtmlElementValuesPresets = TestValuesPresets<HtmlElementKey>;
+type HtmlElementValuesPresets = TestValuesPresets<HtmlElementKey>;
+
+export type {
+  HtmlAttributeValues,
+  HtmlAttributeValuesSets,
+  HtmlAttributeValuesPresets,
+  HtmlElementValues,
+  HtmlElementValuesSets,
+  HtmlElementValuesPresets,
+};

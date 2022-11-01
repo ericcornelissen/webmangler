@@ -11,7 +11,7 @@ const EMBED_TYPE_CSS = "css";
 suite("HTML CSS Embeds - Style attribute", function() {
   const prepareContent = (s: string): string => `:root{${s}}`;
 
-  const scenarios: TestScenarios<TestCase[]> = [
+  const scenarios: TestScenarios<ReadonlyArray<TestCase>> = [
     {
       testName: "sample",
       getScenario: () => [

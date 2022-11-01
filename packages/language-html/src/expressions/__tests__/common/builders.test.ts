@@ -13,13 +13,13 @@ suite("HTML expression factory test suite string builders", function() {
   suite("::buildHtmlAttributes", function() {
     const DEFAULT_ATTRIBUTE_NAME = "alt";
 
-    type TestCase = {
-      expected: string[];
-      input: HtmlAttributeValues;
-      name: string;
-    };
+    interface TestCase {
+      readonly expected: ReadonlyArray<string>;
+      readonly input: HtmlAttributeValues;
+      readonly name: string;
+    }
 
-    const testCases: TestCase[] = [
+    const testCases: ReadonlyArray<TestCase> = [
       {
         name: "no value",
         input: { },
@@ -67,13 +67,13 @@ suite("HTML expression factory test suite string builders", function() {
   });
 
   suite("::buildHtmlComments", function() {
-    type TestCase = {
-      expected: string[];
-      input: string;
-      name: string;
-    };
+    interface TestCase {
+      readonly expected: ReadonlyArray<string>;
+      readonly input: string;
+      readonly name: string;
+    }
 
-    const testCases: TestCase[] = [
+    const testCases: ReadonlyArray<TestCase> = [
       {
         name: "no value",
         input: "",
@@ -115,13 +115,13 @@ suite("HTML expression factory test suite string builders", function() {
   suite("::buildHtmlElement", function() {
     const DEFAULT_TAG = "div";
 
-    type TestCase = {
-      expected: string;
-      input: HtmlElementValues;
-      name: string;
-    };
+    interface TestCase {
+      readonly expected: string;
+      readonly input: HtmlElementValues;
+      readonly name: string;
+    }
 
-    const testCases: TestCase[] = [
+    const testCases: ReadonlyArray<TestCase> = [
       {
         name: "no values",
         input: { },
@@ -178,13 +178,13 @@ suite("HTML expression factory test suite string builders", function() {
   });
 
   suite("::buildHtmlElements", function() {
-    type TestCase = {
-      expected: string;
-      input: HtmlElementValues[];
-      name: string;
-    };
+    interface TestCase {
+      readonly expected: string;
+      readonly input: ReadonlyArray<HtmlElementValues>;
+      readonly name: string;
+    }
 
-    const testCases: TestCase[] = [
+    const testCases: ReadonlyArray<TestCase> = [
       {
         name: "no values",
         input: [],

@@ -13,28 +13,31 @@ import expressionsFactory from "../../single-value-attributes";
 suite("HTML - Single Value Attribute Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "id-[a-zA-Z0-9-]+";
+  let contentWithSingleValueAttribute: string;
+  let contentWithoutSingleValueAttribute: string;
 
-  const contentWithSingleValueAttribute = embedContentInContext(`
-    <div class="foo bar">
-      <form id="id-foobar">
-        <label for="id-input" data-foo="bar">Username</label>
-        <input id="id-input"/>
-      </form>
-    </div>
-  `);
-  const contentWithoutSingleValueAttribute = `
-    <div class="foo bar">
-      <div class="container">
-        <p>Lorem ispum dolor ...</p>
-      </div>
-    </div>
-  `;
+  const patterns = "id-[a-zA-Z0-9-]+";
 
   suiteSetup(function() {
     expressions = expressionsFactory({
       attributeNames: ["id", "for"],
     });
+
+    contentWithSingleValueAttribute = embedContentInContext(`
+      <div class="foo bar">
+        <form id="id-foobar">
+          <label for="id-input" data-foo="bar">Username</label>
+          <input id="id-input"/>
+        </form>
+      </div>
+    `);
+    contentWithoutSingleValueAttribute = `
+      <div class="foo bar">
+        <div class="container">
+          <p>Lorem ispum dolor ...</p>
+        </div>
+      </div>
+    `;
   });
 
   test("benchmark validity", function() {

@@ -13,28 +13,31 @@ import expressionsFactory from "../../multi-value-attributes";
 suite("HTML - Multi Value Attribute Expression Factory", function() {
   let expressions: Iterable<MangleExpression>;
 
-  const patterns = "cls-[a-zA-Z0-9-]+";
+  let contentWithMultiValueAttribute: string;
+  let contentWithoutMultiValueAttribute: string;
 
-  const contentWithMultiValueAttribute = embedContentInContext(`
-    <div class="cls-foo cls-bar">
-      <div id="foobar">
-        <p class="cls-left">Hello</p>
-        <p class="cls-green cls-small" data-foo="bar">World!</p>
-      </div>
-    </div>
-  `);
-  const contentWithoutMultiValueAttribute = `
-    <div id="foo">
-      <div id="bar">
-        <p>Hello world!</p>
-      </div>
-    </div>
-  `;
+  const patterns = "cls-[a-zA-Z0-9-]+";
 
   suiteSetup(function() {
     expressions = expressionsFactory({
       attributeNames: ["class"],
     });
+
+    contentWithMultiValueAttribute = embedContentInContext(`
+      <div class="cls-foo cls-bar">
+        <div id="foobar">
+          <p class="cls-left">Hello</p>
+          <p class="cls-green cls-small" data-foo="bar">World!</p>
+        </div>
+      </div>
+    `);
+    contentWithoutMultiValueAttribute = `
+      <div id="foo">
+        <div id="bar">
+          <p>Hello world!</p>
+        </div>
+      </div>
+    `;
   });
 
   test("benchmark validity", function() {

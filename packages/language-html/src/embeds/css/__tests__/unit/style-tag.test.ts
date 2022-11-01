@@ -9,7 +9,7 @@ import { getStyleTagsAsEmbeds } from "../../style-tag";
 const EMBED_TYPE_CSS = "css";
 
 suite("HTML CSS Embeds - <style> tag", function() {
-  const scenarios: TestScenarios<TestCase[]> = [
+  const scenarios: TestScenarios<ReadonlyArray<TestCase>> = [
     {
       testName: "sample",
       getScenario: () => [

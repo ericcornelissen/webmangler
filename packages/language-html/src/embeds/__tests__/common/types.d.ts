@@ -1,8 +1,8 @@
 import type { WebManglerEmbed, WebManglerFile } from "@webmangler/types";
 
 interface TestCase {
-  file: WebManglerFile;
-  expected: WebManglerEmbed[];
+  file: Readonly<WebManglerFile>;
+  expected: ReadonlyArray<WebManglerEmbed>;
 }
 
 export type {

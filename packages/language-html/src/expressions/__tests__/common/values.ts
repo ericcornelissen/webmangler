@@ -6,7 +6,7 @@ import type {
 /**
  * A list of standard HTML attribute names.
  */
-const attributeNames: string[] = [
+const attributeNames: ReadonlyArray<string> = [
   "id",
   "class",
   "data-value",
@@ -15,7 +15,7 @@ const attributeNames: string[] = [
 /**
  * A list of valid HTML attribute, with and without value.
  */
-const attributes: string[] = [
+const attributes: ReadonlyArray<string> = [
   "disabled",
   "id=_foobar",
   "id=\"_foobar\"",
@@ -31,7 +31,7 @@ const attributes: string[] = [
 /**
  * A list of valid HTML attribute values.
  */
-const attributeValues: string[] = [
+const attributeValues: ReadonlyArray<string> = [
   "foobar",
   "Hello world!",
 ];
@@ -39,19 +39,20 @@ const attributeValues: string[] = [
 /**
  * A list of valid HTML comments.
  */
-const comments: string[] = [
+const comments: ReadonlyArray<string> = [
   "<!---->",
   "<!-- -->",
   "<!--foobar-->",
   "<!-- Hello world! -->",
   "<!-- \n -->",
+  "<!-- --!>",
 ];
 
 /**
  * A list of valid HTML content. `undefined` is included to denote a self-
  * closing tag.
  */
-const content: (string | undefined)[] = [
+const content: ReadonlyArray<(string | undefined)> = [
   undefined,
   "",
   "Lorem ipsum dolor...",
@@ -60,7 +61,7 @@ const content: (string | undefined)[] = [
 /**
  * A list of standard HTML tags.
  */
-const tags: string[] = [
+const tags: ReadonlyArray<string> = [
   "div",
   "p",
   "body",
@@ -69,7 +70,7 @@ const tags: string[] = [
 /**
  * A list of valid whitespace.
  */
-const whitespace: string[] = [
+const whitespace: ReadonlyArray<string> = [
   "",
   " ",
   "\t",
@@ -80,7 +81,7 @@ const whitespace: string[] = [
 /**
  * A collection of sample values for testing the HTML language plugin.
  */
-export const sampleValues = {
+const sampleValues = {
   attributeNames,
   attributes,
   attributeValues,
@@ -93,9 +94,9 @@ export const sampleValues = {
 /**
  * A collection of preset values for testing the HTML language plugin.
  */
-export const valuePresets: {
-  attributes: HtmlAttributeValuesPresets;
-  elements: HtmlElementValuesPresets;
+const valuePresets: {
+  readonly attributes: HtmlAttributeValuesPresets;
+  readonly elements: HtmlElementValuesPresets;
 } = {
   attributes: {
     beforeName: new Set([
@@ -147,4 +148,9 @@ export const valuePresets: {
       ...whitespace,
     ]),
   },
+};
+
+export {
+  sampleValues,
+  valuePresets,
 };
