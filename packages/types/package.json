@@ -1,6 +1,6 @@
 {
   "name": "@webmangler/types",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "TypeScript type definitions for WebMangler",
   "license": "MIT",
   "main": "./lib/index.js",

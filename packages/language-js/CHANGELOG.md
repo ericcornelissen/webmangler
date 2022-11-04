@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.29] - 2022-11-04
+
 - Add support for the `kind` field of `QuerySelectorOptions`. ([#380])
 - Document defaults for the `jsExtensions` option. ([#373])
 
