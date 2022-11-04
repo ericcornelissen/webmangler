@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- BREAKING: Bump the minimum Node.js version to v14.18.0. ([#416])
 
 ## [0.1.9] - 2022-09-10
 
@@ -77,5 +77,6 @@ Versioning].
 [#318]: https://github.com/ericcornelissen/webmangler/pull/318
 [#325]: https://github.com/ericcornelissen/webmangler/pull/325
 [#333]: https://github.com/ericcornelissen/webmangler/pull/333
+[#416]: https://github.com/ericcornelissen/webmangler/pull/416
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

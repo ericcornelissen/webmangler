@@ -1,8 +1,9 @@
 import type { Filters } from "../../types";
 
+import * as os from "node:os";
+import * as path from "node:path";
+
 import { expect } from "chai";
-import * as os from "os";
-import * as path from "path";
 
 import {
   readFilesFiltered,
