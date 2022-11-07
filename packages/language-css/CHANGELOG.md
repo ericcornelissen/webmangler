@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.30] - 2022-11-04
+
 - Add support for the `kind` field of `QuerySelectorOptions`. ([#374])
 - Fix bug where attribute selectors would be removed when mangled. ([#404])
 - Fix bug where unquoted attribute values would not be mangled. ([#408])

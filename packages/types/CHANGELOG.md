@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.27] - 2022-11-04
+
 - Add `kind` field to `CssDeclarationValueOptions`. ([#378])
 - Add `kind` field to `QuerySelectorOptions`. ([#366])
 
