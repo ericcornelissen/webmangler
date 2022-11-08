@@ -65,6 +65,8 @@ module.exports = {
     }],
     "newline-per-chained-call": ["error"],
     "no-console": ["warn"],
+    "no-empty-static-block": "error",
+    "no-new-native-nonconstructor": "error",
     "no-shadow": ["error", {
       "builtinGlobals": false,
       "hoist": "all",
@@ -193,6 +195,7 @@ module.exports = {
       ],
     }],
     "jsdoc/tag-lines": ["error", "never"],
+    "jsdoc/text-escaping": "off",
     "jsdoc/valid-types": "off",
 
     // See: https://ota-meshi.github.io/eslint-plugin-regexp/
