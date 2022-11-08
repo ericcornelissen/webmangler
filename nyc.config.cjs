@@ -18,6 +18,7 @@ const {
   testSuffix,
   testTypeEndToEnd,
   testTypeIntegration,
+  testTypeUnit,
 } = values;
 
 const reportIdentifier = packagesList.length > 1 ? "_mixed" : packagesList[0];
@@ -32,6 +33,11 @@ case testTypeEndToEnd:
 case testTypeIntegration:
   testTypeCoverageExclusions = [
     `${packagesDir}/**/__tests__/`,
+  ];
+  break;
+case testTypeUnit:
+  testTypeCoverageExclusions = [
+    `${packagesDir}/**/index.ts`,
   ];
   break;
 default:
