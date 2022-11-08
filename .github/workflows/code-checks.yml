@@ -14,9 +14,10 @@ jobs:
     outputs:
       all-packages: ${{ steps.all-filter.outputs.changes }}
       e2e-packages: ${{ steps.e2e-filter.outputs.changes }}
+      integration-packages: ${{ steps.integration-filter.outputs.changes }}
       mutation-packages: ${{ steps.mutation-filter.outputs.changes }}
       performance-packages: ${{ steps.performance-filter.outputs.changes }}
-      tested-packages: ${{ steps.tested-filter.outputs.changes }}
+      unit-packages: ${{ steps.unit-filter.outputs.changes }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
@@ -85,21 +86,36 @@ jobs:
         with:
           filters: |
             ${{ steps.mutation-filters.outputs.filters }}
-      - name: Get filters string for test job
-        id: tested-filters
+      - name: Get filters string for unit job
+        id: unit-filters
         run: |
           export FILTERS=$( \
-            node scripts/ci/get-filters.js test ${{ github.ref }} \
+            node scripts/ci/get-filters.js unit ${{ github.ref }} \
           )
           echo 'filters<<EOF' >> $GITHUB_OUTPUT
           echo "$FILTERS" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
-      - name: Check for file changes in tested packages
+      - name: Check for file changes in unit tested packages
         uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
-        id: tested-filter
+        id: unit-filter
         with:
           filters: |
-            ${{ steps.tested-filters.outputs.filters }}
+            ${{ steps.unit-filters.outputs.filters }}
+      - name: Get filters string for integration job
+        id: integration-filters
+        run: |
+          export FILTERS=$( \
+            node scripts/ci/get-filters.js integration ${{ github.ref }} \
+          )
+          echo 'filters<<EOF' >> $GITHUB_OUTPUT
+          echo "$FILTERS" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+      - name: Check for file changes in integration tested packages
+        uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
+        id: integration-filter
+        with:
+          filters: |
+            ${{ steps.integration-filters.outputs.filters }}
   test-performance:
     name: Performance
     runs-on: ubuntu-latest
@@ -176,10 +192,10 @@ jobs:
     needs:
       - changes
       - compile
-    if: ${{ needs.changes.outputs.tested-packages != '[]' }}
+    if: ${{ needs.changes.outputs.unit-packages != '[]' }}
     strategy:
       matrix:
-        package: ${{ fromJSON(needs.changes.outputs.tested-packages) }}
+        package: ${{ fromJSON(needs.changes.outputs.unit-packages) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
@@ -218,10 +234,10 @@ jobs:
       - changes
       - compile
       - test-unit
-    if: ${{ needs.changes.outputs.tested-packages != '[]' }}
+    if: ${{ needs.changes.outputs.integration-packages != '[]' }}
     strategy:
       matrix:
-        package: ${{ fromJSON(needs.changes.outputs.tested-packages) }}
+        package: ${{ fromJSON(needs.changes.outputs.integration-packages) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
