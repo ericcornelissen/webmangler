@@ -95,6 +95,7 @@ module.exports = {
     "no-duplicate-imports": "off",
     "no-empty-character-class": "off",
     "no-empty-pattern": ["error"],
+    "no-empty-static-block": "error",
     "no-ex-assign": ["error"],
     "no-fallthrough": ["error"],
     "no-func-assign": ["error"],
@@ -109,6 +110,7 @@ module.exports = {
     }],
     "no-loss-of-precision": ["error"],
     "no-misleading-character-class": "off",
+    "no-new-native-nonconstructor": "error",
     "no-new-symbol": ["error"],
     "no-obj-calls": ["error"],
     "no-promise-executor-return": ["error"],
@@ -264,6 +266,7 @@ module.exports = {
       ],
     }],
     "jsdoc/tag-lines": ["error", "never"],
+    "jsdoc/text-escaping": "off",
     "jsdoc/valid-types": "off",
 
     // See: https://ota-meshi.github.io/eslint-plugin-regexp/
