@@ -11,121 +11,69 @@ comment:
   require_head: yes
 
 flags:
-  package-benchmarking-unit:
+  package-benchmarking:
     paths:
+      - "!packages/benchmarking/**/index.ts"
       - packages/benchmarking/**/*.ts
     carryforward: true
-  package-benchmarking-integration:
+  package-cli:
     paths:
-      - "!packages/benchmarking/**/__tests__"
-      - packages/benchmarking/**/*.ts
-    carryforward: true
-  package-cli-unit:
-    paths:
+      - "!packages/cli/**/index.ts"
       - packages/cli/**/*.ts
     carryforward: true
-  package-cli-integration:
+  package-core:
     paths:
-      - "!packages/cli/**/__tests__"
-      - packages/cli/**/*.ts
-    carryforward: true
-  package-core-unit:
-    paths:
+      - "!packages/core/**/index.ts"
       - packages/core/**/*.ts
     carryforward: true
-  package-core-integration:
+  package-language-css:
     paths:
-      - "!packages/core/**/__tests__"
-      - packages/core/**/*.ts
-    carryforward: true
-  package-language-css-unit:
-    paths:
+      - "!packages/language-css/**/index.ts"
       - packages/language-css/**/*.ts
     carryforward: true
-  package-language-css-integration:
+  package-language-html:
     paths:
-      - "!packages/language-css/**/__tests__"
-      - packages/language-css/**/*.ts
-    carryforward: true
-  package-language-html-unit:
-    paths:
+      - "!packages/language-html/**/index.ts"
       - packages/language-html/**/*.ts
     carryforward: true
-  package-language-html-integration:
+  package-language-js:
     paths:
-      - "!packages/language-html/**/__tests__"
-      - packages/language-html/**/*.ts
-    carryforward: true
-  package-language-js-unit:
-    paths:
+      - "!packages/language-js/**/index.ts"
       - packages/language-js/**/*.ts
     carryforward: true
-  package-language-js-integration:
+  package-language-utils:
     paths:
-      - "!packages/language-js/**/__tests__"
-      - packages/language-js/**/*.ts
-    carryforward: true
-  package-language-utils-unit:
-    paths:
+      - "!packages/language-utils/**/index.ts"
       - packages/language-utils/**/*.ts
     carryforward: true
-  package-language-utils-integration:
+  package-mangler-css-classes:
     paths:
-      - "!packages/language-utils/**/__tests__"
-      - packages/language-utils/**/*.ts
-    carryforward: true
-  package-mangler-css-classes-unit:
-    paths:
+      - "!packages/mangler-css-classes/**/index.ts"
       - packages/mangler-css-classes/**/*.ts
     carryforward: true
-  package-mangler-css-classes-integration:
+  package-mangler-css-variables:
     paths:
-      - "!packages/mangler-css-classes/**/__tests__"
-      - packages/mangler-css-classes/**/*.ts
-    carryforward: true
-  package-mangler-css-variables-unit:
-    paths:
+      - "!packages/mangler-css-variables/**/index.ts"
       - packages/mangler-css-variables/**/*.ts
     carryforward: true
-  package-mangler-css-variables-integration:
+  package-mangler-html-attributes:
     paths:
-      - "!packages/mangler-css-variables/**/__tests__"
-      - packages/mangler-css-variables/**/*.ts
-    carryforward: true
-  package-mangler-html-attributes-unit:
-    paths:
+      - "!packages/mangler-html-attributes/**/index.ts"
       - packages/mangler-html-attributes/**/*.ts
     carryforward: true
-  package-mangler-html-attributes-integration:
+  package-mangler-html-ids:
     paths:
-      - "!packages/mangler-html-attributes/**/__tests__"
-      - packages/mangler-html-attributes/**/*.ts
-    carryforward: true
-  package-mangler-html-ids-unit:
-    paths:
+      - "!packages/mangler-html-ids/**/index.ts"
       - packages/mangler-html-ids/**/*.ts
     carryforward: true
-  package-mangler-html-ids-integration:
+  package-mangler-utils:
     paths:
-      - "!packages/mangler-html-ids/**/__tests__"
-      - packages/mangler-html-ids/**/*.ts
-    carryforward: true
-  package-mangler-utils-unit:
-    paths:
+      - "!packages/mangler-utils/**/index.ts"
       - packages/mangler-utils/**/*.ts
     carryforward: true
-  package-mangler-utils-integration:
+  package-testing:
     paths:
-      - "!packages/mangler-utils/**/__tests__"
-      - packages/mangler-utils/**/*.ts
-    carryforward: true
-  package-testing-unit:
-    paths:
-      - packages/testing/**/*.ts
-    carryforward: true
-  package-testing-integration:
-    paths:
-      - "!packages/testing/**/__tests__"
+      - "!packages/testing/**/index.ts"
       - packages/testing/**/*.ts
     carryforward: true
 
