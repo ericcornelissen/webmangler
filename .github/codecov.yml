@@ -13,54 +13,67 @@ comment:
 flags:
   package-benchmarking:
     paths:
+      - "!packages/benchmarking/**/index.ts"
       - packages/benchmarking/**/*.ts
     carryforward: true
   package-cli:
     paths:
+      - "!packages/cli/**/index.ts"
       - packages/cli/**/*.ts
     carryforward: true
   package-core:
     paths:
+      - "!packages/core/**/index.ts"
       - packages/core/**/*.ts
     carryforward: true
   package-language-css:
     paths:
+      - "!packages/language-css/**/index.ts"
       - packages/language-css/**/*.ts
     carryforward: true
   package-language-html:
     paths:
+      - "!packages/language-html/**/index.ts"
       - packages/language-html/**/*.ts
     carryforward: true
   package-language-js:
     paths:
+      - "!packages/language-js/**/index.ts"
       - packages/language-js/**/*.ts
     carryforward: true
   package-language-utils:
     paths:
+      - "!packages/language-utils/**/index.ts"
       - packages/language-utils/**/*.ts
     carryforward: true
   package-mangler-css-classes:
     paths:
+      - "!packages/mangler-css-classes/**/index.ts"
       - packages/mangler-css-classes/**/*.ts
     carryforward: true
   package-mangler-css-variables:
     paths:
+      - "!packages/mangler-css-variables/**/index.ts"
       - packages/mangler-css-variables/**/*.ts
     carryforward: true
   package-mangler-html-attributes:
     paths:
+      - "!packages/mangler-html-attributes/**/index.ts"
       - packages/mangler-html-attributes/**/*.ts
     carryforward: true
   package-mangler-html-ids:
     paths:
+      - "!packages/mangler-html-ids/**/index.ts"
       - packages/mangler-html-ids/**/*.ts
     carryforward: true
   package-mangler-utils:
     paths:
+      - "!packages/mangler-utils/**/index.ts"
       - packages/mangler-utils/**/*.ts
     carryforward: true
   package-testing:
     paths:
+      - "!packages/testing/**/index.ts"
       - packages/testing/**/*.ts
     carryforward: true
 
