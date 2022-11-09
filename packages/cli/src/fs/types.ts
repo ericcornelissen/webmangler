@@ -1,4 +1,4 @@
-import type { WebManglerFile } from "webmangler";
+import type { WebManglerFile } from "@webmangler/core";
 
 /**
  * A set of filters for listing and reading multiple files.

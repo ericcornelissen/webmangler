@@ -1,9 +1,9 @@
-import type { WebManglerOptions } from "webmangler";
+import type { WebManglerOptions } from "@webmangler/core";
 
 import type { WebManglerCliArgs } from "./types";
 import type { Writer } from "./logger";
 
-import webmangler from "webmangler";
+import webmangler from "@webmangler/core";
 
 import getConfiguration from "./config";
 import * as fs from "./fs";

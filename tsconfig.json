@@ -15,6 +15,9 @@
     "baseUrl": "./",
     "paths": {
       "@webmangler/benchmarking": ["packages/benchmarking/build"],
+      "@webmangler/core": ["packages/core/lib"],
+      "@webmangler/core/languages": ["packages/core/lib/languages"],
+      "@webmangler/core/manglers": ["packages/core/lib/manglers"],
       "@webmangler/language-css": ["packages/language-css/lib"],
       "@webmangler/language-html": ["packages/language-html/lib"],
       "@webmangler/language-js": ["packages/language-js/lib"],
@@ -25,10 +28,7 @@
       "@webmangler/mangler-html-ids": ["packages/mangler-html-ids/build"],
       "@webmangler/mangler-utils": ["packages/mangler-utils/lib"],
       "@webmangler/testing": ["packages/testing/lib"],
-      "@webmangler/types": ["packages/types/lib"],
-      "webmangler": ["packages/core/lib"],
-      "webmangler/languages": ["packages/core/lib/languages"],
-      "webmangler/manglers": ["packages/core/lib/manglers"]
+      "@webmangler/types": ["packages/types/lib"]
     }
   },
   "exclude": [

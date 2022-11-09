@@ -76,7 +76,7 @@ suite("Version data", function() {
     expect(path.resolve).to.have.been.calledWithExactly(
       process.cwd(),
       "node_modules",
-      "webmangler-cli",
+      "@webmangler/cli",
       "package.json",
     );
     expect(fs.openSync).to.have.been.calledWithExactly(pathToCliManifest, "r");
@@ -118,7 +118,7 @@ suite("Version data", function() {
     expect(path.resolve).to.have.been.calledWithExactly(
       process.cwd(),
       "node_modules",
-      "webmangler",
+      "@webmangler/core",
       "package.json",
     );
     expect(fs.openSync).to.have.been.calledWithExactly(pathToCoreManifest, "r");

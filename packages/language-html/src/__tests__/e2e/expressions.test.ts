@@ -7,10 +7,10 @@ import type {
 
 import type { HtmlLanguagePluginOptions } from "../../index";
 
+import webmangler from "@webmangler/core";
 import { WebManglerPluginMock } from "@webmangler/testing";
 import { expect } from "chai";
 import * as sinon from "sinon";
-import webmangler from "webmangler";
 
 import HtmlLanguagePlugin from "../../index";
 

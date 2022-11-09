@@ -19,7 +19,7 @@ To get started, add the WebMangler Core and CLI as development dependencies to
 your project using npm (or yarn):
 
 ```bash
-npm install --save-dev webmangler webmangler-cli
+npm install --save-dev @webmangler/core @webmangler/cli
 ```
 
 Next, create a configuration file named `.webmanglerrc.js` in your project and

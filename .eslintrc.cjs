@@ -117,9 +117,9 @@ module.exports = {
     "import/no-unresolved": ["error", {
       caseSensitive: true,
       ignore: [
-        "webmangler",
-        "webmangler/languages",
-        "webmangler/manglers",
+        "@webmangler/core",
+        "@webmangler/core/languages",
+        "@webmangler/core/manglers",
       ],
     }],
     "import/no-unused-modules": "error",
