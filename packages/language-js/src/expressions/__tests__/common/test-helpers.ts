@@ -9,17 +9,21 @@ import type { MangleExpression } from "@webmangler/types";
  * @param pattern The pattern to match with.
  * @returns The matches found.
  */
-export function getAllMatches(
+function getAllMatches(
   expressions: Iterable<MangleExpression>,
   input: string,
   pattern: string,
 ): string[] {
-  const matches: string[] = [];
-  Array.from(expressions).some((expression) => {
-    for (const match of expression.findAll(input, pattern)) {
-      matches.push(match);
-    }
-  });
+  return Array.from(expressions)
+    .reduce((matches: string[], expression: MangleExpression) => {
+      for (const match of expression.findAll(input, pattern)) {
+        matches.push(match);
+      }
 
-  return matches;
+      return matches;
+    }, []);
 }
+
+export {
+  getAllMatches,
+};
