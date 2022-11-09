@@ -13,11 +13,7 @@ import initSimpleManglerPlugin from "../../simple-mangler.class";
 suite("SimpleManglerPlugin", function() {
   const SimpleManglerPlugin = initSimpleManglerPlugin({ });
 
-  class ConcreteSimpleManglerPlugin extends SimpleManglerPlugin {
-    constructor(options: SimpleManglerOptions) {
-      super(options);
-    }
-  }
+  class ConcreteSimpleManglerPlugin extends SimpleManglerPlugin { }
 
   const defaultOptions: SimpleManglerOptions = {
     charSet: ["f", "o", "o", "b", "a", "r"],

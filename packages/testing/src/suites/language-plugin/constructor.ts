@@ -11,13 +11,13 @@ function checkConstructor(
   Plugin: WebManglerLanguagePluginConstructor,
 ): string | null {
   try {
-    new Plugin();
+    new Plugin(); // eslint-disable-line no-new
   } catch (error) {
     return `plugin initialized without options failed (error: ${error})`;
   }
 
   try {
-    new Plugin({ });
+    new Plugin({ }); // eslint-disable-line no-new
   } catch (error) {
     return `plugin initialized with empty options failed (error: ${error})`;
   }
