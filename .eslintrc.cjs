@@ -308,9 +308,9 @@ module.exports = {
     "no-sequences": ["error"],
     "no-setter-return": ["error"],
     "no-shadow": ["error", {
-      "builtinGlobals": false,
-      "hoist": "all",
-      "allow": [],
+      builtinGlobals: false,
+      hoist: "all",
+      allow: [],
     }],
     "no-shadow-restricted-names": ["error"],
     "no-sparse-arrays": ["error"],
@@ -705,8 +705,8 @@ module.exports = {
   settings: {
     jsdoc: {
       tagNamePreference: {
-        "file": "fileoverview",
-        "inheritdoc": false,
+        file: "fileoverview",
+        inheritdoc: false,
       },
     },
   },
@@ -759,7 +759,7 @@ module.exports = {
         "@typescript-eslint/switch-exhaustiveness-check": "error",
       },
     },
-    { // packages/cli
+    { // Package 'cli'
       files: [
         `${packagesDir}/cli/**/*.ts`,
       ],
@@ -817,7 +817,7 @@ module.exports = {
         "chai-expect/no-inner-literal": ["error"],
         "chai-expect/terminating-properties": ["error", {
           properties: [
-            // from 'sinon-chai'
+            // For 'sinon-chai'
             "called",
             "calledOnce",
             "calledTwice",
@@ -874,6 +874,8 @@ module.exports = {
         ecmaVersion: 2020,
       },
       rules: {
+        "strict": "off",
+
         // See https://github.com/import-js/eslint-plugin-import#rules
         "import/no-commonjs": "off",
 
