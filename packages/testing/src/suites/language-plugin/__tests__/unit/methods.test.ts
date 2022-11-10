@@ -24,7 +24,7 @@ suite("Language plugin method checks", function() {
     test("method returns nothing", function() {
       const constructor = function() {
         return {
-          getEmbeds: () => void 0,
+          getEmbeds: () => undefined,
         };
       } as unknown as WebManglerLanguagePluginConstructor;
 
@@ -70,7 +70,7 @@ suite("Language plugin method checks", function() {
     test("method returns nothing", function() {
       const constructor = function() {
         return {
-          getExpressions: () => void 0,
+          getExpressions: () => undefined,
         };
       } as unknown as WebManglerLanguagePluginConstructor;
 
@@ -116,7 +116,7 @@ suite("Language plugin method checks", function() {
     test("method returns nothing", function() {
       const constructor = function() {
         return {
-          getLanguages: () => void 0,
+          getLanguages: () => undefined,
         };
       } as unknown as WebManglerLanguagePluginConstructor;
 

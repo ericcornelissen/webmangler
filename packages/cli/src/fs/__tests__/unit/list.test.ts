@@ -168,7 +168,7 @@ suite("Listing", function() {
           let fileCount = 0;
           for await (const result of listFiles(basePath)) {
             expect(expectedFiles).to.include(result);
-            fileCount++;
+            fileCount += 1;
           }
 
           expect(fileCount).to.equal(expectedFiles.length);
@@ -339,7 +339,7 @@ suite("Listing", function() {
           let fileCount = 0;
           for await (const result of listFilesFiltered(basePaths, filters)) {
             expect(expectedFiles).to.include(result);
-            fileCount++;
+            fileCount += 1;
           }
 
           expect(fileCount).to.equal(expectedFiles.length);

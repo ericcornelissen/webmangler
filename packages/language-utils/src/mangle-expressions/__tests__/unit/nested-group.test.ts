@@ -341,7 +341,7 @@ suite("NestedGroupMangleExpression", function() {
           let i = 0;
           for (const str of subject.findAll(s, pattern)) {
             expect(str).to.equal(expected[i]);
-            i++;
+            i += 1;
           }
 
           expect(i).to.equal(expected.length, `in ${s}`);

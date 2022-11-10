@@ -288,7 +288,7 @@ suite("NameGenerator", function() {
         });
 
         for (const { inc, expected } of samples) {
-          for (let i = 0; i < inc; i++) {
+          for (let i = 0; i < inc; i += 1) {
             g.nextName();
           }
 

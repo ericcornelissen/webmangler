@@ -63,7 +63,7 @@ function newDoBenchmark({
     const repetitions = config.getRepetitions(params);
 
     const results: BenchmarkRunStats[] = [];
-    for (let n = 0; n < repetitions; n++) {
+    for (let n = 0; n < repetitions; n += 1) {
       setupFn();
       const runStats = measureOneRun(fn);
       results.push(runStats);

@@ -149,7 +149,7 @@ suite("MultiLanguagePlugin", function() {
             getExpressions: sinon.stub().returns(expressionsMap),
           });
 
-          expressionsMap.forEach((value, key) => expected.set(key, value)),
+          expressionsMap.forEach((value, key) => expected.set(key, value));
           plugins.push(plugin);
         }
 
