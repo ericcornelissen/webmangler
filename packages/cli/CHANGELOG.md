@@ -8,7 +8,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.10] - 2022-11-10
+
 - BREAKING: Bump the minimum Node.js version to v14.18.0. ([#416])
+- BREAKING: Republish as `@webmangler/cli`. ([#424])
 
 ## [0.1.9] - 2022-09-10
 
@@ -78,5 +83,6 @@ Versioning].
 [#325]: https://github.com/ericcornelissen/webmangler/pull/325
 [#333]: https://github.com/ericcornelissen/webmangler/pull/333
 [#416]: https://github.com/ericcornelissen/webmangler/pull/416
+[#424]: https://github.com/ericcornelissen/webmangler/pull/424
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
