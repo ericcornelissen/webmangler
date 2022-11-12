@@ -1,4 +1,5 @@
 import { expect, use as chaiUse } from "chai";
+import * as fc from "fast-check";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
@@ -35,21 +36,29 @@ suite("Embeds", function() {
     });
 
     test("only the first list is empty", function() {
-      const listB = ["foo", "bar"];
-      expect(listB).to.have.length.greaterThan(0);
-
-      const _result = crossProduct([], listB);
-      const result = Array.from(_result);
-      expect(result).to.have.lengthOf(0);
+      fc.assert(
+        fc.property(
+          fc.array(fc.anything(), { minLength: 1 }),
+          (listB) => {
+            const _result = crossProduct([], listB);
+            const result = Array.from(_result);
+            expect(result).to.have.lengthOf(0);
+          },
+        ),
+      );
     });
 
     test("only the second list is empty", function() {
-      const listA = ["foo", "bar"];
-      expect(listA).to.have.length.greaterThan(0);
-
-      const _result = crossProduct(listA, []);
-      const result = Array.from(_result);
-      expect(result).to.have.lengthOf(0);
+      fc.assert(
+        fc.property(
+          fc.array(fc.anything(), { minLength: 1 }),
+          (listA) => {
+            const _result = crossProduct(listA, []);
+            const result = Array.from(_result);
+            expect(result).to.have.lengthOf(0);
+          },
+        ),
+      );
     });
 
     test("neither list is empty", function() {
@@ -70,6 +79,20 @@ suite("Embeds", function() {
       expect(result).to.deep.include(["bar", "world"]);
       expect(result).to.deep.include(["bar", "!"]);
     });
+
+    test("two non-empty lists", function() {
+      fc.assert(
+        fc.property(
+          fc.array(fc.anything(), { minLength: 1 }),
+          fc.array(fc.anything(), { minLength: 1 }),
+          (listA, listB) => {
+            const _result = crossProduct(listA, listB);
+            const result = Array.from(_result);
+            expect(result).to.have.lengthOf(listA.length * listB.length);
+          },
+        ),
+      );
+    });
   });
 
   suite("::empty", function() {
@@ -79,11 +102,15 @@ suite("Embeds", function() {
     });
 
     test("a non-empty list", function() {
-      const list = ["foo", "bar"];
-      expect(list).to.have.length.greaterThan(0);
-
-      const result = empty(list);
-      expect(result).to.be.false;
+      fc.assert(
+        fc.property(
+          fc.array(fc.anything(), { minLength: 1 }),
+          (list) => {
+            const result = empty(list);
+            expect(result).to.be.false;
+          },
+        ),
+      );
     });
   });
 
@@ -94,33 +121,28 @@ suite("Embeds", function() {
     });
 
     test("a list with one item", function() {
-      const item = "foobar";
-      const result = first([item]);
-      expect(result).to.deep.equal(item);
+      fc.assert(
+        fc.property(
+          fc.anything(),
+          (item) => {
+            const result = first([item]);
+            expect(result).to.deep.equal(item);
+          },
+        ),
+      );
     });
 
-    test("a list with more than one item and no duplicates", function() {
-      const item = "foobar";
-      const rest = ["hello", "world", "!"];
-      expect(rest).to.not.include(item);
-
-      const list = [item, ...rest];
-      expect(list).to.have.length.greaterThan(1);
-
-      const result = first(list);
-      expect(result).to.deep.equal(item);
-    });
-
-    test("a list with more than one item and duplicates", function() {
-      const item = "foo";
-      const rest = ["bar", "foo", "baz"];
-      expect(rest).to.include(item);
-
-      const list = [item, ...rest];
-      expect(list).to.have.length.greaterThan(1);
-
-      const result = first(list);
-      expect(result).to.deep.equal(item);
+    test("a list with many item", function() {
+      fc.assert(
+        fc.property(
+          fc.anything(),
+          fc.array(fc.anything(), { minLength: 1 }),
+          (item, list) => {
+            const result = first([item, ...list]);
+            expect(result).to.deep.equal(item);
+          },
+        ),
+      );
     });
   });
 
@@ -171,53 +193,55 @@ suite("Embeds", function() {
       expect(result).to.have.lengthOf(0);
     });
 
-    test("an list of empty list", function() {
-      const testCases = [
-        [[]],
-        [[], []],
-        [[], [], []],
-      ];
-
-      for (const lists of testCases) {
-        for (const subList of lists) {
-          expect(subList).to.have.lengthOf(0);
-        }
-
-        const result = flatten(lists);
-        expect(result).to.have.lengthOf(0);
-      }
+    test("a list of empty list", function() {
+      fc.assert(
+        fc.property(
+          fc.array(fc.constant([]), { minLength: 1 }),
+          (list) => {
+            const result = flatten(list);
+            expect(result).to.have.lengthOf(0);
+          },
+        ),
+      );
     });
 
     test("a list of one non-empty list", function() {
-      const subList = ["foo", "bar"];
-      expect(subList).to.have.length.greaterThan(0);
-
-      const result = flatten([subList]);
-      expect(result).to.have.lengthOf(subList.length);
-      for (const entry of subList) {
-        expect(result).to.contain(entry);
-      }
+      fc.assert(
+        fc.property(
+          fc.array(fc.anything(), { minLength: 1 }),
+          (list) => {
+            const result = flatten([list]);
+            expect(result).to.have.length(list.length);
+            for (const entry of list) {
+              expect(result).to.deep.contain(entry);
+            }
+          },
+        ),
+      );
     });
 
     test("a list of non-empty lists", function() {
-      const subListA = ["foo", "bar"];
-      const subListB = ["hello", "world", "!"];
+      fc.assert(
+        fc.property(
+          fc.array(
+            fc.array(fc.anything(), { minLength: 1 }),
+            { minLength: 1 },
+          ),
+          (lists) => {
+            const expectedLength = lists
+              .map((list) => list.length)
+              .reduce((sum, current) => sum + current, 0);
 
-      expect(subListA).to.have.length.greaterThan(0);
-      expect(subListB).to.have.length.greaterThan(0);
-
-      const lists = [subListA, subListB];
-      const result = flatten(lists);
-
-      expect(result).to.have.lengthOf(
-        subListA.length + subListB.length,
+            const result = flatten(lists);
+            expect(result).to.have.length(expectedLength);
+            for (const subList of lists) {
+              for (const entry of subList) {
+                expect(result).to.deep.contain(entry);
+              }
+            }
+          },
+        ),
       );
-
-      for (const subList of lists) {
-        for (const entry of subList) {
-          expect(result).to.contain(entry);
-        }
-      }
     });
   });
 
@@ -277,12 +301,37 @@ suite("Embeds", function() {
     });
 
     test("one map", function() {
-      const mapA = new Map([
-        ["foo", "bar"],
-      ]);
+      fc.assert(
+        fc.property(
+          fc.array(fc.tuple(fc.string(), fc.string()))
+            .map((tuples) => new Map(tuples)),
+          (mapA) => {
+            const result = merge([mapA]);
+            expect(result).to.deep.equal(mapA);
+          },
+        ),
+      );
+    });
 
-      const result = merge([mapA]);
-      expect(result).to.deep.equal(mapA);
+    test("many maps", function() {
+      fc.assert(
+        fc.property(
+          fc.array(
+            fc.array(fc.tuple(fc.string(), fc.nat()))
+              .map((tuples) => new Map(tuples)),
+            { minLength: 1 },
+          ),
+          (maps) => {
+            const result = merge(maps);
+            for (const mapN of maps) {
+              for (const [key] of mapN.entries()) {
+                const hasKey = result.has(key);
+                expect(hasKey).to.be.true;
+              }
+            }
+          },
+        ),
+      );
     });
 
     test("multiple maps", function() {
@@ -514,23 +563,36 @@ suite("Embeds", function() {
 
   suite("::spread", function() {
     test("return value", function() {
-      const returnValue = "foobar";
+      fc.assert(
+        fc.property(
+          fc.anything(),
+          (returnValue) => {
+            const fn = () => returnValue;
+            const spreadFn = spread(fn);
 
-      const fn = () => returnValue;
-      const spreadFn = spread(fn);
-
-      const result = spreadFn([null, null]);
-      expect(result).to.equal(returnValue);
+            const result = spreadFn([null, null]);
+            expect(result).to.deep.equal(returnValue);
+          },
+        ),
+      );
     });
 
     test("the arguments", function() {
-      const args: [string, string] = ["foo", "bar"];
+      fc.assert(
+        fc.property(
+          fc.anything(),
+          fc.anything(),
+          (arg0, arg1) => {
+            const args: [unknown, unknown] = [arg0, arg1];
 
-      const fn = sinon.spy();
-      const spreadFn = spread(fn);
+            const fn = sinon.spy();
+            const spreadFn = spread(fn);
 
-      spreadFn(args);
-      expect(fn).to.have.been.calledWithExactly(...args);
+            spreadFn(args);
+            expect(fn).to.have.been.calledWithExactly(...args);
+          },
+        ),
+      );
     });
   });
 
@@ -807,16 +869,31 @@ suite("Embeds", function() {
     });
 
     test("a one-item list", function() {
-      const list = ["foobar"];
-      expect(list).to.have.lengthOf(1);
+      fc.assert(
+        fc.property(
+          fc.anything(),
+          (item) => {
+            const list = [item];
 
-      const result = reverse(list);
-      expect(result).to.deep.equal(list);
+            const result = reverse(list);
+            expect(result).to.deep.equal(list);
+          },
+        ),
+      );
     });
 
     test("a many-item list", function() {
-      const result = reverse(["foo", "bar"]);
-      expect(result).to.deep.equal(["bar", "foo"]);
+      fc.assert(
+        fc.property(
+          fc.anything(),
+          fc.array(fc.anything(), { minLength: 1 }),
+          (item, list) => {
+            const result = reverse([...list, item]);
+            expect(result).to.have.lengthOf(list.length + 1);
+            expect(result[0]).to.deep.equal(item);
+          },
+        ),
+      );
     });
   });
 
@@ -863,16 +940,21 @@ suite("Embeds", function() {
     });
 
     test("a one-entry map", function() {
-      const value = "bar";
+      fc.assert(
+        fc.property(
+          fc.anything(),
+          fc.anything(),
+          (key, value) => {
+            const m = new Map([
+              [key, value],
+            ]);
 
-      const m = new Map([
-        ["foo", value],
-      ]);
-      expect(m.size).to.equal(1);
-
-      const _result = values(m);
-      const result = Array.from(_result);
-      expect(result).to.deep.equal([value]);
+            const _result = values(m);
+            const result = Array.from(_result);
+            expect(result).to.deep.equal([value]);
+          },
+        ),
+      );
     });
 
     test("a many-entry map", function() {
@@ -888,6 +970,26 @@ suite("Embeds", function() {
       const _result = values(m);
       const result = Array.from(_result);
       expect(result).to.deep.equal([value1, value2]);
+    });
+
+    test("a many-entries map", function() {
+      fc.assert(
+        fc.property(
+          fc.array(fc.tuple(fc.string(), fc.string()))
+            .map((tuples) => {
+              return tuples.filter(([key], index) => {
+                return tuples.findIndex(([_key]) => key === _key) === index;
+              });
+            })
+            .filter((tuples) => tuples.length >= 2)
+            .map((tuples) => new Map(tuples)),
+          (m) => {
+            const _result = values(m);
+            const result = Array.from(_result);
+            expect(result).to.have.length(m.size);
+          },
+        ),
+      );
     });
   });
 });

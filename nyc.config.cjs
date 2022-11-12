@@ -1,5 +1,7 @@
 "use strict";
 
+const process = require("node:process");
+
 const values = require("./.values.cjs");
 
 const {
@@ -14,9 +16,33 @@ const {
   testDirCommon,
   testsDir,
   testSuffix,
+  testTypeEndToEnd,
+  testTypeIntegration,
+  testTypeUnit,
 } = values;
 
 const reportIdentifier = packagesList.length > 1 ? "_mixed" : packagesList[0];
+
+let testTypeCoverageExclusions;
+switch (process.env.TEST_TYPE) {
+case testTypeEndToEnd:
+  testTypeCoverageExclusions = [
+    `${packagesDir}/**/__tests__/`,
+  ];
+  break;
+case testTypeIntegration:
+  testTypeCoverageExclusions = [
+    `${packagesDir}/**/__tests__/`,
+  ];
+  break;
+case testTypeUnit:
+  testTypeCoverageExclusions = [
+    `${packagesDir}/**/index.ts`,
+  ];
+  break;
+default:
+  testTypeCoverageExclusions = [];
+}
 
 module.exports = {
   all: true,
@@ -54,8 +80,15 @@ module.exports = {
     `${packagesDir}/**/${testsDir}/${testDirCommon}/index.ts`,
     `${packagesDir}/**/${compiledDir}/`,
     ...packagesCoverageExclusions,
+    ...testTypeCoverageExclusions,
   ],
 
-  reportDir: `./${reportsDir}/coverage/${reportIdentifier}`,
+  reportDir: [
+    ".",
+    reportsDir,
+    "coverage",
+    process.env.TEST_TYPE,
+    reportIdentifier,
+  ].join("/"),
   tempDir: `./${tempDir}/nyc/${reportIdentifier}`,
 };

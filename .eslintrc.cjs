@@ -34,7 +34,7 @@ module.exports = {
     "plugin:import/typescript",
   ],
   rules: {
-    // See: https://eslint.org/docs/rules/
+    // See https://eslint.org/docs/rules/
     "accessor-pairs": ["error", {
       setWithoutGet: true,
       getWithoutSet: false,

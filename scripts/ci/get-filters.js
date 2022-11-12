@@ -19,8 +19,8 @@ import values from "../../.values.cjs";
 
 const {
   testsDir,
-  testDirAll,
   testDirEndToEnd,
+  testDirIntegration,
   testDirPerformance,
   testDirUnit,
 } = values;
@@ -46,6 +46,14 @@ function getPackageCriteria(arg) {
         `**/${testsDir}/${testDirEndToEnd}/**`,
       ),
     );
+  case "integration":
+    return (packageName) => hasFiles(
+      packageName,
+      (filePath) => micromatch.isMatch(
+        filePath,
+        `**/${testsDir}/${testDirIntegration}/**`,
+      ),
+    );
   case "mutation":
     return (packageName) => hasFiles(
       packageName,
@@ -62,12 +70,12 @@ function getPackageCriteria(arg) {
         `**/${testsDir}/${testDirPerformance}/**`,
       ),
     );
-  case "test":
+  case "unit":
     return (packageName) => hasFiles(
       packageName,
       (filePath) => micromatch.isMatch(
         filePath,
-        `**/${testsDir}/${testDirAll}/**`,
+        `**/${testsDir}/${testDirUnit}/**`,
       ),
     );
   default:
