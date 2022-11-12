@@ -16,7 +16,7 @@ body:
         Provide the package(s) in which the bug occurs and include the version
         of the package(s).
       placeholder: >-
-        Example: webmangler (v2.7.1), webmangler-cli (v3.1.4)
+        Example: `@webmangler/core` (v2.7.1), `@webmangler/cli` (v3.1.4)
     validations:
       required: true
   - type: textarea

@@ -1,7 +1,7 @@
 import type { WebManglerCliConfig } from "./types";
 
-import { BuiltInLanguagesSupport } from "webmangler/languages";
-import { RecommendedManglers } from "webmangler/manglers";
+import { BuiltInLanguagesSupport } from "@webmangler/core/languages";
+import { RecommendedManglers } from "@webmangler/core/manglers";
 
 import { DefaultReporter } from "../reporters";
 

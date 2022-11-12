@@ -1,9 +1,9 @@
 const VERSION_MISSING = "[missing]";
 
-const CLI_DIR = "webmangler-cli";
+const CLI_DIR = "@webmangler/cli";
 const MANIFEST_FILE = "package.json";
 const NODE_MODULES_DIR = "node_modules";
-const WEBMANGLER_DIR = "webmangler";
+const WEBMANGLER_DIR = "@webmangler/core";
 
 /**
  * An interface to interact with the file system.

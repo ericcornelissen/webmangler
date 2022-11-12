@@ -17,7 +17,7 @@ npm install webmangler --save-dev
 And use it programmatically, e.g.:
 
 ```js
-import webmangler from "webmangler";
+import webmangler from "@webmangler/core";
 
 import { BuiltInLanguagesSupport } from "webmangler/languages";
 import { RecommendedManglers } from "webmangler/manglers";
@@ -44,7 +44,9 @@ HTML, and JavaScript.
 
 ## Other ways to use WebMangler
 
-- as a CLI - [WebMangler CLI](https://www.npmjs.com/package/webmangler-cli)
+- as a CLI - [WebMangler CLI]
 
-[npm-url]: https://www.npmjs.com/package/webmangler "NPM package"
-[npm-image]: https://img.shields.io/npm/v/webmangler.svg
+[npm-url]: https://www.npmjs.com/package/@webmangler/core "NPM package"
+[npm-image]: https://img.shields.io/npm/v/@webmangler/core.svg
+
+[webmangler cli]: https://www.npmjs.com/package/@webmangler/cli

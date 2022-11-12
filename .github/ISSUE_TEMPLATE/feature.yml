@@ -19,7 +19,7 @@ body:
 
         Leave blank if you're unsure to what package the feature belongs.
       placeholder: >-
-        Example: webmangler (v2.7.1), webmangler-cli (v3.1.4)
+        Example: `@webmangler/core` (v2.7.1), `@webmangler/cli` (v3.1.4)
   - type: textarea
     attributes:
       label: Description
