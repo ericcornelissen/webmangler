@@ -222,7 +222,7 @@ module.exports = {
       enforceForLogicalOperands: true,
     }],
     "no-extra-label": ["error"],
-    "no-extra-parens": ["error", "all"],
+    "no-extra-parens": "off",
     "no-extra-semi": ["error"],
     "no-fallthrough": ["error"],
     "no-floating-decimal": ["error"],
@@ -777,6 +777,9 @@ module.exports = {
         ecmaVersion: 2020,
       },
       rules: {
+        // See https://eslint.org/docs/rules/
+        "no-magic-numbers": "off",
+
         // See https://github.com/import-js/eslint-plugin-import#rules
         "import/no-anonymous-default-export": "off",
 
@@ -805,6 +808,7 @@ module.exports = {
         "mocha",
       ],
       rules: {
+        // See https://eslint.org/docs/rules/
         "no-magic-numbers": "off",
         "no-new": "off",
         "no-unused-expressions": "off",
@@ -874,6 +878,8 @@ module.exports = {
         ecmaVersion: 2020,
       },
       rules: {
+        // See https://eslint.org/docs/rules/
+        "no-magic-numbers": "off",
         "strict": "off",
 
         // See https://github.com/import-js/eslint-plugin-import#rules
@@ -922,9 +928,14 @@ module.exports = {
         "plugin:yml/base",
       ],
       rules: {
-        // See: https://eslint.org/docs/rules/
+        // See https://eslint.org/docs/rules/
+        "capitalized-comments": ["error", "always", {
+          ignorePattern: "^\\s*tag=",
+        }],
         "max-len": "off",
-        "spaced-comment": "off", // Per https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
+        "no-multiple-empty-lines": "off",
+        "no-multi-spaces": "off",
+        "spaced-comment": "off",
 
         // See: https://ota-meshi.github.io/eslint-plugin-yml/rules/
         "yml/block-mapping": ["error", "always"],
@@ -996,9 +1007,12 @@ module.exports = {
         console: "readonly",
       },
       rules: {
-        // See: https://eslint.org/docs/rules/
+        // See https://eslint.org/docs/rules/
+        "capitalized-comments": "off",
         "eol-last": "off",
         "no-console": "off",
+        "no-magic-numbers": "off",
+        "prefer-arrow-callback": "off",
         "unicode-bom": "off",
 
         // See: https://github.com/import-js/eslint-plugin-import#rules
@@ -1022,8 +1036,13 @@ module.exports = {
         console: "readonly",
       },
       rules: {
-        // See: https://eslint.org/docs/rules/
+        // See https://eslint.org/docs/rules/
+        "capitalized-comments": "off",
+        "eol-last": "off",
         "no-console": "off",
+        "no-magic-numbers": "off",
+        "prefer-arrow-callback": "off",
+        "unicode-bom": "off",
 
         // See: https://github.com/import-js/eslint-plugin-import#rules
         "import/no-commonjs": "off",
