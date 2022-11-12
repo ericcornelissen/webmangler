@@ -260,8 +260,7 @@ suite("Embeds", function() {
         expect(plugin.getEmbeds).to.have.been.calledWith(file);
 
         expect(embeds).to.have.length(expected.embeds.length);
-        for (const i in Array.from(embeds)) {
-          const embed = Array.from(embeds)[i];
+        Array.from(embeds).forEach((embed, i) => {
           const expectedEmbed = expected.embeds[i];
           const expectedContent = new RegExp(`^${expectedEmbed.content}$`);
           expect(embed.content).to.match(expectedContent);
@@ -270,7 +269,7 @@ suite("Embeds", function() {
           expect(embed.endIndex).to.equal(expectedEmbed.endIndex);
           expect(embed.getRaw()).to.match(expectedContent);
           expect(embed.id).to.equal(expectedEmbed.id);
-        }
+        });
 
         {
           const expectedFile = expected.file;

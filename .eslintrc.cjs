@@ -256,7 +256,7 @@ module.exports = {
     "no-loop-func": "off",
     "no-loss-of-precision": ["error"],
     "no-magic-numbers": ["error", {
-      ignore: [-1, 0, 1, 2],
+      ignore: [-1, 0, 1, 2, 100],
     }],
     "no-misleading-character-class": "off",
     "no-mixed-operators": "off",

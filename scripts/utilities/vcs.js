@@ -29,10 +29,12 @@ async function getChangedFiles() {
       showStatus: true,
     });
 
-    __changedFiles = committedFiles.concat(unCommittedFiles)
-      .filter(notDeletedIn(unCommittedFiles))
-      .filter(notDeletedIn(committedFiles))
-      .map(({ filename }) => filename);
+    if (__changedFiles === null) {
+      __changedFiles = committedFiles.concat(unCommittedFiles)
+        .filter(notDeletedIn(unCommittedFiles))
+        .filter(notDeletedIn(committedFiles))
+        .map(({ filename }) => filename);
+    }
   }
 
   return __changedFiles;
@@ -43,7 +45,7 @@ async function getChangedPackages() {
 
   const changedPackages = new Set();
   for (const changedFile of changedFiles) {
-    const pathMatch = /packages\/([^/]+)\//.exec(changedFile);
+    const pathMatch = /packages\/[^/]+\//.exec(changedFile);
     if (pathMatch !== null) {
       const [, packageName] = pathMatch;
       changedPackages.add(packageName);
