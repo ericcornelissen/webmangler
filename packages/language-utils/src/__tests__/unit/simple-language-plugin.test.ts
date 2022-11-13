@@ -5,7 +5,6 @@ import type { SinonStub } from "sinon";
 import type {
   EmbedsGetter,
   ExpressionFactory,
-  SimpleLanguagePluginOptions,
 } from "../../simple-language-plugin.class";
 
 import { expect, use as chaiUse } from "chai";
@@ -16,11 +15,7 @@ import SimpleLanguagePlugin from "../../simple-language-plugin.class";
 
 chaiUse(sinonChai);
 
-class ConcreteSimpleLanguagePlugin extends SimpleLanguagePlugin {
-  constructor(params: SimpleLanguagePluginOptions) {
-    super(params);
-  }
-}
+class ConcreteSimpleLanguagePlugin extends SimpleLanguagePlugin { }
 
 suite("SimpleLanguagePlugin", function() {
   suite("::getEmbeds", function() {

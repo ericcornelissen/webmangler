@@ -1,7 +1,6 @@
 import type {
   MangleExpression,
   WebManglerEmbed,
-  WebManglerLanguagePlugin,
 } from "@webmangler/types";
 
 import {
@@ -13,11 +12,7 @@ import * as sinon from "sinon";
 
 import MultiLanguagePlugin from "../../multi-language-plugin.class";
 
-class ConcreteMultiLanguagePlugin extends MultiLanguagePlugin {
-  constructor(plugins: WebManglerLanguagePlugin[]) {
-    super(plugins);
-  }
-}
+class ConcreteMultiLanguagePlugin extends MultiLanguagePlugin { }
 
 suite("MultiLanguagePlugin", function() {
   suite("::constructor", function() {
@@ -154,7 +149,7 @@ suite("MultiLanguagePlugin", function() {
             getExpressions: sinon.stub().returns(expressionsMap),
           });
 
-          expressionsMap.forEach((value, key) => expected.set(key, value)),
+          expressionsMap.forEach((value, key) => expected.set(key, value));
           plugins.push(plugin);
         }
 

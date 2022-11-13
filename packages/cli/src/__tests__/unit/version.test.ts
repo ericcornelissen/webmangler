@@ -60,7 +60,8 @@ suite("Version data", function() {
 
     path.resolve.onFirstCall().returns(pathToCliManifest);
     fs.openSync.callsFake((filePath) => {
-      const fileHandle = handlesCounter++;
+      handlesCounter += 1;
+      const fileHandle = handlesCounter;
       fileHandleToPath.set(fileHandle, filePath);
       filePathToHandle.set(filePath, fileHandle);
       return fileHandle;
@@ -102,7 +103,8 @@ suite("Version data", function() {
 
     path.resolve.onSecondCall().returns(pathToCoreManifest);
     fs.openSync.callsFake((filePath) => {
-      const fileHandle = handlesCounter++;
+      handlesCounter += 1;
+      const fileHandle = handlesCounter;
       fileHandleToPath.set(fileHandle, filePath);
       filePathToHandle.set(filePath, fileHandle);
       return fileHandle;

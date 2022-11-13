@@ -268,10 +268,10 @@ suite("Embeds", function() {
         ["hello", "world"],
       ]);
 
-
       let i = 0;
       mapping.forEach((value) => {
-        mapFn.onCall(i++).returns(value);
+        mapFn.onCall(i).returns(value);
+        i += 1;
       });
 
       const list = mapping.keys();
@@ -670,7 +670,8 @@ suite("Embeds", function() {
 
       let i = 0;
       mapping.forEach((value) => {
-        reduceFn.onCall(i++).returns(value);
+        reduceFn.onCall(i).returns(value);
+        i += 1;
       });
 
       const list = mapping.keys();
@@ -694,7 +695,8 @@ suite("Embeds", function() {
 
       let i = 0;
       mapping.forEach((value) => {
-        reduceFn.onCall(i++).returns(value);
+        reduceFn.onCall(i).returns(value);
+        i += 1;
       });
 
       const list = Array.from(mapping.keys());
@@ -773,7 +775,8 @@ suite("Embeds", function() {
 
       let i = 0;
       mapping.forEach((value) => {
-        reduceFn.onCall(i++).returns(value);
+        reduceFn.onCall(i).returns(value);
+        i += 1;
       });
 
       const list = mapping.keys();
@@ -800,7 +803,8 @@ suite("Embeds", function() {
 
       let i = 0;
       mapping.forEach((value) => {
-        reduceFn.onCall(i++).returns(value);
+        reduceFn.onCall(i).returns(value);
+        i += 1;
       });
 
       const list = Array.from(mapping.keys());

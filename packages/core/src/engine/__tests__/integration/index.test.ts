@@ -697,13 +697,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".c, .a { }", "[a-z]+")
                 .returns(["c", "a"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),
@@ -729,13 +728,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".b { } .a { }", "[a-z]+")
                 .returns(["b", "a"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),
@@ -762,13 +760,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".b, .a, .z { } .a.b { }", "[a-z]+")
                 .returns(["b", "a", "z", "a", "b"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),
@@ -794,13 +791,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".b, .z, .a { } .a.b { }", "[a-z]+")
                 .returns(["b", "z", "a", "a", "b"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),
@@ -826,13 +822,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".z, .b, .a { } .a.b { }", "[a-z]+")
                 .returns(["z", "b", "a", "a", "b"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),
@@ -858,13 +853,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".b, .a, .x, .y { }", "[a-z]+")
                 .returns(["b", "a", "x", "y"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),
@@ -890,13 +884,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".b, .a, .c, .d { }", "[a-z]+")
                 .returns(["b", "a", "c", "d"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),
@@ -922,13 +915,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".d, .c, .b, .a { }", "[a-z]+")
                 .returns(["d", "c", "b", "a"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),
@@ -954,13 +946,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".c, .d, .b, .a { }", "[a-z]+")
                 .returns(["c", "d", "b", "a"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),
@@ -986,13 +977,12 @@ suite("ManglerEngine", function() {
                 .withArgs(".x, .a, .b { }", "[a-z]+")
                 .returns(["x", "a", "b"]),
               replaceAll: sinon.stub()
-                .callsFake((content, map) => {
-                  map.forEach((value: string, key: string) => {
-                    const expr = new RegExp(key, "g");
-                    content = content.replace(expr, value);
-                  });
-
-                  return content;
+                .callsFake((content: string, map: Map<string, string>) => {
+                  return Array.from(map.entries())
+                    .reduce((newContent, [key, value]) => {
+                      const expr = new RegExp(key, "g");
+                      return newContent.replace(expr, value);
+                    }, content);
                 }),
             })]],
           ]),

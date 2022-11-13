@@ -14,14 +14,14 @@ function getAllMatches(
   input: string,
   pattern: string,
 ): ReadonlyArray<string> {
-  const matches: string[] = [];
-  Array.from(expressions).some((expression) => {
-    for (const match of expression.findAll(input, pattern)) {
-      matches.push(match);
-    }
-  });
+  return Array.from(expressions)
+    .reduce((matches: string[], expression: MangleExpression) => {
+      for (const match of expression.findAll(input, pattern)) {
+        matches.push(match);
+      }
 
-  return matches;
+      return matches;
+    }, []);
 }
 
 export {

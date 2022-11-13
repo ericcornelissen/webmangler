@@ -33,7 +33,7 @@ suite("Plugin method checks", function() {
     test("method returns nothing", function() {
       const constructor = function() {
         return {
-          options: () => void 0,
+          options: () => undefined,
         };
       } as unknown as WebManglerPluginConstructor;
 

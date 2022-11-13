@@ -24,11 +24,7 @@ suite("MultiManglerPlugin", function() {
       toArrayIfNeeded,
     });
 
-    class ConcreteMultiManglerPlugin extends MultiManglerPlugin {
-      constructor(options: ReadonlyArray<WebManglerPlugin>) {
-        super(options);
-      }
-    }
+    class ConcreteMultiManglerPlugin extends MultiManglerPlugin { }
 
     createMultiManglerPlugin = (options: ReadonlyArray<WebManglerPlugin>) => {
       return new ConcreteMultiManglerPlugin(options);

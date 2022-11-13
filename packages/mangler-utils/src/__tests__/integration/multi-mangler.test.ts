@@ -1,5 +1,3 @@
-import type { WebManglerPlugin } from "@webmangler/types";
-
 import { WebManglerPluginMock } from "@webmangler/testing";
 import { expect, use as chaiUse } from "chai";
 import * as sinonChai from "sinon-chai";
@@ -9,11 +7,7 @@ import { MultiManglerPlugin } from "../../index";
 chaiUse(sinonChai);
 
 suite("MultiManglerPlugin", function() {
-  class ConcreteMultiManglerPlugin extends MultiManglerPlugin {
-    constructor(plugins: ReadonlyArray<WebManglerPlugin>) {
-      super(plugins);
-    }
-  }
+  class ConcreteMultiManglerPlugin extends MultiManglerPlugin { }
 
   test("one plugin", function() {
     const subPlugin = new WebManglerPluginMock();

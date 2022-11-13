@@ -8,6 +8,8 @@ import type {
 
 import * as chalk from "chalk";
 
+const tooLittleChangeThreshold = 0.01;
+
 /**
  * The default reporter for the _WebMangler_ CLI.
  */
@@ -87,14 +89,14 @@ class DefaultReporter implements Reporter {
     changePercentage: number;
   }): string {
     if (changePercentage < 0) {
-      if (changePercentage > -0.01) {
+      if (changePercentage > -tooLittleChangeThreshold) {
         return chalk.green("<-0.01%");
       }
 
       const roundedPercentage = this.roundToTwoDecimalPlaces(changePercentage);
       return chalk.greenBright(`${roundedPercentage}%`);
     } else if (changePercentage > 0) {
-      if (changePercentage < 0.01) {
+      if (changePercentage < tooLittleChangeThreshold) {
         return chalk.red("<+0.01%");
       }
 

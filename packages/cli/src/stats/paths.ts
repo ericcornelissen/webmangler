@@ -98,7 +98,7 @@ function buildCommonDir({
     const min = Math.min(pathToA.length, pathToB.length);
 
     const result = [];
-    for (let i = 0; i < min; i++) {
+    for (let i = 0; i < min; i += 1) {
       if (pathToA[i] === pathToB[i]) {
         result.push(pathToA[i]);
       } else {

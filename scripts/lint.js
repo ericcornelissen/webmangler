@@ -115,6 +115,8 @@ function getLintersForLanguages(languages) {
       return [
         newEslintConfig(ymlExts),
       ];
+    default:
+      throw new Error(`unsupported language ${language}`);
     }
   });
 }

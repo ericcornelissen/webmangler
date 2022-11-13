@@ -48,7 +48,7 @@ suite("NameGenerator", function() {
         {
           charSet: ALL_LOWERCASE_CHARS as CharSet,
           samples: [
-            { inc: ALL_LOWERCASE_CHARS.length**2, expected: "za" },
+            { inc: ALL_LOWERCASE_CHARS.length ** 2, expected: "za" },
             { inc: ALL_LOWERCASE_CHARS.length - 2, expected: "zz" },
             { inc: 0, expected: "aaa" },
             { inc: 0, expected: "aab" },
@@ -288,7 +288,7 @@ suite("NameGenerator", function() {
         });
 
         for (const { inc, expected } of samples) {
-          for (let i = 0; i < inc; i++) {
+          for (let i = 0; i < inc; i += 1) {
             g.nextName();
           }
 

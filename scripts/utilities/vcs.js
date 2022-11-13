@@ -29,10 +29,12 @@ async function getChangedFiles() {
       showStatus: true,
     });
 
-    __changedFiles = committedFiles.concat(unCommittedFiles)
-      .filter(notDeletedIn(unCommittedFiles))
-      .filter(notDeletedIn(committedFiles))
-      .map(({ filename }) => filename);
+    if (__changedFiles === null) {
+      __changedFiles = committedFiles.concat(unCommittedFiles)
+        .filter(notDeletedIn(unCommittedFiles))
+        .filter(notDeletedIn(committedFiles))
+        .map(({ filename }) => filename);
+    }
   }
 
   return __changedFiles;

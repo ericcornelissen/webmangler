@@ -109,11 +109,11 @@ function hasFiles(pkg, test) {
     for (const entry of fs.readdirSync(folder)) {
       const entryPath = path.resolve(folder, entry);
       const stats = fs.statSync(entryPath);
-      if (!stats.isFile()) {
-        const result = helper(entryPath);
+      if (stats.isFile()) {
+        const result = test(entryPath);
         if (result) return result;
       } else {
-        const result = test(entryPath);
+        const result = helper(entryPath);
         if (result) return result;
       }
     }
