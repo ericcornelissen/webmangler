@@ -1,3 +1,5 @@
+// Check out ESLint at: https://eslint.org/
+
 "use strict";
 
 const values = require("./.values.cjs");
@@ -663,20 +665,23 @@ module.exports = {
   ],
 
   ignorePatterns: [
-    `${dependenciesDir}/`,
-    `${testDataDir}/`,
-
-    // Generated & temporary
-    `${reportsDir}/`,
-    `${tempDir}/`,
-    "build/",
-    "lib/",
-
     // Don't ignore configuration files
     `!${githubDir}/`,
     "!.*.cjs",
     "!.*.js",
     "!.*.json",
     "!.*.yml",
+
+    // Generated & temporary
+    `${dependenciesDir}/`,
+    `${testDataDir}/`,
+    `${reportsDir}/`,
+    `${tempDir}/`,
+    "build/",
+    "lib/",
+
+    // @webmangler/cli configuration files
+    "packages/cli/.webmanglerrc.js",
+    "packages/cli/webmangler.config.js",
   ],
 };

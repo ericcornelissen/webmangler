@@ -43,7 +43,7 @@ async function getChangedPackages() {
 
   const changedPackages = new Set();
   for (const changedFile of changedFiles) {
-    const pathMatch = /packages\/([^/]+)\//.exec(changedFile);
+    const pathMatch = /packages\/[^/]+\//.exec(changedFile);
     if (pathMatch !== null) {
       const [, packageName] = pathMatch;
       changedPackages.add(packageName);

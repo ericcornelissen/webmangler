@@ -3,6 +3,8 @@
  * Provides a logger for scripts.
  */
 
+import process from "node:process";
+
 function clearLine() {
   const emptyLine = " ".repeat(process.stdout.columns);
 
