@@ -493,7 +493,6 @@ module.exports = {
         ".mocharc.cjs",
         ".values.cjs",
         "commitlint.config.cjs",
-        "nyc.config.cjs",
       ],
       parser: "espree",
       parserOptions: {
@@ -519,6 +518,7 @@ module.exports = {
     },
     { // Configuration files (ESM)
       files: [
+        "nyc.config.js",
         "stryker.config.js",
       ],
       parser: "espree",

@@ -75,7 +75,7 @@ function compilePackages(packagesStr) {
 
   const packagesList = packagesStr.split(",");
   packagesList.forEach((packageName, i) => {
-    log.reprint(`[${i+1}/${packagesList.length}] `);
+    log.reprint(`[${i + 1}/${packagesList.length}] `);
     log.print(`Compiling packages/${packageName}...`);
     execSync("npm", ["run", "compile"], {
       cwd: path.resolve(paths.packagesDir, packageName),
