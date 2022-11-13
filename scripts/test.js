@@ -104,7 +104,7 @@ function getCommandArgs(argv) {
   }
 
   if (argv.includes(FLAGS.MUTATION)) {
-    cliArgs.push("run", "stryker.config.cjs");
+    cliArgs.push("run", "stryker.config.js");
   }
 
   if (argv.includes(FLAGS.WATCH)) {

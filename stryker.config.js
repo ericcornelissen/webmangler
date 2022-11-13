@@ -1,6 +1,6 @@
-"use strict";
+// Check out Stryker at: https://stryker-mutator.io/
 
-const values = require("./.values.cjs");
+import values from "./.values.cjs";
 
 const {
   cacheDir,
@@ -26,7 +26,7 @@ const oldThreshold = [
   "mangler-html-attributes",
 ];
 
-module.exports = {
+export default {
   coverageAnalysis: "perTest",
   inPlace: false,
   mutate: [
@@ -79,5 +79,5 @@ module.exports = {
   },
 
   tempDirName: `${tempDir}/stryker`,
-  cleanTempDir: false,
+  cleanTempDir: true,
 };
