@@ -866,14 +866,12 @@ module.exports = {
         "regexp/no-super-linear-move": "off",
       },
     },
-    { // Configuration files (JS)
+    { // Configuration files (CJS)
       files: [
         ".eslintrc.cjs",
         ".mocharc.cjs",
         ".values.cjs",
         "commitlint.config.cjs",
-        "nyc.config.cjs",
-        "stryker.config.cjs",
       ],
       parser: "espree",
       parserOptions: {
@@ -899,6 +897,23 @@ module.exports = {
       globals: {
         ...COMMON_JS_GLOBALS,
         __dirname: "readonly",
+      },
+    },
+    { // Configuration files (ESM)
+      files: [
+        "nyc.config.js",
+        "stryker.config.js",
+      ],
+      parser: "espree",
+      parserOptions: {
+        ecmaVersion: 2020,
+      },
+      rules: {
+        // See https://github.com/import-js/eslint-plugin-import#rules
+        "import/no-anonymous-default-export": "off",
+
+        // See: https://github.com/gajus/eslint-plugin-jsdoc#configuration
+        "jsdoc/require-jsdoc": "off",
       },
     },
     { // Configuration files (JSON)

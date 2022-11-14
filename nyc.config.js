@@ -1,8 +1,8 @@
-"use strict";
+// Check out nyc at: https://istanbul.js.org/
 
-const process = require("node:process");
+import process from "node:process";
 
-const values = require("./.values.cjs");
+import values from "./.values.cjs";
 
 const {
   dependenciesDir,
@@ -44,7 +44,7 @@ default:
   testTypeCoverageExclusions = [];
 }
 
-module.exports = {
+export default {
   all: true,
   extends: [
     "@istanbuljs/nyc-config-typescript",

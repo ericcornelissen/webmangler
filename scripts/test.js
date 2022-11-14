@@ -75,7 +75,7 @@ function compilePackages(packagesStr) {
 
   const packagesList = packagesStr.split(",");
   packagesList.forEach((packageName, i) => {
-    log.reprint(`[${i+1}/${packagesList.length}] `);
+    log.reprint(`[${i + 1}/${packagesList.length}] `);
     log.print(`Compiling packages/${packageName}...`);
     execSync("npm", ["run", "compile"], {
       cwd: path.resolve(paths.packagesDir, packageName),
@@ -104,7 +104,7 @@ function getCommandArgs(argv) {
   }
 
   if (argv.includes(FLAGS.MUTATION)) {
-    cliArgs.push("run", "stryker.config.cjs");
+    cliArgs.push("run", "stryker.config.js");
   }
 
   if (argv.includes(FLAGS.WATCH)) {
