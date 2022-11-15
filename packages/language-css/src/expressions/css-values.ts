@@ -59,7 +59,7 @@ function newCssDeclarationValueExpression(
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
  */
-function cssDeclarationValueExpressionFactory(
+function fallback(
   options: CssDeclarationValueOptions,
 ): Iterable<MangleExpression> {
   const config: CssDeclarationValueConfig = {
@@ -71,6 +71,30 @@ function cssDeclarationValueExpressionFactory(
   return [
     ...newCssDeclarationValueExpression(config),
   ];
+}
+
+/**
+ * Get a collection of {@link MangleExpression}s to match the values of CSS
+ * declarations in CSS. This will match:
+ * - Function names (e.g. `attr` in `div { foo: attr(bar); }`).
+ * - Values  (e.g. `bar` in `div { foo: bar; }`).
+ * - Variables names (e.g. `bar` in `div { foo: --bar; }`).
+ *
+ * @param options The {@link CssDeclarationValueOptions}.
+ * @returns A set of {@link MangleExpression}s.
+ */
+function cssDeclarationValueExpressionFactory(
+  options: CssDeclarationValueOptions,
+): Iterable<MangleExpression> {
+  if (options.kind === undefined) {
+    return fallback(options);
+  }
+
+  switch (options.kind) {
+  case "function": return [];
+  case "value": return [];
+  case "variable": return [];
+  }
 }
 
 export default cssDeclarationValueExpressionFactory;
