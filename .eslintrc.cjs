@@ -609,6 +609,9 @@ module.exports = {
     "regexp/no-misleading-unicode-character": ["error", {
       fixable: false,
     }],
+    "regexp/no-missing-g-flag": ["error", {
+      strictTypes: true,
+    }],
     "regexp/no-non-standard-flag": "error",
     "regexp/no-obscure-range": ["error", {
       allowed: "alphanumeric",
@@ -947,7 +950,7 @@ module.exports = {
       rules: {
         // See https://eslint.org/docs/rules/
         "capitalized-comments": ["error", "always", {
-          ignorePattern: "^\\s*tag=",
+          ignorePattern: "^(\\s*tag=|\\s*v\\d+\\.\\d+\\.\\d+)",
         }],
         "max-len": "off",
         "no-multiple-empty-lines": "off",
