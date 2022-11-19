@@ -6,7 +6,9 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
-type QuerySelectorConfig = QuerySelectorOptions;
+type QuerySelectorConfig = QuerySelectorOptions & {
+  readonly caseSensitive?: boolean;
+};
 
 /**
  * Get a {@link MangleExpression} to match query selectors in CSS, e.g. `foobar`
@@ -20,6 +22,7 @@ function newCssSelectorExpression(
 ): Iterable<MangleExpression> {
   return [
     new SingleGroupMangleExpression({
+      caseSensitive: config.caseSensitive,
       patternTemplate: `
         (?:
           (?:${patterns.anyString}|${patterns.comment}|${patterns.ruleset})
@@ -77,9 +80,10 @@ function fallback(
  */
 function newAttributeSelectorExpression(): Iterable<MangleExpression> {
   return newCssSelectorExpression({
+    caseSensitive: false,
     kind: "attribute",
     prefix: /\[\s*/.source,
-    suffix: /\s*(?:]|${attributeOperators})/.source
+    suffix: /\s*(?:\]|$\{attributeOperators\})/.source
       .replace("${attributeOperators}", patterns.attributeOperators),
   });
 }
@@ -108,7 +112,6 @@ function newElementSelectorExpression(): Iterable<MangleExpression> {
     kind: "element",
   });
 }
-
 
 /**
  * Get {@link MangleExpression}s to match query selectors for IDs in CSS, e.g.
@@ -144,12 +147,12 @@ function querySelectorExpressionFactory(
     return fallback(options);
   }
 
-  return [
-    ...(options.kind === "attribute" ? newAttributeSelectorExpression() : []),
-    ...(options.kind === "class" ? newClassSelectorExpression() : []),
-    ...(options.kind === "element" ? newElementSelectorExpression() : []),
-    ...(options.kind === "id" ? newIdSelectorExpression() : []),
-  ];
+  switch (options.kind) {
+  case "attribute": return newAttributeSelectorExpression();
+  case "class": return newClassSelectorExpression();
+  case "element": return newElementSelectorExpression();
+  case "id": return newIdSelectorExpression();
+  }
 }
 
 export default querySelectorExpressionFactory;
