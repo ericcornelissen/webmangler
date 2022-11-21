@@ -27,7 +27,7 @@
     "test:watch": "node scripts/test.js --watch"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "17.2.0",
+    "@commitlint/config-conventional": "17.3.0",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "@stryker-mutator/core": "6.3.0",
     "@stryker-mutator/mocha-runner": "6.3.0",
@@ -37,11 +37,11 @@
     "@types/node": "18.11.9",
     "@types/sinon": "10.0.13",
     "@types/sinon-chai": "3.2.9",
-    "@typescript-eslint/eslint-plugin": "5.42.1",
-    "@typescript-eslint/parser": "5.42.1",
+    "@typescript-eslint/eslint-plugin": "5.44.0",
+    "@typescript-eslint/parser": "5.44.0",
     "chai": "4.3.7",
-    "commitlint": "17.2.0",
-    "eslint": "8.27.0",
+    "commitlint": "17.3.0",
+    "eslint": "8.28.0",
     "eslint-import-resolver-typescript": "3.5.2",
     "eslint-plugin-chai-expect": "3.0.0",
     "eslint-plugin-import": "2.26.0",
@@ -55,7 +55,7 @@
     "fast-check": "3.3.0",
     "git-changed-files": "1.0.0",
     "husky": "8.0.2",
-    "licensee": "9.0.0",
+    "licensee": "10.0.0",
     "markdownlint-cli": "0.32.2",
     "micromatch": "4.0.5",
     "mocha": "10.1.0",
@@ -64,7 +64,7 @@
     "sinon-chai": "3.7.0",
     "ts-node": "10.9.1",
     "tsconfig-paths": "4.1.0",
-    "typescript": "4.8.4"
+    "typescript": "4.9.3"
   },
   "workspaces": [
     "packages/benchmarking",
