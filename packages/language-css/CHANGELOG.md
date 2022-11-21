@@ -8,7 +8,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix bug where attribute selectors would be mangled consistently if cased
+  differently. ([#430])
 
 ## [0.1.30] - 2022-11-04
 
@@ -64,5 +65,6 @@ Versioning].
 [#374]: https://github.com/ericcornelissen/webmangler/pull/374
 [#404]: https://github.com/ericcornelissen/webmangler/pull/404
 [#408]: https://github.com/ericcornelissen/webmangler/pull/408
+[#430]: https://github.com/ericcornelissen/webmangler/pull/430
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
