@@ -21,11 +21,11 @@ suite("CSS - Query Selector Expression Factory", function() {
     readonly name: string;
     readonly pattern: string;
     readonly factoryOptions: Pick<QuerySelectorOptions, "kind">;
-    readonly expected: string[];
-    getValuesSets(): CssRulesetValuesSets[];
+    readonly expected: ReadonlyArray<string>;
+    getValuesSets(): ReadonlyArray<CssRulesetValuesSets>;
   }
 
-  const scenarios: TestScenario[] = [
+  const scenarios: ReadonlyArray<TestScenario> = [
     {
       name: "one selector, no configuration",
       pattern: "[a-z]+",
@@ -37,6 +37,24 @@ suite("CSS - Query Selector Expression Factory", function() {
         {
           beforeSelector: valuePresets.beforeSelector,
           selector: ["div"],
+          afterSelector: valuePresets.afterSelector,
+        },
+      ],
+    },
+    {
+      name: "attribute selector",
+      pattern: "[a-z]+",
+      factoryOptions: {
+        kind: "attribute",
+      },
+      expected: ["foobar"],
+      getValuesSets: () => [
+        {
+          beforeSelector: valuePresets.beforeSelector,
+          selector: [
+            "[foobar]",
+            "[FoObAr]",
+          ],
           afterSelector: valuePresets.afterSelector,
         },
       ],
