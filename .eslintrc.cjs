@@ -912,6 +912,8 @@ module.exports = {
         ecmaVersion: 2020,
       },
       rules: {
+        "no-magic-numbers": "off",
+
         // See https://github.com/import-js/eslint-plugin-import#rules
         "import/no-anonymous-default-export": "off",
 
