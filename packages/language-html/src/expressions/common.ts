@@ -30,8 +30,8 @@ const singleQuotedString = /(?:'[^']*')/.source;
  * Regular Expression pattern as a string for a string in HTML.
  */
 const anyString = /(?:$\{doubleQuotedString\}|$\{singleQuotedString\})/.source
-  .replace("${doubleQuotedString}", doubleQuotedString)
-  .replace("${singleQuotedString}", singleQuotedString);
+  .replace("$\\{doubleQuotedString\\}", doubleQuotedString)
+  .replace("$\\{singleQuotedString\\}", singleQuotedString);
 
 /**
  * Regular Expression pattern as a string for valid characters after an
@@ -44,13 +44,13 @@ const afterAttribute = /(?:[\s/>])/.source;
  * attribute name in HTML.
  */
 const afterAttributeName = /(?:=|$\{afterAttribute\})/.source
-  .replace("${afterAttribute}", afterAttribute);
+  .replace("$\\{afterAttribute\\}", afterAttribute);
 
 /**
  * Regular Expression pattern as a string for any number of attributes in HTML.
  */
 const attributes = /(?:[^\s=>]+(?:\s*=\s*(?:$\{anyString\}|[^\s"'>]+))?\s+)+/.source
-  .replace("${anyString}", anyString);
+  .replace("$\\{anyString\\}", anyString);
 
 /**
  * Regular Expression pattern as a string of a comment in HTML.
