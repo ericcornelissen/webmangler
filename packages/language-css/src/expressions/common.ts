@@ -7,26 +7,26 @@ const QUOTES_ARRAY = ["\"", "'"];
  * Regular Expression pattern as a string of ways to combine query selectors in
  * CSS.
  */
-const querySelectorCombiners = /(?:\s|,|>|\+|~)/.source;
+const querySelectorCombiners = /(?:[\s+,>~])/.source;
 
 /**
  * Regular Expression pattern as a string of characters that may appear after
  * the end of a query selector in CSS.
  */
-const allowedAfterSelector = /(?:${querySelectorCombiners}|\.|#|\[|:|\))/.source
-  .replace("${querySelectorCombiners}", querySelectorCombiners);
+const allowedAfterSelector = /(?:$\{querySelectorCombiners\}|[#).:[])/.source
+  .replace("$\\{querySelectorCombiners\\}", querySelectorCombiners);
 
 /**
  * Regular Expression pattern as a string of characters that may appear before
  * the start of a query selector in CSS.
  */
-const allowedBeforeSelector = /(?:${querySelectorCombiners}|\()/.source
-  .replace("${querySelectorCombiners}", querySelectorCombiners);
+const allowedBeforeSelector = /(?:$\{querySelectorCombiners\}|\()/.source
+  .replace("$\\{querySelectorCombiners\\}", querySelectorCombiners);
 
 /**
  * Regular Expression pattern as a string of all arithmetic operators in CSS.
  */
-const arithmeticOperators = /(?:\+|-|\*|\/)/.source;
+const arithmeticOperators = /(?:[*+\-/])/.source;
 
 /**
  * Regular Expression pattern as a string of  all attribute operators in CSS.
@@ -51,20 +51,20 @@ const singleQuotedString = /(?:'(?:\\'|[^'])*')/.source;
 /**
  * Regular Expression pattern as a string for a string in CSS.
  */
-const anyString = /(?:${doubleQuotedString}|${singleQuotedString})/.source
-  .replace("${doubleQuotedString}", doubleQuotedString)
-  .replace("${singleQuotedString}", singleQuotedString);
+const anyString = /(?:$\{doubleQuotedString\}|$\{singleQuotedString\})/.source
+  .replace("$\\{doubleQuotedString\\}", doubleQuotedString)
+  .replace("$\\{singleQuotedString\\}", singleQuotedString);
 
 /**
  * Regular Expression pattern as a string for quotes in CSS.
  */
-const quotes = /(?:"|')/.source;
+const quotes = /(?:["'])/.source;
 
 /**
  * Regular Expression pattern as a string for a CSS ruleset.
  */
-const ruleset = /(?:\{(?:${anyString}|[^}'"])*?\})/.source
-  .replace("${anyString}", anyString);
+const ruleset = /(?:\{(?:$\{anyString\}|[^"'}])*\})/.source
+  .replace("$\\{anyString\\}", anyString);
 
 /**
  * An object of common Regular Expression patterns in CSS.

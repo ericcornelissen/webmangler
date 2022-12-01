@@ -3,7 +3,7 @@ import type { WebManglerEmbed, WebManglerFile } from "@webmangler/types";
 /**
  * A regular expression to find media queries in CSS.
  */
-const REGEXP_MEDIA_QUERY = /(?:\/\*[^]*?\*\/|(?<q>@media\s+[^\s][^{]*{)(?<v>(?:[^{}]*{[^}]*})*[^{}]*)})/gmi;
+const REGEXP_MEDIA_QUERY = /\/\*[^]*?\*\/|(?<q>@media\s+\S[^{]*\{)(?<v>(?:[^{}]*\{[^}]*\})*[^{}]*)\}/gi;
 
 /**
  * Convert a {@link REGEXP_MEDIA_QUERY} match into a {@link WebManglerEmbed}.
