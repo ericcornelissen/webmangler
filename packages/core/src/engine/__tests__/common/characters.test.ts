@@ -7,7 +7,7 @@ import {
 
 suite("Characters", function() {
   suite("::ALL_LOWERCASE_CHARS", function() {
-    const allowedCharactersExpr = /[a-z]{1}/;
+    const allowedCharactersExpr = /[a-z]/;
 
     test("valid characters", function() {
       for (const character of ALL_LOWERCASE_CHARS) {
@@ -25,7 +25,7 @@ suite("Characters", function() {
   });
 
   suite("::ALL_UPPERCASE_CHARS", function() {
-    const allowedCharactersExpr = /[A-Z]{1}/;
+    const allowedCharactersExpr = /[A-Z]/;
 
     test("valid characters", function() {
       for (const character of ALL_UPPERCASE_CHARS) {
