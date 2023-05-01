@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Add support for the `kind` field of `CssDeclarationValueOptions`. ([#429])
 - Fix bug where attribute selectors would be mangled consistently if cased
   differently. ([#430])
 
@@ -65,6 +66,7 @@ Versioning].
 [#374]: https://github.com/ericcornelissen/webmangler/pull/374
 [#404]: https://github.com/ericcornelissen/webmangler/pull/404
 [#408]: https://github.com/ericcornelissen/webmangler/pull/408
+[#429]: https://github.com/ericcornelissen/webmangler/pull/429
 [#430]: https://github.com/ericcornelissen/webmangler/pull/430
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
