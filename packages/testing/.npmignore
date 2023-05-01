@@ -1,5 +1,9 @@
-src/
-tsconfig.*
+*
 
-# JavaScript files that are always empty
-types.js
+# Allowlist
+!lib/**
+lib/**/types.js
+!CHANGELOG.md
+!LICENSE
+!package.json
+!README.md
