@@ -11,7 +11,7 @@ const DEFAULT_IGNORE_PATTERNS: Iterable<string> = [
  * {@link CssVariableMangler}.
  */
 const DEFAULT_PATTERNS: Iterable<string> = [
-  /[a-zA-Z-]+/.source,
+  /[-A-Za-z]+/.source,
 ];
 
 /**

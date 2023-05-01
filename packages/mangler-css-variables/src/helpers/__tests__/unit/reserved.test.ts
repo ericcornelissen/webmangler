@@ -7,7 +7,7 @@ import {
 suite("CSS Variable Mangler reserved helpers", function() {
   suite("::getReserved", function() {
     const ALWAYS_RESERVED: string[] = [
-      "([0-9]|-).*",
+      "[-0-9].*",
     ];
     const DEFAULT_RESERVED: string[] = [];
 
