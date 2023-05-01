@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.7] - 2023-05-01
+
 - Add Sinon.JS v15 support. ([#433])
 - Drop Sinon.JS v11 and v12 support. ([#293])
 - Mocks no longer return per-instance unique values. ([#253])

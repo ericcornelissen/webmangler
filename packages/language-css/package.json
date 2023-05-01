@@ -1,6 +1,6 @@
 {
   "name": "@webmangler/language-css",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "CSS language support for WebMangler",
   "license": "MIT",
   "main": "./lib/index.js",

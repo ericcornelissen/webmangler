@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.11] - 2023-05-01
+
 - Bump minimum `cosmiconfig` from `^7.0.0` to `^8.0.0`. ([#433])
 
 ## [0.1.10] - 2022-11-10

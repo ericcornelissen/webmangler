@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.31] - 2023-05-01
+
 - Add support for the `kind` field of `CssDeclarationValueOptions`. ([#429])
 - Fix bug where attribute selectors would be mangled consistently if cased
   differently. ([#430])
