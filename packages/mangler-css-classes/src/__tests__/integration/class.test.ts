@@ -10,7 +10,7 @@ import CssClassMangler from "../../index";
 suite("CSS Class Mangler", function() {
   suite("Configuration", function() {
     suite("::classNamePattern", function() {
-      const DEFAULT_PATTERNS = ["cls-[a-zA-Z-_]+"];
+      const DEFAULT_PATTERNS = ["cls-[-A-Z_a-z]+"];
 
       test("default patterns", function() {
         const cssClassMangler = new CssClassMangler();
@@ -35,7 +35,7 @@ suite("CSS Class Mangler", function() {
           classNamePattern: patterns,
         });
         const result = cssClassMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ patterns: patterns });
+        expect(result).to.deep.include({ patterns });
       });
     });
 
@@ -55,7 +55,7 @@ suite("CSS Class Mangler", function() {
           ignoreClassNamePattern: ignorePatterns,
         });
         const result = cssClassMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+        expect(result).to.deep.include({ ignorePatterns });
       });
 
       test("multiple custom patterns", function() {
@@ -65,7 +65,7 @@ suite("CSS Class Mangler", function() {
           ignoreClassNamePattern: ignorePatterns,
         });
         const result = cssClassMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+        expect(result).to.deep.include({ ignorePatterns });
       });
     });
 

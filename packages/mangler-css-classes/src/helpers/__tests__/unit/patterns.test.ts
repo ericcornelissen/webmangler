@@ -37,7 +37,7 @@ suite("CSS Class Mangler pattern helpers", function() {
   });
 
   suite("::getPatterns", function() {
-    const DEFAULT_PATTERNS = ["cls-[a-zA-Z-_]+"];
+    const DEFAULT_PATTERNS = ["cls-[-A-Z_a-z]+"];
 
     test("default patterns", function() {
       const result = getPatterns({ });

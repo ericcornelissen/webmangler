@@ -6,7 +6,7 @@ import {
 
 suite("CSS Class Mangler reserved helpers", function() {
   suite("::getReserved", function() {
-    const ALWAYS_RESERVED: string[] = ["(-|[0-9]).*"];
+    const ALWAYS_RESERVED: string[] = ["[-0-9].*"];
     const DEFAULT_RESERVED: string[] = [];
 
     test("default reserved", function() {
