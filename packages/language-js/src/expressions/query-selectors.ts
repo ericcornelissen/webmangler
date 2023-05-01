@@ -123,7 +123,7 @@ function newAttributeSelectorExpression(): Iterable<MangleExpression> {
     ...newQuerySelectorExpressions({
       kind: "attribute",
       prefix: /\[\s*/.source,
-      suffix: /\s*(?:]|=|~=|\|=|\^=|\$=|\*=)/.source,
+      suffix: /\s*(?:[=\]]|[$*^|~]=)/.source,
     }),
     ...newSelectorAsStandaloneStringExpressions(),
   ];
