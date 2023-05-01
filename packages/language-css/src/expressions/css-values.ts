@@ -6,7 +6,7 @@ import type {
 import { SingleGroupMangleExpression } from "@webmangler/language-utils";
 import { patterns } from "./common";
 
-type CssDeclarationValueConfig = Required<CssDeclarationValueOptions>;
+type CssDeclarationValueConfig = CssDeclarationValueOptions;
 
 /**
  * Get a {@link MangleExpression} to match the value of CSS declarations in CSS,
@@ -34,11 +34,11 @@ function newCssDeclarationValueExpression(
               ${patterns.comment}|
               ${patterns.arithmeticOperators}
             )
-            ${config.prefix}
+            ${config.prefix || ""}
           )
           ${SingleGroupMangleExpression.CAPTURE_GROUP}
           (?=
-            ${config.suffix}
+            ${config.suffix || ""}
             (?:
               \\s|,|\\)|\\!|\\;|\\}|
               ${patterns.comment}|
@@ -59,18 +59,92 @@ function newCssDeclarationValueExpression(
  * @param options The {@link CssDeclarationValueOptions}.
  * @returns A set of {@link MangleExpression}s.
  */
-function cssDeclarationValueExpressionFactory(
+function fallback(
   options: CssDeclarationValueOptions,
 ): Iterable<MangleExpression> {
   const config: CssDeclarationValueConfig = {
     kind: options.kind,
-    prefix: options.prefix ? options.prefix : "",
-    suffix: options.suffix ? options.suffix : "",
+    prefix: options.prefix,
+    suffix: options.suffix,
   };
 
   return [
     ...newCssDeclarationValueExpression(config),
   ];
+}
+
+/**
+ * Get {@link MangleExpression}s to match function values in CSS, e.g. `bar` in
+ * `div { foo: attr(bar); }`.
+ *
+ * @returns The {@link MangleExpression}s.
+ */
+function newFunctionExpressions(): Iterable<MangleExpression> {
+  return [
+    ...newCssDeclarationValueExpression({
+      kind: "function",
+      prefix: /(?:ATTR|ATTr|ATtR|ATtr|AtTR|AtTr|AttR|Attr|aTTR|aTTr|aTtR|aTtr|atTR|atTr|attR|attr)\s*\(\s*/.source,
+      suffix: /\s*(?:,[^)]+)?\)/.source,
+    }),
+    ...newCssDeclarationValueExpression({
+      kind: "function",
+      prefix: /(?:VAR|VAr|VaR|Var|vAR|vAr|vaR|var)\s*\(\s*/.source,
+      suffix: /\s*(?:,[^)]+)?\)/.source,
+    }),
+  ];
+}
+
+/**
+ * Get {@link MangleExpression}s to match values in CSS, e.g. `bar` in
+ * `div { foo: bar; }`.
+ *
+ * @returns The {@link MangleExpression}s.
+ */
+function newValueExpressions(): Iterable<MangleExpression> {
+  return [
+    ...newCssDeclarationValueExpression({
+      kind: "value",
+    }),
+  ];
+}
+
+/**
+ * Get {@link MangleExpression}s to match variable names in CSS, e.g. `bar` in
+ * `div { foo: --bar; }`.
+ *
+ * @returns The {@link MangleExpression}s.
+ */
+function newVariableExpressions(): Iterable<MangleExpression> {
+  return [
+    ...newCssDeclarationValueExpression({
+      kind: "variable",
+      prefix: /--/.source,
+    }),
+  ];
+}
+
+/**
+ * Get a collection of {@link MangleExpression}s to match the values of CSS
+ * declarations in CSS. This will match:
+ * - Function names (e.g. `bar` in `div { foo: attr(bar); }`).
+ * - Values  (e.g. `bar` in `div { foo: bar; }`).
+ * - Variables names (e.g. `bar` in `div { foo: --bar; }`).
+ *
+ * @param options The {@link CssDeclarationValueOptions}.
+ * @returns A set of {@link MangleExpression}s.
+ */
+function cssDeclarationValueExpressionFactory(
+  options: CssDeclarationValueOptions,
+): Iterable<MangleExpression> {
+  if (options.kind === undefined) {
+    return fallback(options);
+  }
+
+  switch (options.kind) {
+  case "function": return newFunctionExpressions();
+  case "value": return newValueExpressions();
+  case "variable": return newVariableExpressions();
+  }
 }
 
 export default cssDeclarationValueExpressionFactory;
