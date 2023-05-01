@@ -7,7 +7,7 @@ import HtmlAttributeMangler from "../../index";
 suite("HTML Attribute Mangler", function() {
   suite("Configuration", function() {
     suite("::attrNamePattern", function() {
-      const DEFAULT_PATTERNS = ["data-[a-z-]+"];
+      const DEFAULT_PATTERNS = ["data-[-a-z]+"];
 
       test("default patterns", function() {
         const htmlAttributeMangler = new HtmlAttributeMangler();
@@ -32,7 +32,7 @@ suite("HTML Attribute Mangler", function() {
           attrNamePattern: patterns,
         });
         const result = htmlAttributeMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ patterns: patterns });
+        expect(result).to.deep.include({ patterns });
       });
     });
 
@@ -52,7 +52,7 @@ suite("HTML Attribute Mangler", function() {
           ignoreAttrNamePattern: ignorePatterns,
         });
         const result = htmlAttributeMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+        expect(result).to.deep.include({ ignorePatterns });
       });
 
       test("multiple custom patterns", function() {
@@ -62,7 +62,7 @@ suite("HTML Attribute Mangler", function() {
           ignoreAttrNamePattern: ignorePatterns,
         });
         const result = htmlAttributeMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+        expect(result).to.deep.include({ ignorePatterns });
       });
     });
 

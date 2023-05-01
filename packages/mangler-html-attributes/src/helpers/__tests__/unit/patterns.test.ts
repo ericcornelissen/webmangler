@@ -33,7 +33,7 @@ suite("HTML Attribute Mangler pattern helpers", function() {
   });
 
   suite("::getPatterns", function() {
-    const DEFAULT_PATTERNS = ["data-[a-z-]+"];
+    const DEFAULT_PATTERNS = ["data-[-a-z]+"];
 
     test("default patterns", function() {
       const result = getPatterns({ });

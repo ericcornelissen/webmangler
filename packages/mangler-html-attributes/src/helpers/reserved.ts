@@ -3,7 +3,7 @@
  * illegal HTML attribute names.
  */
 const ALWAYS_RESERVED: string[] = [
-  /([0-9]|-|_).*/.source,
+  /[-0-9_].*/.source,
 ];
 
 /**

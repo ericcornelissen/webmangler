@@ -11,7 +11,7 @@ const DEFAULT_IGNORE_PATTERNS: string[] = [
  * {@link HtmlAttributeMangler}.
  */
 const DEFAULT_PATTERNS: string[] = [
-  /data-[a-z-]+/.source,
+  /data-[-a-z]+/.source,
 ];
 
 /**
