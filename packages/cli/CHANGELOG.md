@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Bump minimum `cosmiconfig` from `^7.0.0` to `^8.0.0`. ([#433])
 
 ## [0.1.10] - 2022-11-10
 
@@ -84,5 +84,6 @@ Versioning].
 [#333]: https://github.com/ericcornelissen/webmangler/pull/333
 [#416]: https://github.com/ericcornelissen/webmangler/pull/416
 [#424]: https://github.com/ericcornelissen/webmangler/pull/424
+[#433]: https://github.com/ericcornelissen/webmangler/pull/433
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"

@@ -1,6 +1,6 @@
 # WebMangler Core
 
-[![NPM Package][npm-image]][npm-url]
+[![npm package][npm-image]][npm-url]
 
 The _WebMangler Core_ is the central package of the _WebMangler_ ecosystem. It
 can be used by itself programmatically or through [other packages and
@@ -11,7 +11,7 @@ plugins](#other-ways-to-use-webmangler).
 Install the `webmangler` core, e.g.:
 
 ```shell
-npm install webmangler --save-dev
+npm install @webmangler/core --save-dev
 ```
 
 And use it programmatically, e.g.:
@@ -46,7 +46,7 @@ HTML, and JavaScript.
 
 - as a CLI - [WebMangler CLI]
 
-[npm-url]: https://www.npmjs.com/package/@webmangler/core "NPM package"
+[npm-url]: https://www.npmjs.com/package/@webmangler/core "npm package"
 [npm-image]: https://img.shields.io/npm/v/@webmangler/core.svg
 
 [webmangler cli]: https://www.npmjs.com/package/@webmangler/cli
