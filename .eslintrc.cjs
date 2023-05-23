@@ -456,6 +456,7 @@ module.exports = {
     "yoda": ["error", "never"],
 
     // See https://github.com/import-js/eslint-plugin-import#rules
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
     "import/default": "error",
     "import/export": "error",
     "import/exports-last": "error",
@@ -466,6 +467,7 @@ module.exports = {
     "import/namespace": "error",
     "import/newline-after-import": ["error", {
       count: 1,
+      considerComments: true,
     }],
     "import/no-absolute-path": "error",
     "import/no-amd": "error",
@@ -518,6 +520,7 @@ module.exports = {
       ],
     }],
     "jsdoc/implements-on-classes": "off",
+    "jsdoc/informative-docs": "off",
     "jsdoc/match-description": ["error", {
       matchDescription: "^([A-Z]|[`\\d_])[\\s\\S]*\\.\\n{0,1}$",
       tags: {
@@ -533,8 +536,8 @@ module.exports = {
       singleLineTags: [],
       noMultilineBlocks: false,
     }],
-    "jsdoc/newline-after-description": ["error", "always"],
     "jsdoc/no-bad-blocks": "error",
+    "jsdoc/no-blank-block-descriptions": "error",
     "jsdoc/no-defaults": "error",
     "jsdoc/no-multi-asterisks": ["error", {
       allowWhitespace: true,
@@ -563,12 +566,21 @@ module.exports = {
     "jsdoc/require-yields": "error",
     "jsdoc/require-yields-check": "error",
     "jsdoc/sort-tags": ["error", {
+      alphabetizeExtras: false,
+      reportTagGroupSpacing: false,
       tagSequence: [
-        "inheritDoc", "default", "example", "param", "returns",
-        "yields", "throws", "since", "version",
+        {
+          tags: [
+            "inheritDoc", "default", "example", "param", "returns",
+            "yields", "throws", "since", "version",
+          ],
+        },
       ],
     }],
-    "jsdoc/tag-lines": ["error", "never"],
+    "jsdoc/tag-lines": ["error", "any", {
+      endLines: 0,
+      startLines: 1,
+    }],
     "jsdoc/text-escaping": "off",
     "jsdoc/valid-types": "off",
 
@@ -606,6 +618,9 @@ module.exports = {
       ignorePartial: false,
     }],
     "regexp/no-legacy-features": "error",
+    "regexp/no-misleading-capturing-group": ["error", {
+      reportBacktrackingEnds: true,
+    }],
     "regexp/no-misleading-unicode-character": ["error", {
       fixable: false,
     }],
@@ -656,6 +671,7 @@ module.exports = {
     }],
     "regexp/prefer-escape-replacement-dollar-char": "error",
     "regexp/prefer-lookaround": ["error", {
+      lookbehind: true,
       strictTypes: true,
     }],
     "regexp/prefer-named-backreference": "error",
@@ -693,6 +709,7 @@ module.exports = {
     "regexp/use-ignore-case": "off",
 
     // See: https://github.com/nodesecurity/eslint-plugin-security#rules
+    "security/detect-bidi-characters": "error",
     "security/detect-buffer-noassert": "error",
     "security/detect-child-process": "error",
     "security/detect-disable-mustache-escape": "off",
@@ -745,6 +762,24 @@ module.exports = {
           prefer: "type-imports",
           disallowTypeAnnotations: false,
         }],
+        "@typescript-eslint/lines-around-comment": ["error", {
+          allowArrayEnd: false,
+          allowArrayStart: true,
+          allowBlockEnd: false,
+          allowBlockStart: true,
+          allowClassEnd: false,
+          allowClassStart: true,
+          allowEnumEnd: false,
+          allowEnumStart: true,
+          allowInterfaceEnd: false,
+          allowInterfaceStart: true,
+          allowModuleEnd: false,
+          allowModuleStart: true,
+          allowObjectEnd: false,
+          allowObjectStart: true,
+          allowTypeEnd: false,
+          allowTypeStart: true,
+        }],
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/member-delimiter-style": ["error", {
           multiline: {
@@ -757,8 +792,11 @@ module.exports = {
           },
           multilineDetection: "brackets",
         }],
+        "@typescript-eslint/no-duplicate-type-constituents": "error",
+        "@typescript-eslint/no-mixed-enums": "error",
         "@typescript-eslint/no-redundant-type-constituents": "error",
         "@typescript-eslint/no-unsafe-declaration-merging": "error",
+        "@typescript-eslint/no-unsafe-enum-comparison": "error",
         "@typescript-eslint/no-useless-empty-export": "error",
         "@typescript-eslint/space-before-blocks": "error",
         "@typescript-eslint/switch-exhaustiveness-check": "error",
@@ -987,6 +1025,7 @@ module.exports = {
           maxBOF: 0,
         }],
         "yml/no-tab-indent": "error",
+        "yml/no-trailing-zeros": "error",
         "yml/plain-scalar": ["error", "always"],
         "yml/quotes": ["error", {
           avoidEscape: true,
@@ -1043,6 +1082,9 @@ module.exports = {
         "import/no-unresolved": "off",
 
         // See: https://typescript-eslint.io/rules/
+        "@typescript-eslint/no-duplicate-type-constituents": "off",
+        "@typescript-eslint/no-mixed-enums": "off",
+        "@typescript-eslint/no-unsafe-enum-comparison": "off",
         "@typescript-eslint/no-var-requires": "off",
       },
     },
@@ -1073,9 +1115,12 @@ module.exports = {
 
         // See: https://typescript-eslint.io/rules/
         "@typescript-eslint/consistent-type-exports": "off",
+        "@typescript-eslint/no-duplicate-type-constituents": "off",
+        "@typescript-eslint/no-mixed-enums": "off",
         "@typescript-eslint/no-redundant-type-constituents": "off",
-        "@typescript-eslint/switch-exhaustiveness-check": "off",
+        "@typescript-eslint/no-unsafe-enum-comparison": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/switch-exhaustiveness-check": "off",
       },
     },
   ],

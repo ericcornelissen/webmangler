@@ -1,2 +1,8 @@
-src/
-tsconfig.*
+*
+
+# Allowlist
+!lib/**
+lib/**/types.js
+!CHANGELOG.md
+!LICENSE
+!package.json

@@ -1,6 +1,6 @@
 {
   "name": "@webmangler/cli",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "The WebMangler Command Line Interface (CLI)",
   "license": "MIT",
   "main": "./lib/index.js",
@@ -37,7 +37,7 @@
     "yargs": "^17.0.0"
   },
   "devDependencies": {
-    "@types/yargs": "17.0.15"
+    "@types/yargs": "17.0.24"
   },
   "peerDependencies": {
     "@webmangler/core": "^0.1.27"

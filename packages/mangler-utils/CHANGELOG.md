@@ -8,6 +8,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.29] - 2023-05-01
+
 - BREAKING: Drop support for generators from `providedOrDefault`. ([#413])
 
 ## [0.1.28] - 2022-09-10
