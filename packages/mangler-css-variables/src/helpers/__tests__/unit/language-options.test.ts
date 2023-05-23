@@ -46,7 +46,7 @@ suite("CSS Variable Mangler language-options helpers", function() {
     test("the `suffix` option", function() {
       const result = getCssVariableUsageExpressionOptions();
       const suffix = result.options.suffix;
-      expect(suffix).to.equal("\\s*(,[^)]+)?\\)");
+      expect(suffix).to.equal("\\s*(?:,[^)]+)?\\)");
     });
   });
 });

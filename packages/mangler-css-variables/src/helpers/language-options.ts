@@ -32,7 +32,7 @@ function getCssVariableUsageExpressionOptions():
     options: {
       kind: "function",
       prefix: /(?:VAR|VAr|VaR|Var|vAR|vAr|vaR|var)\s*\(\s*--/.source,
-      suffix: /\s*(,[^)]+)?\)/u.source,
+      suffix: /\s*(?:,[^)]+)?\)/u.source,
     },
   };
 }

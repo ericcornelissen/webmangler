@@ -29,28 +29,28 @@ const singleQuotedString = /(?:'[^']*')/.source;
 /**
  * Regular Expression pattern as a string for a string in HTML.
  */
-const anyString = /(?:${doubleQuotedString}|${singleQuotedString})/.source
-  .replace("${doubleQuotedString}", doubleQuotedString)
-  .replace("${singleQuotedString}", singleQuotedString);
+const anyString = /(?:$\{doubleQuotedString\}|$\{singleQuotedString\})/.source
+  .replace("$\\{doubleQuotedString\\}", doubleQuotedString)
+  .replace("$\\{singleQuotedString\\}", singleQuotedString);
 
 /**
  * Regular Expression pattern as a string for valid characters after an
  * attribute in HTML.
  */
-const afterAttribute = /(?:\s|\/|>)/.source;
+const afterAttribute = /(?:[\s/>])/.source;
 
 /**
  * Regular Expression pattern as a string for valid characters after an
  * attribute name in HTML.
  */
-const afterAttributeName = /(?:=|${afterAttribute})/.source
-  .replace("${afterAttribute}", afterAttribute);
+const afterAttributeName = /(?:=|$\{afterAttribute\})/.source
+  .replace("$\\{afterAttribute\\}", afterAttribute);
 
 /**
  * Regular Expression pattern as a string for any number of attributes in HTML.
  */
-const attributes = /(?:[^>\s=]+(?:\s*=\s*(?:${anyString}|[^>\s"']+))?\s+)+/.source
-  .replace("${anyString}", anyString);
+const attributes = /(?:[^\s=>]+(?:\s*=\s*(?:$\{anyString\}|[^\s"'>]+))?\s+)+/.source
+  .replace("$\\{anyString\\}", anyString);
 
 /**
  * Regular Expression pattern as a string of a comment in HTML.
@@ -60,12 +60,12 @@ const comment = /(?:<!--[^]*?--!?>)/.source;
 /**
  * Regular Expression pattern as a string for quotes in HTML.
  */
-const quotes = /(?:"|')/.source;
+const quotes = /(?:["'])/.source;
 
 /**
  * Regular Expression pattern as a string for a tag opening in HTML.
  */
-const tagOpen = /(?:<\s*[a-zA-Z0-9]+\s+)/.source;
+const tagOpen = /(?:<\s*[0-9A-Za-z]+\s+)/.source;
 
 /**
  * An object of common Regular Expression patterns in HTML.

@@ -7,7 +7,7 @@ import CssVariableMangler from "../../index";
 suite("CSS Variable Mangler", function() {
   suite("Configuration", function() {
     suite("::cssVarNamePattern", function() {
-      const DEFAULT_PATTERNS = ["[a-zA-Z-]+"];
+      const DEFAULT_PATTERNS = ["[-A-Za-z]+"];
 
       test("default patterns", function() {
         const cssVariableMangler = new CssVariableMangler();
@@ -32,7 +32,7 @@ suite("CSS Variable Mangler", function() {
           cssVarNamePattern: patterns,
         });
         const result = cssVariableMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ patterns: patterns });
+        expect(result).to.deep.include({ patterns });
       });
     });
 
@@ -52,7 +52,7 @@ suite("CSS Variable Mangler", function() {
           ignoreCssVarNamePattern: ignorePatterns,
         });
         const result = cssVariableMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+        expect(result).to.deep.include({ ignorePatterns });
       });
 
       test("multiple custom patterns", function() {
@@ -62,7 +62,7 @@ suite("CSS Variable Mangler", function() {
           ignoreCssVarNamePattern: ignorePatterns,
         });
         const result = cssVariableMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+        expect(result).to.deep.include({ ignorePatterns });
       });
     });
 

@@ -111,7 +111,7 @@ suite("HTML ID Mangler language-options helpers", function() {
     test("the `valuePrefix` option", function() {
       const result = getUrlAttributeExpressionOptions({ });
       const valuePrefix = result.options.valuePrefix;
-      expect(valuePrefix).to.equal("[a-zA-Z0-9\\-_/.?]*(\\?[a-zA-Z0-9_\\-=%]+)?#");
+      expect(valuePrefix).to.equal("[\\w\\-./?]*(?:\\?[\\w%\\-=]+)?#");
     });
 
     test("the `valueSuffix` option", function() {

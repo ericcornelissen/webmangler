@@ -59,7 +59,7 @@ suite("HTML Attribute Mangler language-options helpers", function() {
 
     test("the `suffix` option", function() {
       const suffix = subject.options.suffix;
-      expect(suffix).to.equal("\\s*(?:]|(?:=|~=|\\|=|\\^=|\\$=|\\*=))");
+      expect(suffix).to.equal("\\s*(?:[=\\]]|[$*^|~]=)");
     });
   });
 
@@ -79,12 +79,12 @@ suite("HTML Attribute Mangler language-options helpers", function() {
 
     test("the `prefix` option", function() {
       const prefix = subject.options.prefix;
-      expect(prefix).to.equal("(?:ATTR|ATTr|ATtR|AtTR|ATtr|AtTr|AttR|Attr|aTTR|aTTr|aTtR|atTR|aTtr|atTr|attR|attr)\\s*\\(\\s*");
+      expect(prefix).to.equal("(?:ATTR|ATTr|ATtR|ATtr|AtTR|AtTr|AttR|Attr|aTTR|aTTr|aTtR|aTtr|atTR|atTr|attR|attr)\\s*\\(\\s*");
     });
 
     test("the `suffix` option", function() {
       const suffix = subject.options.suffix;
-      expect(suffix).to.equal("(\\s+([a-zA-Z]+|%))?\\s*(,[^)]+)?\\)");
+      expect(suffix).to.equal("(?:\\s+(?:[A-Za-z]+|%))?\\s*(?:,[^)]+)?\\)");
     });
   });
 });

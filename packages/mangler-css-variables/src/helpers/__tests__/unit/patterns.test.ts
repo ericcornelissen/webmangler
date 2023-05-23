@@ -39,7 +39,7 @@ suite("CSS Variable Mangler patterns helpers", function() {
   });
 
   suite("::getPatterns", function() {
-    const DEFAULT_PATTERNS = ["[a-zA-Z-]+"];
+    const DEFAULT_PATTERNS = ["[-A-Za-z]+"];
 
     test("default patterns", function() {
       const result = getPatterns({ });

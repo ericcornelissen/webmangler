@@ -3,7 +3,7 @@
  * illegal CSS variable names.
  */
 const ALWAYS_RESERVED: string[] = [
-  /([0-9]|-).*/.source,
+  /[-0-9].*/.source,
 ];
 
 /**

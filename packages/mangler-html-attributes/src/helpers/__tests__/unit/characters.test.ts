@@ -6,7 +6,7 @@ import {
 
 suite("HTML Attribute Mangler characters helpers", function() {
   suite("::getCharacterSet", function() {
-    const allowedCharactersExpr = /([a-z0-9]|-|_){1}/;
+    const allowedCharactersExpr = /[-0-9_a-z]/;
 
     test("valid characters", function() {
       const characters = getCharacterSet();

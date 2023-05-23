@@ -10,7 +10,7 @@ import HtmlIdMangler from "../../index";
 suite("HTML ID Mangler", function() {
   suite("Configuration", function() {
     suite("::idNamePatterns", function() {
-      const DEFAULT_PATTERNS = ["id-[a-zA-Z-_]+"];
+      const DEFAULT_PATTERNS = ["id-[-A-Z_a-z]+"];
 
       test("default patterns", function() {
         const htmlIdMangler = new HtmlIdMangler();
@@ -31,7 +31,7 @@ suite("HTML ID Mangler", function() {
 
         const htmlIdMangler = new HtmlIdMangler({ idNamePattern: patterns });
         const result = htmlIdMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ patterns: patterns });
+        expect(result).to.deep.include({ patterns });
       });
     });
 
@@ -51,7 +51,7 @@ suite("HTML ID Mangler", function() {
           ignoreIdNamePattern: ignorePatterns,
         });
         const result = htmlIdMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+        expect(result).to.deep.include({ ignorePatterns });
       });
 
       test("multiple custom patterns", function() {
@@ -61,13 +61,12 @@ suite("HTML ID Mangler", function() {
           ignoreIdNamePattern: ignorePatterns,
         });
         const result = htmlIdMangler.options() as MangleOptions;
-        expect(result).to.deep.include({ ignorePatterns: ignorePatterns });
+        expect(result).to.deep.include({ ignorePatterns });
       });
     });
 
     suite("::reservedIds", function() {
       test("default reserved", function() {
-
         const htmlIdMangler = new HtmlIdMangler();
         const result = htmlIdMangler.options() as MangleOptions;
         expect(result).to.have.property("reservedNames").that.is.empty;

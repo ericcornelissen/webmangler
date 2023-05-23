@@ -7,7 +7,7 @@ import {
 suite("HTML Attribute Mangler reserved helpers", function() {
   suite("::getReserved", function() {
     const ALWAYS_RESERVED: string[] = [
-      "([0-9]|-|_).*",
+      "[-0-9_].*",
     ];
     const DEFAULT_RESERVED: string[] = [];
 

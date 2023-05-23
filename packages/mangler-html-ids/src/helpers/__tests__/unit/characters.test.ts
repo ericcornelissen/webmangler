@@ -6,7 +6,7 @@ import {
 
 suite("HTML ID Mangler characters helpers", function() {
   suite("::getCharacterSet", function() {
-    const allowedCharactersExpr = /([a-zA-Z0-9]|-|_){1}/;
+    const allowedCharactersExpr = /[\w-]/;
 
     test("valid characters", function() {
       const characters = getCharacterSet();

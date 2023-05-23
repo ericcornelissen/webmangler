@@ -34,7 +34,7 @@ suite("HTML ID Mangler pattern helpers", function() {
 
   suite("::getPatterns", function() {
     const DEFAULT_PATTERNS = [
-      "id-[a-zA-Z-_]+",
+      "id-[-A-Z_a-z]+",
     ];
 
     test("default patterns", function() {
