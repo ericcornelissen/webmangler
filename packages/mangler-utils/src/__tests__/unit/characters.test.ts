@@ -14,7 +14,7 @@ suite("Character sets", function() {
 
   suite("ALL_ALPHANUMERIC_CHARS", function() {
     test("only contains letters and numbers", function() {
-      const expr = /^[A-Za-z0-9]$/;
+      const expr = /^[0-9A-Za-z]$/;
       for (const character of ALL_ALPHANUMERIC_CHARS) {
         const result = expr.test(character);
         expect(result, `${character} is not alphanumeric`).to.be.true;
@@ -64,7 +64,7 @@ suite("Character sets", function() {
 
   suite("ALL_NUMBER_CHARS", function() {
     test("only contains numeric characters", function() {
-      const expr = /^[0-9]$/;
+      const expr = /^\d$/;
       for (const character of ALL_NUMBER_CHARS) {
         const result = expr.test(character);
         expect(result, `${character} is not a number`).to.be.true;
