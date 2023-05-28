@@ -8,6 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Add support for Node.js v20. ([#444])
 - Correct installation instructions in the README. ([#426])
 
 ## [0.1.28] - 2022-11-10
@@ -203,5 +204,6 @@ Versioning].
 [#418]: https://github.com/ericcornelissen/webmangler/pull/418
 [#424]: https://github.com/ericcornelissen/webmangler/pull/424
 [#426]: https://github.com/ericcornelissen/webmangler/pull/426
+[#444]: https://github.com/ericcornelissen/webmangler/pull/444
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
