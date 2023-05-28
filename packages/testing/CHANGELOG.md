@@ -8,7 +8,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Drop Sinon.JS v13 and v14 support. ([#445])
 
 ## [0.1.7] - 2023-05-01
 
@@ -62,6 +62,7 @@ Versioning].
 [#253]: https://github.com/ericcornelissen/webmangler/pull/253
 [#293]: https://github.com/ericcornelissen/webmangler/pull/293
 [#433]: https://github.com/ericcornelissen/webmangler/pull/433
+[#445]: https://github.com/ericcornelissen/webmangler/pull/445
 [56b0fb6]: https://github.com/ericcornelissen/webmangler/commit/56b0fb6c3755d84d556c528610dc7387d6327b47
 [6175995]: https://github.com/ericcornelissen/webmangler/commit/617599564ec741f4b5a6ca0f47295f3db1817fb5
 [775c343]: https://github.com/ericcornelissen/webmangler/commit/775c34321bad41e9171b70ed5a33d72d793bf0f6
