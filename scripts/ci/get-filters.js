@@ -99,6 +99,7 @@ function asPackageFilter(packageName) {
   return [
     `${packageName}:`,
     "  - .github/workflows/code-checks.yml",
+    "  - .nvmrc",
     `  - packages/${packageName}/**`,
     "  - package-lock.json",
   ].join("\n");
