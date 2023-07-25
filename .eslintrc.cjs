@@ -752,9 +752,11 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
       ],
       rules: {
+        "class-methods-use-this": "off",
         "space-before-blocks": "off",
 
         // See: https://typescript-eslint.io/rules/
+        "@typescript-eslint/class-methods-use-this": "error",
         "@typescript-eslint/consistent-type-exports": ["error", {
           fixMixedExportsWithInlineTypeSpecifier: false,
         }],
