@@ -34,14 +34,14 @@
     "@stryker-mutator/typescript-checker": "7.1.1",
     "@types/chai": "4.3.5",
     "@types/mocha": "10.0.1",
-    "@types/node": "18.17.6",
+    "@types/node": "18.17.12",
     "@types/sinon": "10.0.16",
     "@types/sinon-chai": "3.2.9",
-    "@typescript-eslint/eslint-plugin": "6.4.1",
-    "@typescript-eslint/parser": "6.4.1",
-    "chai": "4.3.7",
+    "@typescript-eslint/eslint-plugin": "6.5.0",
+    "@typescript-eslint/parser": "6.5.0",
+    "chai": "4.3.8",
     "commitlint": "17.7.1",
-    "eslint": "8.47.0",
+    "eslint": "8.48.0",
     "eslint-import-resolver-typescript": "3.6.0",
     "eslint-plugin-chai-expect": "3.0.0",
     "eslint-plugin-import": "2.28.1",
@@ -64,7 +64,7 @@
     "sinon-chai": "3.7.0",
     "ts-node": "10.9.1",
     "tsconfig-paths": "4.2.0",
-    "typescript": "5.1.6"
+    "typescript": "5.2.2"
   },
   "workspaces": [
     "packages/benchmarking",
