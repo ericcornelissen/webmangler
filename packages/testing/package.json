@@ -25,7 +25,7 @@
     "postpublish": "npm run clean"
   },
   "peerDependencies": {
-    "sinon": "^15.0.0"
+    "sinon": "^15.0.0 || ^16.0.0"
   },
   "engines": {
     "node": "^18 || ^20"
