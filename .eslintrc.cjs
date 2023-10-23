@@ -587,6 +587,7 @@ module.exports = {
     // See: https://ota-meshi.github.io/eslint-plugin-regexp/
     "regexp/confusing-quantifier": "error",
     "regexp/control-character-escape": "error",
+    "regexp/grapheme-string-literal": "error",
     "regexp/hexadecimal-escape": ["error", "never"],
     "regexp/letter-case": ["error", {
       caseInsensitive: "lowercase",
@@ -611,6 +612,7 @@ module.exports = {
     "regexp/no-empty-character-class": "error",
     "regexp/no-empty-group": "error",
     "regexp/no-empty-lookarounds-assertion": "error",
+    "regexp/no-empty-string-literal": "error",
     "regexp/no-escape-backspace": "error",
     "regexp/no-invalid-regexp": "error",
     "regexp/no-invisible-character": "error",
@@ -657,6 +659,8 @@ module.exports = {
     "regexp/no-useless-non-capturing-group": "error",
     "regexp/no-useless-quantifier": "error",
     "regexp/no-useless-range": "error",
+    "regexp/no-useless-set-operand": "error",
+    "regexp/no-useless-string-literal": "error",
     "regexp/no-useless-two-nums-quantifier": "error",
     "regexp/no-zero-quantifier": "error",
     "regexp/optimal-lookaround-quantifier": "error",
@@ -689,10 +693,13 @@ module.exports = {
     "regexp/prefer-result-array-groups": ["error", {
       strictTypes: true,
     }],
+    "regexp/prefer-set-operation": "error",
     "regexp/prefer-star-quantifier": "error",
     "regexp/prefer-unicode-codepoint-escapes": "error",
     "regexp/prefer-w": "error",
     "regexp/require-unicode-regexp": "off",
+    "regexp/require-unicode-sets-regexp": "off",
+    "regexp/simplify-set-operations": "error",
     "regexp/sort-alternatives": "error",
     "regexp/sort-character-class-elements": ["error", {
       order: [
