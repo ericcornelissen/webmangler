@@ -33,11 +33,11 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "cosmiconfig": "^8.0.0",
+    "cosmiconfig": "^9.0.0",
     "yargs": "^17.0.0"
   },
   "devDependencies": {
-    "@types/yargs": "17.0.31"
+    "@types/yargs": "17.0.32"
   },
   "peerDependencies": {
     "@webmangler/core": "^0.1.27"
