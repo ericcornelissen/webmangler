@@ -9,6 +9,7 @@ Versioning].
 ## [Unreleased]
 
 - Add support for Node.js v20. ([#444])
+- Bump minimum `cosmiconfig` from `^8.0.0` to `^9.0.0`. ([#475])
 
 ## [0.1.11] - 2023-05-01
 
@@ -90,5 +91,6 @@ Versioning].
 [#424]: https://github.com/ericcornelissen/webmangler/pull/424
 [#433]: https://github.com/ericcornelissen/webmangler/pull/433
 [#444]: https://github.com/ericcornelissen/webmangler/pull/444
+[#475]: https://github.com/ericcornelissen/webmangler/pull/475
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a CHANGELOG"
 [semantic versioning]: https://semver.org/spec/v2.0.0.html "Semantic versioning"
